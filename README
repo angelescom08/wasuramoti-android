@@ -1,0 +1,8 @@
+[How to compile]
+Before doing the following command, you have to do `cd src/main/jni/libogg-*/ && ./configure && make`
+Just compile:
+ $ sbt compile
+Make a package for debug: 
+ $ sbt android:package-debug
+Make a package for release:
+ $ sbt android:package-release

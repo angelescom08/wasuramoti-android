@@ -14,10 +14,12 @@ object General {
   lazy val fullAndroidSettings =
     General.settings ++
     AndroidProject.androidSettings ++
+    AndroidNdk.settings ++
     TypedResources.settings ++
     AndroidMarketPublish.settings ++ Seq (
       keyalias in Android := "change-me",
-      libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
+      libraryDependencies ++= Seq( "org.scalatest" %% "scalatest" % "1.6.1" % "test",
+      "commons-io" % "commons-io" % "2.1" ),
       proguardOption in Android := """
       -keep class scala.Function1
       -verbose
