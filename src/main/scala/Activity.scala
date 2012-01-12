@@ -9,8 +9,6 @@ import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 
 import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.io.{File,FileInputStream,FileOutputStream}
-import org.apache.commons.io
-
 
 class WasuramotiActivity extends Activity {
   override def onCreate(savedInstanceState: Bundle) {
@@ -32,17 +30,19 @@ class WasuramotiActivity extends Activity {
         val wav_file = File.createTempFile("wasuramoti_up",".wav",temp_dir)
         val hoobar = new OggVorbisDecoder()
         hoobar.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
+        println("Ogg Info: " + hoobar.channels + ", " + hoobar.rate + ", " + hoobar.max_amplitude)
+        val conf_channels = if(hoobar.channels==1){AudioFormat.CHANNEL_CONFIGURATION_MONO}else{AudioFormat.CHANNEL_CONFIGURATION_STEREO}
         try{
 
            val audit = new AudioTrack( AudioManager.STREAM_VOICE_CALL,
-              22050,
-              AudioFormat.CHANNEL_CONFIGURATION_MONO,
+              hoobar.rate.toInt,
+              conf_channels,
               AudioFormat.ENCODING_PCM_16BIT,
               wav_file.length.toInt,
               AudioTrack.MODE_STATIC );
+           val bar = new Array[Byte](wav_file.length.toInt)
            val fin = new FileInputStream(wav_file)
-           //val bar = Source.fromInputStream(fin).map(_.toByte).toArray
-           val bar = io.IOUtils.toByteArray(fin)
+           fin.read(bar) 
            fin.close()
            var offset = 0
            var len = 0

@@ -18,8 +18,7 @@ object General {
     TypedResources.settings ++
     AndroidMarketPublish.settings ++ Seq (
       keyalias in Android := "change-me",
-      libraryDependencies ++= Seq( "org.scalatest" %% "scalatest" % "1.6.1" % "test",
-      "commons-io" % "commons-io" % "2.1" ),
+      libraryDependencies ++= Seq( "org.scalatest" %% "scalatest" % "1.6.1" % "test"),
       proguardOption in Android := """
       -keep class scala.Function1
       -verbose

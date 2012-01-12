@@ -1,5 +1,6 @@
 syntax: glob
 *.class
+*.so
 target/*
 src/main/assets/*
 obj/*

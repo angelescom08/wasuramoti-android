@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vorbis/codec.h>
+#include "wav_ogg_file_codec_jni.h"
 
 #ifdef _WIN32 /* We need the following two to set fin/fout to binary */
 #include <io.h>
@@ -35,12 +36,14 @@
 #include <console.h>      /* CodeWarrior's Mac "command-line" support */
 #endif
 
+#define MAX_AMPLITUDE 32767
+
 ogg_int16_t convbuffer[4096]; /* take 8k out of the data segment, not the stack */
 int convsize=4096;
 
 extern void _VDBG_dump(void);
 
-int decode_file(const char* fin_path, const char * fout_path){
+int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_file_codec_info * return_info){
   ogg_sync_state   oy; /* sync and verify incoming physical bitstream */
   ogg_stream_state os; /* take physical pages, weld into a logical
                           stream of packets */
@@ -109,7 +112,7 @@ int decode_file(const char* fin_path, const char * fout_path){
       
       /* error case.  Must not be Vorbis data */
       fprintf(stderr,"Input does not appear to be an Ogg bitstream.\n");
-      exit(1);
+      return(0);
     }
   
     /* Get the serial number and set up the rest of decode. */
@@ -129,21 +132,24 @@ int decode_file(const char* fin_path, const char * fout_path){
     if(ogg_stream_pagein(&os,&og)<0){ 
       /* error; stream version mismatch perhaps */
       fprintf(stderr,"Error reading first page of Ogg bitstream data.\n");
-      exit(1);
+      return(0);
     }
     
     if(ogg_stream_packetout(&os,&op)!=1){ 
       /* no page? must not be vorbis */
       fprintf(stderr,"Error reading initial header packet.\n");
-      exit(1);
+      return(0);
     }
     
     if(vorbis_synthesis_headerin(&vi,&vc,&op)<0){ 
       /* error case; not a vorbis header */
       fprintf(stderr,"This Ogg bitstream does not contain Vorbis "
               "audio data.\n");
-      exit(1);
+      return(0);
     }
+    return_info->channels = vi.channels;
+    return_info->rate = vi.rate;
+    return_info->max_amplitude = MAX_AMPLITUDE;
     
     /* At this point, we're sure we're Vorbis. We've set up the logical
        (Ogg) bitstream decoder. Get the comment and codebook headers and
@@ -173,12 +179,12 @@ int decode_file(const char* fin_path, const char * fout_path){
               /* Uh oh; data at some point was corrupted or missing!
                  We can't tolerate that in a header.  Die. */
               fprintf(stderr,"Corrupt secondary header.  Exiting.\n");
-              exit(1);
+              return(0);
             }
             result=vorbis_synthesis_headerin(&vi,&vc,&op);
             if(result<0){
               fprintf(stderr,"Corrupt secondary header.  Exiting.\n");
-              exit(1);
+              return(0);
             }
             i++;
           }
@@ -189,7 +195,7 @@ int decode_file(const char* fin_path, const char * fout_path){
       bytes=fread(buffer,1,4096,fin);
       if(bytes==0 && i<2){
         fprintf(stderr,"End of file before finding all Vorbis headers!\n");
-        exit(1);
+        return(0);
       }
       ogg_sync_wrote(&oy,bytes);
     }
@@ -260,17 +266,17 @@ int decode_file(const char* fin_path, const char * fout_path){
                     float  *mono=pcm[i];
                     for(j=0;j<bout;j++){
 #if 1
-                      int val=floor(mono[j]*32767.f+.5f);
+                      int val=floor(mono[j]*(float)MAX_AMPLITUDE+.5f);
 #else /* optional dither */
-                      int val=mono[j]*32767.f+drand48()-0.5f;
+                      int val=mono[j]*(float)MAX_AMPLITUDE+drand48()-0.5f;
 #endif
                       /* might as well guard against clipping */
-                      if(val>32767){
-                        val=32767;
+                      if(val>MAX_AMPLITUDE){
+                        val=MAX_AMPLITUDE;
                         clipflag=1;
                       }
-                      if(val<-32768){
-                        val=-32768;
+                      if(val<-MAX_AMPLITUDE-1){
+                        val=-MAX_AMPLITUDE-1;
                         clipflag=1;
                       }
                       *ptr=val;

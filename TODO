@@ -1,2 +1,0 @@
- * using commons-io library requires Apache Licence. consider whether it is valuable, otherwise use Source.fromInputStream instead.
- * currently only 22050 Hz, 16bit, MONO ogg is able to play. make it be able to play any kinds of sample rate, bit depth, number of tracks.
