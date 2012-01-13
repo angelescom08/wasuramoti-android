@@ -1,4 +1,13 @@
 [How to compile]
+Requirements:
+  openjdk 6 ( or other Java JDK )
+  scala 2.9.1
+  sbt 0.11 ( A Scala-Based Simple Build Tool )
+  sbt-android-plugin 0.6.x
+  android-sdk r16
+  android-platform r10
+  android-ndk r7
+
 Before doing the following command, you have to do `cd src/main/jni/libogg-*/ && ./configure && make`
 Just compile:
  $ sbt compile

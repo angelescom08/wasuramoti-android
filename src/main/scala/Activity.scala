@@ -4,16 +4,31 @@ import _root_.android.app.Activity
 import _root_.android.os.Bundle
 import _root_.android.widget.TextView
 import _root_.android.util.Log
-import _root_.android.view.View
+import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 
 import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.io.{File,FileInputStream,FileOutputStream}
 
 class WasuramotiActivity extends Activity {
+  override def onCreateOptionsMenu(menu: Menu) : Boolean = {
+    super.onCreateOptionsMenu(menu)
+    val inflater = getMenuInflater()
+    inflater.inflate(R.menu.mainmenu, menu)
+    return true
+  }
+  override def onOptionsItemSelected(item: MenuItem) : Boolean = {
+    item.getItemId match {
+      case R.id.menu_shuffle => println("shuffle")
+      case R.id.menu_move => println("move")
+      case R.id.menu_fudalist => println("fuda list")
+      case R.id.menu_config => println("config")
+    }
+    return true
+  }
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.mainlayout);
+    setContentView(R.layout.mainlayout)
     val read_button = findViewById(R.id.read_button)
     read_button.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
