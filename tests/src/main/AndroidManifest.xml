@@ -2,7 +2,7 @@
     <uses-sdk android:minSdkVersion="10"></uses-sdk>
     <application>
         <uses-library android:name="android.test.runner"></uses-library>
-        <activity android:name=".Wasuramoti Activity" android:label="@string/app_name">
+        <activity android:name=".WasuramotiActivity" android:label="@string/app_name">
            <intent-filter>
                <action android:name="android.intent.action.MAIN"/>
                <category android:name="android.intent.category.LAUNCHER"/>

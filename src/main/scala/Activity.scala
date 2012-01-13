@@ -6,9 +6,17 @@ import _root_.android.widget.TextView
 import _root_.android.util.Log
 import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
+import _root_.android.content.Intent
 
 import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.io.{File,FileInputStream,FileOutputStream}
+
+class FudaListActivity extends Activity {
+  override def onCreate(savedInstanceState: Bundle) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.fudalistlayout)
+  }
+}
 
 class WasuramotiActivity extends Activity {
   override def onCreateOptionsMenu(menu: Menu) : Boolean = {
@@ -21,7 +29,9 @@ class WasuramotiActivity extends Activity {
     item.getItemId match {
       case R.id.menu_shuffle => println("shuffle")
       case R.id.menu_move => println("move")
-      case R.id.menu_fudalist => println("fuda list")
+      case R.id.menu_fudalist =>
+        val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaListActivity])
+        startActivity(intent)
       case R.id.menu_config => println("config")
     }
     return true
@@ -33,6 +43,7 @@ class WasuramotiActivity extends Activity {
     read_button.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         println("Button Clicked")
+        println(R.string.app_name)
         val IN_FILE = "yamajun_001_2.ogg"
         val asset_fd = getAssets().openFd(IN_FILE)
         val finstream = asset_fd.createInputStream()
