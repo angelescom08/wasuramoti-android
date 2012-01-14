@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" 
+              android:layout_height="fill_parent" 
+              android:orientation="vertical" >
+     <LinearLayout 
+              android:layout_width="fill_parent" 
+              android:layout_height="fill_parent" 
+              android:orientation="horizontal" >
+
+     <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/fudalist_add"
+            android:onClick="addFudaList" />
+     <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/fudalist_delete"
+            android:onClick="deleteFudaList" />
+     <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/fudalist_edit"
+            android:onClick="editFudaList" />
+    </LinearLayout>
+    <Spinner android:id="@+id/fudaset_list"
+            android:layout_height="50sp"
+            android:layout_width="200sp"
+             />
+</LinearLayout>

@@ -5,7 +5,7 @@
     android:key="fudalist"
     android:title="@string/conf_fudalist_title"
     android:summary="@string/conf_fudalist_summary"
-    android:dialogLayout="@layout/fudalistlayout"
+    android:dialogLayout="@layout/fuda_list"
     />
   <ListPreference
     android:key="read_order"
