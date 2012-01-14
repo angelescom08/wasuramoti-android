@@ -33,4 +33,5 @@
 
   <string name="fudalistedit_title">名前</string>
   <string name="fudalistedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
+  <string name="fudalistedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
 </resources>

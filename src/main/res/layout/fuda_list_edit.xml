@@ -11,9 +11,10 @@
                   android:layout_height="wrap_content"
                   android:layout_width="wrap_content"
                   android:text="@string/fudalistedit_title" />
-              <EditText android:id="@+id/fudaset_edit_title"
-                android:layout_height="30sp"
+              <EditText android:id="@+id/fudalistedit_title_contents"
+                android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:singleLine="true"
                 />
               </LinearLayout>
               <TextView
@@ -21,8 +22,9 @@
                   android:layout_width="wrap_content"
                   android:text="@string/fudalistedit_text" />
 
-    <EditText android:id="@+id/fudaset_edit_text"
+    <EditText android:id="@+id/fudalistedit_text_contents"
             android:layout_height="200sp"
+            android:gravity="top"
             android:layout_width="fill_parent"
              />
 </LinearLayout>
