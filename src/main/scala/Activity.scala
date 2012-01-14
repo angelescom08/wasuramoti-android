@@ -1,20 +1,26 @@
 package tami.pen.wasuramoti
 
 import _root_.android.app.Activity
+import _root_.android.preference.{PreferenceActivity,DialogPreference}
 import _root_.android.os.Bundle
 import _root_.android.widget.TextView
-import _root_.android.util.Log
+import _root_.android.util.{Log,AttributeSet}
 import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.content.Intent
+import _root_.android.content.{Intent,Context}
 
 import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.io.{File,FileInputStream,FileOutputStream}
 
-class FudaListActivity extends Activity {
+
+class FudaListPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+}
+
+class FudaConfActivity extends PreferenceActivity {
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.fudalistlayout)
+    addPreferencesFromResource(R.xml.fudaconf)
   }
 }
 
@@ -27,10 +33,10 @@ class WasuramotiActivity extends Activity {
   }
   override def onOptionsItemSelected(item: MenuItem) : Boolean = {
     item.getItemId match {
-      case R.id.menu_shuffle => println("shuffle")
+      case R.id.menu_restart => println("restart")
       case R.id.menu_move => println("move")
-      case R.id.menu_fudalist =>
-        val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaListActivity])
+      case R.id.menu_fudaconf =>
+        val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaConfActivity])
         startActivity(intent)
       case R.id.menu_config => println("config")
     }
