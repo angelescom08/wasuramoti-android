@@ -11,18 +11,18 @@
      <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/fudalist_add"
-            android:onClick="addFudaList" />
+            android:text="@string/fudaset_add"
+            android:onClick="addFudaSet" />
      <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/fudalist_delete"
-            android:onClick="deleteFudaList" />
+            android:text="@string/fudaset_delete"
+            android:onClick="deleteFudaSet" />
      <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/fudalist_edit"
-            android:onClick="editFudaList" />
+            android:text="@string/fudaset_edit"
+            android:onClick="editFudaSet" />
     </LinearLayout>
     <Spinner android:id="@+id/fudaset_list"
             android:layout_height="50sp"

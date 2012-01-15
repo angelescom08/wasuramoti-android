@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-  <tami.pen.wasuramoti.FudaListPreference
-    android:key="fudalist"
-    android:title="@string/conf_fudalist_title"
-    android:summary="@string/conf_fudalist_summary"
-    android:dialogLayout="@layout/fuda_list"
+  <tami.pen.wasuramoti.FudaSetPreference
+    android:key="fudaset"
+    android:title="@string/conf_fudaset_title"
+    android:summary="@string/conf_fudaset_summary"
+    android:dialogLayout="@layout/fudaset"
     />
   <ListPreference
     android:key="read_order"

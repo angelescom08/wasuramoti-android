@@ -3,13 +3,16 @@
   <string name="app_name">わすらもち</string>
   <string name="app_version">0.00</string>
 
+  <string name="button_ok">OK</string>
+  <string name="button_cancel">キャンセル</string>
+
   <string name="menu_restart">最初から詠み直す</string>
   <string name="menu_move">移動</string>
   <string name="menu_fudaconf">札設定</string>
   <string name="menu_config">設定</string>
 
-  <string name="conf_fudalist_title">詠み札のセット</string>
-  <string name="conf_fudalist_summary">一字札のみ,あ札のみなど一部の札のみ詠む</string>
+  <string name="conf_fudaset_title">詠み札のセット</string>
+  <string name="conf_fudaset_summary">一字札のみ,あ札のみなど一部の札のみ詠む</string>
 
   <string name="conf_read_order_title">詠む順番</string>
   <string name="conf_read_order_summary">ランダム，シャッフルなどの詠む順番</string>
@@ -27,11 +30,12 @@
   <string name="conf_read_auto_title">自動詠み上げ</string>
   <string name="conf_read_auto_summary">上の句と下の句の間で停止するかどうか</string>
 
-  <string name="fudalist_add">追加</string>
-  <string name="fudalist_delete">削除</string>
-  <string name="fudalist_edit">編集</string>
+  <string name="fudaset_add">追加</string>
+  <string name="fudaset_delete">削除</string>
+  <string name="fudaset_edit">編集</string>
 
-  <string name="fudalistedit_title">名前</string>
-  <string name="fudalistedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
-  <string name="fudalistedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
+  <string name="fudasetedit_title">札セットの追加/編集</string>
+  <string name="fudasetedit_name">名前</string>
+  <string name="fudasetedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
+  <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
 </resources>
