@@ -68,7 +68,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     var cursor = db.query(Globals.TABLE_FUDASETS,Array("title"),null,null,null,null,null,null)
     cursor.moveToFirst()
     listItems.clear()
-    for( i <- 0 to cursor.getCount - 1){
+    for( i <- 0 until cursor.getCount){
       val title = cursor.getString(0)
       listItems.add(title)
       if(title == persisted){

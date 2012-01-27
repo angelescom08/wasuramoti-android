@@ -66,6 +66,23 @@ class WasuramotiActivity extends Activity {
       override def onClick(v: View) {
         println("Button Clicked")
         FudaListHelper.shuffle(getApplicationContext())
+        println(FudaListHelper.queryRandom(getApplicationContext()))
+        println(FudaListHelper.queryRandom(getApplicationContext()))
+        println(FudaListHelper.queryRandom(getApplicationContext()))
+        println(FudaListHelper.queryRandom(getApplicationContext()))
+        println(FudaListHelper.queryRandom(getApplicationContext()))
+        FudaListHelper.moveToFirst(getApplicationContext())
+        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
+        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
+        FudaListHelper.moveNext(getApplicationContext())
+        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
+        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
+        FudaListHelper.moveNext(getApplicationContext())
+        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
+        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
+        FudaListHelper.moveNext(getApplicationContext())
+        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
+        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
         val IN_FILE = "yamajun_001_2.ogg"
         val asset_fd = getAssets().openFd(IN_FILE)
         val finstream = asset_fd.createInputStream()
@@ -98,6 +115,17 @@ class WasuramotiActivity extends Activity {
              len = audit.write(bar,offset,bar.length-offset)
              offset += len
            }while( len > 0 && offset < bar.length)
+           audit.setNotificationMarkerPosition(wav_file.length.toInt / 2 - 22050)
+           audit.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener(){
+           override def onPeriodicNotification(audio_track:AudioTrack){
+             println("Periodic Notification")
+           }
+           override def onMarkerReached(audio_track:AudioTrack){
+             println("Marker Reached")
+             println(audio_track.getPlaybackHeadPosition)
+             println(wav_file.length)
+           }
+             })
            audit.play()
         }catch{
        //   case e => println(e)
