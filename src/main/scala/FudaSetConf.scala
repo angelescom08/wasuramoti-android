@@ -21,7 +21,39 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val pos = spinner.get.getSelectedItemPosition()
-      persistString(listItems.get(pos))
+      val title = listItems.get(pos)
+      persistString(title)
+      val db = Globals.database.get.getWritableDatabase
+      var cursor = db.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(title),null,null,null,null)
+      var body = ""
+      if( cursor.getCount > 0 ){
+        cursor.moveToFirst()
+        body = cursor.getString(1)
+      }
+      cursor.close()
+      db.close()
+      var haveto_read = Set[String]()
+      if(! body.isEmpty){
+        val trie = CreateTrie.makeTrie(AllFuda.list)
+        for( s <- body.split(" ") ){
+          val ss = trie.traversePrefix(s).toSet
+          haveto_read ++= ss
+        }
+      }else{
+        haveto_read = AllFuda.list.toSet
+      }
+      val skip = AllFuda.list.toSet -- haveto_read
+      val dbw = Globals.database.get.getWritableDatabase
+      Utils.withTransaction(dbw, ()=>
+        for((ss,flag) <- Array((haveto_read,0),(skip,1))){
+          for( s <- ss ){
+            val cv = new ContentValues()
+            cv.put("skip",new java.lang.Integer(flag))
+            val num = AllFuda.getFudaNum(s)
+            dbw.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(num.toString))
+          }
+        })
+      dbw.close()
     }
     super.onDialogClosed(positiveResult)
   }
@@ -87,7 +119,7 @@ class FudaConfActivity extends PreferenceActivity{
       override def onClick(v:View){
         val title = title_view.getText().toString()
         if(title.isEmpty){
-          Globals.messageDialog(context,Right(R.string.fudasetedit_titleempty))
+          Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
           return()
         }
         val db = Globals.database.get.getReadableDatabase
@@ -103,7 +135,7 @@ class FudaConfActivity extends PreferenceActivity{
         cursor.close()
         db.close()
         if(is_duplicate){
-          Globals.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
+          Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
         }
         val body = body_view.getText().toString()
@@ -115,13 +147,13 @@ class FudaConfActivity extends PreferenceActivity{
           st ++= list
         }
         if(st.isEmpty){
-          Globals.messageDialog(context,Right(R.string.fudasetedit_setempty) )
+          Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         }else{
           val excl = AllFuda.list.toSet -- st
-          val kimari = trie.traverseWithout(excl.toSeq).toList.sort(AllFuda.compareMusumefusahose).reduceLeft(_ + " " + _) 
+          val kimari = trie.traverseWithout(excl.toSeq).toList.sortWith(AllFuda.compareMusumefusahose).reduceLeft(_ + " " + _) 
           val template = getResources().getString(R.string.fudasetedit_confirm)
           val message = template.format(st.size)
-          Globals.confirmDialog(context,Left(message), () => {
+          Utils.confirmDialog(context,Left(message), () => {
             val cv = new ContentValues()
             val db = Globals.database.get.getWritableDatabase
             cv.put("title",title)
@@ -175,7 +207,7 @@ class FudaConfActivity extends PreferenceActivity{
     val message = template.format(title)
     println(template)
     println(title)
-    Globals.confirmDialog(this,Left(message), () => {
+    Utils.confirmDialog(this,Left(message), () => {
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(title))
       db.close()

@@ -32,4 +32,12 @@ object AllFuda{
       return x1.compare(y1) < 0
     }
   }
+  def getFudaNum(s:String):Int = {
+    val r = list.indexOf(s)
+    if( r < 0){
+      return -1
+    }else{
+      return r+1
+    }
+  }
 }

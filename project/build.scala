@@ -23,7 +23,8 @@ object General {
       -keep class scala.Function1
       -verbose
       """,
-      useProguard in Android := true
+      useProguard in Android := true,
+      scalacOptions ++= Seq("-deprecation")
     )
 }
 
