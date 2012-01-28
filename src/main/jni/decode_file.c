@@ -36,7 +36,8 @@
 #include <console.h>      /* CodeWarrior's Mac "command-line" support */
 #endif
 
-#define MAX_AMPLITUDE 32767
+#define BIT_DEPTH 16
+#define MAX_AMPLITUDE ((1 << (BIT_DEPTH-1)) - 1)
 
 ogg_int16_t convbuffer[4096]; /* take 8k out of the data segment, not the stack */
 int convsize=4096;
@@ -149,7 +150,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
     }
     return_info->channels = vi.channels;
     return_info->rate = vi.rate;
-    return_info->max_amplitude = MAX_AMPLITUDE;
+    return_info->bit_depth = BIT_DEPTH;
     
     /* At this point, we're sure we're Vorbis. We've set up the logical
        (Ogg) bitstream decoder. Get the comment and codebook headers and

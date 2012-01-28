@@ -10,7 +10,6 @@ import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.widget.Button
 
 import _root_.java.io.{File,FileInputStream,FileOutputStream}
-import _root_.mita.nep.audio.OggVorbisDecoder
 
 class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
   override def onUpgrade(db:SQLiteDatabase,oldv:Int,newv:Int){
@@ -50,6 +49,7 @@ class WasuramotiActivity extends Activity {
   }
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
+    setTitle(getResources().getString(R.string.app_name) + " ver " + getResources().getString(R.string.app_version))
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
     Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
     setContentView(R.layout.main)
@@ -85,11 +85,7 @@ class WasuramotiActivity extends Activity {
         println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
         println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
         val reader = ReaderList.makeCurrentReader(getApplicationContext())
-        val wav_file = File.createTempFile("wasuramoti_up",".wav",getApplicationContext().getCacheDir())
-        val hoobar = new OggVorbisDecoder()
-        reader.withFile(1,1,(temp_file) => {
-        hoobar.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-        println("Ogg Info: " + hoobar.channels + ", " + hoobar.rate + ", " + hoobar.max_amplitude)
+        reader.withDecodedFile(1,1,(wav_file,hoobar) => {
         val conf_channels = if(hoobar.channels==1){AudioFormat.CHANNEL_CONFIGURATION_MONO}else{AudioFormat.CHANNEL_CONFIGURATION_STEREO}
         try{
 
@@ -122,7 +118,6 @@ class WasuramotiActivity extends Activity {
              })
            audit.play()
         }catch{
-       //   case e => println(e)
             case e => throw e
         }
         })

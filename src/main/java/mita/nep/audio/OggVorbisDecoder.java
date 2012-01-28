@@ -1,9 +1,9 @@
 package mita.nep.audio;
 
 public class OggVorbisDecoder {
-  public int channels;
-  public long rate;
-  public int max_amplitude;
+  public int channels = 0;
+  public long rate = 0;
+  public int bit_depth = 0;
   static{
     System.loadLibrary("vorbis");
   }

@@ -5,6 +5,7 @@ import _root_.android.util.AttributeSet
 import _root_.android.app.AlertDialog.Builder
 import _root_.android.os.Environment
 import _root_.java.io.{IOException,File,FileOutputStream}
+import _root_.mita.nep.audio.OggVorbisDecoder
 
 object ReaderList{
   def makeCurrentReader(context:Context):Reader = {
@@ -23,6 +24,15 @@ object ReaderList{
     def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
     def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
     def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
+    def withDecodedFile(num:Int, kamisimo:Int, func:(File,OggVorbisDecoder)=>Unit){
+      val wav_file = File.createTempFile("wasuramoti",".wav",context.getCacheDir())
+      val decoder = new OggVorbisDecoder()
+      withFile(num,kamisimo,temp_file => {
+        decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
+        func(wav_file,decoder)
+      })
+      wav_file.delete()
+    }
     def existsAll():(Boolean,String) = {
       for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
         if(!exists(num,kamisimo)){

@@ -3,6 +3,6 @@
 struct wav_ogg_file_codec_info{
   int channels;
   long rate;
-  int max_amplitude;
+  int bit_depth;
 };
 #endif

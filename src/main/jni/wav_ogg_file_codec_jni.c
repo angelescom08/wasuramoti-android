@@ -19,8 +19,8 @@ Java_mita_nep_audio_OggVorbisDecoder_decodeFile( JNIEnv* env,
   (*env)->SetIntField(env, thiz, fid, wi.channels);
   fid = (*env)->GetFieldID(env, cls, "rate","J");
   (*env)->SetLongField(env, thiz, fid, wi.rate);
-  fid = (*env)->GetFieldID(env, cls, "max_amplitude","I");
-  (*env)->SetIntField(env, thiz, fid, wi.max_amplitude);
+  fid = (*env)->GetFieldID(env, cls, "bit_depth","I");
+  (*env)->SetIntField(env, thiz, fid, wi.bit_depth);
 
   //DON'T FORGET THIS LINE!!!
   (*env)->ReleaseStringUTFChars(env, fin_path, native_fin_path);
