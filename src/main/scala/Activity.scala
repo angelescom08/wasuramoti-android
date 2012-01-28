@@ -1,6 +1,7 @@
 package tami.pen.wasuramoti
 
 import _root_.android.app.Activity
+import _root_.android.preference.PreferenceManager
 import _root_.android.content.{Intent,Context,ContentValues}
 import _root_.android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
@@ -50,6 +51,7 @@ class WasuramotiActivity extends Activity {
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
+    Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
     setContentView(R.layout.main)
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
 
@@ -82,21 +84,10 @@ class WasuramotiActivity extends Activity {
         FudaListHelper.moveNext(getApplicationContext())
         println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
         println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
-        val IN_FILE = "reader/yamajun/yamajun_001_2.ogg"
-        val asset_fd = getAssets().openFd(IN_FILE)
-        for( j <- getAssets().list("reader")){
-          println("assets:"+j)
-        }
-        println("assetssize:"+getAssets.list("reader").length)
-        val finstream = asset_fd.createInputStream()
-        val temp_dir = getApplicationContext().getCacheDir()
-        val temp_file = File.createTempFile("wasuramoti_up",".ogg",temp_dir)
-        new FileOutputStream(temp_file).getChannel().transferFrom(
-          finstream.getChannel(), 0, asset_fd.getLength()
-        )
-        finstream.close()
-        val wav_file = File.createTempFile("wasuramoti_up",".wav",temp_dir)
+        val reader = ReaderList.makeCurrentReader(getApplicationContext())
+        val wav_file = File.createTempFile("wasuramoti_up",".wav",getApplicationContext().getCacheDir())
         val hoobar = new OggVorbisDecoder()
+        reader.withFile(1,1,(temp_file) => {
         hoobar.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
         println("Ogg Info: " + hoobar.channels + ", " + hoobar.rate + ", " + hoobar.max_amplitude)
         val conf_channels = if(hoobar.channels==1){AudioFormat.CHANNEL_CONFIGURATION_MONO}else{AudioFormat.CHANNEL_CONFIGURATION_STEREO}
@@ -134,6 +125,7 @@ class WasuramotiActivity extends Activity {
        //   case e => println(e)
             case e => throw e
         }
+        })
       }
     });
   }

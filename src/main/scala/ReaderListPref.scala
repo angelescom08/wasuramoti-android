@@ -4,9 +4,13 @@ import _root_.android.content.Context
 import _root_.android.util.AttributeSet
 import _root_.android.app.AlertDialog.Builder
 import _root_.android.os.Environment
-import _root_.java.io.{IOException,File}
+import _root_.java.io.{IOException,File,FileOutputStream}
 
 object ReaderList{
+  def makeCurrentReader(context:Context):Reader = {
+    val path = Globals.prefs.get.getString("reader_path",null)
+    makeReader(context,path)
+  }
   def makeReader(context:Context,path:String):Reader = {
     if(path.startsWith("INT:")){
       new Asset(context,path.replaceFirst("INT:",""))
@@ -14,9 +18,11 @@ object ReaderList{
       new External(context,path.replaceFirst("EXT:","").replaceFirst("/<>/","/"+Globals.READER_DIR+"/"))
     }
   }
-  abstract class Reader(context:Context){
-    def basename:String
+  abstract class Reader(context:Context,path:String){
+    def basename:String = new File(path).getName()
     def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
+    def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
+    def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
     def existsAll():(Boolean,String) = {
       for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
         if(!exists(num,kamisimo)){
@@ -25,26 +31,43 @@ object ReaderList{
       }
       (true,"")
     }
-    def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
   }
-  class Asset(context:Context,path:String) extends Reader(context){
-    override def basename = new File(path).getName()
+  class Asset(context:Context,path:String) extends Reader(context,path){
+    def getAssetPath(num:Int, kamisimo:Int):String = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
+    
     override def exists(num:Int, kamisimo:Int):Boolean = {
       try{
-        val p = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
-        context.getAssets.open(p)
+        val fp = context.getAssets.open(getAssetPath(num,kamisimo))
+        fp.close()
         true
       }catch{
         case e:IOException => false
       }
     }
+    override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
+      val temp_dir = context.getCacheDir()
+      val temp_file = File.createTempFile("wasuramoti",".ogg",temp_dir)
+      val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
+      val finstream = asset_fd.createInputStream()
+      new FileOutputStream(temp_file).getChannel().transferFrom(
+        finstream.getChannel(), 0, asset_fd.getLength())
+      func(temp_file)
+      finstream.close()
+      asset_fd.close()
+      temp_file.delete()
+    }
   }
-  class External(context:Context,path:String) extends Reader(context){
-    override def basename = new File(path).getName()
+  class External(context:Context,path:String) extends Reader(context,path){
+    def getFile(num:Int, kamisimo:Int):File = {
+      val dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
+      val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
+      return(file)
+    }
     override def exists(num:Int, kamisimo:Int):Boolean = {
-      var dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
-      var file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
-      file.exists()
+      getFile(num,kamisimo).exists()
+    }
+    override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
+      func(getFile(num,kamisimo))
     }
   }
 }

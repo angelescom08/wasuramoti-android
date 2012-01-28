@@ -1,7 +1,7 @@
 package tami.pen.wasuramoti
 
 import _root_.android.app.AlertDialog
-import _root_.android.content.{DialogInterface,Context}
+import _root_.android.content.{DialogInterface,Context,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.java.io.File
 import scala.collection.Iterable
@@ -16,6 +16,7 @@ object Globals {
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   var database = None:Option[DictionaryOpenHelper]
+  var prefs = None:Option[SharedPreferences]
 }
 
 object Utils {
