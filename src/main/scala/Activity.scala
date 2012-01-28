@@ -66,45 +66,18 @@ class WasuramotiActivity extends Activity {
     read_button.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         println("Button Clicked")
-        FudaListHelper.shuffle(getApplicationContext())
-        println(FudaListHelper.queryRandom(getApplicationContext()))
-        println(FudaListHelper.queryRandom(getApplicationContext()))
-        println(FudaListHelper.queryRandom(getApplicationContext()))
-        println(FudaListHelper.queryRandom(getApplicationContext()))
-        println(FudaListHelper.queryRandom(getApplicationContext()))
-        FudaListHelper.moveToFirst(getApplicationContext())
-        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
-        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
-        FudaListHelper.moveNext(getApplicationContext())
-        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
-        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
-        FudaListHelper.moveNext(getApplicationContext())
-        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
-        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
-        FudaListHelper.moveNext(getApplicationContext())
-        println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
-        println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
+        //FudaListHelper.shuffle(getApplicationContext())
+        //println(FudaListHelper.queryRandom(getApplicationContext()))
+        //FudaListHelper.moveToFirst(getApplicationContext())
+        //println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
+        //println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
+        //FudaListHelper.moveNext(getApplicationContext())
         val reader = ReaderList.makeCurrentReader(getApplicationContext())
-        reader.withDecodedFile(1,1,(wav_file,hoobar) => {
-        val conf_channels = if(hoobar.channels==1){AudioFormat.CHANNEL_CONFIGURATION_MONO}else{AudioFormat.CHANNEL_CONFIGURATION_STEREO}
-        try{
-
-           val audit = new AudioTrack( AudioManager.STREAM_VOICE_CALL,
-              hoobar.rate.toInt,
-              conf_channels,
-              AudioFormat.ENCODING_PCM_16BIT,
-              wav_file.length.toInt,
-              AudioTrack.MODE_STATIC );
-           val bar = new Array[Byte](wav_file.length.toInt)
-           val fin = new FileInputStream(wav_file)
-           fin.read(bar) 
-           fin.close()
-           var offset = 0
-           var len = 0
-           do{
-             len = audit.write(bar,offset,bar.length-offset)
-             offset += len
-           }while( len > 0 && offset < bar.length)
+        reader.withDecodedFile(1,1,(wav_file,decoder) => {
+           val audit = AudioHelper.makeAudioTrack(decoder,wav_file.length.toInt)
+           val buf = AudioHelper.readShortsFromFile(wav_file)
+           val wav = new WavBuffer(buf,decoder)
+           wav.writeToAudioTrack(audit)
            audit.setNotificationMarkerPosition(wav_file.length.toInt / 2 - 22050)
            audit.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener(){
            override def onPeriodicNotification(audio_track:AudioTrack){
@@ -117,9 +90,6 @@ class WasuramotiActivity extends Activity {
            }
              })
            audit.play()
-        }catch{
-            case e => throw e
-        }
         })
       }
     });
