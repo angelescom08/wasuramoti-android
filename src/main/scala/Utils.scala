@@ -3,6 +3,8 @@ package tami.pen.wasuramoti
 import _root_.android.app.AlertDialog
 import _root_.android.content.{DialogInterface,Context}
 import _root_.android.database.sqlite.SQLiteDatabase
+import _root_.java.io.File
+import scala.collection.Iterable
 
 object Globals {
   val TABLE_FUDASETS = "fudasets"
@@ -11,6 +13,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 1
+  val READER_DIR = "wasuramoti_reader"
   var database = None:Option[DictionaryOpenHelper]
 }
 
@@ -49,6 +52,16 @@ object Utils {
         }
       }).create.show()
   }
+  def walkDir(f:File,depth:Int,func:(File)=>Unit){
+    if(depth == 0){
+      return
+    }
+    for( i <- f.listFiles ){
+      func(i)
+      if( i.isDirectory ){
+        walkDir(i,depth - 1,func)
+      }
+    }
+  }
 }
-
 

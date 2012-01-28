@@ -17,4 +17,8 @@
     android:key="read_auto"
     android:title="@string/conf_read_auto_title"
     android:summary="@string/conf_read_auto_summary" />
+  <tami.pen.wasuramoti.ReaderListPreference
+    android:key="reader_path"
+    android:title="@string/conf_reader_list"
+    android:summary="@string/conf_reader_list_summary" />
 </PreferenceScreen>

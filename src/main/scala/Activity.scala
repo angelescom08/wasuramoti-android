@@ -83,8 +83,12 @@ class WasuramotiActivity extends Activity {
         FudaListHelper.moveNext(getApplicationContext())
         println(FudaListHelper.queryCurrentIndexWithSkip(getApplicationContext()))
         println(FudaListHelper.queryNext(getApplicationContext(),FudaListHelper.getCurrentIndex(getApplicationContext())))
-        val IN_FILE = "yamajun_001_2.ogg"
+        val IN_FILE = "reader/yamajun/yamajun_001_2.ogg"
         val asset_fd = getAssets().openFd(IN_FILE)
+        for( j <- getAssets().list("reader")){
+          println("assets:"+j)
+        }
+        println("assetssize:"+getAssets.list("reader").length)
         val finstream = asset_fd.createInputStream()
         val temp_dir = getApplicationContext().getCacheDir()
         val temp_file = File.createTempFile("wasuramoti_up",".ogg",temp_dir)
