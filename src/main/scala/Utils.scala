@@ -14,6 +14,7 @@ object Globals {
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 1
   val READER_DIR = "wasuramoti_reader"
+  val ASSETS_READER_DIR="reader"
   var database = None:Option[DictionaryOpenHelper]
 }
 

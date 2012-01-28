@@ -8,9 +8,9 @@
 
   <string name="menu_restart">最初から詠み直す</string>
   <string name="menu_move">移動</string>
-  <string name="menu_fudaconf">札設定</string>
-  <string name="menu_config">設定</string>
-
+  <string name="menu_fudaconf">設定</string>
+  <!-- CATEGORY_MAIN -->
+  <string name="category_main">メイン</string>
   <string name="conf_fudaset_title">詠み札のセット</string>
   <string name="conf_fudaset_summary">一字札のみ,あ札のみなど一部の札のみ詠む</string>
 
@@ -27,8 +27,24 @@
 
   <string name="conf_reader_list">詠み手</string>
   <string name="conf_reader_list_summary">追加する場合はSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg形式のファイルを置いて下さい</string>
+  <!-- CATEGORY_AUTO -->
+  <string name="category_auto">連続</string>
   <string name="conf_read_auto_title">自動詠み上げ</string>
   <string name="conf_read_auto_summary">上の句と下の句の間で停止するかどうか</string>
+  <string name="conf_read_auto_span">詠み上げ間隔</string>
+  <string name="conf_read_auto_span_summary">何秒間停止するか</string>
+  <!-- CATEGORI_SUB -->
+  <string name="category_sub">詳細</string> 
+  <string name="conf_wav_begin_read">詠み始め</string>
+  <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
+  <string name="conf_wav_span_simokami">間</string>
+  <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
+  <string name="conf_wav_threshold">閾値</string>
+  <string name="conf_wav_threshold_summary">音の強さがこれ以下の音は無音とみなす</string>
+  <string name="conf_wav_fadeout_simo">フェードアウト</string>
+  <string name="conf_wav_fadout_simo_summary">下の句のフェードアウト秒数</string>
+  <string name="conf_wav_fadein_kami">フェードイン</string>
+  <string name="conf_wav_fadein_kami_summary">上の句のフェードイン秒数</string>
 
   <string name="fudaset_add">追加</string>
   <string name="fudaset_delete">削除</string>

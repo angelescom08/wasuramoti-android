@@ -1,24 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-  <tami.pen.wasuramoti.FudaSetPreference
-    android:key="fudaset"
-    android:title="@string/conf_fudaset_title"
-    android:summary="@string/conf_fudaset_summary"
-    android:dialogLayout="@layout/fudaset"
-    />
-  <ListPreference
-    android:key="read_order"
-    android:title="@string/conf_read_order_title"
-    android:summary="@string/conf_read_order_summary"
-    android:entries="@array/conf_read_order_entries"
-    android:entryValues="@array/conf_read_order_entryValues" />
-  <CheckBoxPreference
-    android:key="read_auto"
-    android:title="@string/conf_read_auto_title"
-    android:summary="@string/conf_read_auto_summary" />
-  <tami.pen.wasuramoti.ReaderListPreference
-    android:key="reader_path"
-    android:title="@string/conf_reader_list"
-    android:summary="@string/conf_reader_list_summary" />
+  <PreferenceCategory android:title="@string/category_main">
+    <tami.pen.wasuramoti.FudaSetPreference
+      android:key="fudaset"
+      android:title="@string/conf_fudaset_title"
+      android:summary="@string/conf_fudaset_summary"
+      android:dialogLayout="@layout/fudaset"
+      />
+    <ListPreference
+      android:key="read_order"
+      android:title="@string/conf_read_order_title"
+      android:summary="@string/conf_read_order_summary"
+      android:entries="@array/conf_read_order_entries"
+      android:entryValues="@array/conf_read_order_entryValues" />
+    <tami.pen.wasuramoti.ReaderListPreference
+      android:key="reader_path"
+      android:title="@string/conf_reader_list"
+      android:summary="@string/conf_reader_list_summary" />
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_auto">
+    <CheckBoxPreference
+      android:key="read_auto"
+      android:title="@string/conf_read_auto_title"
+      android:summary="@string/conf_read_auto_summary" />
+    <EditTextPreference
+      android:key="read_auto_span"
+      android:title="@string/conf_read_auto_span"
+      android:summary="@string/conf_read_auto_span_summary"
+      android:defaultValue="5.0"
+      />
+
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_sub">
+    <EditTextPreference
+      android:key="wav_begin_read"
+      android:title="@string/conf_wav_begin_read"
+      android:summary="@string/conf_wav_begin_read_summary"
+      android:defaultValue="0.5"
+      />
+
+    <EditTextPreference
+      android:key="wav_span_simokami"
+      android:title="@string/conf_wav_span_simokami"
+      android:summary="@string/conf_wav_span_simokami_summary"
+      android:defaultValue="1.0"
+      />
+    <EditTextPreference
+      android:key="wav_threashold"
+      android:title="@string/conf_wav_threshold"
+      android:summary="@string/conf_wav_threshold_summary"
+      android:defaultValue="0.01"
+      />
+
+    <EditTextPreference
+      android:key="wav_fadeout_simo"
+      android:title="@string/conf_wav_fadeout_simo"
+      android:summary="@string/conf_wav_fadout_simo_summary"
+      android:defaultValue="0.2"
+      />
+    <EditTextPreference
+      android:key="wav_fadein_kami"
+      android:title="@string/conf_wav_fadein_kami"
+      android:summary="@string/conf_wav_fadein_kami_summary"
+      android:defaultValue="0.1"
+      />
+  </PreferenceCategory>
+
 </PreferenceScreen>

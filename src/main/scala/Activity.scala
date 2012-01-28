@@ -44,7 +44,6 @@ class WasuramotiActivity extends Activity {
       case R.id.menu_fudaconf =>
         val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaConfActivity])
         startActivity(intent)
-      case R.id.menu_config => println("config")
     }
     return true
   }
