@@ -6,5 +6,7 @@
     <Button android:id="@+id/read_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Push Here" />
+            android:text="Push Here" 
+            android:textSize="36dp"
+            />
 </LinearLayout>

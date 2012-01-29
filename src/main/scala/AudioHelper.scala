@@ -18,7 +18,7 @@ object AudioHelper{
     }else{
       AudioFormat.CHANNEL_CONFIGURATION_STEREO
     }
-    new AudioTrack( AudioManager.STREAM_VOICE_CALL,
+    new AudioTrack( AudioManager.STREAM_MUSIC,
       decoder.rate.toInt,
       channels,
       audio_format,
@@ -35,11 +35,18 @@ object AudioHelper{
     ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts)
     return(shorts)
   }
+  def makeSilence(sec:Double,decoder:OggVorbisDecoder):WavBuffer = {
+    val buf = new Array[Short]((sec*decoder.rate).toInt)
+    new WavBuffer(buf,decoder)
+  }
 }
 //TODO:handle stereo audio
 class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
   var index_begin = 0
   var index_end = buffer.length
+  def bufferSize():Int = {
+    (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
+  }
   def writeToAudioTrack(track:AudioTrack){ 
     var offset = index_begin
     var len = 0

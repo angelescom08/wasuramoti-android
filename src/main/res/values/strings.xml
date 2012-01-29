@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">わすらもち</string>
-  <string name="app_version">0.0.0 beta</string>
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
@@ -58,4 +57,9 @@
   <string name="fudasetedit_titleempty">タイトルが空白です</string>
   <string name="fudasetedit_titleduplicated">すでに同じタイトルの札セットが存在します</string>
   <string name="fudasetedit_setempty">決まり字に該当する札がありません</string>
+
+  <string name="message_readindex" formatted="false">%d / %d 首目</string>
+
+  <string name="fudaset_title_all">全部の札</string>
+  <string name="fudaset_title_one">一字札</string>
 </resources>

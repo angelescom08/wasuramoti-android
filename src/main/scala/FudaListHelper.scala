@@ -29,6 +29,25 @@ object FudaListHelper{
   }
   def moveTo(context:Context,num:Int){
   }
+
+  def makeReadIndexMessage(context:Context):String = {
+    val num_to_read = queryNumbersToRead(context)
+    val current_index = queryCurrentIndexWithSkip(context)
+    val template = context.getResources().getString(R.string.message_readindex)
+    val message = template.format(current_index,num_to_read)
+    return(message)
+  }
+
+  def queryNumbersToRead(context:Context):Int = {
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip=0 AND num > 0",null,null,null,null,null)
+    cursor.moveToFirst()
+    val count = cursor.getInt(0)
+    cursor.close()
+    db.close()
+    return count
+  }
+
   def queryCurrentIndexWithSkip(context:Context):Int = {
     val current_index = getCurrentIndex(context)
     val db = Globals.database.get.getReadableDatabase

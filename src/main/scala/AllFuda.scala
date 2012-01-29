@@ -22,10 +22,10 @@ object AllFuda{
 "なげけ","む","なにわえ","たま","みせ",
 "きり","わがそ","よのなかは","みよ","おおけ",
 "はなさ","こぬ","かぜそ","ひとも","もも")
-  val musumefusahose : String = "むすめふさほせうつしもゆいちひきはやよかみたこおわなあ"
+  val musumefusahoseAll : String = "むすめふさほせうつしもゆいちひきはやよかみたこおわなあ"
   def compareMusumefusahose(x:String,y:String):Boolean = {
-    val x1 = musumefusahose.indexOf(x(0))
-    val y1 = musumefusahose.indexOf(y(0))
+    val x1 = musumefusahoseAll.indexOf(x(0))
+    val y1 = musumefusahoseAll.indexOf(y(0))
     if( x1 == y1 ){
       return x.compare(y) < 0
     }else{
