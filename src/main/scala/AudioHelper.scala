@@ -70,43 +70,78 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
   }
 }
 
-class KarutaPlayer(context:Context,reader:Reader,simo_num:Int,kami_num:Int){
+class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,kami_num:Int){
   var thread = None:Option[Thread]
   startDecode()
   var wav_buffer = None:Option[WavBuffer]
   var simo_millsec = None:Option[Long]
+  var track = None:Option[AudioTrack]
+  var timer_kamiend = None:Option[Timer]
+  var timer_simoend = None:Option[Timer]
   var is_playing = false
+  var is_decoding = false
+  var is_kaminoku = false
   def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
-    if(is_playing){
-      return
+    Globals.global_lock.synchronized{
+      if(is_playing){
+        return
+      }
+      is_playing = true
+      waitDecode()
+      track = Some(wav_buffer.get.writeToAudioTrack())
+      timer_simoend = Some(new Timer())
+      timer_kamiend = Some(new Timer())
+      timer_simoend.get.schedule(new TimerTask(){
+          override def run(){
+            onSimoEnd()
+            is_kaminoku=true
+          }},simo_millsec.get)
+      timer_kamiend.get.schedule(new TimerTask(){
+          override def run(){
+            onKamiEnd()
+            is_playing=false
+          }},wav_buffer.get.audioLength)
+      track.get.play()
     }
-    is_playing = true
-    waitDecode()
-    val track = wav_buffer.get.writeToAudioTrack()
-    new Timer().schedule(new TimerTask(){override def run(){onSimoEnd()}},simo_millsec.get)
-    new Timer().schedule(new TimerTask(){override def run(){onKamiEnd();is_playing=false}},wav_buffer.get.audioLength)
-    track.play()
   }
-  def startDecode(){
-    val t = new Thread(new Runnable(){
-      override def run(){
-        var buf = new mutable.ArrayBuffer[Short]()
-        var g_decoder:Option[OggVorbisDecoder] = None
-        reader.withDecodedFile(simo_num,2,(wav_file,decoder) => {
-           g_decoder = Some(decoder)
-           val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
-           buf ++= w.getBuffer
-           simo_millsec = Some(w.audioLength)
-        })
-        reader.withDecodedFile(kami_num,1,(wav_file,decoder) => {
-           val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
-           buf ++= w.getBuffer
-        })
-        wav_buffer = Some(new WavBuffer(buf.toArray,g_decoder.get))
+  def stop(){
+    timer_simoend.get.cancel()
+    timer_kamiend.get.cancel()
+    timer_simoend = None
+    timer_kamiend = None
+    track.get.flush()
+    track.get.stop()
+    track.get.release()
+    track = None
+    is_playing = false
+  }
+  def startDecode(){ 
+    Globals.global_lock.synchronized{
+      if(is_decoding){
+        return
+      }
+      is_decoding = true
+      val t = new Thread(new Runnable(){
+        override def run(){
+          var buf = new mutable.ArrayBuffer[Short]()
+          var g_decoder:Option[OggVorbisDecoder] = None
+          reader.withDecodedFile(simo_num,2,(wav_file,decoder) => {
+             g_decoder = Some(decoder)
+             val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
+             buf ++= w.getBuffer
+             simo_millsec = Some(w.audioLength)
+          })
+          reader.withDecodedFile(kami_num,1,(wav_file,decoder) => {
+             val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
+             buf ++= w.getBuffer
+          })
+          wav_buffer = Some(new WavBuffer(buf.toArray,g_decoder.get))
+          is_decoding = false
+      }
+      })
+      thread = Some(t)
+      t.start
     }
-    })
-    thread = Some(t)
-    t.start
   }
   def waitDecode(){
     if(!thread.isEmpty){

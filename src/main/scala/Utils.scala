@@ -15,6 +15,7 @@ object Globals {
   val DATABASE_VERSION = 1
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
+  val global_lock = new Object()
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
