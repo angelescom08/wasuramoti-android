@@ -8,9 +8,27 @@ import _root_.java.io.{IOException,File,FileOutputStream}
 import _root_.mita.nep.audio.OggVorbisDecoder
 
 object ReaderList{
-  def makeCurrentReader(context:Context):Reader = {
+  def setDefaultReader(context:Context){
+    if(!Globals.prefs.get.contains("reader_path")){
+      for(p <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
+        val reader_path = "INT:" + p
+        val reader = makeReader(context,reader_path)
+        if(reader.existsAll() match {case (b,m) => b}){
+          val edit = Globals.prefs.get.edit
+          edit.putString("reader_path",reader_path)
+          edit.commit
+          return
+        }
+      }
+    }
+  }
+  def makeCurrentReader(context:Context):Option[Reader] = {
     val path = Globals.prefs.get.getString("reader_path",null)
-    makeReader(context,path)
+    if(path == null){
+      None
+    }else{
+      Some(makeReader(context,path))
+    }
   }
   def makeReader(context:Context,path:String):Reader = {
     if(path.startsWith("INT:")){

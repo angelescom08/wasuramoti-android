@@ -13,7 +13,9 @@
       android:title="@string/conf_read_order_title"
       android:summary="@string/conf_read_order_summary"
       android:entries="@array/conf_read_order_entries"
-      android:entryValues="@array/conf_read_order_entryValues" />
+      android:entryValues="@array/conf_read_order_entryValues" 
+      android:defaultValue="SHUFFLE"
+      />
     <tami.pen.wasuramoti.ReaderListPreference
       android:key="reader_path"
       android:title="@string/conf_reader_list"

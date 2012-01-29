@@ -47,12 +47,7 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
   def bufferSize():Int = {
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
   }
-  def writeToAudioTrack(track:AudioTrack){ 
-    var offset = index_begin
-    var len = 0
-    do{
-     len = track.write(buffer,offset,index_end-offset)
-     offset += len
-    }while( len > 0 && offset < index_end)
+  def writeToAudioTrack(track:AudioTrack){
+    track.write(buffer,index_begin,index_end-index_begin)
   }
 }
