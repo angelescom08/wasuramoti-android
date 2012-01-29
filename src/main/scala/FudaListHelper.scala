@@ -34,11 +34,13 @@ object FudaListHelper{
   }
 
   def makeReadIndexMessage(context:Context):String = {
-    val num_to_read = queryNumbersToRead(context)
-    val current_index = queryCurrentIndexWithSkip(context)
-    val template = context.getResources().getString(R.string.message_readindex)
-    val message = template.format(current_index,num_to_read)
-    return(message)
+    val num_to_read = new java.lang.Integer(queryNumbersToRead(context))
+    if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+      context.getResources().getString(R.string.message_readindex_random,num_to_read)
+    }else{
+      val current_index = new java.lang.Integer(queryCurrentIndexWithSkip(context))
+      context.getResources().getString(R.string.message_readindex_shuffle,current_index,num_to_read)
+    }
   }
 
   def queryNumbersToRead(context:Context):Int = {

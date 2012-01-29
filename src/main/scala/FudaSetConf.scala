@@ -151,8 +151,7 @@ class FudaConfActivity extends PreferenceActivity{
         }else{
           val excl = AllFuda.list.toSet -- st
           val kimari = trie.traverseWithout(excl.toSeq).toList.sortWith(AllFuda.compareMusumefusahose).reduceLeft(_ + " " + _) 
-          val template = getResources().getString(R.string.fudasetedit_confirm)
-          val message = template.format(st.size)
+          val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st.size))
           Utils.confirmDialog(context,Left(message),_ => {
             val cv = new ContentValues()
             val db = Globals.database.get.getWritableDatabase

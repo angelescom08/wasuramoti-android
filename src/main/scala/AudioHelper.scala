@@ -11,9 +11,18 @@ import scala.collection.mutable
 object AudioHelper{
   def makeKarutaPlayer(context:Context,reader:Reader):Option[KarutaPlayer] = {
     val current_index = FudaListHelper.getCurrentIndex(context)
-    FudaListHelper.queryNext(context,current_index).map(
-      {case (cur_num,next_num,_,_) => new KarutaPlayer(context,reader,cur_num,next_num)}
-    )
+    if("RANDOM" == Globals.prefs.get.getString("read_order",null)){
+      val cur_num = Globals.player match {
+        case Some(player) => player.kami_num
+        case None => 0
+      }
+      val next_num = FudaListHelper.queryRandom(context)
+      Some(new KarutaPlayer(context,reader,cur_num,next_num))
+    }else{
+      FudaListHelper.queryNext(context,current_index).map(
+        {case (cur_num,next_num,_,_) => new KarutaPlayer(context,reader,cur_num,next_num)}
+      )
+    }
   }
   def makeAudioTrack(decoder:OggVorbisDecoder,buffer_size:Int):AudioTrack ={
     val audio_format = if(decoder.bit_depth == 16){
@@ -70,7 +79,7 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
   }
 }
 
-class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,kami_num:Int){
+class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:Int){
   var thread = None:Option[Thread]
   startDecode()
   var wav_buffer = None:Option[WavBuffer]

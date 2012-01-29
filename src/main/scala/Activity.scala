@@ -38,7 +38,7 @@ class WasuramotiActivity extends Activity{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
           setButtonTextNormal()
-          refreshKarutaPlayer()
+          refreshKarutaPlayer(true)
         })
       }
       case R.id.menu_move => println("move")

@@ -61,7 +61,8 @@
   <string name="fudasetedit_setempty">決まり字に該当する札がありません</string>
   <string name="reader_not_found">詠み手の音声ファイルがありません．</string>
 
-  <string name="message_readindex" formatted="false">%d / %d 首目</string>
+  <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
+  <string name="message_readindex_random">ランダム / %d 首</string>
 
   <string name="fudaset_title_all">全部の札</string>
   <string name="fudaset_title_one">一字札</string>
