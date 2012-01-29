@@ -4,8 +4,31 @@ import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.java.io.{EOFException,File,FileInputStream,DataInputStream}
 import _root_.java.nio.{ByteBuffer,ByteOrder}
+import _root_.android.content.Context
+import scala.collection.mutable
 
 object AudioHelper{
+  def decodeNextReadInThread(context:Context){
+    val thread = new Thread(new Runnable(){
+      override def run(){
+        val current_index = FudaListHelper.getCurrentIndex(context)
+        val (cur_num,next_num,cur_order,next_order) = FudaListHelper.queryNext(context,current_index)
+        var buf = new mutable.ArrayBuffer[Short]()
+        var g_decoder:Option[OggVorbisDecoder] = None
+        Globals.current_reader.get.withDecodedFile(cur_num,2,(wav_file,decoder) => {
+            buf ++= AudioHelper.readShortsFromFile(wav_file)
+           g_decoder = Some(decoder)
+        })
+        Globals.current_reader.get.withDecodedFile(next_num,1,(wav_file,decoder) => {
+           buf ++= AudioHelper.readShortsFromFile(wav_file)
+        })
+        val wav = new WavBuffer(buf.toArray,g_decoder.get)
+        Globals.decoded_buffer = Some(wav)
+    }
+    })
+    Globals.decoder_thread = Some(thread)
+    thread.start
+  }
   def makeAudioTrack(decoder:OggVorbisDecoder,buffer_size:Int):AudioTrack ={
     val audio_format = if(decoder.bit_depth == 16){
       AudioFormat.ENCODING_PCM_16BIT
@@ -44,10 +67,16 @@ object AudioHelper{
 class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
   var index_begin = 0
   var index_end = buffer.length
+  // in milliseconds
+  def audioLength():Int = {
+    (1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toInt
+  }
   def bufferSize():Int = {
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
   }
-  def writeToAudioTrack(track:AudioTrack){
+  def writeToAudioTrack():AudioTrack = {
+    val track = AudioHelper.makeAudioTrack(decoder,bufferSize()) 
     track.write(buffer,index_begin,index_end-index_begin)
+    return(track)
   }
 }

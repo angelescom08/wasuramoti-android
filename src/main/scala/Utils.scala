@@ -17,6 +17,9 @@ object Globals {
   val ASSETS_READER_DIR="reader"
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
+  var current_reader = None:Option[ReaderList.Reader]
+  var decoder_thread = None:Option[Thread]
+  var decoded_buffer = None:Option[WavBuffer]
 }
 
 object Utils {

@@ -32,6 +32,8 @@ class WasuramotiActivity extends Activity{
     super.onResume()
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
+    Globals.current_reader = ReaderList.makeCurrentReader(getApplicationContext())
+    AudioHelper.decodeNextReadInThread(getApplicationContext())
   }
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -47,31 +49,15 @@ class WasuramotiActivity extends Activity{
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setOnClickListener(new View.OnClickListener() {
       override def onClick(v:View) {
-        val maybe_reader = ReaderList.makeCurrentReader(getApplicationContext())
-        maybe_reader match{
-        case Some(reader) =>
-          new Thread(new Runnable(){
-            override def run(){
-              val current_index = FudaListHelper.getCurrentIndex(context)
-              val (cur_num,next_num,cur_order,next_order) = FudaListHelper.queryNext(context,current_index+1)
-              var buf = new mutable.ArrayBuffer[Short]()
-              var g_decoder:Option[OggVorbisDecoder] = None
-              reader.withDecodedFile(cur_num,2,(wav_file,decoder) => {
-                  buf ++= AudioHelper.readShortsFromFile(wav_file)
-                 g_decoder = Some(decoder)
-              })
-              reader.withDecodedFile(next_num,1,(wav_file,decoder) => {
-                 buf ++= AudioHelper.readShortsFromFile(wav_file)
-              })
-              println("buffer len:"+buf.length)
-              val wav = new WavBuffer(buf.toArray,g_decoder.get)
-              val audit = AudioHelper.makeAudioTrack(g_decoder.get,wav.bufferSize)
-              wav.writeToAudioTrack(audit)
-              audit.play()
-          }
-        }).start()
-        case None => Utils.messageDialog(context,Right(R.string.reader_not_found))
+        if(Globals.current_reader.isEmpty){
+          Utils.messageDialog(context,Right(R.string.reader_not_found))
+          return
         }
+        if(!Globals.decoder_thread.isEmpty){
+          Globals.decoder_thread.get.join
+        }
+        val audio_track = Globals.decoded_buffer.get.writeToAudioTrack()
+        audio_track.play()
       }
     });
   }
