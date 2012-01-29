@@ -4,6 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
+  <string name="now_playing">再生中</string>
 
   <string name="menu_restart">最初から詠み直す</string>
   <string name="menu_move">移動</string>

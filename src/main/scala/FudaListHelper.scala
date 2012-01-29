@@ -1,6 +1,7 @@
 package tami.pen.wasuramoti
 import _root_.android.content.{Context,ContentValues}
 import scala.util.Random
+import _root_.android.database.CursorIndexOutOfBoundsException
 
 object FudaListHelper{
   val PREFS_NAME="wasuramoti.pref"
@@ -19,13 +20,15 @@ object FudaListHelper{
   }
 
   def moveToFirst(context:Context){
-    val (_,_,next_index,_) = queryNext(context, 0)
-    putCurrentIndex(context,next_index)
+    queryNext(context, 0).foreach(
+      {case (_,_,first_index,_) => putCurrentIndex(context,first_index)}
+    )
   }
   def moveNext(context:Context){
     val current_index = getCurrentIndex(context)
-    val (_,_,_,next_index) = queryNext(context, current_index)
-    putCurrentIndex(context,next_index)
+    queryNext(context, current_index).foreach(
+      {case (_,_,_,next_index) => putCurrentIndex(context,next_index)}
+    )
   }
   def moveTo(context:Context,num:Int){
   }
@@ -58,18 +61,24 @@ object FudaListHelper{
     db.close()
     return(index)
   }
-  def queryNext(context:Context,index:Int):(Int,Int,Int,Int) = {
+  def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip = 0 AND read_order >= ?",Array(index.toString),null,null,"read_order ASC","2")
-    cursor.moveToFirst()
-    val simo_num = cursor.getInt(0)
-    val simo_order = cursor.getInt(1)
-    cursor.moveToNext()
-    val kami_num = cursor.getInt(0)
-    val kami_order = cursor.getInt(1)
-    cursor.close()
-    db.close()
-    return(simo_num,kami_num,simo_order,kami_order)
+    try{
+      cursor.moveToFirst()
+      val simo_num = cursor.getInt(0)
+      val simo_order = cursor.getInt(1)
+      cursor.moveToNext()
+      val kami_num = cursor.getInt(0)
+      val kami_order = cursor.getInt(1)
+      return Some((simo_num,kami_num,simo_order,kami_order))
+    }catch{
+      case e:CursorIndexOutOfBoundsException =>
+       return None
+    }finally{
+      cursor.close()
+      db.close()
+    }
   }
   def queryRandom(context:Context):Int = {
     val db = Globals.database.get.getReadableDatabase

@@ -153,7 +153,7 @@ class FudaConfActivity extends PreferenceActivity{
           val kimari = trie.traverseWithout(excl.toSeq).toList.sortWith(AllFuda.compareMusumefusahose).reduceLeft(_ + " " + _) 
           val template = getResources().getString(R.string.fudasetedit_confirm)
           val message = template.format(st.size)
-          Utils.confirmDialog(context,Left(message), () => {
+          Utils.confirmDialog(context,Left(message),_ => {
             val cv = new ContentValues()
             val db = Globals.database.get.getWritableDatabase
             cv.put("title",title)
@@ -171,7 +171,7 @@ class FudaConfActivity extends PreferenceActivity{
               adapter.insert(title,pos)
             }
             dialog.dismiss()},
-            () => {
+            _ => {
               body_view.setText(kimari)
             }
           )
@@ -207,7 +207,7 @@ class FudaConfActivity extends PreferenceActivity{
     val message = template.format(title)
     println(template)
     println(title)
-    Utils.confirmDialog(this,Left(message), () => {
+    Utils.confirmDialog(this,Left(message), _ => {
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(title))
       db.close()

@@ -37,67 +37,6 @@ object ReaderList{
       new External(context,path.replaceFirst("EXT:","").replaceFirst("/<>/","/"+Globals.READER_DIR+"/"))
     }
   }
-  abstract class Reader(context:Context,path:String){
-    def basename:String = new File(path).getName()
-    def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
-    def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
-    def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
-    def withDecodedFile(num:Int, kamisimo:Int, func:(File,OggVorbisDecoder)=>Unit){
-      val wav_file = File.createTempFile("wasuramoti",".wav",context.getCacheDir())
-      val decoder = new OggVorbisDecoder()
-      withFile(num,kamisimo,temp_file => {
-        decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-        func(wav_file,decoder)
-      })
-      wav_file.delete()
-    }
-    def existsAll():(Boolean,String) = {
-      for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
-        if(!exists(num,kamisimo)){
-          return(false, addSuffix(basename,num,kamisimo) + " not found")
-        }
-      }
-      (true,"")
-    }
-  }
-  class Asset(context:Context,path:String) extends Reader(context,path){
-    def getAssetPath(num:Int, kamisimo:Int):String = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
-    
-    override def exists(num:Int, kamisimo:Int):Boolean = {
-      try{
-        val fp = context.getAssets.open(getAssetPath(num,kamisimo))
-        fp.close()
-        true
-      }catch{
-        case e:IOException => false
-      }
-    }
-    override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
-      val temp_dir = context.getCacheDir()
-      val temp_file = File.createTempFile("wasuramoti",".ogg",temp_dir)
-      val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
-      val finstream = asset_fd.createInputStream()
-      new FileOutputStream(temp_file).getChannel().transferFrom(
-        finstream.getChannel(), 0, asset_fd.getLength())
-      func(temp_file)
-      finstream.close()
-      asset_fd.close()
-      temp_file.delete()
-    }
-  }
-  class External(context:Context,path:String) extends Reader(context,path){
-    def getFile(num:Int, kamisimo:Int):File = {
-      val dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
-      val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
-      return(file)
-    }
-    override def exists(num:Int, kamisimo:Int):Boolean = {
-      getFile(num,kamisimo).exists()
-    }
-    override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
-      func(getFile(num,kamisimo))
-    }
-  }
 }
 
 class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs){
@@ -134,5 +73,68 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     setEntries(entries)
     setEntryValues(entries)
     super.onPrepareDialogBuilder(builder)
+  }
+}
+
+
+abstract class Reader(context:Context,path:String){
+  def basename:String = new File(path).getName()
+  def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
+  def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
+  def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
+  def withDecodedFile(num:Int, kamisimo:Int, func:(File,OggVorbisDecoder)=>Unit){
+    val wav_file = File.createTempFile("wasuramoti",".wav",context.getCacheDir())
+    val decoder = new OggVorbisDecoder()
+    withFile(num,kamisimo,temp_file => {
+      decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
+      func(wav_file,decoder)
+    })
+    wav_file.delete()
+  }
+  def existsAll():(Boolean,String) = {
+    for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
+      if(!exists(num,kamisimo)){
+        return(false, addSuffix(basename,num,kamisimo) + " not found")
+      }
+    }
+    (true,"")
+  }
+}
+class Asset(context:Context,path:String) extends Reader(context,path){
+  def getAssetPath(num:Int, kamisimo:Int):String = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
+  
+  override def exists(num:Int, kamisimo:Int):Boolean = {
+    try{
+      val fp = context.getAssets.open(getAssetPath(num,kamisimo))
+      fp.close()
+      true
+    }catch{
+      case e:IOException => false
+    }
+  }
+  override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
+    val temp_dir = context.getCacheDir()
+    val temp_file = File.createTempFile("wasuramoti",".ogg",temp_dir)
+    val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
+    val finstream = asset_fd.createInputStream()
+    new FileOutputStream(temp_file).getChannel().transferFrom(
+      finstream.getChannel(), 0, asset_fd.getLength())
+    func(temp_file)
+    finstream.close()
+    asset_fd.close()
+    temp_file.delete()
+  }
+}
+class External(context:Context,path:String) extends Reader(context,path){
+  def getFile(num:Int, kamisimo:Int):File = {
+    val dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
+    val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
+    return(file)
+  }
+  override def exists(num:Int, kamisimo:Int):Boolean = {
+    getFile(num,kamisimo).exists()
+  }
+  override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
+    func(getFile(num,kamisimo))
   }
 }

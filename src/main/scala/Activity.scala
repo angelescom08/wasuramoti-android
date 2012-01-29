@@ -20,7 +20,10 @@ class WasuramotiActivity extends Activity{
   }
   override def onOptionsItemSelected(item: MenuItem) : Boolean = {
     item.getItemId match {
-      case R.id.menu_restart => println("restart")
+      case R.id.menu_restart => {
+        FudaListHelper.shuffle(getApplicationContext())
+        FudaListHelper.moveToFirst(getApplicationContext())
+      }
       case R.id.menu_move => println("move")
       case R.id.menu_fudaconf =>
         val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaConfActivity])
@@ -32,8 +35,9 @@ class WasuramotiActivity extends Activity{
     super.onResume()
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
-    Globals.current_reader = ReaderList.makeCurrentReader(getApplicationContext())
-    AudioHelper.decodeNextReadInThread(getApplicationContext())
+    val maybe_reader = ReaderList.makeCurrentReader(getApplicationContext())
+    Globals.player = maybe_reader.flatMap(
+      reader => AudioHelper.makeKarutaPlayer(getApplicationContext(),reader))
   }
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -49,15 +53,19 @@ class WasuramotiActivity extends Activity{
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setOnClickListener(new View.OnClickListener() {
       override def onClick(v:View) {
-        if(Globals.current_reader.isEmpty){
+        if(Globals.player.isEmpty){
           Utils.messageDialog(context,Right(R.string.reader_not_found))
           return
         }
-        if(!Globals.decoder_thread.isEmpty){
-          Globals.decoder_thread.get.join
+        read_button.setText(R.string.now_playing)
+        Globals.player.get.play(
+          _ => FudaListHelper.moveNext(getApplicationContext()),
+          _ => {
+            val reader = ReaderList.makeCurrentReader(getApplicationContext())
+            Globals.player = AudioHelper.makeKarutaPlayer(getApplicationContext(),reader.get)
+            //read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
         }
-        val audio_track = Globals.decoded_buffer.get.writeToAudioTrack()
-        audio_track.play()
+        )
       }
     });
   }

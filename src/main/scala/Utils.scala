@@ -17,9 +17,7 @@ object Globals {
   val ASSETS_READER_DIR="reader"
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
-  var current_reader = None:Option[ReaderList.Reader]
-  var decoder_thread = None:Option[Thread]
-  var decoded_buffer = None:Option[WavBuffer]
+  var player = None:Option[KarutaPlayer]
 }
 
 object Utils {
@@ -29,7 +27,7 @@ object Utils {
     db.setTransactionSuccessful()
     db.endTransaction
   }
-  def confirmDialog(context:Context,arg:Either[String,Int],func_yes:()=>Unit,func_no:()=>Unit = ()=>()){
+  def confirmDialog(context:Context,arg:Either[String,Int],func_yes:Unit=>Unit,func_no:Unit=>Unit=identity[Unit]){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
