@@ -30,6 +30,7 @@
       android:key="read_auto_span"
       android:title="@string/conf_read_auto_span"
       android:summary="@string/conf_read_auto_span_summary"
+      android:numeric="decimal"
       android:defaultValue="5.0"
       />
 
@@ -39,6 +40,7 @@
       android:key="wav_begin_read"
       android:title="@string/conf_wav_begin_read"
       android:summary="@string/conf_wav_begin_read_summary"
+      android:numeric="decimal"
       android:defaultValue="0.5"
       />
 
@@ -46,12 +48,14 @@
       android:key="wav_span_simokami"
       android:title="@string/conf_wav_span_simokami"
       android:summary="@string/conf_wav_span_simokami_summary"
+      android:numeric="decimal"
       android:defaultValue="1.0"
       />
     <EditTextPreference
       android:key="wav_threashold"
       android:title="@string/conf_wav_threshold"
       android:summary="@string/conf_wav_threshold_summary"
+      android:numeric="decimal"
       android:defaultValue="0.01"
       />
 
@@ -59,12 +63,14 @@
       android:key="wav_fadeout_simo"
       android:title="@string/conf_wav_fadeout_simo"
       android:summary="@string/conf_wav_fadout_simo_summary"
+      android:numeric="decimal"
       android:defaultValue="0.2"
       />
     <EditTextPreference
       android:key="wav_fadein_kami"
       android:title="@string/conf_wav_fadein_kami"
       android:summary="@string/conf_wav_fadein_kami_summary"
+      android:numeric="decimal"
       android:defaultValue="0.1"
       />
   </PreferenceCategory>

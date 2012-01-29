@@ -10,6 +10,8 @@ import _root_.android.widget.Button
 import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.lang.Runnable
 
+import _root_.java.util.{Timer,TimerTask}
+
 import scala.collection.mutable
 
 class WasuramotiActivity extends Activity{
@@ -66,10 +68,15 @@ class WasuramotiActivity extends Activity{
 
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setOnClickListener(new View.OnClickListener() {
+      var timer_autoread = None:Option[Timer]
       override def onClick(v:View) {
         if(Globals.player.isEmpty){
           Utils.messageDialog(context,Right(R.string.reader_not_found))
           return
+        }
+        if(!timer_autoread.isEmpty){
+          timer_autoread.get.cancel()
+          timer_autoread = None
         }
         val player = Globals.player.get
         if(player.is_playing){
@@ -79,14 +86,26 @@ class WasuramotiActivity extends Activity{
           }
         }else{
           read_button.setText(R.string.now_playing)
-          val refresh = new Handler()
+          val handler = new Handler()
           player.play(
             _ => FudaListHelper.moveNext(getApplicationContext()),
             _ => {
               refreshKarutaPlayer()
-              refresh.post(new Runnable(){
+              handler.post(new Runnable(){
                 override def run(){setButtonTextNormal()}
               })
+              if(Globals.prefs.get.getBoolean("read_auto",false)){
+                timer_autoread = Some(new Timer())
+                timer_autoread.get.schedule(new TimerTask(){
+                  override def run(){
+                    handler.post(new Runnable(){
+                      override def run(){onClick(v)}
+                    })
+                    timer_autoread.get.cancel()
+                    timer_autoread = None
+                  }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
+                )
+              }
           })
         }
       }
