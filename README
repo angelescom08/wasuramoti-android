@@ -4,14 +4,22 @@
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.3.4
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta.
-  Note: The packaged *.apk is compiled in Android NDK which is targetted to ARM CPU.
-        Therefore this *.apk works only on ARM CPU.
+  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM CPU.
+        Therefore this wasuramoti-*.apk works only on ARM CPU.
+
+[Credits]
+  Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [How to Install]
-  You have to allow your device to install non-Market applications.
-  On the device, go to Settings > Applications and enable Unknown sources
-  (on an Android 4.0 device, the setting is located in Settings > Security).
+  Copy wasuramoti-*.apk to SD Card or run Android machine in USB Storage mode and copy to it.
+  Run 'ES File Explorer' (or some other file explorer) and browse to the copied file.
+  Click wasuramoti-*.apk and the installation will be started.
+  Note that you have to allow installation from `Unknown sources'.
+
+  Additionally, you can install by running a command `adb install wasuramoti-*.apk'.
+  Browse following URL for further information:
   http://developer.android.com/guide/developing/device.html#setting-up
+  
 
 [Where to put .ogg file in the external storage such as SD Card]
   Make directory named `wasuramoti_reader' and make subdirectory. And then put .ogg files in it.

@@ -71,6 +71,7 @@ class WasuramotiActivity extends Activity{
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
+    PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.fudaconf,false)
     Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
     ReaderList.setDefaultReader(getApplicationContext())
     setContentView(R.layout.main)
