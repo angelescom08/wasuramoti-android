@@ -1,4 +1,4 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 
 import _root_.android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
 import _root_.android.content.{Context,ContentValues}

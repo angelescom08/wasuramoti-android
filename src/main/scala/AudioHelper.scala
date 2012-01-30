@@ -1,9 +1,9 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 
-import _root_.mita.nep.audio.OggVorbisDecoder
+import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.content.Context
-import _root_.java.io.{EOFException,File,FileInputStream,DataInputStream}
+import _root_.java.io.{File,FileInputStream}
 import _root_.java.nio.{ByteBuffer,ByteOrder}
 import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable

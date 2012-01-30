@@ -2,7 +2,7 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/category_main">
-    <tami.pen.wasuramoti.FudaSetPreference
+    <karuta.hpnpwd.wasuramoti.FudaSetPreference
       android:key="fudaset"
       android:title="@string/conf_fudaset_title"
       android:summary="@string/conf_fudaset_summary"
@@ -16,7 +16,7 @@
       android:entryValues="@array/conf_read_order_entryValues" 
       android:defaultValue="SHUFFLE"
       />
-    <tami.pen.wasuramoti.ReaderListPreference
+    <karuta.hpnpwd.wasuramoti.ReaderListPreference
       android:key="reader_path"
       android:title="@string/conf_reader_list"
       android:summary="@string/conf_reader_list_summary" />
@@ -36,6 +36,11 @@
 
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_sub">
+    <CheckBoxPreference
+      android:key="enable_lock"
+      android:title="@string/conf_enable_lock"
+      android:summary="@string/conf_enable_lock_summary"
+      />
     <EditTextPreference
       android:key="wav_begin_read"
       android:title="@string/conf_wav_begin_read"

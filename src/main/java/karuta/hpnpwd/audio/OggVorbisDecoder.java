@@ -1,4 +1,4 @@
-package mita.nep.audio;
+package karuta.hpnpwd.audio;
 
 public class OggVorbisDecoder {
   public int channels = 0;

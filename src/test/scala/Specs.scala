@@ -1,4 +1,4 @@
-import tami.pen.wasuramoti
+import karuta.hpnpwd.wasuramoti
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.Spec
 

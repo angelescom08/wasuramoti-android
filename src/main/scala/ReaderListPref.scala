@@ -1,11 +1,11 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 import _root_.android.preference.ListPreference
 import _root_.android.content.Context
 import _root_.android.util.AttributeSet
 import _root_.android.app.AlertDialog.Builder
 import _root_.android.os.Environment
 import _root_.java.io.{IOException,File,FileOutputStream}
-import _root_.mita.nep.audio.OggVorbisDecoder
+import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 object ReaderList{
   def setDefaultReader(context:Context){

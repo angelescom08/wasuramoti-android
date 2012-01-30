@@ -1,7 +1,8 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
+
 import _root_.android.content.{Context,ContentValues}
-import scala.util.Random
 import _root_.android.database.CursorIndexOutOfBoundsException
+import scala.util.Random
 
 object FudaListHelper{
   val PREFS_NAME="wasuramoti.pref"

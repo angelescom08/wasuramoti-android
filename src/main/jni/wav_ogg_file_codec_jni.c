@@ -4,7 +4,7 @@
 #include "wav_ogg_file_codec_jni.h"
 
 jint
-Java_mita_nep_audio_OggVorbisDecoder_decodeFile( JNIEnv* env,
+Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile( JNIEnv* env,
                                                   jobject thiz, jstring fin_path, jstring fout_path)
 {
   //Get the native string from javaString

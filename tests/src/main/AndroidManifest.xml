@@ -1,4 +1,4 @@
-<manifest package="tami.pen.wasuramoti.tests" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="karuta.hpnpwd.wasuramoti.tests" xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-sdk android:minSdkVersion="10"></uses-sdk>
     <application>
         <uses-library android:name="android.test.runner"></uses-library>
@@ -10,6 +10,6 @@
         </activity>
     </application>
     <instrumentation 
-    android:label="Tests" android:targetPackage="tami.pen.wasuramoti" android:name="android.test.InstrumentationTestRunner">
+    android:label="Tests" android:targetPackage="karuta.hpnpwd.wasuramoti" android:name="android.test.InstrumentationTestRunner">
 </instrumentation>
 </manifest>

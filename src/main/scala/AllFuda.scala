@@ -1,4 +1,4 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 
 object AllFuda{
   val list : Array[String] = Array(

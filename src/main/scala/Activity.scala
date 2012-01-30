@@ -1,20 +1,17 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.Activity
 import _root_.android.preference.PreferenceManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.os.{Bundle,Handler}
+import _root_.android.os.{Bundle,Handler,PowerManager}
 import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.widget.Button
-
-import _root_.mita.nep.audio.OggVorbisDecoder
 import _root_.java.lang.Runnable
-
 import _root_.java.util.{Timer,TimerTask}
 
-import scala.collection.mutable
 
 class WasuramotiActivity extends Activity{
+  var release_lock = None:Option[Unit=>Unit]
   def setButtonTextNormal(){
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
@@ -45,7 +42,7 @@ class WasuramotiActivity extends Activity{
       }
       case R.id.menu_move => println("move")
       case R.id.menu_fudaconf =>
-        val intent = new Intent(this,classOf[tami.pen.wasuramoti.FudaConfActivity])
+        val intent = new Intent(this,classOf[FudaConfActivity])
         startActivity(intent)
     }
     return true
@@ -54,6 +51,18 @@ class WasuramotiActivity extends Activity{
     super.onResume()
     setButtonTextNormal()
     refreshKarutaPlayer(true)
+    release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
+      None
+    }else{
+      val power_manager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
+      val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
+      wake_lock.acquire()
+      Some( _ => wake_lock.release ) 
+    }
+  }
+  override def onPause(){
+    super.onPause()
+    release_lock.foreach(_())
   }
 
   override def onCreate(savedInstanceState: Bundle) {

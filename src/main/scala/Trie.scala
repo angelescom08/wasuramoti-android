@@ -1,4 +1,4 @@
-package tami.pen.wasuramoti
+package karuta.hpnpwd.wasuramoti
 
 class TrieVertex{
   var char:Char = '\0'
