@@ -3,22 +3,25 @@
   android:layout_width="fill_parent" android:layout_height="fill_parent" 
   android:orientation="vertical" >
   <LinearLayout
-    android:layout_width="fill_parent" android:layout_height="wrap_content"
-    android:orientation="horizontal" >
-    <TextView
-      android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:text="@string/fudasetedit_name" />
-    <EditText android:id="@+id/fudasetedit_name"
-      android:layout_width="fill_parent" android:layout_height="wrap_content"
-      android:singleLine="true" />
-  </LinearLayout>
-  <TextView
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:text="@string/fudasetedit_text" />
-
-  <EditText android:id="@+id/fudasetedit_text"
-    android:layout_width="fill_parent" android:layout_height="200sp"
-    android:gravity="top" />
+    android:orientation="horizontal" >
+    <Button android:id="@+id/move_button_prev"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/move_button_prev" />
+    <Button android:id="@+id/move_button_next"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/move_button_next" />
+  </LinearLayout>
+  <LinearLayout
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <Button android:id="@+id/move_button_prev_ten"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/move_button_prev_ten" />
+    <Button android:id="@+id/move_button_next_ten"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/move_button_next_ten" />
+  </LinearLayout>
   <LinearLayout
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal" >

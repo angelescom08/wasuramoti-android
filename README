@@ -1,8 +1,8 @@
 [Where to put .ogg file]
-  main/assets/reader/<name>/<name>_000_2.ogg
-  main/assets/reader/<name>/<name>_001_1.ogg
-  main/assets/reader/<name>/<name>_001_2.ogg
-  main/assets/reader/<name>/<name>_002_2.ogg
+  src/main/assets/reader/<name>/<name>_000_2.ogg
+  src/main/assets/reader/<name>/<name>_001_1.ogg
+  src/main/assets/reader/<name>/<name>_001_2.ogg
+  src/main/assets/reader/<name>/<name>_002_2.ogg
   ...
 [How to compile]
 Requirements:

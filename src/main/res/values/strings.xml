@@ -68,4 +68,10 @@
 
   <string name="fudaset_title_all">全部の札</string>
   <string name="fudaset_title_one">一字札</string>
+
+  <string name="move_position_title">札移動</string>
+  <string name="move_button_prev">前の札</string>
+  <string name="move_button_next">次の札</string>
+  <string name="move_button_prev_ten">10個前の札</string>
+  <string name="move_button_next_ten">10個次の札</string>
 </resources>

@@ -4,7 +4,7 @@ import _root_.android.app.Activity
 import _root_.android.preference.PreferenceManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,PowerManager}
-import _root_.android.view.{View,Menu,MenuItem}
+import _root_.android.view.{View,Menu,MenuItem,ContextThemeWrapper}
 import _root_.android.widget.Button
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
@@ -40,7 +40,7 @@ class WasuramotiActivity extends Activity{
           refreshKarutaPlayer(true)
         })
       }
-      case R.id.menu_move => println("move")
+      case R.id.menu_move => new MovePositionDialog(this,_=>{setButtonTextNormal();refreshKarutaPlayer()}).show
       case R.id.menu_fudaconf =>
         val intent = new Intent(this,classOf[FudaConfActivity])
         startActivity(intent)
@@ -132,6 +132,6 @@ class WasuramotiActivity extends Activity{
             }},(Globals.prefs.get.getString("wav_begin_read","0.0").toDouble*1000.0).toLong)
         }
       }
-    });
+    })
   }
 }

@@ -31,8 +31,6 @@ object FudaListHelper{
       {case (_,_,_,next_index) => putCurrentIndex(context,next_index)}
     )
   }
-  def moveTo(context:Context,num:Int){
-  }
 
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = new java.lang.Integer(queryNumbersToRead(context))
@@ -82,6 +80,16 @@ object FudaListHelper{
       cursor.close()
       db.close()
     }
+  }
+  def queryIndexWithSkip(context:Context,fake_index:Int):Int = {
+    val db = Globals.database.get.getReadableDatabase
+    //val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip = 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip = 0 AND rnk = ?",Array(fake_index.toString))
+    val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip = 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip = 0 AND rnk = "+fake_index,null)
+    cursor.moveToFirst()
+    val ret = cursor.getInt(1)
+    cursor.close()
+    db.close()
+    return(ret)
   }
   def queryRandom(context:Context):Int = {
     val db = Globals.database.get.getReadableDatabase
