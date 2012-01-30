@@ -202,10 +202,7 @@ class FudaConfActivity extends PreferenceActivity{
       return
     }
     val title = adapter.getItem(pos)
-    val template = getResources().getString(R.string.fudaset_confirmdelete)
-    val message = template.format(title)
-    println(template)
-    println(title)
+    val message = getResources().getString(R.string.fudaset_confirmdelete,title)
     Utils.confirmDialog(this,Left(message), _ => {
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(title))

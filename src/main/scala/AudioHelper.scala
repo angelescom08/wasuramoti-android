@@ -60,6 +60,7 @@ object AudioHelper{
 }
 //TODO:handle stereo audio
 class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
+  val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = buffer.length
   // in milliseconds
@@ -76,6 +77,51 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
     val track = AudioHelper.makeAudioTrack(decoder,bufferSize()) 
     track.write(buffer,index_begin,index_end-index_begin)
     return(track)
+  }
+  def threasholdIndex(threashold:Double,fromEnd:Boolean):Int = {
+    val (bg,ed,step) = if(fromEnd){
+      (index_end-1,index_begin,-1)
+    }else{
+      (index_begin,index_end-1,1)
+    }
+    for( i <- bg to (ed,step) ){
+      if( scala.math.abs(buffer(i)) / max_amp > threashold ){
+        return i
+      }
+    }
+    return(ed)
+  }
+  def fade(begin:Int,end:Int){
+    if(begin == end){
+      return
+    }
+    val width = scala.math.abs(begin - end).toDouble
+    val step = if( begin < end ){ 1 } else { -1 }
+    try{
+      for( i <- begin to (end,step) ){
+        val len = scala.math.abs(i - begin).toDouble
+        val amp = len / width
+        buffer.update(i,(buffer(i)*amp).toShort)
+      }
+    }catch{
+      case e:ArrayIndexOutOfBoundsException => None
+    }
+  }
+  def trimFadeKami(){
+    val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
+    val fadelen = (Globals.prefs.get.getString("wav_fadein_kami","0.0").toDouble * decoder.rate).toInt
+    val beg = threasholdIndex(threashold,false)
+    val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
+    fade(fadebegin,beg) 
+    index_begin = fadebegin
+  }
+  def trimFadeSimo(){
+    val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
+    val fadelen = (Globals.prefs.get.getString("wav_fadeout_simo","0.0").toDouble * decoder.rate).toInt
+    val end = threasholdIndex(threashold,true)
+    val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
+    fade(end,fadeend) 
+    index_end = end
   }
 }
 
@@ -137,11 +183,15 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
           reader.withDecodedFile(simo_num,2,(wav_file,decoder) => {
              g_decoder = Some(decoder)
              val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
+             w.trimFadeSimo()
              buf ++= w.getBuffer
              simo_millsec = Some(w.audioLength)
           })
+          val ma = AudioHelper.makeSilence(Globals.prefs.get.getString("wav_span_simokami","1.0").toDouble,g_decoder.get)
+          buf ++= ma.getBuffer()
           reader.withDecodedFile(kami_num,1,(wav_file,decoder) => {
              val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
+             w.trimFadeKami()
              buf ++= w.getBuffer
           })
           wav_buffer = Some(new WavBuffer(buf.toArray,g_decoder.get))

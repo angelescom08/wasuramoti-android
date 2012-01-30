@@ -16,7 +16,7 @@ class WasuramotiActivity extends Activity{
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
   }
-  def refreshKarutaPlayer(fromProperty:Boolean=false){
+  def refreshKarutaPlayer(fromProperty:Boolean=true){
     Globals.player = (if(fromProperty){
       ReaderList.makeCurrentReader(getApplicationContext())
     }else{
@@ -37,7 +37,7 @@ class WasuramotiActivity extends Activity{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
           setButtonTextNormal()
-          refreshKarutaPlayer(true)
+          refreshKarutaPlayer()
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,_=>{setButtonTextNormal();refreshKarutaPlayer()}).show
@@ -50,7 +50,7 @@ class WasuramotiActivity extends Activity{
   override def onResume(){
     super.onResume()
     setButtonTextNormal()
-    refreshKarutaPlayer(true)
+    refreshKarutaPlayer()
     release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
       None
     }else{
@@ -110,7 +110,7 @@ class WasuramotiActivity extends Activity{
                        FudaListHelper.moveNext(getApplicationContext())
                      },
                 _ => {
-                  refreshKarutaPlayer()
+                  refreshKarutaPlayer(false)
                   handler.post(new Runnable(){
                     override def run(){setButtonTextNormal()}
                   })
