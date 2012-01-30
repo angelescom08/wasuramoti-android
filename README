@@ -1,23 +1,44 @@
-[Where to put .ogg file]
+[About]
+  App Name: Wasuramoti
+  App Version: 0.1
+  Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
+  Required OS: Android OS version >= 2.3.4
+  Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta.
+  Note: The packaged *.apk is compiled in Android NDK which is targetted to ARM CPU.
+        Therefore this *.apk works only on ARM CPU.
+
+[How to Install]
+  You have to allow your device to install non-Market applications.
+  On the device, go to Settings > Applications and enable Unknown sources
+  (on an Android 4.0 device, the setting is located in Settings > Security).
+  http://developer.android.com/guide/developing/device.html#setting-up
+
+[Where to put .ogg file in the external storage such as SD Card]
+  Make directory named `wasuramoti_reader' and make subdirectory. And then put .ogg files in it.
+  Ogg files must be named in format of <name>_%03d_%d.ogg and placed in the directory named `<name>'.
+  For example the Simo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
+    wasuramoti_reader/inaba/inaba_007_2.ogg
+
+[Where to put .ogg file inside the application]
   src/main/assets/reader/<name>/<name>_000_2.ogg
   src/main/assets/reader/<name>/<name>_001_1.ogg
   src/main/assets/reader/<name>/<name>_001_2.ogg
   src/main/assets/reader/<name>/<name>_002_2.ogg
   ...
 [How to compile]
-Requirements:
-  openjdk 6 ( or other Java JDK )
-  scala 2.9.1
-  sbt 0.11 ( A Scala-Based Simple Build Tool )
-  sbt-android-plugin 0.6.x
-  android-sdk r16
-  android-platform r10
-  android-ndk r7
+  Requirements:
+    openjdk 6 ( or other Java JDK )
+    scala 2.9.1
+    sbt 0.11 ( A Scala-Based Simple Build Tool )
+    sbt-android-plugin 0.6.x
+    android-sdk r16
+    android-platform r10
+    android-ndk r7
 
-Before doing the following command, you have to do `cd src/main/jni/libogg-*/ && ./configure && make`
-Just compile:
- $ sbt compile
-Make a package for debug: 
- $ sbt android:package-debug
-Make a package for release:
- $ sbt android:package-release
+  Before doing the following command, you have to do `cd src/main/jni/libogg-*/ && ./configure && make`
+  Just compile:
+   $ sbt compile
+  Make a package for debug: 
+   $ sbt android:package-debug
+  Make a package for release:
+   $ sbt android:package-release

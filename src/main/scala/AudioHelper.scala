@@ -160,13 +160,13 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
     }
   }
   def stop(){
-    timer_simoend.get.cancel()
-    timer_kamiend.get.cancel()
+    timer_simoend.foreach(_.cancel())
+    timer_kamiend.foreach(_.cancel())
     timer_simoend = None
     timer_kamiend = None
-    track.get.flush()
-    track.get.stop()
-    track.get.release()
+    track.foreach(_.flush())
+    track.foreach(_.stop())
+    track.foreach(_.release())
     track = None
     is_playing = false
   }
