@@ -2,7 +2,7 @@
   App Name: Wasuramoti
   App Version: 0.1
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
-  Required OS: Android OS version >= 2.3.4
+  Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta.
   Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM CPU.
         Therefore this wasuramoti-*.apk works only on ARM CPU.
