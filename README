@@ -1,6 +1,6 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.1
+  App Version: 0.2
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta.
@@ -37,7 +37,7 @@
   Make directory named `wasuramoti_reader' and make subdirectory named `inaba` or whatever.
   Then put the .ogg files in it.
   Ogg files must be named in format of <name>_%03d_%d.ogg and if the directory name is `<name>'.
-  First %03d indicates fuda number. The second %d indicate 1 for Kami-no-Ku, and 2 for Shimo-no-Ku.
+  First %03d indicates fuda number. The second %d indicates 1 for Kami-no-Ku, and 2 for Shimo-no-Ku.
   For example the Simo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
     `wasuramoti_reader/inaba/inaba_007_2.ogg'
   The <name>_000_1.ogg is optional. Because sometimes Kami-no-Ku of Joka might be concatenated in <name>_000_2.ogg.
