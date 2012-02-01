@@ -82,12 +82,13 @@ abstract class Reader(context:Context,path:String){
   def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
   def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
   def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
-  def withDecodedFile(num:Int, kamisimo:Int, func:(File,OggVorbisDecoder)=>Unit){
+  def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
     val wav_file = File.createTempFile("wasuramoti",".wav",context.getCacheDir())
     val decoder = new OggVorbisDecoder()
     withFile(num,kamisimo,temp_file => {
       decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-      func(wav_file,decoder)
+      val wav = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
+      func(wav)
     })
     wav_file.delete()
   }

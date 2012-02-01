@@ -59,7 +59,7 @@ object AudioHelper{
   }
 }
 //TODO:handle stereo audio
-class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
+class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
   val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = buffer.length
@@ -107,6 +107,7 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
       case e:ArrayIndexOutOfBoundsException => None
     }
   }
+  // fadein
   def trimFadeKami(){
     val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
     val fadelen = (Globals.prefs.get.getString("wav_fadein_kami","0.0").toDouble * decoder.rate).toInt
@@ -115,6 +116,7 @@ class WavBuffer(buffer:Array[Short],decoder:OggVorbisDecoder){
     fade(fadebegin,beg) 
     index_begin = fadebegin
   }
+  // fadeout
   def trimFadeSimo(){
     val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
     val fadelen = (Globals.prefs.get.getString("wav_fadeout_simo","0.0").toDouble * decoder.rate).toInt
@@ -129,7 +131,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   var thread = None:Option[Thread]
   startDecode()
   var wav_buffer = None:Option[WavBuffer]
-  var simo_millsec = None:Option[Long]
+  var simo_millsec = 0:Long
   var track = None:Option[AudioTrack]
   var timer_kamiend = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
@@ -150,7 +152,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
           override def run(){
             onSimoEnd()
             is_kaminoku=true
-          }},simo_millsec.get)
+          }},simo_millsec)
       timer_kamiend.get.schedule(new TimerTask(){
           override def run(){
             onKamiEnd()
@@ -160,15 +162,17 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
     }
   }
   def stop(){
-    timer_simoend.foreach(_.cancel())
-    timer_kamiend.foreach(_.cancel())
-    timer_simoend = None
-    timer_kamiend = None
-    track.foreach(_.flush())
-    track.foreach(_.stop())
-    track.foreach(_.release())
-    track = None
-    is_playing = false
+    Globals.global_lock.synchronized{
+      timer_simoend.foreach(_.cancel())
+      timer_kamiend.foreach(_.cancel())
+      timer_simoend = None
+      timer_kamiend = None
+      track.foreach(_.flush())
+      track.foreach(_.stop())
+      track.foreach(_.release())
+      track = None
+      is_playing = false
+    }
   }
   def startDecode(){ 
     Globals.global_lock.synchronized{
@@ -178,33 +182,46 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
       is_decoding = true
       val t = new Thread(new Runnable(){
         override def run(){
-          var buf = new mutable.ArrayBuffer[Short]()
+          var audio_buf = new mutable.ArrayBuffer[Short]()
           var g_decoder:Option[OggVorbisDecoder] = None
-          reader.withDecodedFile(simo_num,2,(wav_file,decoder) => {
-             g_decoder = Some(decoder)
-             val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
-             w.trimFadeSimo()
-             buf ++= w.getBuffer
-             simo_millsec = Some(w.audioLength)
+          simo_millsec = 0
+          def add_to_simo(w:WavBuffer){
+            audio_buf ++= w.getBuffer
+            simo_millsec += w.audioLength
+          }
+          val span_simokami = Globals.prefs.get.getString("wav_span_simokami","1.0").toDouble
+          lazy val ma_simokami = AudioHelper.makeSilence(span_simokami,g_decoder.get)
+          if(simo_num == 0 && reader.exists(simo_num,1)){
+            reader.withDecodedWav(simo_num, 1, wav => {
+               g_decoder = Some(wav.decoder)
+               wav.trimFadeSimo()
+               add_to_simo(wav)
+            })
+            add_to_simo(ma_simokami)
+          }
+          reader.withDecodedWav(simo_num, 2, wav => {
+             g_decoder = Some(wav.decoder)
+             wav.trimFadeSimo()
+             add_to_simo(wav)
+             if(simo_num == 0 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
+               add_to_simo(ma_simokami)
+               add_to_simo(wav)
+             }
           })
-          val ma = AudioHelper.makeSilence(Globals.prefs.get.getString("wav_span_simokami","1.0").toDouble,g_decoder.get)
-          buf ++= ma.getBuffer()
-          reader.withDecodedFile(kami_num,1,(wav_file,decoder) => {
-             val w = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
-             w.trimFadeKami()
-             buf ++= w.getBuffer
+          audio_buf ++= ma_simokami.getBuffer
+          reader.withDecodedWav(kami_num, 1, wav => {
+             wav.trimFadeKami()
+             audio_buf ++= wav.getBuffer
           })
-          wav_buffer = Some(new WavBuffer(buf.toArray,g_decoder.get))
+          wav_buffer = Some(new WavBuffer(audio_buf.toArray,g_decoder.get))
           is_decoding = false
-      }
+        }
       })
       thread = Some(t)
       t.start
     }
   }
   def waitDecode(){
-    if(!thread.isEmpty){
-      thread.get.join
-    }
+    thread.foreach(_.join())
   }
 }

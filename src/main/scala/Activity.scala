@@ -63,6 +63,7 @@ class WasuramotiActivity extends Activity{
   override def onPause(){
     super.onPause()
     release_lock.foreach(_())
+    Globals.player.foreach(_.stop())
   }
 
   override def onCreate(savedInstanceState: Bundle) {

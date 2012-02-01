@@ -38,6 +38,8 @@
   <string name="category_sub">詳細</string> 
   <string name="conf_enable_lock">画面ロック</string>
   <string name="conf_enable_lock_summary">時間経過による画面ロックを有効にする</string>
+  <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
+  <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>
   <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
   <string name="conf_wav_span_simokami">間</string>

@@ -41,6 +41,11 @@
       android:title="@string/conf_enable_lock"
       android:summary="@string/conf_enable_lock_summary"
       />
+    <CheckBoxPreference
+      android:key="read_simo_joka_twice"
+      android:title="@string/conf_read_simo_joka_twice"
+      android:summary="@string/conf_read_simo_joka_twice_summary"
+      />
     <EditTextPreference
       android:key="wav_begin_read"
       android:title="@string/conf_wav_begin_read"
