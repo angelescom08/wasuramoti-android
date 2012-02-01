@@ -12,7 +12,7 @@ object Globals {
   val TABLE_READFILTER = "readfilter"
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
-  val DATABASE_VERSION = 1
+  val DATABASE_VERSION = 2
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val global_lock = new Object()

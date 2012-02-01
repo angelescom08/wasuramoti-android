@@ -4,7 +4,22 @@ import _root_.android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
 import _root_.android.content.{Context,ContentValues}
 
 class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
+  def insertGoshoku(db:SQLiteDatabase){
+   val cv = new ContentValues()
+   Utils.withTransaction(db, () => {
+     for( (name,list) <- AllFuda.goshoku ){
+       AllFuda.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
+         cv.put("title",name)
+         cv.put("body",str)
+       }})
+       db.insert(Globals.TABLE_FUDASETS,null,cv)
+     }
+   })
+  }
   override def onUpgrade(db:SQLiteDatabase,oldv:Int,newv:Int){
+    if(newv == Globals.DATABASE_VERSION){
+      insertGoshoku(db)
+    }
   }
   override def onCreate(db:SQLiteDatabase){
      db.execSQL("CREATE TABLE "+Globals.TABLE_FUDASETS+" (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT);")
@@ -32,7 +47,6 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
          db.insert(Globals.TABLE_FUDASETS,null,cv)
        }
        })
-     
-     
+    insertGoshoku(db) 
   }
 }

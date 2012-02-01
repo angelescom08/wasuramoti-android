@@ -140,18 +140,11 @@ class FudaConfActivity extends PreferenceActivity{
         }
         val body = body_view.getText().toString()
         var pat = new Regex("[あ-ん]+")
-        val trie = CreateTrie.makeTrie(AllFuda.list)
-        var st = Set[String]()
-        for ( m <- pat.findAllIn(body) ){
-          val list = trie.traversePrefix(m)
-          st ++= list
-        }
-        if(st.isEmpty){
+        AllFuda.makeKimarijiSet(pat.findAllIn(body).toList) match {
+        case None => 
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
-        }else{
-          val excl = AllFuda.list.toSet -- st
-          val kimari = trie.traverseWithout(excl.toSeq).toList.sortWith(AllFuda.compareMusumefusahose).reduceLeft(_ + " " + _) 
-          val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st.size))
+        case Some((kimari,st_size)) =>
+          val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
           Utils.confirmDialog(context,Left(message),_ => {
             val cv = new ContentValues()
             val db = Globals.database.get.getWritableDatabase
