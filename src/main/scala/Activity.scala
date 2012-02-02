@@ -27,6 +27,7 @@ class WasuramotiActivity extends Activity{
     return true
   }
   override def onOptionsItemSelected(item: MenuItem) : Boolean = {
+    Globals.player.foreach(p=>{p.stop();p.setButtonTextByState()})
     item.getItemId match {
       case R.id.menu_shuffle => {
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
@@ -45,7 +46,7 @@ class WasuramotiActivity extends Activity{
   }
   override def onResume(){
     super.onResume()
-    Globals.player.foreach(_.setButtonTextByState)
+    Globals.player.foreach(p=>{p.stop();p.setButtonTextByState;})
     refreshKarutaPlayer()
     release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
       None
@@ -86,7 +87,6 @@ class WasuramotiActivity extends Activity{
       }))
     read_button.setOnClickListener(new View.OnClickListener() {
       var timer_autoread = None:Option[Timer]
-      var timer_start = None:Option[Timer]
       override def onClick(v:View) {
         Globals.global_lock.synchronized{
           if(Globals.player.isEmpty){
@@ -97,43 +97,31 @@ class WasuramotiActivity extends Activity{
           timer_autoread.foreach(_.cancel())
           timer_autoread = None
           
-          if(!timer_start.isEmpty){
-            timer_start.get.cancel()
-            timer_start = None
-            player.setButtonTextByState
-            return
-          }
           if(player.is_playing){
             if(!player.is_kaminoku){
               player.stop()
               player.setButtonTextByState
             }
           }else{
-            timer_start = Some(new Timer())
-            timer_start.get.schedule(new TimerTask(){
-              override def run(){
-                player.play(
-                  _ => if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
-                         FudaListHelper.moveNext(getApplicationContext())
-                       },
-                  _ => {
-                    refreshKarutaPlayer(false)
-                    if(Globals.prefs.get.getBoolean("read_auto",false)){
-                      timer_autoread = Some(new Timer())
-                      timer_autoread.get.schedule(new TimerTask(){
-                        override def run(){
-                          handler.post(new Runnable(){
-                            override def run(){onClick(v)}
-                          })
-                          timer_autoread.foreach(_.cancel())
-                          timer_autoread = None
-                        }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
-                      )
-                    }
-                })
-                timer_start.foreach(_.cancel())
-                timer_start = None
-              }},(Globals.prefs.get.getString("wav_begin_read","0.0").toDouble*1000.0).toLong)
+            player.play(
+              _ => if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
+                     FudaListHelper.moveNext(getApplicationContext())
+                   },
+              _ => {
+                refreshKarutaPlayer(false)
+                if(Globals.prefs.get.getBoolean("read_auto",false)){
+                  timer_autoread = Some(new Timer())
+                  timer_autoread.get.schedule(new TimerTask(){
+                    override def run(){
+                      handler.post(new Runnable(){
+                        override def run(){onClick(v)}
+                      })
+                      timer_autoread.foreach(_.cancel())
+                      timer_autoread = None
+                    }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
+                  )
+                }
+            })
           }
         }
       }

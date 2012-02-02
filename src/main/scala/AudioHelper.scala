@@ -129,23 +129,37 @@ class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
 
 class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:Int){
   var thread = None:Option[Thread]
-  startDecode()
   var wav_buffer = None:Option[WavBuffer]
   var simo_millsec = 0:Long
   var track = None:Option[AudioTrack]
+  var timer_start = None:Option[Timer]
   var timer_kamiend = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
   var is_playing = false
   var is_decoding = false
   var is_kaminoku = false
+  startDecode()
   def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       if(is_playing){
         return
       }
       is_playing = true
-      waitDecode()
+
       setButtonTextByState
+      timer_start = Some(new Timer())
+      timer_start.get.schedule(new TimerTask(){
+        override def run(){
+          onReallyStart(onSimoEnd,onKamiEnd)
+          timer_start.foreach(_.cancel())
+          timer_start = None
+        }},(Globals.prefs.get.getString("wav_begin_read","0.0").toDouble*1000.0).toLong)
+    }
+  }
+
+  def onReallyStart(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
+    Globals.global_lock.synchronized{
+      waitDecode()
       track = Some(wav_buffer.get.writeToAudioTrack())
       timer_simoend = Some(new Timer())
       timer_kamiend = Some(new Timer())
@@ -164,6 +178,8 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   }
   def stop(){
     Globals.global_lock.synchronized{
+      timer_start.foreach(_.cancel())
+      timer_start = None
       timer_simoend.foreach(_.cancel())
       timer_kamiend.foreach(_.cancel())
       timer_simoend = None
