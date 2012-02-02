@@ -12,10 +12,6 @@ import _root_.java.util.{Timer,TimerTask}
 
 class WasuramotiActivity extends Activity{
   var release_lock = None:Option[Unit=>Unit]
-  def setButtonTextNormal(){
-    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
-    read_button.setText(FudaListHelper.makeReadIndexMessage(getApplicationContext()))
-  }
   def refreshKarutaPlayer(fromProperty:Boolean=true){
     Globals.player = (if(fromProperty){
       ReaderList.makeCurrentReader(getApplicationContext())
@@ -36,11 +32,11 @@ class WasuramotiActivity extends Activity{
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
-          setButtonTextNormal()
+          Globals.player.foreach(_.setButtonTextByState)
           refreshKarutaPlayer()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,_=>{setButtonTextNormal();refreshKarutaPlayer()}).show
+      case R.id.menu_move => new MovePositionDialog(this,_=>{Globals.player.foreach(_.setButtonTextByState);refreshKarutaPlayer()}).show
       case R.id.menu_fudaconf =>
         val intent = new Intent(this,classOf[FudaConfActivity])
         startActivity(intent)
@@ -49,7 +45,7 @@ class WasuramotiActivity extends Activity{
   }
   override def onResume(){
     super.onResume()
-    setButtonTextNormal()
+    Globals.player.foreach(_.setButtonTextByState)
     refreshKarutaPlayer()
     release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
       None
@@ -75,8 +71,19 @@ class WasuramotiActivity extends Activity{
     Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
     ReaderList.setDefaultReader(getApplicationContext())
     setContentView(R.layout.main)
-
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
+    val handler = new Handler()
+    Globals.setButtonText = Some( arg =>
+      handler.post(new Runnable(){
+        override def run(){
+          arg match {
+            // TODO: The following way to call setText is not smart.
+            //       Are there any way to do the follwing two lines in one row ?
+            case Left(text) => read_button.setText(text)
+            case Right(id) => read_button.setText(id)
+          }
+        }
+      }))
     read_button.setOnClickListener(new View.OnClickListener() {
       var timer_autoread = None:Option[Timer]
       var timer_start = None:Option[Timer]
@@ -93,17 +100,15 @@ class WasuramotiActivity extends Activity{
           if(!timer_start.isEmpty){
             timer_start.get.cancel()
             timer_start = None
-            setButtonTextNormal()
+            player.setButtonTextByState
             return
           }
           if(player.is_playing){
             if(!player.is_kaminoku){
               player.stop()
-              setButtonTextNormal()
+              player.setButtonTextByState
             }
           }else{
-            read_button.setText(R.string.now_playing)
-            val handler = new Handler()
             timer_start = Some(new Timer())
             timer_start.get.schedule(new TimerTask(){
               override def run(){
@@ -113,9 +118,6 @@ class WasuramotiActivity extends Activity{
                        },
                   _ => {
                     refreshKarutaPlayer(false)
-                    handler.post(new Runnable(){
-                      override def run(){setButtonTextNormal()}
-                    })
                     if(Globals.prefs.get.getBoolean("read_auto",false)){
                       timer_autoread = Some(new Timer())
                       timer_autoread.get.schedule(new TimerTask(){

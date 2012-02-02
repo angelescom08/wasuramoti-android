@@ -19,6 +19,7 @@ object Globals {
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
+  var setButtonText = None:Option[Either[String,Int]=>Unit]
 }
 
 object Utils {

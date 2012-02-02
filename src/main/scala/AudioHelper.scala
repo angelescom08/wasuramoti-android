@@ -145,6 +145,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
       }
       is_playing = true
       waitDecode()
+      setButtonTextByState
       track = Some(wav_buffer.get.writeToAudioTrack())
       timer_simoend = Some(new Timer())
       timer_kamiend = Some(new Timer())
@@ -180,9 +181,10 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
         return
       }
       is_decoding = true
+      setButtonTextByState
       val t = new Thread(new Runnable(){
         override def run(){
-          var audio_buf = new mutable.ArrayBuffer[Short]()
+          val audio_buf = new mutable.ArrayBuffer[Short]()
           var g_decoder:Option[OggVorbisDecoder] = None
           simo_millsec = 0
           def add_to_simo(w:WavBuffer){
@@ -215,6 +217,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
           })
           wav_buffer = Some(new WavBuffer(audio_buf.toArray,g_decoder.get))
           is_decoding = false
+          setButtonTextByState()
         }
       })
       thread = Some(t)
@@ -223,5 +226,15 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   }
   def waitDecode(){
     thread.foreach(_.join())
+  }
+  def setButtonTextByState(){
+    Globals.setButtonText.foreach( func => 
+      func(if(is_decoding){
+        Right(R.string.now_decoding)
+      }else if(is_playing){
+        Right(R.string.now_playing)
+      }else{
+        Left(FudaListHelper.makeReadIndexMessage(context))
+      }))
   }
 }

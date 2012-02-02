@@ -5,6 +5,7 @@
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
   <string name="now_playing">再生中</string>
+  <string name="now_decoding">準備中</string>
 
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？この操作は取り消せません．</string>
