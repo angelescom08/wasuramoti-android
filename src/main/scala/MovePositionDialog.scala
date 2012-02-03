@@ -15,10 +15,13 @@ class MovePositionDialog(context:Context,doWhenOk:Unit=>Unit) extends Dialog(con
   }
   def incCurrentIndex(dx:Int){
     val n = current_index + dx
-    if( n <= 0 || n >= numbers_to_read){
-      return
+    current_index = if( n < 1 ){
+      1
+    }else if( n > numbers_to_read){
+      numbers_to_read
+    }else{
+      n
     }
-    current_index = n
     setTitleWithNum()
   }
   def setOnClick(id:Int,func:Unit=>Unit){

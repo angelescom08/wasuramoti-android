@@ -19,6 +19,9 @@ class WasuramotiActivity extends Activity{
       Globals.player.map{_.reader}
     }).flatMap(
       reader => AudioHelper.makeKarutaPlayer(getApplicationContext(),reader))
+    if(Globals.player.isEmpty){
+      Globals.setButtonText.foreach(func => func(Left(FudaListHelper.makeReadIndexMessage(getApplicationContext()))))
+    }
   }
   override def onCreateOptionsMenu(menu: Menu) : Boolean = {
     super.onCreateOptionsMenu(menu)
@@ -109,7 +112,7 @@ class WasuramotiActivity extends Activity{
                    },
               _ => {
                 refreshKarutaPlayer(false)
-                if(Globals.prefs.get.getBoolean("read_auto",false)){
+                if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
                   timer_autoread = Some(new Timer())
                   timer_autoread.get.schedule(new TimerTask(){
                     override def run(){
