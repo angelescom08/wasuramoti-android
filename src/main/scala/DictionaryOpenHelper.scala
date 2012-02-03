@@ -7,9 +7,9 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
   def insertGoshoku(db:SQLiteDatabase){
    val cv = new ContentValues()
    Utils.withTransaction(db, () => {
-     for( (name,list) <- AllFuda.goshoku ){
+     for( (name_id,list) <- AllFuda.goshoku ){
        AllFuda.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
-         cv.put("title",name)
+         cv.put("title",context.getResources().getString(name_id))
          cv.put("body",str)
        }})
        db.insert(Globals.TABLE_FUDASETS,null,cv)
@@ -41,7 +41,7 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
          R.string.fudaset_title_one -> (_.length() == 1))
        val cv = new ContentValues()
        for( (title_id,cond) <- conds ){
-         val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).reduceLeft(_+" "+_)
+         val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).foldLeft("")(_+" "+_)
          cv.put("title",context.getResources().getString(title_id))
          cv.put("body",body)
          db.insert(Globals.TABLE_FUDASETS,null,cv)

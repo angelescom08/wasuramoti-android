@@ -102,7 +102,7 @@ class FudaConfActivity extends PreferenceActivity{
     dialog.setContentView(R.layout.fudaset_edit)
     dialog.setTitle(R.string.fudasetedit_title)
     val title_view = dialog.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-    val body_view = dialog.findViewById(R.id.fudasetedit_text).asInstanceOf[EditText]
+    val body_view = dialog.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     var data_id = -1L
     if(!is_add){
       title_view.setText(orig_title) 
@@ -113,7 +113,7 @@ class FudaConfActivity extends PreferenceActivity{
       val body = cursor.getString(2)
       cursor.close()
       db.close()
-      body_view.setText(body)
+      body_view.setLocalizationText(body)
     }
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
@@ -138,7 +138,7 @@ class FudaConfActivity extends PreferenceActivity{
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
         }
-        val body = body_view.getText().toString()
+        val body = body_view.getLocalizationText()
         var pat = new Regex("[あ-ん]+")
         AllFuda.makeKimarijiSet(pat.findAllIn(body).toList) match {
         case None => 
@@ -164,7 +164,7 @@ class FudaConfActivity extends PreferenceActivity{
             }
             dialog.dismiss()},
             _ => {
-              body_view.setText(kimari)
+              body_view.setLocalizationText(kimari)
             }
           )
         }

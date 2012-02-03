@@ -31,6 +31,9 @@ class TrieVertex{
 
   def traversePrefix(str:String):Seq[String] = {
     var r = Seq[String]()
+    if(str.isEmpty){
+      return r
+    }
     this.traverseAll( (v,s) => {
         val b = str.startsWith(s) || s.startsWith(str)
         if(b && v.isLeaf){

@@ -1,80 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">わすらもち</string>
+  <string name="app_name">Wasuramoti</string>
 
   <string name="button_ok">OK</string>
-  <string name="button_cancel">キャンセル</string>
-  <string name="now_playing">再生中</string>
-  <string name="now_decoding">準備中</string>
+  <string name="button_cancel">Cancel</string>
+  <string name="now_playing">Playing</string>
+  <string name="now_decoding">Loading</string>
 
-  <string name="menu_shuffle">シャッフル</string>
-  <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？この操作は取り消せません．</string>
-  <string name="menu_move">移動</string>
-  <string name="menu_fudaconf">設定</string>
+  <string name="menu_shuffle">Shuffle</string>
+  <string name="menu_shuffle_confirm">Really Shuffle? this command cannot be canceled.</string>
+  <string name="menu_move">Move</string>
+  <string name="menu_fudaconf">Configure</string>
   <!-- CATEGORY_MAIN -->
-  <string name="category_main">メイン</string>
-  <string name="conf_fudaset_title">詠み札のセット</string>
-  <string name="conf_fudaset_summary">一字札のみ,あ札のみなど一部の札のみ詠む</string>
+  <string name="category_main">Main</string>
+  <string name="conf_fudaset_title">Sets of Fuda</string>
+  <string name="conf_fudaset_summary">Which subsets of Fuda to read.</string>
 
-  <string name="conf_read_order_title">詠む順番</string>
-  <string name="conf_read_order_summary">ランダム，シャッフルなどの詠む順番</string>
+  <string name="conf_read_order_title">Read order</string>
+  <string name="conf_read_order_summary">Rundom or shuffle.</string>
   <string-array name="conf_read_order_entries">
-    <item>シャッフル</item>
-    <item>ランダム</item>
+    <item>Shuffle</item>
+    <item>Random</item>
   </string-array>
   <string-array name="conf_read_order_entryValues">
     <item>SHUFFLE</item>
     <item>RANDOM</item>
   </string-array>
 
-  <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加する場合はSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg形式のファイルを置いて下さい</string>
+  <string name="conf_reader_list">Reader</string>
+  <string name="conf_reader_list_summary">Place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg</string>
   <!-- CATEGORY_AUTO -->
-  <string name="category_auto">連続</string>
-  <string name="conf_read_auto_title">自動詠み上げ</string>
-  <string name="conf_read_auto_summary">上の句と下の句の間で停止するかどうか</string>
-  <string name="conf_read_auto_span">詠み上げ間隔</string>
-  <string name="conf_read_auto_span_summary">何秒間停止するか</string>
+  <string name="category_auto">Auto</string>
+  <string name="conf_read_auto_title">Auto reading</string>
+  <string name="conf_read_auto_summary">Whether to stop reading between upper phase and lower phase.</string>
+  <string name="conf_read_auto_span">Interval of auto-reading</string>
+  <string name="conf_read_auto_span_summary">How many seconds to stop after upper phase.</string>
   <!-- CATEGORI_SUB -->
-  <string name="category_sub">詳細</string> 
-  <string name="conf_enable_lock">画面ロック</string>
-  <string name="conf_enable_lock_summary">時間経過による画面ロックを有効にする</string>
-  <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
-  <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
-  <string name="conf_wav_begin_read">詠み始め</string>
-  <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
-  <string name="conf_wav_span_simokami">間</string>
-  <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
-  <string name="conf_wav_threshold">閾値</string>
-  <string name="conf_wav_threshold_summary">音の強さがこれ以下の音は無音とみなす</string>
-  <string name="conf_wav_fadeout_simo">フェードアウト</string>
-  <string name="conf_wav_fadout_simo_summary">下の句のフェードアウト秒数</string>
-  <string name="conf_wav_fadein_kami">フェードイン</string>
-  <string name="conf_wav_fadein_kami_summary">上の句のフェードイン秒数</string>
+  <string name="category_sub">Detail</string> 
+  <string name="conf_enable_lock">Lock Screen</string>
+  <string name="conf_enable_lock_summary">Enable screen lock.</string>
+  <string name="conf_read_simo_joka_twice">Lower phase of 0th poem twice</string>
+  <string name="conf_read_simo_joka_twice_summary">Whether to play &lt;name&gt;_000_2.ogg twice.</string>
+  <string name="conf_wav_begin_read">Beginnig to read</string>
+  <string name="conf_wav_begin_read_summary">How many seconds to stop before reading.</string>
+  <string name="conf_wav_span_simokami">Interval</string>
+  <string name="conf_wav_span_simokami_summary">Interval between lower phase and upper phase.</string>
+  <string name="conf_wav_threshold">Threshold</string>
+  <string name="conf_wav_threshold_summary">Treat as silence if amplitude is lower than this value</string>
+  <string name="conf_wav_fadeout_simo">Fade Out</string>
+  <string name="conf_wav_fadout_simo_summary">How many seconds to fade out for lower phase.</string>
+  <string name="conf_wav_fadein_kami">Fade In</string>
+  <string name="conf_wav_fadein_kami_summary">How many seconds to fade in for upper phase</string>
 
-  <string name="fudaset_add">追加</string>
-  <string name="fudaset_delete">削除</string>
-  <string name="fudaset_edit">編集</string>
+  <string name="fudaset_add">Add</string>
+  <string name="fudaset_delete">Delete</string>
+  <string name="fudaset_edit">Edit</string>
 
-  <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
-  <string name="fudasetedit_title">札セットの追加/編集</string>
-  <string name="fudasetedit_name">名前</string>
-  <string name="fudasetedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
-  <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
-  <string name="fudasetedit_titleempty">タイトルが空白です</string>
-  <string name="fudasetedit_titleduplicated">すでに同じタイトルの札セットが存在します</string>
-  <string name="fudasetedit_setempty">決まり字に該当する札がありません</string>
-  <string name="reader_not_found">詠み手の音声ファイルがありません．</string>
+  <string name="fudaset_confirmdelete">Really delete %s ?</string>
+  <string name="fudasetedit_title">Add/Edit Fuda sets</string>
+  <string name="fudasetedit_name">Title</string>
+  <string name="fudasetedit_text">First chracters of upper phase in romanization. (e.g. asazi, koi, oo)</string>
+  <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
+  <string name="fudasetedit_titleempty">The title is empty</string>
+  <string name="fudasetedit_titleduplicated">Fuda sets with same name already exists.</string>
+  <string name="fudasetedit_setempty">Empty fuda set.</string>
+  <string name="reader_not_found">No audio file for current reader.</string>
 
-  <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
-  <string name="message_readindex_random">ランダム / %d 首</string>
+  <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
+  <string name="message_readindex_random">Random from %d</string>
 
-  <string name="fudaset_title_all">全部の札</string>
-  <string name="fudaset_title_one">一字札</string>
+  <string name="fudaset_title_all">All Fuda</string>
+  <string name="fudaset_title_one">Unique First Syllables</string>
+  <string name="fudaset_five_color_blue">Five Colors: Blue</string>
+  <string name="fudaset_five_color_pink">Five Colors: Pink</string>
+  <string name="fudaset_five_color_yellow">Five Colors: Yellow</string>
+  <string name="fudaset_five_color_green">Five Colors: Green</string>
+  <string name="fudaset_five_color_orange">Five Colors: Orange</string>
 
-  <string name="move_position_title">札移動</string>
-  <string name="move_button_prev">前の札</string>
-  <string name="move_button_next">次の札</string>
-  <string name="move_button_prev_ten">10個前の札</string>
-  <string name="move_button_next_ten">10個次の札</string>
+  <string name="move_position_title">Moving</string>
+  <string name="move_button_prev">Previous</string>
+  <string name="move_button_next">Next</string>
+  <string name="move_button_prev_ten">+ 10</string>
+  <string name="move_button_next_ten">- 10</string>
 </resources>
