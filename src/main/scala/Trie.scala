@@ -47,18 +47,23 @@ class TrieVertex{
 
   def traverseWithout(seq:Seq[String]):Seq[String] = {
     var r = Seq[String]()
+    // preprocess
+    this.flag = true
     for(s <- seq){
       traverseSingle(s, _.flag = true)
     }
+    // traverse
     this.traverseAll( (v,s) => {
       if(!v.flag){
         r ++= Seq(s)
       }
       v.flag}
     )
+    // postprocess
     for(s <- seq){
       traverseSingle(s, _.flag = false)
     }
+    this.flag = false
     return r
   }
       
