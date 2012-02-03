@@ -41,8 +41,8 @@ class WasuramotiActivity extends Activity{
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,_=>{Globals.player.foreach(_.setButtonTextByState);refreshKarutaPlayer()}).show
-      case R.id.menu_fudaconf =>
-        val intent = new Intent(this,classOf[FudaConfActivity])
+      case R.id.menu_conf =>
+        val intent = new Intent(this,classOf[ConfActivity])
         startActivity(intent)
     }
     return true
@@ -71,7 +71,7 @@ class WasuramotiActivity extends Activity{
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
-    PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.fudaconf,false)
+    PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,false)
     Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
     ReaderList.setDefaultReader(getApplicationContext())
     setContentView(R.layout.main)

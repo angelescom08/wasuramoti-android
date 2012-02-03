@@ -83,12 +83,8 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   }
 }
 
-
-class FudaConfActivity extends PreferenceActivity{
-  override def onCreate(savedInstanceState: Bundle) {
-    super.onCreate(savedInstanceState)
-    addPreferencesFromResource(R.xml.fudaconf)
-  }
+trait FudaSetTrait{
+  this:Context => 
   def getSpinnerSelected(view:View):(ArrayAdapter[String],Int) = {
     val spinner = view.getRootView().findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     val adapter = spinner.getAdapter().asInstanceOf[ArrayAdapter[String]]
@@ -204,5 +200,3 @@ class FudaConfActivity extends PreferenceActivity{
     })
   }
 }
-
-// vim: set ts=2 sw=2 et:

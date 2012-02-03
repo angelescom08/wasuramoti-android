@@ -10,7 +10,7 @@
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？この操作は取り消せません．</string>
   <string name="menu_move">移動</string>
-  <string name="menu_fudaconf">設定</string>
+  <string name="menu_conf">設定</string>
   <!-- CATEGORY_MAIN -->
   <string name="category_main">メイン</string>
   <string name="conf_fudaset_title">詠み札のセット</string>

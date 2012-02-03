@@ -10,7 +10,7 @@
   <string name="menu_shuffle">Shuffle</string>
   <string name="menu_shuffle_confirm">Really Shuffle? this command cannot be canceled.</string>
   <string name="menu_move">Move</string>
-  <string name="menu_fudaconf">Configure</string>
+  <string name="menu_conf">Configure</string>
   <!-- CATEGORY_MAIN -->
   <string name="category_main">Main</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
