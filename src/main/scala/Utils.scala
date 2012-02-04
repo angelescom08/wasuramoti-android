@@ -4,7 +4,6 @@ import _root_.android.app.AlertDialog
 import _root_.android.content.{DialogInterface,Context,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.java.io.File
-import scala.collection.Iterable
 
 object Globals {
   val TABLE_FUDASETS = "fudasets"

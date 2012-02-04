@@ -5,6 +5,7 @@ import _root_.android.os.Bundle
 import _root_.android.view.View
 import _root_.android.content.Context
 import _root_.android.preference.{Preference,PreferenceManager}
+
 class ConfActivity extends PreferenceActivity with FudaSetTrait{
   override def onCreate(savedInstanceState: Bundle) {
     val context = this

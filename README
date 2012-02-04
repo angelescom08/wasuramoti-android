@@ -11,7 +11,9 @@
   Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [License]
-  This software is licensed under BSD 3-Clause License as follows:
+  This software open source software, and licensed under BSD 3-Clause License.
+  You can download the source code from http://sourceforge.net/projects/wasuramoti-andr/
+  The licence is as follows:
 
   Copyright (c) 2012, Haruhiro Yoshimoto
   All rights reserved.
@@ -36,8 +38,9 @@
 [Where to put .ogg file in the external storage such as SD Card]
   Make directory named `wasuramoti_reader' and make subdirectory named `inaba` or whatever.
   Then put the .ogg files in it.
-  Ogg files must be named in format of <name>_%03d_%d.ogg and if the directory name is `<name>'.
-  First %03d indicates fuda number. The second %d indicates 1 for Kami-no-Ku, and 2 for Shimo-no-Ku.
+  Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
+  First %03d indicates fuda number(refer to AllFuda.scala).
+  The second %d indicates 1 for Kami-no-Ku(upper phrase), and 2 for Shimo-no-Ku(lower phrase).
   For example the Simo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
     `wasuramoti_reader/inaba/inaba_007_2.ogg'
   The <name>_000_1.ogg is optional. Because sometimes Kami-no-Ku of Joka might be concatenated in <name>_000_2.ogg.
@@ -60,7 +63,7 @@
     android-platform r7
     android-ndk r7
 
-  Before executing the following command, you have to do `cd src/main/jni/libogg-*/ && ./configure && make`
+  Before executing the following command, you have to execute `cd src/main/jni/libogg-*/ && ./configure && make`
   Just compile:
    $ sbt compile
   Make a *.apk package for debug: 

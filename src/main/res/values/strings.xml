@@ -42,7 +42,7 @@
   <string name="conf_read_simo_joka_twice">Lower phase of 0th poem twice</string>
   <string name="conf_read_simo_joka_twice_summary">Whether to play &lt;name&gt;_000_2.ogg twice.</string>
   <string name="conf_wav_begin_read">Beginnig to read</string>
-  <string name="conf_wav_begin_read_summary">How many seconds to stop before reading.</string>
+  <string name="conf_wav_begin_read_summary">How many seconds to wait before reading.</string>
   <string name="conf_wav_span_simokami">Interval</string>
   <string name="conf_wav_span_simokami_summary">Interval between lower phase and upper phase.</string>
   <string name="conf_wav_threshold">Threshold</string>
