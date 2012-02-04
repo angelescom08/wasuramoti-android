@@ -8,5 +8,8 @@
             android:layout_height="fill_parent"
             android:text="Push Here" 
             android:textSize="36dp"
+            android:onClick="onMainButtonClick"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
             />
 </LinearLayout>

@@ -30,6 +30,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
             ed.commit
           }
           PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,true)
+          ReaderList.setDefaultReader(getApplicationContext())
           finish()
         })
         return false

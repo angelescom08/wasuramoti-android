@@ -52,7 +52,7 @@ object Romanization{
     ).foldLeft("")(_+_)
   }
   def roma_to_jap(str:String):String = {
-    pat_roma.findAllIn(str).map(_.toString).map( x =>
+    pat_roma.findAllIn(str.toLowerCase).map(_.toString).map( x =>
       roma_to_jap.find({case (roma,jap) => roma == x }) match {
         case Some((roma,jap)) => jap
         case None => " "

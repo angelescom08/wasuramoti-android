@@ -10,7 +10,7 @@ import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
 
 
-class WasuramotiActivity extends Activity{
+class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
   def refreshKarutaPlayer(fromProperty:Boolean=true){
     Globals.player = (if(fromProperty){
@@ -88,46 +88,49 @@ class WasuramotiActivity extends Activity{
           }
         }
       }))
-    read_button.setOnClickListener(new View.OnClickListener() {
-      var timer_autoread = None:Option[Timer]
-      override def onClick(v:View) {
-        Globals.global_lock.synchronized{
-          if(Globals.player.isEmpty){
-            Utils.messageDialog(context,Right(R.string.reader_not_found))
-            return
-          }
-          val player = Globals.player.get
-          timer_autoread.foreach(_.cancel())
-          timer_autoread = None
-          
-          if(player.is_playing){
-            if(!player.is_kaminoku){
-              player.stop()
-              player.setButtonTextByState
-            }
-          }else{
-            player.play(
-              _ => if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
-                     FudaListHelper.moveNext(getApplicationContext())
-                   },
-              _ => {
-                refreshKarutaPlayer(false)
-                if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
-                  timer_autoread = Some(new Timer())
-                  timer_autoread.get.schedule(new TimerTask(){
-                    override def run(){
-                      handler.post(new Runnable(){
-                        override def run(){onClick(v)}
-                      })
-                      timer_autoread.foreach(_.cancel())
-                      timer_autoread = None
-                    }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
-                  )
-                }
-            })
-          }
-        }
+  }
+}
+
+trait MainButtonTrait{
+  self:WasuramotiActivity =>
+  def onMainButtonClick(v:View) {
+    Globals.global_lock.synchronized{
+    val handler = new Handler()
+    var timer_autoread = None:Option[Timer]
+      if(Globals.player.isEmpty){
+        Utils.messageDialog(self,Right(R.string.reader_not_found))
+        return
       }
-    })
+      val player = Globals.player.get
+      timer_autoread.foreach(_.cancel())
+      timer_autoread = None
+      
+      if(player.is_playing){
+        if(!player.is_kaminoku){
+          player.stop()
+          player.setButtonTextByState
+        }
+      }else{
+        player.play(
+          _ => if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
+                 FudaListHelper.moveNext(self.getApplicationContext())
+               },
+          _ => {
+            self.refreshKarutaPlayer(false)
+            if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
+              timer_autoread = Some(new Timer())
+              timer_autoread.get.schedule(new TimerTask(){
+                override def run(){
+                  handler.post(new Runnable(){
+                    override def run(){onMainButtonClick(v)}
+                  })
+                  timer_autoread.foreach(_.cancel())
+                  timer_autoread = None
+                }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
+              )
+            }
+        })
+      }
+    }
   }
 }
