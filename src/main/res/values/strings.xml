@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="digits">0123456789</string>
   <string name="app_name">Wasuramoti</string>
 
   <string name="button_ok">OK</string>
@@ -10,6 +11,7 @@
   <string name="menu_shuffle">Shuffle</string>
   <string name="menu_shuffle_confirm">Really shuffle and restart from beginning?</string>
   <string name="menu_move">Move</string>
+  <string name="menu_timer">Timer</string>
   <string name="menu_conf">Configure</string>
   <!-- CATEGORY_MAIN -->
   <string name="category_main">Main</string>
@@ -91,4 +93,7 @@
   <string name="move_button_prev_ten">- 10</string>
   <string name="move_button_next_ten">+ 10</string>
 
+  <string name="timer_minutes_elapsed">minutes elapsed</string>
+  <string name="timer_play_sound">Play Sound</string>
+  <string name="timer_start_button">Start Timer</string>
 </resources>

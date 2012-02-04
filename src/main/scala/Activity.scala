@@ -41,9 +41,8 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,_=>{Globals.player.foreach(_.setButtonTextByState);refreshKarutaPlayer()}).show
-      case R.id.menu_conf =>
-        val intent = new Intent(this,classOf[ConfActivity])
-        startActivity(intent)
+      case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
+      case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
     }
     return true
   }

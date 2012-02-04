@@ -10,6 +10,7 @@
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
   <string name="menu_move">移動</string>
+  <string name="menu_timer">タイマー</string>
   <string name="menu_conf">設定</string>
   <!-- CATEGORY_MAIN -->
   <string name="category_main">メイン</string>
@@ -91,4 +92,7 @@
   <string name="move_button_prev_ten">10個前の札</string>
   <string name="move_button_next_ten">10個次の札</string>
 
+  <string name="timer_minutes_elapsed">分経過しました</string>
+  <string name="timer_play_sound">音を鳴らす</string>
+  <string name="timer_start_button">タイマー開始</string>
 </resources>
