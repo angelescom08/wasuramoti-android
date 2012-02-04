@@ -2,7 +2,5 @@
 * Able to set auto lock period: Default About 5 minutes ?
 * Able to read stereo audio file
 * Able to change style / theme
-* Timer mode (13min, 15min)
 * Fuda-otoshi mode
-* write link to Sorceforge.net in README
-
+* Able to change timer sound.

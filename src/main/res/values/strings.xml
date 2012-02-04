@@ -96,5 +96,5 @@
   <string name="timer_play_sound">Play Sound</string>
   <string name="timer_start_button">Start Timer</string>
   <string name="timer_cancel_button">Cancel Timer</string>
-  <string name="timers_remaining">Remaining Timers</string>
+  <string name="timers_remaining">Timers</string>
 </resources>

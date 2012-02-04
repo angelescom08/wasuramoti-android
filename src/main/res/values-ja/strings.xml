@@ -96,5 +96,5 @@
   <string name="timer_play_sound">音を鳴らす</string>
   <string name="timer_start_button">タイマー開始</string>
   <string name="timer_cancel_button">タイマーキャンセル</string>
-  <string name="timers_remaining">残タイマー</string>
+  <string name="timers_remaining">タイマー</string>
 </resources>
