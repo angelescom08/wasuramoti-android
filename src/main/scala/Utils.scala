@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.AlertDialog
+import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
 import _root_.android.content.{DialogInterface,Context,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.java.io.File
@@ -19,6 +19,8 @@ object Globals {
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
   var setButtonText = None:Option[Either[String,Int]=>Unit]
+  var alarm_manager = None:Option[AlarmManager]
+  var notify_manager = None:Option[NotificationManager]
 }
 
 object Utils {
