@@ -245,7 +245,8 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   }
   def setButtonTextByState(){
     Globals.setButtonText.foreach( func => 
-      func(if(is_decoding){
+      func(
+      if(is_decoding){
         Right(R.string.now_decoding)
       }else if(is_playing){
         Right(R.string.now_playing)

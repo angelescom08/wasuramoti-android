@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="digits">0123456789</string>
   <string name="app_name">Wasuramoti</string>
 
   <string name="button_ok">OK</string>
@@ -96,4 +95,6 @@
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_play_sound">Play Sound</string>
   <string name="timer_start_button">Start Timer</string>
+  <string name="timer_cancel_button">Cancel Timer</string>
+  <string name="timers_remaining">Remaining Timers</string>
 </resources>

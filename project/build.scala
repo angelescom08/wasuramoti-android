@@ -26,6 +26,7 @@ object General {
       -keep class scala.Either
       -keep class scala.Option
       -keep class scala.Tuple2
+      -keep class scala.Tuple3
       -keep class scala.Tuple4
       -keep class scala.collection.Seq
       -keep class scala.collection.immutable.List

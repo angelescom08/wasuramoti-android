@@ -19,6 +19,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       Globals.player.map{_.reader}
     }).flatMap(
       reader => AudioHelper.makeKarutaPlayer(getApplicationContext(),reader))
+    // TODO: the following 'setButtonText' is unnecessary and want's to combine with 'setButtonTextByState'
     if(Globals.player.isEmpty){
       Globals.setButtonText.foreach(func => func(Left(FudaListHelper.makeReadIndexMessage(getApplicationContext()))))
     }
@@ -79,6 +80,10 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
+          if(!Globals.notify_timers.isEmpty){
+            read_button.setText((Utils.makeTimerText(context)))
+            return
+          }
           arg match {
             // TODO: The following way to call setText is not smart.
             //       Is there any way to do the follwing two lines in one row ?
