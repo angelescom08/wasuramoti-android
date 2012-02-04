@@ -84,5 +84,8 @@
       android:defaultValue="0.1"
       />
   </PreferenceCategory>
-
+  <PreferenceCategory android:title="@string/category_init">
+    <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
+    <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
+  </PreferenceCategory>
 </PreferenceScreen>

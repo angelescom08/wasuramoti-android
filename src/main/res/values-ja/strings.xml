@@ -8,7 +8,7 @@
   <string name="now_decoding">準備中</string>
 
   <string name="menu_shuffle">シャッフル</string>
-  <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？この操作は取り消せません．</string>
+  <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
   <string name="menu_move">移動</string>
   <string name="menu_conf">設定</string>
   <!-- CATEGORY_MAIN -->
@@ -51,6 +51,14 @@
   <string name="conf_wav_fadout_simo_summary">下の句のフェードアウト秒数</string>
   <string name="conf_wav_fadein_kami">フェードイン</string>
   <string name="conf_wav_fadein_kami_summary">上の句のフェードイン秒数</string>
+  <!-- CATEGORY_CLEAR -->
+  <string name="category_init">初期化</string>
+  <string name="conf_init_fudaset">札セットの初期化</string>
+  <string name="conf_init_fudaset_summary">全ての札セットをインストール時の状態に戻す</string>
+  <string name="confirm_init_fudaset">本当に札セットを全て初期化しますか？ </string>
+  <string name="conf_init_preference">設定の初期化</string>
+  <string name="conf_init_preference_summary">札セット以外の設定を全て初期化</string>
+  <string name="confirm_init_preference">本当に札セット以外の設定を全て初期化しますか？</string>
 
   <string name="fudaset_add">追加</string>
   <string name="fudaset_delete">削除</string>

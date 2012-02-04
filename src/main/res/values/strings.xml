@@ -8,7 +8,7 @@
   <string name="now_decoding">Loading</string>
 
   <string name="menu_shuffle">Shuffle</string>
-  <string name="menu_shuffle_confirm">Really Shuffle? this command cannot be canceled.</string>
+  <string name="menu_shuffle_confirm">Really shuffle and restart from beginning?</string>
   <string name="menu_move">Move</string>
   <string name="menu_conf">Configure</string>
   <!-- CATEGORY_MAIN -->
@@ -35,7 +35,7 @@
   <string name="conf_read_auto_summary">Whether to stop reading between upper phase and lower phase.</string>
   <string name="conf_read_auto_span">Interval of auto-reading</string>
   <string name="conf_read_auto_span_summary">How many seconds to stop after upper phase.</string>
-  <!-- CATEGORI_SUB -->
+  <!-- CATEGORY_SUB -->
   <string name="category_sub">Detail</string> 
   <string name="conf_enable_lock">Lock Screen</string>
   <string name="conf_enable_lock_summary">Enable screen lock.</string>
@@ -51,6 +51,14 @@
   <string name="conf_wav_fadout_simo_summary">How many seconds to fade out for lower phase.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in for upper phase</string>
+  <!-- CATEGORY_CLEAR -->
+  <string name="category_init">Initialize</string>
+  <string name="conf_init_fudaset">Initialize Fudasets</string>
+  <string name="conf_init_fudaset_summary">Initialize all the Fudasets</string>
+  <string name="confirm_init_fudaset">Really Initialize all the Fudasets?</string>
+  <string name="conf_init_preference">Initialize Config</string>
+  <string name="conf_init_preference_summary">Initialize all the config except Fudasets</string>
+  <string name="confirm_init_preference">Really Initialize all the config except Fudasets?</string>
 
   <string name="fudaset_add">Add</string>
   <string name="fudaset_delete">Delete</string>

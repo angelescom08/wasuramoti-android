@@ -82,7 +82,7 @@ class WasuramotiActivity extends Activity{
         override def run(){
           arg match {
             // TODO: The following way to call setText is not smart.
-            //       Are there any way to do the follwing two lines in one row ?
+            //       Is there any way to do the follwing two lines in one row ?
             case Left(text) => read_button.setText(text)
             case Right(id) => read_button.setText(id)
           }

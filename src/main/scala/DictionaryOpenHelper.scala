@@ -3,22 +3,46 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
 import _root_.android.content.{Context,ContentValues}
 
-class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
-  def insertGoshoku(db:SQLiteDatabase){
-   val cv = new ContentValues()
-   Utils.withTransaction(db, () => {
-     for( (name_id,list) <- AllFuda.goshoku ){
-       AllFuda.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
-         cv.put("title",context.getResources().getString(name_id))
-         cv.put("body",str)
-       }})
-       db.insert(Globals.TABLE_FUDASETS,null,cv)
-     }
-   })
+object DbUtils{
+  def initializeFudaSets(context:Context,db:SQLiteDatabase,delete_all:Boolean=false){
+    if(delete_all){
+      db.delete(Globals.TABLE_FUDASETS,"1",null)
+    }
+    insertInits(context,db)
+    insertGoshoku(context,db)
   }
+  def insertGoshoku(context:Context,db:SQLiteDatabase){
+    val cv = new ContentValues()
+    Utils.withTransaction(db, () => {
+      for( (name_id,list) <- AllFuda.goshoku ){
+        AllFuda.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
+          cv.put("title",context.getResources().getString(name_id))
+          cv.put("body",str)
+        }})
+        db.insert(Globals.TABLE_FUDASETS,null,cv)
+      }
+    })
+  }
+  def insertInits(context:Context,db:SQLiteDatabase){
+    Utils.withTransaction(db, () => {
+      val conds = Array[(Int,(String => Boolean))](
+        R.string.fudaset_title_all -> (_ => true),
+        R.string.fudaset_title_one -> (_.length() == 1))
+      val cv = new ContentValues()
+      for( (title_id,cond) <- conds ){
+        val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).foldLeft("")(_+" "+_)
+        cv.put("title",context.getResources().getString(title_id))
+        cv.put("body",body)
+        db.insert(Globals.TABLE_FUDASETS,null,cv)
+      }
+      })
+  }
+}
+
+class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
   override def onUpgrade(db:SQLiteDatabase,oldv:Int,newv:Int){
     if(newv == Globals.DATABASE_VERSION){
-      insertGoshoku(db)
+      DbUtils.insertGoshoku(context,db)
     }
   }
   override def onCreate(db:SQLiteDatabase){
@@ -35,18 +59,6 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
          db.insert(Globals.TABLE_FUDALIST,null,cv)
        }
        })
-     Utils.withTransaction(db, () => {
-       val conds = Array[(Int,(String => Boolean))](
-         R.string.fudaset_title_all -> (_ => true),
-         R.string.fudaset_title_one -> (_.length() == 1))
-       val cv = new ContentValues()
-       for( (title_id,cond) <- conds ){
-         val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).foldLeft("")(_+" "+_)
-         cv.put("title",context.getResources().getString(title_id))
-         cv.put("body",body)
-         db.insert(Globals.TABLE_FUDASETS,null,cv)
-       }
-       })
-    insertGoshoku(db) 
+    DbUtils.initializeFudaSets(context,db)
   }
 }
