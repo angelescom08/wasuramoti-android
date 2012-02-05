@@ -1,6 +1,9 @@
+keystore
+
 syntax: glob
 *.class
 *.so
+*.apk
 target/*
 src/main/assets/*
 obj/*
@@ -14,3 +17,4 @@ src/main/jni/libogg-*/src/.deps/*
 src/main/jni/libogg-*/src/.libs/*
 src/main/jni/libogg-*/src/*.{o,lo,la}
 src/main/jni/libogg-*/src/test_*
+

@@ -1,11 +1,11 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.5
+  App Version: 0.5.1
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta(Competitive Karuta).
-  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM CPU.
-        Therefore this wasuramoti-*.apk works only on ARM CPU.
+  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM,ARM-v7a,x86 CPU.
+        Therefore this wasuramoti-*.apk only works on those CPU's.
 
 [Credits]
   Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
