@@ -4,3 +4,5 @@
 * Able to change style / theme
 * Fuda-otoshi mode
 * Able to change timer sound.
+* Show detail of CPU from Android.os.Build when cannot load libvorbis.so
+* Able to read .wav file in case cannot load libvorbis.so

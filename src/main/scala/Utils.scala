@@ -66,7 +66,7 @@ object Utils {
       }).create.show()
 
   }
-  def messageDialog(context:Context,arg:Either[String,Int]){
+  def messageDialog(context:Context,arg:Either[String,Int],func_done:Unit=>Unit=identity[Unit]){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
@@ -74,6 +74,7 @@ object Utils {
     }
     builder.setMessage(str).setPositiveButton("OK",new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
+          func_done()
         }
       }).create.show()
   }

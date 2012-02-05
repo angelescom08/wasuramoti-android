@@ -8,6 +8,7 @@ import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.widget.Button
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
+import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
@@ -49,6 +50,11 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   }
   override def onResume(){
     super.onResume()
+    // returned onCreate before loading preference
+    if( Globals.prefs.isEmpty ){
+      return
+    }
+    
     Globals.player.foreach(p=>{p.stop();p.setButtonTextByState;})
     refreshKarutaPlayer()
     release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
@@ -68,6 +74,14 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
     super.onCreate(savedInstanceState)
+
+    //try loading 'libvorbis.so'
+    val decoder = new OggVorbisDecoder()
+    if(!OggVorbisDecoder.library_loaded){
+      Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
+      return
+    }
+
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
