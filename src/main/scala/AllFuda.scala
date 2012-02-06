@@ -61,7 +61,7 @@ object AllFuda{
     }else{
       val excl = AllFuda.list.toSet -- st
       val kimari = trie.traverseWithout(excl.toSeq).toList
-        .sortWith(AllFuda.compareMusumefusahose).foldLeft("")(_ + " " + _) 
+        .sortWith(AllFuda.compareMusumefusahose).mkString(" ")
       Some((kimari,st.size))
     }
   }

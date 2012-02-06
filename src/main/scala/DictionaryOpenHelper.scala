@@ -30,7 +30,7 @@ object DbUtils{
         R.string.fudaset_title_one -> (_.length() == 1))
       val cv = new ContentValues()
       for( (title_id,cond) <- conds ){
-        val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).foldLeft("")(_+" "+_)
+        val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).mkString(" ")
         cv.put("title",context.getResources().getString(title_id))
         cv.put("body",body)
         db.insert(Globals.TABLE_FUDASETS,null,cv)

@@ -31,17 +31,17 @@ object Utils {
   def makeTimerText(context:Context):String = {
      val nt = Globals.notify_timers
      var title = context.getResources.getString(R.string.timers_remaining)
-       nt.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v1.getExtras.getLong("limit_millis")}.map{case (k,v) =>
-         val millis = v.getExtras.getLong("limit_millis")
-         val df = new SimpleDateFormat(
-           if( millis - System.currentTimeMillis() < 1000 * 60 * 60 * 24){
-             "HH:mm"
-           }else{
-             "MM/dd HH:mm"
-           }
-         )
-         df.format(new Date(millis))
-       }.foldLeft(title)(_+"\n"+_)
+     nt.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v1.getExtras.getLong("limit_millis")}.map{case (k,v) =>
+       val millis = v.getExtras.getLong("limit_millis")
+       val df = new SimpleDateFormat(
+         if( millis - System.currentTimeMillis() < 1000 * 60 * 60 * 24){
+           "HH:mm"
+         }else{
+           "MM/dd HH:mm"
+         }
+       )
+       df.format(new Date(millis))
+     }.foldLeft(title)(_+"\n"+_)
   }
   def withTransaction(db:SQLiteDatabase,func:()=>Unit){
     db.beginTransaction()
