@@ -6,6 +6,7 @@ import _root_.android.content.{Context,DialogInterface}
 import _root_.android.os.Bundle
 import _root_.android.preference.DialogPreference
 import _root_.android.preference.PreferenceActivity
+import _root_.android.text.TextUtils
 import _root_.android.util.AttributeSet
 import _root_.android.view.View
 import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText}
@@ -33,7 +34,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       cursor.close()
       db.close()
       var haveto_read = Set[String]()
-      if(! Utils.stringIsEmpty(body)){
+      if(! TextUtils.isEmpty(body)){
         val trie = CreateTrie.makeTrie(AllFuda.list)
         for( s <- body.split(" ") ){
           val ss = trie.traversePrefix(s).toSet
@@ -114,7 +115,7 @@ trait FudaSetTrait{
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val title = title_view.getText().toString()
-        if(Utils.stringIsEmpty(title)){
+        if(TextUtils.isEmpty(title)){
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
           return()
         }

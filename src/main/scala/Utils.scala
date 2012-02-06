@@ -28,10 +28,6 @@ object Globals {
 }
 
 object Utils {
-  // java.lang.String.isEmpty() requires API Level 9
-  def stringIsEmpty(str:String):Boolean = {
-    str.length() == 0
-  }
   def makeTimerText(context:Context):String = {
      val nt = Globals.notify_timers
      var title = context.getResources.getString(R.string.timers_remaining)

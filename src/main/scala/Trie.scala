@@ -1,4 +1,5 @@
 package karuta.hpnpwd.wasuramoti
+import _root_.android.text.TextUtils
 
 class TrieVertex{
   var char:Char = '\0'
@@ -31,7 +32,7 @@ class TrieVertex{
 
   def traversePrefix(str:String):Seq[String] = {
     var r = Seq[String]()
-    if(Utils.stringIsEmpty(str)){
+    if(TextUtils.isEmpty(str)){
       return r
     }
     this.traverseAll( (v,s) => {
