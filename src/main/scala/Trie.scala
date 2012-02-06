@@ -31,7 +31,7 @@ class TrieVertex{
 
   def traversePrefix(str:String):Seq[String] = {
     var r = Seq[String]()
-    if(str.isEmpty){
+    if(Utils.stringIsEmpty(str)){
       return r
     }
     this.traverseAll( (v,s) => {

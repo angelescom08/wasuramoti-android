@@ -33,7 +33,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       cursor.close()
       db.close()
       var haveto_read = Set[String]()
-      if(! body.isEmpty){
+      if(! Utils.stringIsEmpty(body)){
         val trie = CreateTrie.makeTrie(AllFuda.list)
         for( s <- body.split(" ") ){
           val ss = trie.traversePrefix(s).toSet
@@ -114,7 +114,7 @@ trait FudaSetTrait{
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val title = title_view.getText().toString()
-        if(title.isEmpty){
+        if(Utils.stringIsEmpty(title)){
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
           return()
         }
