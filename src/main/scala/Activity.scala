@@ -13,13 +13,9 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
-  def refreshKarutaPlayer(){
-    Globals.player = ReaderList.makeCurrentReader(getApplicationContext()).flatMap(
-      reader => AudioHelper.makeKarutaPlayer(getApplicationContext(),reader))
-    // TODO: the following 'setButtonText' is unnecessary and want's to combine with 'setButtonTextByState'
-    if(Globals.player.isEmpty){
-      Globals.setButtonText.foreach(func => func(Left(FudaListHelper.makeReadIndexMessage(getApplicationContext()))))
-    }
+  def refreshKarutaPlayer(force:Boolean = false){
+    Globals.player = AudioHelper.refreshKarutaPlayer(getApplicationContext(),Globals.player,force)
+    Utils.setButtonTextByState(getApplicationContext())
   }
   override def onCreateOptionsMenu(menu: Menu) : Boolean = {
     super.onCreateOptionsMenu(menu)
@@ -28,17 +24,17 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     return true
   }
   override def onOptionsItemSelected(item: MenuItem) : Boolean = {
-    Globals.player.foreach(p=>{p.stop();p.setButtonTextByState()})
+    Globals.player.foreach(_.stop())
+    Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
-          Globals.player.foreach(_.setButtonTextByState)
           refreshKarutaPlayer()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,_=>{Globals.player.foreach(_.setButtonTextByState);refreshKarutaPlayer()}).show
+      case R.id.menu_move => new MovePositionDialog(this,_=>refreshKarutaPlayer()).show
       case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
     }
@@ -51,7 +47,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       return
     }
     
-    Globals.player.foreach(p=>{p.stop();p.setButtonTextByState;})
+    Globals.player.foreach{_.stop()}
     refreshKarutaPlayer()
     release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
       None
@@ -91,10 +87,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
-          if(!Globals.notify_timers.isEmpty){
-            read_button.setText((Utils.makeTimerText(context)))
-            return
-          }
           arg match {
             // TODO: The following way to call setText is not smart.
             //       Is there any way to do the follwing two lines in one row ?
@@ -120,19 +112,23 @@ trait MainButtonTrait{
       timer_autoread.foreach(_.cancel())
       timer_autoread = None
 
-      if(player.is_playing){
+      if(Globals.is_playing){
         if(!player.is_kaminoku){
           player.stop()
-          player.setButtonTextByState
+          Utils.setButtonTextByState(self.getApplicationContext())
         }
       }else{
         player.play(
           identity[Unit],
           _ => {
-            if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
+            val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
+            if(is_shuffle){ 
               FudaListHelper.moveNext(self.getApplicationContext())
             }
-            self.refreshKarutaPlayer()
+            // In random mode, there is a possobility that same pairs of fuda are read in a row.
+            // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
+            // Therefore we give force flag to true for refreshKarutaPlayer.
+            self.refreshKarutaPlayer(!is_shuffle) 
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){

@@ -27,6 +27,7 @@ object Globals {
   var alarm_manager = None:Option[AlarmManager]
   var notify_manager = None:Option[NotificationManager]
   var progress_dialog = None:Option[ProgressDialogWithHandler]
+  var is_playing = false
 }
 
 class ProgressDialogWithHandler(context:Context,handler:Handler) extends ProgressDialog(context){
@@ -103,6 +104,17 @@ object Utils {
         walkDir(i,depth - 1,func)
       }
     }
+  }
+  def setButtonTextByState(context:Context){
+    Globals.setButtonText.foreach( func => 
+      func(
+      if(Globals.is_playing){
+        Right(R.string.now_playing)
+      }else if(!Globals.notify_timers.isEmpty){
+        Left(Utils.makeTimerText(context))
+      }else{
+        Left(FudaListHelper.makeReadIndexMessage(context))
+      }))
   }
 }
 

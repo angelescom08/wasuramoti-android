@@ -10,19 +10,32 @@ import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable
 
 object AudioHelper{
-  def makeKarutaPlayer(context:Context,reader:Reader):Option[KarutaPlayer] = {
+  def refreshKarutaPlayer(context:Context,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
+    val maybe_reader = ReaderList.makeCurrentReader(context)
+    if(maybe_reader.isEmpty){
+      return None
+    }
     val current_index = FudaListHelper.getCurrentIndex(context)
-    if("RANDOM" == Globals.prefs.get.getString("read_order",null)){
+    val num = if("RANDOM" == Globals.prefs.get.getString("read_order",null)){
       val cur_num = Globals.player match {
         case Some(player) => player.kami_num
         case None => 0
       }
       val next_num = FudaListHelper.queryRandom(context)
-      Some(new KarutaPlayer(context,reader,cur_num,next_num))
+      Some(cur_num,next_num)
     }else{
-      FudaListHelper.queryNext(context,current_index).map(
-        {case (cur_num,next_num,_,_) => new KarutaPlayer(context,reader,cur_num,next_num)}
-      )
+      FudaListHelper.queryNext(context,current_index).map{
+        case (cur_num,next_num,_,_) => (cur_num,next_num)
+      }
+    }
+    num.flatMap{case(cur_num,next_num) =>
+      if(force || old_player.isEmpty || old_player.get.reader.path != maybe_reader.get.path || 
+        old_player.get.simo_num != cur_num || old_player.get.kami_num != next_num
+      ){
+        Some(new KarutaPlayer(context,maybe_reader.get,cur_num,next_num))
+      }else{
+        old_player
+      }
     }
   }
   def makeAudioTrack(decoder:OggVorbisDecoder,buffer_size:Int):AudioTrack ={
@@ -128,7 +141,7 @@ class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
   }
 }
 
-class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:Int){
+class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_num:Int){
   var thread = None:Option[Thread]
   var wav_buffer = None:Option[WavBuffer]
   var simo_millsec = 0:Long
@@ -136,18 +149,16 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   var timer_start = None:Option[Timer]
   var timer_kamiend = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
-  var is_playing = false
   var is_decoding = false
   var is_kaminoku = false
   startDecode()
   def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
-      if(is_playing){
+      if(Globals.is_playing){
         return
       }
-      is_playing = true
-
-      setButtonTextByState
+      Globals.is_playing = true
+      Utils.setButtonTextByState(context)
       timer_start = Some(new Timer())
       timer_start.get.schedule(new TimerTask(){
         override def run(){
@@ -171,8 +182,8 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
           }},simo_millsec)
       timer_kamiend.get.schedule(new TimerTask(){
           override def run(){
+            Globals.is_playing=false
             onKamiEnd()
-            is_playing=false
           }},wav_buffer.get.audioLength)
       track.get.play()
     }
@@ -189,7 +200,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
       track.foreach(_.stop())
       track.foreach(_.release())
       track = None
-      is_playing = false
+      Globals.is_playing = false
     }
   }
   def startDecode(){ 
@@ -203,7 +214,6 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
         pd.showWithHandler()
       }}
       is_decoding = true
-      setButtonTextByState
       val t = new Thread(new Runnable(){
         override def run(){
           val audio_buf = new mutable.ArrayBuffer[Short]()
@@ -248,14 +258,5 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   }
   def waitDecode(){
     thread.foreach(_.join())
-  }
-  def setButtonTextByState(){
-    Globals.setButtonText.foreach( func => 
-      func(
-      if(is_playing){
-        Right(R.string.now_playing)
-      }else{
-        Left(FudaListHelper.makeReadIndexMessage(context))
-      }))
   }
 }

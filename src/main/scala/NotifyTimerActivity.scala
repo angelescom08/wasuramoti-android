@@ -75,16 +75,11 @@ class NotifyTimerReceiver extends BroadcastReceiver {
         R.drawable.baby_tux
       }
       Globals.notify_timers.remove(timer_id)
-      // TODO: the following match function is unnecessary and want's to combine with 'setButtonTextByState'
-      Globals.player match{
-        case None => Globals.setButtonText.foreach(func => func(Left(FudaListHelper.makeReadIndexMessage(context))))
-      
-        case Some(p) => p.setButtonTextByState
-      }
+      Utils.setButtonTextByState(context)
       val message = intent.getExtras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
       val notif = new Notification(icon,message, System.currentTimeMillis())
-      if(intent.getExtras.getBoolean("play_sound") && !Globals.player.exists(_.is_playing)){
+      if(intent.getExtras.getBoolean("play_sound") && !Globals.is_playing){
         notif.defaults |= Notification.DEFAULT_SOUND
       }
       notif.setLatestEventInfo(context, from, message, contentIntent)

@@ -77,7 +77,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
 }
 
 
-abstract class Reader(context:Context,path:String){
+abstract class Reader(context:Context,val path:String){
   def basename:String = new File(path).getName()
   def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
   def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
