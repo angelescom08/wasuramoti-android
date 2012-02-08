@@ -126,8 +126,8 @@ class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
   }
   // fadein
   def trimFadeKami(){
-    val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
-    val fadelen = (Globals.prefs.get.getString("wav_fadein_kami","0.0").toDouble * decoder.rate).toInt
+    val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami",0.1) * decoder.rate).toInt
     val beg = threasholdIndex(threashold,false)
     val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
     fade(fadebegin,beg) 
@@ -135,8 +135,8 @@ class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
   }
   // fadeout
   def trimFadeSimo(){
-    val threashold = Globals.prefs.get.getString("wav_threashold","0.0").toDouble
-    val fadelen = (Globals.prefs.get.getString("wav_fadeout_simo","0.0").toDouble * decoder.rate).toInt
+    val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo",0.2) * decoder.rate).toInt
     val end = threasholdIndex(threashold,true)
     val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
     fade(end,fadeend) 
@@ -168,7 +168,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
           onReallyStart(onSimoEnd,onKamiEnd)
           timer_start.foreach(_.cancel())
           timer_start = None
-        }},(Globals.prefs.get.getString("wav_begin_read","0.0").toDouble*1000.0).toLong)
+        }},(Utils.getPrefAs[Double]("wav_begin_read",0.5)*1000.0).toLong)
     }
   }
 
@@ -226,7 +226,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
             audio_buf ++= w.getBuffer
             simo_millsec += w.audioLength
           }
-          val span_simokami = Globals.prefs.get.getString("wav_span_simokami","1.0").toDouble
+          val span_simokami = Utils.getPrefAs[Double]("wav_span_simokami",1.0)
           lazy val ma_simokami = AudioHelper.makeSilence(span_simokami,g_decoder.get)
           if(simo_num == 0 && reader.exists(simo_num,1)){
             reader.withDecodedWav(simo_num, 1, wav => {

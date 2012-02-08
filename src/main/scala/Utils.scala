@@ -116,5 +116,24 @@ object Utils {
         Left(FudaListHelper.makeReadIndexMessage(context))
       }))
   }
+  trait PrefTrait[T] { def from(s:String):T }
+  implicit val IntPrefTrait = new PrefTrait[Int] { 
+    def from(s : String) = s.toInt 
+  }
+  implicit val DoublePrefTrait = new PrefTrait[Double] { 
+    def from(s : String) = s.toDouble 
+  }
+
+  def getPrefAs[T:PrefTrait](key:String,defValue:T):T = {
+    if(Globals.prefs.isEmpty){
+      return defValue
+    }
+    try{
+      val v =Globals.prefs.get.getString(key,defValue.toString)
+      implicitly[PrefTrait[T]].from(v)
+    }catch{
+      case e:NumberFormatException => defValue
+    }
+  }
 }
 

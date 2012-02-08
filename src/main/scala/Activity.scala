@@ -10,7 +10,6 @@ import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
-
 class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
   var timer_dimlock = None:Option[Timer]
@@ -100,7 +99,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
         wake_lock.acquire()
         Some( _ => wake_lock.release ) 
       }
-      val dimlock_minutes = Globals.prefs.get.getString("dimlock_minutes","5").toInt
+      val dimlock_minutes = Utils.getPrefAs[Int]("dimlock_minutes",5)
       timer_dimlock.foreach(_.cancel())
       timer_dimlock = Some(new Timer())
       timer_dimlock.get.schedule(new TimerTask(){
@@ -154,7 +153,7 @@ trait MainButtonTrait{
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None
-                }},(Globals.prefs.get.getString("read_auto_span","0.0").toDouble*1000.0).toLong
+                }},(Utils.getPrefAs[Double]("read_auto_span",5.0)*1000.0).toLong
               )
             }
         })
