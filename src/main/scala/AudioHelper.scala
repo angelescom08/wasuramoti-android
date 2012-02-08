@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.content.Context
+import _root_.android.view.Gravity
 import _root_.java.io.{File,FileInputStream}
 import _root_.java.nio.{ByteBuffer,ByteOrder}
 import _root_.java.util.{Timer,TimerTask}
@@ -196,6 +197,11 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
       if(is_decoding){
         return
       }
+      Globals.progress_dialog.foreach{ pd => {
+        pd.setMessage(context.getResources.getString(R.string.now_decoding))
+        pd.getWindow.setGravity(Gravity.BOTTOM)
+        pd.showWithHandler()
+      }}
       is_decoding = true
       setButtonTextByState
       val t = new Thread(new Runnable(){
@@ -233,7 +239,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
           })
           wav_buffer = Some(new WavBuffer(audio_buf.toArray,g_decoder.get))
           is_decoding = false
-          setButtonTextByState()
+          Globals.progress_dialog.foreach{_.dismissWithHandler()}
         }
       })
       thread = Some(t)
@@ -246,9 +252,7 @@ class KarutaPlayer(context:Context,val reader:Reader,simo_num:Int,var kami_num:I
   def setButtonTextByState(){
     Globals.setButtonText.foreach( func => 
       func(
-      if(is_decoding){
-        Right(R.string.now_decoding)
-      }else if(is_playing){
+      if(is_playing){
         Right(R.string.now_playing)
       }else{
         Left(FudaListHelper.makeReadIndexMessage(context))

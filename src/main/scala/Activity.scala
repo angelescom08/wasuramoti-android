@@ -13,12 +13,8 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
-  def refreshKarutaPlayer(fromProperty:Boolean=true){
-    Globals.player = (if(fromProperty){
-      ReaderList.makeCurrentReader(getApplicationContext())
-    }else{
-      Globals.player.map{_.reader}
-    }).flatMap(
+  def refreshKarutaPlayer(){
+    Globals.player = ReaderList.makeCurrentReader(getApplicationContext()).flatMap(
       reader => AudioHelper.makeKarutaPlayer(getApplicationContext(),reader))
     // TODO: the following 'setButtonText' is unnecessary and want's to combine with 'setButtonTextByState'
     if(Globals.player.isEmpty){
@@ -91,6 +87,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     setContentView(R.layout.main)
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     val handler = new Handler()
+    Globals.progress_dialog = Some(new ProgressDialogWithHandler(this,handler))
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
@@ -113,8 +110,8 @@ trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
     Globals.global_lock.synchronized{
-    val handler = new Handler()
-    var timer_autoread = None:Option[Timer]
+      val handler = new Handler()
+        var timer_autoread = None:Option[Timer]
       if(Globals.player.isEmpty){
         Utils.messageDialog(self,Right(R.string.reader_not_found))
         return
@@ -122,7 +119,7 @@ trait MainButtonTrait{
       val player = Globals.player.get
       timer_autoread.foreach(_.cancel())
       timer_autoread = None
-      
+
       if(player.is_playing){
         if(!player.is_kaminoku){
           player.stop()
@@ -130,11 +127,12 @@ trait MainButtonTrait{
         }
       }else{
         player.play(
-          _ => if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
-                 FudaListHelper.moveNext(self.getApplicationContext())
-               },
+          identity[Unit],
           _ => {
-            self.refreshKarutaPlayer(false)
+            if("SHUFFLE" == Globals.prefs.get.getString("read_order",null)){ 
+              FudaListHelper.moveNext(self.getApplicationContext())
+            }
+            self.refreshKarutaPlayer()
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){

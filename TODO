@@ -1,8 +1,13 @@
+* put is_playing flag outside of karuta player
+
 * Pitch and Speed change using picola and others
 * Able to set auto lock period: Default About 5 minutes ?
 * Able to read stereo audio file
 * Able to change style / theme
 * Fuda-otoshi mode
+* Able to show fuda during reading
 * Able to change timer sound.
 * Show detail of CPU from Android.os.Build when cannot load libvorbis.so
 * Able to read .wav file in case cannot load libvorbis.so
+* Yomi-fuda mode
+* Special words such as 'one' 'two' 'red' in fuda sets
