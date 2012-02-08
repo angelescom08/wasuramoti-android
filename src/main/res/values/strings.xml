@@ -38,8 +38,8 @@
   <string name="conf_read_auto_span_summary">How many seconds to stop after upper phase.</string>
   <!-- CATEGORY_SUB -->
   <string name="category_sub">Detail</string> 
-  <string name="conf_enable_lock">Lock Screen</string>
-  <string name="conf_enable_lock_summary">Enable screen lock.</string>
+  <string name="conf_dimlock_minutes">Lock Screen</string>
+  <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_read_simo_joka_twice">Lower phase of 0th poem twice</string>
   <string name="conf_read_simo_joka_twice_summary">Whether to play &lt;name&gt;_000_2.ogg twice.</string>
   <string name="conf_wav_begin_read">Beginnig to read</string>

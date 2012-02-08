@@ -36,10 +36,12 @@
 
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_sub">
-    <CheckBoxPreference
-      android:key="enable_lock"
-      android:title="@string/conf_enable_lock"
-      android:summary="@string/conf_enable_lock_summary"
+    <EditTextPreference
+      android:key="dimlock_minutes"
+      android:title="@string/conf_dimlock_minutes"
+      android:summary="@string/conf_dimlock_minutes_summary"
+      android:numeric="integer"
+      android:defaultValue="5"
       />
     <CheckBoxPreference
       android:key="read_simo_joka_twice"

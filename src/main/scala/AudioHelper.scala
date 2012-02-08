@@ -28,13 +28,16 @@ object AudioHelper{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
-    num.flatMap{case(cur_num,next_num) =>
-      if(force || old_player.isEmpty || old_player.get.reader.path != maybe_reader.get.path || 
+    num.flatMap{case(cur_num,next_num) =>{
+        if(!maybe_reader.get.bothExists(cur_num,next_num)){
+          None
+        }else if(force || old_player.isEmpty || old_player.get.reader.path != maybe_reader.get.path || 
         old_player.get.simo_num != cur_num || old_player.get.kami_num != next_num
-      ){
-        Some(new KarutaPlayer(context,maybe_reader.get,cur_num,next_num))
-      }else{
-        old_player
+        ){
+          Some(new KarutaPlayer(context,maybe_reader.get,cur_num,next_num))
+        }else{
+          old_player
+        }
       }
     }
   }

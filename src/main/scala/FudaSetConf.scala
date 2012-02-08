@@ -22,7 +22,11 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val pos = spinner.get.getSelectedItemPosition()
-      val title = listItems.get(pos)
+      val title = try{
+        listItems.get(pos)
+      }catch{
+        case e:ArrayIndexOutOfBoundsException => return
+      }
       persistString(title)
       val db = Globals.database.get.getWritableDatabase
       var cursor = db.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(title),null,null,null,null)

@@ -38,8 +38,8 @@
   <string name="conf_read_auto_span_summary">何秒間停止するか</string>
   <!-- CATEGORI_SUB -->
   <string name="category_sub">詳細</string> 
-  <string name="conf_enable_lock">画面ロック</string>
-  <string name="conf_enable_lock_summary">時間経過による画面ロックを有効にする</string>
+  <string name="conf_dimlock_minutes">画面ロック</string>
+  <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
   <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>

@@ -13,7 +13,8 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
-  def refreshKarutaPlayer(force:Boolean = false){
+  var timer_dimlock = None:Option[Timer]
+  def refreshAndSetButton(force:Boolean = false){
     Globals.player = AudioHelper.refreshKarutaPlayer(getApplicationContext(),Globals.player,force)
     Utils.setButtonTextByState(getApplicationContext())
   }
@@ -31,10 +32,10 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
-          refreshKarutaPlayer()
+          refreshAndSetButton()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,_=>refreshKarutaPlayer()).show
+      case R.id.menu_move => new MovePositionDialog(this,_=>refreshAndSetButton()).show
       case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
     }
@@ -48,19 +49,13 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
     
     Globals.player.foreach{_.stop()}
-    refreshKarutaPlayer()
-    release_lock = if(Globals.prefs.get.getBoolean("enable_lock",false)){
-      None
-    }else{
-      val power_manager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-      val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
-      wake_lock.acquire()
-      Some( _ => wake_lock.release ) 
-    }
+    refreshAndSetButton()
+    startDimLockTimer()
   }
   override def onPause(){
     super.onPause()
     release_lock.foreach(_())
+    release_lock = None
   }
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -96,6 +91,26 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
         }
       }))
   }
+  def startDimLockTimer(){
+    Globals.global_lock.synchronized{
+      release_lock.foreach(_())
+      release_lock = {
+        val power_manager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
+        val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
+        wake_lock.acquire()
+        Some( _ => wake_lock.release ) 
+      }
+      val dimlock_minutes = Globals.prefs.get.getString("dimlock_minutes","5").toInt
+      timer_dimlock.foreach(_.cancel())
+      timer_dimlock = Some(new Timer())
+      timer_dimlock.get.schedule(new TimerTask(){
+        override def run(){
+          release_lock.foreach(_())
+          release_lock = None
+        }
+      },1000*60*dimlock_minutes)
+    }
+  }
 }
 
 trait MainButtonTrait{
@@ -103,7 +118,7 @@ trait MainButtonTrait{
   def onMainButtonClick(v:View) {
     Globals.global_lock.synchronized{
       val handler = new Handler()
-        var timer_autoread = None:Option[Timer]
+      var timer_autoread = None:Option[Timer]
       if(Globals.player.isEmpty){
         Utils.messageDialog(self,Right(R.string.reader_not_found))
         return
@@ -118,6 +133,7 @@ trait MainButtonTrait{
           Utils.setButtonTextByState(self.getApplicationContext())
         }
       }else{
+        startDimLockTimer()
         player.play(
           identity[Unit],
           _ => {
@@ -127,8 +143,8 @@ trait MainButtonTrait{
             }
             // In random mode, there is a possobility that same pairs of fuda are read in a row.
             // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
-            // Therefore we give force flag to true for refreshKarutaPlayer.
-            self.refreshKarutaPlayer(!is_shuffle) 
+            // Therefore we give force flag to true for refreshAndSetButton.
+            self.refreshAndSetButton(!is_shuffle) 
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){
