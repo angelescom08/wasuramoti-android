@@ -12,6 +12,7 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
+  var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
   def refreshAndSetButton(force:Boolean = false){
     Globals.player = AudioHelper.refreshKarutaPlayer(getApplicationContext(),Globals.player,force)
@@ -25,6 +26,8 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   }
   override def onOptionsItemSelected(item: MenuItem) : Boolean = {
     Globals.player.foreach(_.stop())
+    timer_autoread.foreach(_.cancel())
+    timer_autoread = None
     Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
@@ -48,6 +51,9 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
     
     Globals.player.foreach{_.stop()}
+    timer_autoread.foreach(_.cancel())
+    timer_autoread = None
+
     refreshAndSetButton()
     startDimLockTimer()
   }
@@ -117,7 +123,6 @@ trait MainButtonTrait{
   def onMainButtonClick(v:View) {
     Globals.global_lock.synchronized{
       val handler = new Handler()
-      var timer_autoread = None:Option[Timer]
       if(Globals.player.isEmpty){
         Utils.messageDialog(self,Right(R.string.reader_not_found))
         return

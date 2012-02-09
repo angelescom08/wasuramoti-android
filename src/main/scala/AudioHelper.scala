@@ -176,6 +176,18 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
     Globals.global_lock.synchronized{
       waitDecode()
       track = Some(wav_buffer.get.writeToAudioTrack())
+      // I couldn't determine the reason why the AudioTrack.play sometimes throws IllegalStateException.
+      // However I assumed that it is caused by playing more than two AudioTracks simultaneously, which is played by other apps.
+      // Therefore, I catch the exception and silently ignore it since user can wait for another AudioTrack to finish and try playing again. 
+      try{
+        track.get.play()
+      }catch{
+        case _:IllegalStateException => {
+          Globals.is_playing = false
+          Utils.setButtonTextByState(context)
+        }
+      }
+
       timer_simoend = Some(new Timer())
       timer_kamiend = Some(new Timer())
       timer_simoend.get.schedule(new TimerTask(){
@@ -188,7 +200,6 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
             Globals.is_playing=false
             onKamiEnd()
           }},wav_buffer.get.audioLength)
-      track.get.play()
     }
   }
   def stop(){
@@ -250,7 +261,9 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
              wav.trimFadeKami()
              audio_buf ++= wav.getBuffer
           })
-          wav_buffer = Some(new WavBuffer(audio_buf.toArray,g_decoder.get))
+          //I assumed that cause of ClassCastException reported by user is using toArray with no ClassManifest.
+          //Therefore I use toArray[Short] instead of toArray.
+          wav_buffer = Some(new WavBuffer(audio_buf.toArray[Short],g_decoder.get))
           is_decoding = false
           Globals.progress_dialog.foreach{_.dismissWithHandler()}
         }
