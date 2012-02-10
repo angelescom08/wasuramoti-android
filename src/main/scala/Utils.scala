@@ -49,14 +49,15 @@ object Utils {
      var title = context.getResources.getString(R.string.timers_remaining)
      nt.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v1.getExtras.getLong("limit_millis")}.map{case (k,v) =>
        val millis = v.getExtras.getLong("limit_millis")
+       val minutes_left = scala.math.ceil((millis - System.currentTimeMillis()) / (1000 * 60.0)).toInt
        val df = new SimpleDateFormat(
-         if( millis - System.currentTimeMillis() < 1000 * 60 * 60 * 24){
+         if( minutes_left < 60 * 24){
            "HH:mm"
          }else{
            "MM/dd HH:mm"
          }
        )
-       df.format(new Date(millis))
+       df.format(new Date(millis)) + " (" + minutes_left.toString + " " + context.getResources.getString(R.string.timers_minutes_left) + ")"
      }.foldLeft(title)(_+"\n"+_)
   }
   def withTransaction(db:SQLiteDatabase,func:()=>Unit){

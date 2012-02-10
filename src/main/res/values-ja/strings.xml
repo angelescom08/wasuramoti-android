@@ -97,6 +97,7 @@
   <string name="timer_start_button">タイマー開始</string>
   <string name="timer_cancel_button">タイマーキャンセル</string>
   <string name="timers_remaining">タイマー</string>
+  <string name="timers_minutes_left">分前</string>
 
   <string name="cannot_load_vorbis_library">Vorbisライブラリの読込み失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
 </resources>

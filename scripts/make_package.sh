@@ -1,7 +1,7 @@
 #!/bin/sh
 ROOT="$(hg root)"
 KEYSTORE="${ROOT}/keystore/hpnpwd.keystore"
-READER_DIR="${ROOT}/keystore/"
+READER_DIR="${ROOT}/players/"
 READER_ASSETS="${ROOT}/src/main/assets/reader"
 TARGET_BASE="${ROOT}"
 

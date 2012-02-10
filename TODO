@@ -1,3 +1,4 @@
+* Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
 * Pitch and Speed change using picola and others
 * Able to read stereo audio file
 * Able to change style / theme
@@ -8,3 +9,4 @@
 * Show detail of CPU from Android.os.Build when cannot load libvorbis.so
 * Able to read .wav file in case cannot load libvorbis.so
 * Special words such as 'one' 'two' 'red' in fuda sets
+* Able to customize notify timer (add new, set default minutes,set icons)

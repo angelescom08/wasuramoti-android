@@ -97,6 +97,7 @@
   <string name="timer_start_button">Start Timer</string>
   <string name="timer_cancel_button">Cancel Timer</string>
   <string name="timers_remaining">Timers</string>
+  <string name="timers_minutes_left">min. left</string>
 
   <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targetted to your CPU.</string>
 </resources>

@@ -14,6 +14,26 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   var release_lock = None:Option[Unit=>Unit]
   var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
+  var timer_refresh_text = None:Option[Timer]
+  def restartRefreshTimer(){
+    Globals.global_lock.synchronized{
+      timer_refresh_text.foreach(_.cancel())
+      timer_refresh_text = None
+      if(!Globals.notify_timers.isEmpty){
+        timer_refresh_text = Some(new Timer())
+        timer_refresh_text.get.schedule(new TimerTask(){
+          override def run(){
+            if(Globals.notify_timers.isEmpty){
+              timer_refresh_text.foreach(_.cancel())
+              timer_refresh_text = None
+              return
+            }
+            Utils.setButtonTextByState(getApplicationContext())
+          }
+        },0,60*1000)
+      }
+    }
+  }
   def refreshAndSetButton(force:Boolean = false){
     Globals.player = AudioHelper.refreshKarutaPlayer(getApplicationContext(),Globals.player,force)
     Utils.setButtonTextByState(getApplicationContext())
@@ -43,13 +63,14 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
     return true
   }
-  override def onResume(){
-    super.onResume()
-    // returned onCreate before loading preference
+  override def onStart(){
+    super.onStart()
     if( Globals.prefs.isEmpty ){
+      // onCreate returned before loading preference
       return
     }
     
+    restartRefreshTimer()
     Globals.player.foreach{_.stop()}
     timer_autoread.foreach(_.cancel())
     timer_autoread = None
@@ -57,10 +78,12 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     refreshAndSetButton()
     startDimLockTimer()
   }
-  override def onPause(){
-    super.onPause()
+  override def onStop(){
+    super.onStop()
     release_lock.foreach(_())
     release_lock = None
+    timer_refresh_text.foreach(_.cancel())
+    timer_refresh_text = None
   }
 
   override def onCreate(savedInstanceState: Bundle) {

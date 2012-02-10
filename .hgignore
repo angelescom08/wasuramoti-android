@@ -1,4 +1,5 @@
 keystore
+players
 
 syntax: glob
 *.class
