@@ -145,10 +145,12 @@ class WavBuffer(buffer:Array[Short],val decoder:OggVorbisDecoder){
 }
 
 class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_num:Int){
-  var thread = None:Option[Thread]
+
+  var decode_thread = None:Option[Thread]
+  //TODO: holding both wav_buffer and audio_track is quite redundant because it requires twice memory
   var wav_buffer = None:Option[WavBuffer]
+  var audio_track = None:Option[AudioTrack]
   var simo_millsec = 0:Long
-  var track = None:Option[AudioTrack]
   var timer_start = None:Option[Timer]
   var timer_kamiend = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
@@ -175,19 +177,9 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
   def onReallyStart(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       waitDecode()
-      track = Some(wav_buffer.get.writeToAudioTrack())
-      // I couldn't determine the reason why the AudioTrack.play sometimes throws IllegalStateException.
-      // However I assumed that it is caused by playing more than two AudioTracks simultaneously, which is played by other apps.
-      // Therefore, I catch the exception and silently ignore it since user can wait for another AudioTrack to finish and try playing again. 
-      try{
-        track.get.play()
-      }catch{
-        case _:IllegalStateException => {
-          Globals.is_playing = false
-          Utils.setButtonTextByState(context)
-        }
-      }
-
+      audio_track = Some(wav_buffer.get.writeToAudioTrack())
+      // TODO: AudioTrack.play sometimes throws IllegalStateException. find the reason and fix it.
+      audio_track.get.play()
       timer_simoend = Some(new Timer())
       timer_kamiend = Some(new Timer())
       timer_simoend.get.schedule(new TimerTask(){
@@ -210,10 +202,10 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
       timer_kamiend.foreach(_.cancel())
       timer_simoend = None
       timer_kamiend = None
-      track.foreach(_.flush())
-      track.foreach(_.stop())
-      track.foreach(_.release())
-      track = None
+      audio_track.foreach(_.flush())
+      audio_track.foreach(_.stop())
+      audio_track.foreach(_.release())
+      audio_track = None
       Globals.is_playing = false
     }
   }
@@ -268,11 +260,11 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
           Globals.progress_dialog.foreach{_.dismissWithHandler()}
         }
       })
-      thread = Some(t)
+      decode_thread = Some(t)
       t.start
     }
   }
   def waitDecode(){
-    thread.foreach(_.join())
+    decode_thread.foreach(_.join())
   }
 }
