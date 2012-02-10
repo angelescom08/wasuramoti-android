@@ -2,18 +2,28 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
 import _root_.android.os.Bundle 
-import _root_.android.view.View
+import _root_.android.view.{View,LayoutInflater}
 import _root_.android.content.{Intent,Context,BroadcastReceiver}
-import _root_.android.widget.{CheckBox,EditText}
+import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout}
 
 class NotifyTimerActivity extends Activity{
-  val TIMER_FIRST_ID = 1
-  val TIMER_LAST_ID = 2
+  val timer_icons = List(
+    (R.drawable.baby_tux,13),
+    (R.drawable.animals_dolphin,15)
+  )
+  val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,default),i) => (icon,default,i+1,new Object())}
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.notify_timer)
     Globals.alarm_manager = Some(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
-
+    val inflater = LayoutInflater.from(this)
+    for( (icon,default,id,tag) <- timer_iter ){
+      val vw = inflater.inflate(R.layout.notify_timer_item,null)
+      vw.setTag(tag)
+      vw.findViewById(R.id.timer_icon).asInstanceOf[ImageView].setImageResource(icon)
+      vw.findViewById(R.id.timer_limit).asInstanceOf[EditText].setText(default.toString)
+      findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
+    }
   }
   def onTimerStartClick(v:View){
     setAllTimeAlarm
@@ -35,22 +45,21 @@ class NotifyTimerActivity extends Activity{
   def setAllTimeAlarm(){
     Globals.global_lock.synchronized{
       Globals.notify_manager.foreach{_.cancelAll}
-      val iters = Array((TIMER_FIRST_ID,R.id.timer_first_limit,R.id.timer_first_play_sound),
-                        (TIMER_LAST_ID,R.id.timer_last_limit,R.id.timer_last_play_sound))
-      for( (timer_id, limit_id, play_sound_id ) <- iters ){
+      for( (timer_icon,_,timer_id,timer_tag) <- timer_iter ){
+        val vw_item = findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].findViewWithTag(timer_tag)
         val limit = try{
-          findViewById(limit_id).asInstanceOf[EditText].getText.toString.toInt
+          vw_item.findViewById(R.id.timer_limit).asInstanceOf[EditText].getText.toString.toInt
         }catch{
           case e:java.lang.NumberFormatException => 0
         }
-        val play_sound = findViewById(play_sound_id).asInstanceOf[CheckBox].isChecked
+        val play_sound = vw_item.findViewById(R.id.timer_play_sound).asInstanceOf[CheckBox].isChecked
         val intent = new Intent(this, classOf[NotifyTimerReceiver])
         val limit_millis = System.currentTimeMillis() + (limit * 60 * 1000)
         intent.putExtra("timer_id",timer_id)
         intent.putExtra("elapsed",limit)
-        intent.putExtra("is_last",timer_id == TIMER_LAST_ID)
         intent.putExtra("play_sound",play_sound)
         intent.putExtra("limit_millis",limit_millis)
+        intent.putExtra("timer_icon",timer_icon)
         val pendingIntent = PendingIntent.getBroadcast(this, timer_id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         Globals.alarm_manager.foreach{ x => 
           x.set(AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
@@ -69,11 +78,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       Globals.notify_manager = Some(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
       val contentIntent = PendingIntent.getActivity(context, 0,new Intent(), 0)
       val timer_id = intent.getExtras.getInt("timer_id")
-      val icon = if(intent.getExtras.getBoolean("is_last")){
-        R.drawable.animals_dolphin
-      }else{
-        R.drawable.baby_tux
-      }
+      val icon = intent.getExtras.getInt("timer_icon")
       Globals.notify_timers.remove(timer_id)
       Utils.setButtonTextByState(context)
       val message = intent.getExtras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
