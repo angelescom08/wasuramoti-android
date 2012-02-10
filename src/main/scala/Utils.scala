@@ -95,14 +95,24 @@ object Utils {
         }
       }).create.show()
   }
-  def walkDir(f:File,depth:Int,func:(File)=>Unit){
-    if(depth == 0){
+  def walkDir(cur:File,depth:Int,func:(File)=>Unit){
+    // Checking whether File object is not null is usually not required. 
+    // However I will check it just for sure.
+    if(depth == 0 || cur == null){
       return
     }
-    for( i <- f.listFiles ){
-      func(i)
-      if( i.isDirectory ){
-        walkDir(i,depth - 1,func)
+    val files = cur.listFiles()
+    if(files == null){
+      // There seems some directory which File.isDirectory is `true',
+      // but File.listFiles returns `null'.
+      return
+    }
+    for( f <- files ){
+      if( f != null ){
+        func(f)
+        if( f.isDirectory ){
+          walkDir(f,depth - 1,func)
+        }
       }
     }
   }

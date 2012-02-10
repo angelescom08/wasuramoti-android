@@ -61,8 +61,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       val expath = Environment.getExternalStorageDirectory
       Utils.walkDir(expath,5, f =>{
         if(f.getName == Globals.READER_DIR){
-          for( i <- f.listFiles() ){
-            if(i.isDirectory){
+          val files = f.listFiles()
+          if(files != null){
+            for( i <- files if i.isDirectory() ){
               seq ++= Seq("EXT:"+i.getAbsolutePath.replaceFirst("^"+expath,"").replaceFirst("/"+Globals.READER_DIR+"/","/<>/"))
             }
           }

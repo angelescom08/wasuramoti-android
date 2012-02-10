@@ -1,6 +1,6 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.5.5
+  App Version: 0.5.6
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta(Competitive Karuta).
@@ -53,6 +53,9 @@
   src/main/assets/reader/<name>/<name>_002_1.ogg
   ...
   src/main/assets/reader/<name>/<name>_100_2.ogg
+
+  However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
+  and builds *.apk package. Therfore we should use this script.
 [How to compile]
   Requirements:
     openjdk 6 (or other Java JDK)
