@@ -1,28 +1,26 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.5.6
+  App Version: 0.5.7
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
-  Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta(Competitive Karuta).
+  Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta (Competitive Karuta).
   Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM,ARM-v7a,x86 CPU.
         Therefore this wasuramoti-*.apk only works on those CPU's.
-
-[Credits]
-  Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [License]
   This software open source software, and licensed under BSD 3-Clause License.
   You can download the source code from http://sourceforge.net/projects/wasuramoti-andr/
-  The licence is as follows:
+  The licence is written in COPYING file in the same directory of this README.
 
-  Copyright (c) 2012, Haruhiro Yoshimoto
-  All rights reserved.
+  However, note that the audio file enclosed in the package might have another licence, and
+  have some limits when redistributing.
+  I will write the copyrights and licence when packaging *.apk in below.
 
-  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-   * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-   * Neither the name of the Kareno_No_Yume nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  __WRITE_AUDIO_LICENCE_HERE__
+
+[Credits]
+  This software uses the following library and copyrighted as follows:
+   - [libogg/libvorbis] Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [How to Install]
   Copy wasuramoti-*.apk to SD Card or run Android machine in USB Storage mode and copy to it.
@@ -33,10 +31,9 @@
   Additionally, you can install by running a command `adb install wasuramoti-*.apk'.
   Browse following URL for further information:
   http://developer.android.com/guide/developing/device.html#setting-up
-  
 
 [Where to put .ogg file in the external storage such as SD Card]
-  Make directory named `wasuramoti_reader' and make subdirectory named `inaba` or whatever.
+  Make directory named `wasuramoti_reader' and make subdirectory named `inaba' or whatever.
   Then put the .ogg files in it.
   Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
   First %03d indicates fuda number(refer to AllFuda.scala).
@@ -46,19 +43,21 @@
   The <name>_000_1.ogg is optional. Because sometimes Kami-no-Ku of Joka might be concatenated in <name>_000_2.ogg.
 
 [Where to put .ogg file inside the application]
-  src/main/assets/reader/<name>/<name>_000_1.ogg (optional)
-  src/main/assets/reader/<name>/<name>_000_2.ogg
-  src/main/assets/reader/<name>/<name>_001_1.ogg
-  src/main/assets/reader/<name>/<name>_001_2.ogg
-  src/main/assets/reader/<name>/<name>_002_1.ogg
-  ...
-  src/main/assets/reader/<name>/<name>_100_2.ogg
+  The naming convension of the *.ogg file of the reader is as follows:
+
+    src/main/assets/reader/<name>/<name>_000_1.ogg (optional)
+    src/main/assets/reader/<name>/<name>_000_2.ogg (lower phrase of Joka)
+    src/main/assets/reader/<name>/<name>_001_1.ogg (upper phase of Akinotano)
+    src/main/assets/reader/<name>/<name>_001_2.ogg (lower phase of Akinotano)
+    src/main/assets/reader/<name>/<name>_002_1.ogg (upper phase of Harusugite)
+    ...
+    src/main/assets/reader/<name>/<name>_100_2.ogg (lower phase of Momoshikiya)
 
   However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
   and builds *.apk package. Therfore we should use this script.
 [How to compile]
   Requirements:
-    openjdk 6 (or other Java JDK)
+    openjdk 6 (or some other Java JDK)
     scala 2.9.1
     sbt 0.11 (A Scala-Based Simple Build Tool)
     sbt-android-plugin 0.6.x
