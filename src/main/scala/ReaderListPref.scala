@@ -87,7 +87,7 @@ abstract class Reader(context:Context,val path:String){
   }
   def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
-    val wav_file = File.createTempFile("wasuramoti_single_",".wav",context.getCacheDir())
+    val wav_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_WAV,context.getCacheDir())
     val decoder = new OggVorbisDecoder()
     withFile(num,kamisimo,temp_file => {
       decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
@@ -120,7 +120,7 @@ class Asset(context:Context,path:String) extends Reader(context,path){
   }
   override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
     val temp_dir = context.getCacheDir()
-    val temp_file = File.createTempFile("wasuramoti_single_",".ogg",temp_dir)
+    val temp_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_OGG,temp_dir)
     val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
     val finstream = asset_fd.createInputStream()
     new FileOutputStream(temp_file).getChannel().transferFrom(

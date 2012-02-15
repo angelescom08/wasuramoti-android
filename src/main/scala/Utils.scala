@@ -18,6 +18,8 @@ object Globals {
   val DATABASE_VERSION = 2
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
+  val CACHE_SUFFIX_OGG = "_copied.ogg"
+  val CACHE_SUFFIX_WAV = "_decoded.wav"
   val global_lock = new Object()
   val notify_timers = new mutable.HashMap[Int,Intent]()
   var database = None:Option[DictionaryOpenHelper]
@@ -147,15 +149,17 @@ object Utils {
     }
   }
 
-  def deleteAllCache(context:Context){
+  def deleteCache(context:Context,match_func:String=>Boolean){
     Globals.global_lock.synchronized{
       val files = context.getCacheDir().listFiles()
       if(files != null){
         for(f <- files){
-          try{
-            f.delete()
-          }catch{
-            case _:Exception => None
+          if(match_func(f.getAbsolutePath())){
+            try{
+              f.delete()
+            }catch{
+              case _:Exception => None
+            }
           }
         }
       }

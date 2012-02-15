@@ -12,4 +12,3 @@
 * Able to customize notify timer (add new, set default minutes,set icons)
 * Able to record the voice of the player and use it as reader
 * Score the voice (whether it is as good as the official karuta reader). 
-* Do the decoding during kami-no-ku (if it does not do jittering, about 3 or 4 seconds before finish?)

@@ -69,14 +69,14 @@ object AudioHelper{
     val buf = new Array[Short](track.getSampleRate()*millisec/1000)
     track.write(buf,0,buf.length)
   }
-  // note: the change made to ShortBuffer is reflected to tho original file
+  // note: modifying the follwing ShortBuffer is reflected to tho original file because it is casted from MappedByteBuffer
   def withMappedShortsFromFile(f:File,func:ShortBuffer=>Unit){
     val raf = new RandomAccessFile(f,"rw")
     func(raf.getChannel().map(FileChannel.MapMode.READ_WRITE,0,f.length()).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer())
     raf.close()
   }
 }
-//TODO:handle stereo audio
+//TODO: handle stereo audio
 class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
   val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
@@ -89,12 +89,12 @@ class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
   }
   def writeToAudioTrack(track:AudioTrack){
-    // Using ShortBuffer.array() throws UnsupportedOperationException (maybe because we use FileChannel.map ?)),
-    // thus we use ShortBuffer.get() instead.
+    // Since using ShortBuffer.array() throws UnsupportedOperationException (maybe because we are using FileChannel.map() ?),
+    // we use ShortBuffer.get() instead.
     val b_size = index_end-index_begin
     val b = new Array[Short](b_size)
-    buffer.rewind()
-    buffer.get(b,index_begin,b_size)
+    buffer.position(index_begin)
+    buffer.get(b,0,b_size)
     buffer.rewind()
     track.write(b,0,b_size)
   }
@@ -111,6 +111,7 @@ class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
     }
     return(ed)
   }
+  // if begin < end then fade-in else fade-out
   def fade(begin:Int,end:Int){
     if(begin == end){
       return
@@ -135,6 +136,10 @@ class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
     val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
     fade(fadebegin,beg) 
     index_begin = fadebegin
+    //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
+    if(index_begin >= index_end){
+      index_begin = index_end - 1
+    }
   }
   // fadeout
   def trimFadeSimo(){
@@ -144,6 +149,10 @@ class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
     val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
     fade(end,fadeend) 
     index_end = end
+    //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
+    if(index_end <= index_begin){
+      index_end = index_begin + 1
+    }
   }
 }
 
@@ -161,6 +170,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
   var audio_track = None:Option[AudioTrack]
   var audio_queue = None:Option[mutable.Queue[Either[WavBuffer,Int]]] // file or silence in millisec 
   startDecode()
+
   def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
@@ -243,7 +253,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
       is_decoding = true
       val t = new Thread(new Runnable(){
         override def run(){
-          Utils.deleteAllCache(context)
+          Utils.deleteCache(context,path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
           audio_queue = Some(new mutable.Queue[Either[WavBuffer,Int]]())
           simo_millsec = 0
           kami_millsec = 0

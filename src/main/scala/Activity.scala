@@ -86,7 +86,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     timer_refresh_text = None
   }
   override def onDestroy(){
-    Utils.deleteAllCache(getApplicationContext())
+    Utils.deleteCache(getApplicationContext(),_=>true)
     super.onDestroy()
   }
 
