@@ -85,6 +85,10 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     timer_refresh_text.foreach(_.cancel())
     timer_refresh_text = None
   }
+  override def onDestroy(){
+    Utils.deleteAllCache(getApplicationContext())
+    super.onDestroy()
+  }
 
   override def onCreate(savedInstanceState: Bundle) {
     val context = this

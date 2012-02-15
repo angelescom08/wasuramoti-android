@@ -87,14 +87,15 @@ abstract class Reader(context:Context,val path:String){
   }
   def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
-    val wav_file = File.createTempFile("wasuramoti",".wav",context.getCacheDir())
+    val wav_file = File.createTempFile("wasuramoti_single_",".wav",context.getCacheDir())
     val decoder = new OggVorbisDecoder()
     withFile(num,kamisimo,temp_file => {
       decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-      val wav = new WavBuffer(AudioHelper.readShortsFromFile(wav_file),decoder)
-      func(wav)
+      AudioHelper.withMappedShortsFromFile(wav_file,buffer => {
+        val wav = new WavBuffer(buffer,wav_file,decoder)
+        func(wav)
+      })
     })
-    wav_file.delete()
   }
   def existsAll():(Boolean,String) = {
     for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
@@ -119,7 +120,7 @@ class Asset(context:Context,path:String) extends Reader(context,path){
   }
   override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
     val temp_dir = context.getCacheDir()
-    val temp_file = File.createTempFile("wasuramoti",".ogg",temp_dir)
+    val temp_file = File.createTempFile("wasuramoti_single_",".ogg",temp_dir)
     val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
     val finstream = asset_fd.createInputStream()
     new FileOutputStream(temp_file).getChannel().transferFrom(

@@ -146,5 +146,20 @@ object Utils {
       case e:NumberFormatException => defValue
     }
   }
+
+  def deleteAllCache(context:Context){
+    Globals.global_lock.synchronized{
+      val files = context.getCacheDir().listFiles()
+      if(files != null){
+        for(f <- files){
+          try{
+            f.delete()
+          }catch{
+            case _:Exception => None
+          }
+        }
+      }
+    }
+  }
 }
 
