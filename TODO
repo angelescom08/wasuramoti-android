@@ -1,15 +1,23 @@
-* Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
-* Pitch and Speed change using picola and FFT
-* Able to read stereo audio file
-* Able to change style / theme
-* Fuda-otoshi mode
-* Able to show fuda during reading
-* Yomi-fuda mode
-* Able to change timer sound.
-* Show detail of CPU from Android.os.Build when cannot load libvorbis.so
-* Able to read .wav file in case cannot load libvorbis.so
-* Special words such as 'one' 'two' 'red' in fuda sets
-* Able to customize notify timer (add new, set default minutes,set icons)
-* Able to record the voice of the player and use it as reader
-* Score the voice (whether it is as good as the official karuta reader). 
-* Able to show all the list of Kimari-ji when editing fuda sets.
+Priority High:
+  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode.
+  * Special words such as 'one' 'two' 'red' in fuda sets
+  * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
+  * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
+  * Fix problem that when application is in background, the audio skipping occurs.
+  * When relese lock (maybe onResume() ?) refresh text of notify timer.
+
+Priority Middle:
+  * Fuda-otoshi mode
+  * Able to show fuda during reading
+  * Yomi-fuda mode
+  * Able to customize notify timer (add new, set default minutes,set icons)
+  * Able to change notify timer sound.
+  * Pitch and Speed change using picola and FFT
+  * Able to read stereo audio file
+
+Priority Low:
+  * Able to change style / theme
+  * Show detail of CPU from Android.os.Build when cannot load libvorbis.so
+  * Able to read .wav file in case cannot load libvorbis.so
+  * Able to record the voice of the player and use it as reader
+  * Score the recoded voice (whether it is as good as the official karuta reader). 

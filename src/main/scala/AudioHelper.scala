@@ -77,7 +77,7 @@ object AudioHelper{
   }
 }
 //TODO: handle stereo audio
-class WavBuffer(buffer:ShortBuffer,orig_file:File,val decoder:OggVorbisDecoder){
+class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecoder){
   val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = orig_file.length().toInt / 2
@@ -201,14 +201,14 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
       audio_thread = Some(new Thread(new Runnable(){
         override def run(){
           audio_queue.foreach{_.foreach{ arg =>{
-            if(Thread.interrupted()){
-              return
-            }
             audio_track.foreach{ track =>
               arg match {
                 case Left(w) => w.writeToAudioTrack(track)
                 case Right(millisec) => AudioHelper.writeSilence(track,millisec)
               }
+            }
+            if(Thread.interrupted()){
+              return
             }
           }}}
           audio_track.foreach(x => {x.stop();x.release()})
@@ -226,9 +226,21 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
       timer_start = None
       timer_simoend.foreach(_.cancel())
       timer_simoend = None
-      audio_thread.foreach(_.interrupt())
+      audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
+      audio_track.foreach(track => {
+          track.flush()
+          track.stop() // calling this methods terminates AudioTrack.write() called in audio_thread.
+
+          // Now since audio_thread.isInterrupted is true and AudioTrack.write() is terminated,
+          // the audio_thread have to end immediately. 
+          // Before calling AudioTrack.relase(), we have to wait for audio_thread to end.
+          // The reason why I have to do this is assumed that
+          // calling AudioTrack.stop() does not immediately terminate AudioTrack.write(), and
+          // calling AudioTrack.release() before the termination is illecal.
+          audio_thread.foreach{_.join()} 
+          track.release()
+        })
       audio_thread = None
-      audio_track.foreach(x => {x.stop();x.release()})
       audio_track = None
       Globals.is_playing = false
 

@@ -4,7 +4,7 @@
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta (Competitive Karuta).
-               `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is Japanese sports.
+               `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport.
   Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM,ARM-v7a,x86 CPU.
         Therefore this wasuramoti-*.apk only works on those CPU's.
 
@@ -21,7 +21,7 @@
 
 [Credits]
   This software uses the following library and copyrighted as follows:
-   - [libogg/libvorbis] Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
+   - <libogg/libvorbis> Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [How to Install]
   Copy wasuramoti-*.apk to SD Card or run Android machine in USB Storage mode and copy to it.
@@ -37,7 +37,7 @@
   Make directory named `wasuramoti_reader' and make subdirectory named `inaba' or whatever.
   Then put the .ogg files in it.
   Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
-  First %03d indicates fuda number(refer to AllFuda.scala).
+  First %03d indicates fuda number (refer to AllFuda.scala).
   The second %d indicates 1 for Kami-no-Ku(upper phrase), and 2 for Shimo-no-Ku(lower phrase).
   For example the Simo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
     `wasuramoti_reader/inaba/inaba_007_2.ogg'
@@ -56,6 +56,7 @@
 
   However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
   and builds *.apk package. Therfore we should use this script.
+
 [How to compile]
   Requirements:
     openjdk 6 (or some other Java JDK)
@@ -71,5 +72,7 @@
    $ sbt compile
   Make a *.apk package for debug: 
    $ sbt android:package-debug
+  Run in device:
+   $ sbt android:start-device
   Make a *.apk package for release:
    $ sbt android:package-release
