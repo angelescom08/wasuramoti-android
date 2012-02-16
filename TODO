@@ -4,7 +4,6 @@ Priority High:
   * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
   * Fix problem that when application is in background, the audio skipping occurs.
-  * When relese lock (maybe onResume() ?) refresh text of notify timer.
 
 Priority Middle:
   * Fuda-otoshi mode

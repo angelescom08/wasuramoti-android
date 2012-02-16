@@ -63,23 +63,21 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
     return true
   }
-  override def onStart(){
-    super.onStart()
+  override def onResume(){
+    super.onResume()
     if( Globals.prefs.isEmpty ){
       // onCreate returned before loading preference
       return
     }
-    
     restartRefreshTimer()
     Globals.player.foreach{_.stop()}
     timer_autoread.foreach(_.cancel())
     timer_autoread = None
-
     refreshAndSetButton()
     startDimLockTimer()
   }
-  override def onStop(){
-    super.onStop()
+  override def onPause(){
+    super.onPause()
     release_lock.foreach(_())
     release_lock = None
     timer_refresh_text.foreach(_.cancel())
