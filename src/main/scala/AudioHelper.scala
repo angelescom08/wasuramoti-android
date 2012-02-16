@@ -161,9 +161,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
   var decode_thread = None:Option[Thread]
   var audio_thread = None:Option[Thread]
   var simo_millsec = 0:Long
-  var kami_millsec = 0:Long
   var timer_start = None:Option[Timer]
-  var timer_kamiend = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
   var is_decoding = false
   var is_kaminoku = false
@@ -192,17 +190,11 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
     Globals.global_lock.synchronized{
       waitDecode()
       timer_simoend = Some(new Timer())
-      timer_kamiend = Some(new Timer())
       timer_simoend.get.schedule(new TimerTask(){
           override def run(){
             onSimoEnd()
             is_kaminoku=true
           }},simo_millsec)
-      timer_kamiend.get.schedule(new TimerTask(){
-          override def run(){
-            Globals.is_playing=false
-            onKamiEnd()
-          }},simo_millsec+kami_millsec)
       audio_track = Some(AudioHelper.makeAudioTrack(audio_queue.get.find{_.isLeft}.get match{case Left(w)=>w.decoder}))
       audio_track.get.play()
 
@@ -218,8 +210,12 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
                 case Right(millisec) => AudioHelper.writeSilence(track,millisec)
               }
             }
-          }}
-        }}
+          }}}
+          audio_track.foreach(x => {x.stop();x.release()})
+          audio_track = None
+          Globals.is_playing=false
+          onKamiEnd()
+        }
       }))
       audio_thread.get.start()
     }
@@ -229,9 +225,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
       timer_start.foreach(_.cancel())
       timer_start = None
       timer_simoend.foreach(_.cancel())
-      timer_kamiend.foreach(_.cancel())
       timer_simoend = None
-      timer_kamiend = None
       audio_thread.foreach(_.interrupt())
       audio_thread = None
       audio_track.foreach(x => {x.stop();x.release()})
@@ -256,7 +250,6 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
           Utils.deleteCache(context,path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
           audio_queue = Some(new mutable.Queue[Either[WavBuffer,Int]]())
           simo_millsec = 0
-          kami_millsec = 0
           val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami",1.0) * 1000).toInt
           def add_to_audio_queue(w:Either[WavBuffer,Int],is_kami:Boolean){
             audio_queue.foreach{_.enqueue(w)}
@@ -264,9 +257,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
               case Left(wav) => wav.audioLength
               case Right(len) => len
             }
-            if(is_kami){
-              kami_millsec += alen
-            }else{
+            if(!is_kami){
               simo_millsec += alen
             }
           }
