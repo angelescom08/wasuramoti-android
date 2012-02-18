@@ -13,4 +13,5 @@ android:versionName="0.5.10" android:versionCode="15" package="karuta.hpnpwd.was
         <activity android:launchMode="singleInstance" android:name=".NotifyTimerActivity" android:configChanges="orientation|keyboardHidden"/>
     </application>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

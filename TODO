@@ -1,9 +1,11 @@
 Priority High:
-  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode.
+  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
-  * Fix problem that when application is in background, the audio skipping occurs.
+  * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
+  * Show warning and ask to set silence mode on onResume if it is not silence mode (using AudioManager.setRingerMode)
+  * Able to play kami-no-ku after simo-no-ku
 
 Priority Middle:
   * Fuda-otoshi mode

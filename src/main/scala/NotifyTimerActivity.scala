@@ -1,6 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
+import _root_.android.media.AudioManager
 import _root_.android.os.Bundle 
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.content.{Intent,Context,BroadcastReceiver}
@@ -53,11 +54,13 @@ class NotifyTimerActivity extends Activity{
           case e:java.lang.NumberFormatException => 0
         }
         val play_sound = vw_item.findViewById(R.id.timer_play_sound).asInstanceOf[CheckBox].isChecked
+        val do_vibrate = vw_item.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].isChecked
         val intent = new Intent(this, classOf[NotifyTimerReceiver])
         val limit_millis = System.currentTimeMillis() + (limit * 60 * 1000)
         intent.putExtra("timer_id",timer_id)
         intent.putExtra("elapsed",limit)
         intent.putExtra("play_sound",play_sound)
+        intent.putExtra("do_vibrate",do_vibrate)
         intent.putExtra("limit_millis",limit_millis)
         intent.putExtra("timer_icon",timer_icon)
         val pendingIntent = PendingIntent.getBroadcast(this, timer_id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -84,8 +87,14 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       val message = intent.getExtras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
       val notif = new Notification(icon,message, System.currentTimeMillis())
-      if(intent.getExtras.getBoolean("play_sound") && !Globals.is_playing){
-        notif.defaults |= Notification.DEFAULT_SOUND
+      if(!Globals.is_playing){
+        if(intent.getExtras.getBoolean("play_sound")){ 
+          notif.defaults |= Notification.DEFAULT_SOUND
+          notif.audioStreamType = AudioManager.STREAM_ALARM // able to play sound even when it is silent mode.
+        }
+        if(intent.getExtras.getBoolean("do_vibrate")){
+          notif.defaults |= Notification.DEFAULT_VIBRATE
+        }
       }
       notif.setLatestEventInfo(context, from, message, contentIntent)
       Globals.notify_manager.foreach{_.notify(timer_id, notif)}

@@ -94,6 +94,7 @@
 
   <string name="timer_minutes_elapsed">分経過しました</string>
   <string name="timer_play_sound">音を鳴らす</string>
+  <string name="timer_do_vibrate">振動</string>
   <string name="timer_start_button">タイマー開始</string>
   <string name="timer_cancel_button">タイマーキャンセル</string>
   <string name="timers_remaining">タイマー</string>

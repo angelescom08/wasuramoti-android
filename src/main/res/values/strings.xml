@@ -94,6 +94,7 @@
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_play_sound">Play Sound</string>
+  <string name="timer_do_vibrate">Vibrate</string>
   <string name="timer_start_button">Start Timer</string>
   <string name="timer_cancel_button">Cancel Timer</string>
   <string name="timers_remaining">Timers</string>
