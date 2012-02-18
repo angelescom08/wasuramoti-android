@@ -1,6 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.Activity
+import _root_.android.media.AudioManager
 import _root_.android.preference.PreferenceManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,PowerManager}
@@ -15,6 +16,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
   var timer_refresh_text = None:Option[Timer]
+  var ringer_mode_bkup = None:Option[Int]
   def restartRefreshTimer(){
     Globals.global_lock.synchronized{
       timer_refresh_text.foreach(_.cancel())
@@ -63,31 +65,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
     return true
   }
-  override def onResume(){
-    super.onResume()
-    if( Globals.prefs.isEmpty ){
-      // onCreate returned before loading preference
-      return
-    }
-    restartRefreshTimer()
-    Globals.player.foreach{_.stop()}
-    timer_autoread.foreach(_.cancel())
-    timer_autoread = None
-    refreshAndSetButton()
-    startDimLockTimer()
-  }
-  override def onPause(){
-    super.onPause()
-    release_lock.foreach(_())
-    release_lock = None
-    timer_refresh_text.foreach(_.cancel())
-    timer_refresh_text = None
-  }
-  override def onDestroy(){
-    Utils.deleteCache(getApplicationContext(),_=>true)
-    super.onDestroy()
-  }
-
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
     super.onCreate(savedInstanceState)
@@ -120,6 +97,50 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
           }
         }
       }))
+  }
+  override def onStart(){
+    super.onStart()
+    if( Globals.prefs.isEmpty ){
+      // onCreate returned before loading preference
+      return
+    }
+    val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+    if(am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
+      ringer_mode_bkup = Some(am.getRingerMode())
+      am.setRingerMode(AudioManager.RINGER_MODE_SILENT)
+    }
+  }
+  override def onResume(){
+    super.onResume()
+    if( Globals.prefs.isEmpty ){
+      // onCreate returned before loading preference
+      return
+    }
+    restartRefreshTimer()
+    Globals.player.foreach{_.stop()}
+    timer_autoread.foreach(_.cancel())
+    timer_autoread = None
+    refreshAndSetButton()
+    startDimLockTimer()
+  }
+  override def onPause(){
+    super.onPause()
+    release_lock.foreach(_())
+    release_lock = None
+    timer_refresh_text.foreach(_.cancel())
+    timer_refresh_text = None
+  }
+  override def onStop(){
+    super.onStop() 
+    ringer_mode_bkup.foreach{ mode =>
+      val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+      am.setRingerMode(mode)
+    }
+    ringer_mode_bkup = None
+  }
+  override def onDestroy(){
+    Utils.deleteCache(getApplicationContext(),_=>true)
+    super.onDestroy()
   }
   def startDimLockTimer(){
     Globals.global_lock.synchronized{

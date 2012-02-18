@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
 import _root_.android.media.AudioManager
-import _root_.android.os.Bundle 
+import _root_.android.os.{Bundle,Vibrator}
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.content.{Intent,Context,BroadcastReceiver}
 import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout}
@@ -93,7 +93,9 @@ class NotifyTimerReceiver extends BroadcastReceiver {
           notif.audioStreamType = AudioManager.STREAM_ALARM // able to play sound even when it is silent mode.
         }
         if(intent.getExtras.getBoolean("do_vibrate")){
-          notif.defaults |= Notification.DEFAULT_VIBRATE
+          // using `notif.defaults |= Notification.DEFAULT_VIBRATE' does not work when RINGER_MODE_SILENT
+          val vib = context.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
+          vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(2000,500).map{_.toLong}}.flatten),-1)
         }
       }
       notif.setLatestEventInfo(context, from, message, contentIntent)

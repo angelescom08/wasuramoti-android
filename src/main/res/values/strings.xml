@@ -16,7 +16,6 @@
   <string name="category_main">Main</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
   <string name="conf_fudaset_summary">Which subsets of Fuda to read.</string>
-
   <string name="conf_read_order_title">Read order</string>
   <string name="conf_read_order_summary">Rundom or shuffle.</string>
   <string-array name="conf_read_order_entries">
@@ -33,9 +32,9 @@
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">Auto</string>
   <string name="conf_read_auto_title">Auto reading</string>
-  <string name="conf_read_auto_summary">Whether to stop reading between upper phase and lower phase.</string>
+  <string name="conf_read_auto_summary">After reading is done, stop a while, and start reading next fuda.</string>
   <string name="conf_read_auto_span">Interval of auto-reading</string>
-  <string name="conf_read_auto_span_summary">How many seconds to stop after upper phase.</string>
+  <string name="conf_read_auto_span_summary">How many seconds to stop until reading next fuda.</string>
   <!-- CATEGORY_SUB -->
   <string name="category_sub">Detail</string> 
   <string name="conf_dimlock_minutes">Lock Screen</string>
