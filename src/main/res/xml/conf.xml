@@ -44,6 +44,11 @@
       android:defaultValue="5"
       />
     <CheckBoxPreference
+      android:key="silent_mode_on_start"
+      android:title="@string/conf_silent_mode_on_start"
+      android:summary="@string/conf_silent_mode_on_start_summary"
+      />
+    <CheckBoxPreference
       android:key="read_simo_joka_twice"
       android:title="@string/conf_read_simo_joka_twice"
       android:summary="@string/conf_read_simo_joka_twice_summary"

@@ -1,5 +1,4 @@
 Priority High:
-  * Set focus on 'timer start' button on notification timer.
   * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
   * Able to play kami-no-ku after simo-no-ku
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 

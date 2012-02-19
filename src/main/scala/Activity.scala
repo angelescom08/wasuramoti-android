@@ -104,10 +104,12 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       // onCreate returned before loading preference
       return
     }
-    val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-    if(am != null && am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
-      ringer_mode_bkup = Some(am.getRingerMode())
-      am.setRingerMode(AudioManager.RINGER_MODE_SILENT)
+    if(Globals.prefs.get.getBoolean("silent_mode_on_start",false)){
+      val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+      if(am != null && am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
+        ringer_mode_bkup = Some(am.getRingerMode())
+        am.setRingerMode(AudioManager.RINGER_MODE_SILENT)
+      }
     }
   }
   override def onResume(){

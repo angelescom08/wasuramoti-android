@@ -33,14 +33,15 @@
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">連続</string>
   <string name="conf_read_auto_title">自動詠み上げ</string>
-  <string name="conf_read_auto_summary">札を詠み終えた後しばらく停止し，その後次の札を詠み始める．</string>
+  <string name="conf_read_auto_summary">札を詠み終えた後しばらく停止し，その後次の札を詠み始める</string>
   <string name="conf_read_auto_span">詠み上げ間隔</string>
   <string name="conf_read_auto_span_summary">何秒間停止してから次の札を詠むか</string>
   <!-- CATEGORI_SUB -->
   <string name="category_sub">詳細</string> 
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
-
+  <string name="conf_silent_mode_on_start">マナーモード</string>
+  <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定，終了時に元に戻す</string>
   <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
   <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>
