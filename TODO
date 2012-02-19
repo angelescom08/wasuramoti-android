@@ -1,10 +1,11 @@
 Priority High:
+  * Set focus on 'timer start' button on notification timer.
+  * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
+  * Able to play kami-no-ku after simo-no-ku
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Special words such as 'one' 'two' 'red' in fuda sets
-  * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
   * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
-  * Able to play kami-no-ku after simo-no-ku
 
 Priority Middle:
   * Fuda-otoshi mode

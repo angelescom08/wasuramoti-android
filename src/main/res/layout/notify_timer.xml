@@ -9,7 +9,11 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content">
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:text="@string/timer_start_button" 
-            android:onClick="onTimerStartClick"/>
+            android:focusable = "true"
+            android:focusableInTouchMode = "true"
+            android:onClick="onTimerStartClick">
+      <requestFocus/>
+    </Button>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:text="@string/timer_cancel_button" 
             android:onClick="onTimerCancelClick"

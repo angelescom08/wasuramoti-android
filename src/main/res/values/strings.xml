@@ -100,4 +100,5 @@
   <string name="timers_minutes_left">min. left</string>
 
   <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targetted to your CPU.</string>
+  <string name="alarm_service_not_supported">ALARM_SERVICE is not supported on this device.</string>
 </resources>

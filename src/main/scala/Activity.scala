@@ -105,7 +105,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       return
     }
     val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-    if(am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
+    if(am != null && am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
       ringer_mode_bkup = Some(am.getRingerMode())
       am.setRingerMode(AudioManager.RINGER_MODE_SILENT)
     }
@@ -134,7 +134,9 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     super.onStop() 
     ringer_mode_bkup.foreach{ mode =>
       val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-      am.setRingerMode(mode)
+      if(am != null){
+        am.setRingerMode(mode)
+      }
     }
     ringer_mode_bkup = None
   }
@@ -147,9 +149,14 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       release_lock.foreach(_())
       release_lock = {
         val power_manager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-        val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
-        wake_lock.acquire()
-        Some( _ => wake_lock.release ) 
+        if(power_manager != null){
+          val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
+          wake_lock.acquire()
+          Some( _ => wake_lock.release )
+        }else{
+          println("WARNING: POWER_SERVICE is not supported on this device.")
+          None
+        }
       }
       val dimlock_minutes = Utils.getPrefAs[Int]("dimlock_minutes",5)
       timer_dimlock.foreach(_.cancel())

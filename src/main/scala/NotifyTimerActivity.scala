@@ -9,14 +9,14 @@ import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout}
 
 class NotifyTimerActivity extends Activity{
   val timer_icons = List(
-    (R.drawable.baby_tux,13),
+    (R.drawable.baby_tux,13), // icon_id, default_minutes
     (R.drawable.animals_dolphin,15)
   )
   val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,default),i) => (icon,default,i+1,new Object())}
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.notify_timer)
-    Globals.alarm_manager = Some(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
+    Globals.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)
     for( (icon,default,id,tag) <- timer_iter ){
       val vw = inflater.inflate(R.layout.notify_timer_item,null)
@@ -27,6 +27,10 @@ class NotifyTimerActivity extends Activity{
     }
   }
   def onTimerStartClick(v:View){
+    if(Globals.alarm_manager.isEmpty){
+      Utils.messageDialog(this,Right(R.string.alarm_service_not_supported))
+      return
+    }
     setAllTimeAlarm
     finish
   }
@@ -78,7 +82,7 @@ class NotifyTimerActivity extends Activity{
 class NotifyTimerReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
-      Globals.notify_manager = Some(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
+      Globals.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
       val contentIntent = PendingIntent.getActivity(context, 0,new Intent(), 0)
       val timer_id = intent.getExtras.getInt("timer_id")
       val icon = intent.getExtras.getInt("timer_icon")
@@ -95,7 +99,11 @@ class NotifyTimerReceiver extends BroadcastReceiver {
         if(intent.getExtras.getBoolean("do_vibrate")){
           // using `notif.defaults |= Notification.DEFAULT_VIBRATE' does not work when RINGER_MODE_SILENT
           val vib = context.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
-          vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(2000,500).map{_.toLong}}.flatten),-1)
+          if(vib != null){
+            vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(2000,500).map{_.toLong}}.flatten),-1)
+          }else{
+            println("WARNING: This device does not support VIBRATOR_SERVICE")
+          }
         }
       }
       notif.setLatestEventInfo(context, from, message, contentIntent)
