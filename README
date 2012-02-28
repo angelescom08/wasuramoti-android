@@ -1,26 +1,26 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.5.12
+  App Version: 0.6
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
-  Description: Hyakunin-Isshu Player which can be used for Kyogi-Karuta (Competitive Karuta).
-               `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport.
+  Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
+               `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport which uses the set.
   Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM,ARM-v7a,x86 CPU.
-        Therefore this wasuramoti-*.apk only works on those CPU's.
+        Therefore the wasuramoti-*.apk only works on those CPU's.
 
 [License]
-  This software open source software, and licensed under BSD 3-Clause License.
+  Wasuramoti is an open source software, which is licensed under BSD 3-Clause License.
   You can download the source code from http://sourceforge.net/projects/wasuramoti-andr/
-  The licence is written in COPYING file in the same directory of this README.
+  The licence is written in COPYING file which is placed on the same directory of this README.
 
-  However, note that the audio file enclosed in the package might have another licence, and
-  have some limits when redistributing.
-  I will write the copyrights and licence when packaging *.apk in below.
+  However, note that the audio file enclosed in the *.apk package might have another licence.
+  Therefore, redistributing the *.apk file might have some limits.
+  I will write the copyrights and licence of the audio file in below when packaging *.apk.
 
   __WRITE_AUDIO_LICENCE_HERE__
 
 [Credits]
-  This software uses the following library and copyrighted as follows:
+  This software uses the following library which is copyrighted as follows:
    - <libogg/libvorbis> Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [How to Install]
@@ -55,16 +55,17 @@
     src/main/assets/reader/<name>/<name>_100_2.ogg (lower phase of Momoshikiya)
 
   However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
-  and builds *.apk package. Therfore we should use this script.
+  and builds *.apk package. Therfore you should use this script to make *.apk file.
 
 [How to compile]
   Requirements:
-    openjdk 6 (or some other Java JDK)
+    openjdk6 (or some other Java JDK)
     scala 2.9.1
     sbt 0.11 (A Scala-Based Simple Build Tool)
     sbt-android-plugin 0.6.x
     android-sdk r16
-    android-platform r7
+    android-sdk-platform-tools r10
+    android-platform-15
     android-ndk r7
 
   Before executing the following command, you have to execute `cd src/main/jni/libogg-*/ && ./configure && make`

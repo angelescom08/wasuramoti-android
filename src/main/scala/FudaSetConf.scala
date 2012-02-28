@@ -8,7 +8,7 @@ import _root_.android.preference.DialogPreference
 import _root_.android.preference.PreferenceActivity
 import _root_.android.text.TextUtils
 import _root_.android.util.AttributeSet
-import _root_.android.view.View
+import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText}
 import _root_.java.util.ArrayList
 
@@ -63,7 +63,13 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     super.onDialogClosed(positiveResult)
   }
   override def onCreateDialogView():View = {
-    val view = super.onCreateDialogView()
+    super.onCreateDialogView()
+    // Using XML Attribute ``android:dialogLayout="@layout/fudaset"'' with ``android:onClick="..."'' does not work in Android 3.x.
+    // That is because it creates each button with context instanciated from ContextThemeWrapper, and causes
+    // ``java.lang.IllegalStateException: Could not find a method ... for onClick handler on view class android.widget.Button''
+    // Therefore we set the layout here. 
+    val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
+
     var persisted = getPersistedString("")
     adapter = Some(new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,listItems))
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]

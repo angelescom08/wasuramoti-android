@@ -10,6 +10,8 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
     super.onCreate(savedInstanceState)
+    val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
+    setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)
     findPreference("init_fudaset").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {

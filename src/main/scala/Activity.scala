@@ -76,8 +76,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       return
     }
 
-    val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
-    setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
     PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,false)
     Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
