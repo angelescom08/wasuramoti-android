@@ -28,7 +28,7 @@
   </string-array>
 
   <string name="conf_reader_list">Reader</string>
-  <string name="conf_reader_list_summary">Place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg</string>
+  <string name="conf_reader_list_summary">To add new audio file, place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg in SD Card</string>
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">Auto</string>
   <string name="conf_read_auto_title">Auto reading</string>

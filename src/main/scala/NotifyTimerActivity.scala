@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
 import _root_.android.media.AudioManager
-import _root_.android.os.{Bundle,Vibrator}
+import _root_.android.os.{Bundle,Vibrator,Parcelable}
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.content.{Intent,Context,BroadcastReceiver}
 import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout}
@@ -15,6 +15,7 @@ class NotifyTimerActivity extends Activity{
   val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,default),i) => (icon,default,i+1,new Object())}
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
+    Utils.initGlobals(getApplicationContext())
     setContentView(R.layout.notify_timer)
     Globals.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)
@@ -26,13 +27,21 @@ class NotifyTimerActivity extends Activity{
       findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
     }
   }
+  def myfinish(){
+    var intent = new Intent(this,classOf[WasuramotiActivity])
+    // TODO: implement Parcelable HashMap and send the following data in one row.
+    intent.putExtra("notify_timers_keys",Globals.notify_timers.keys.toArray[Int])
+    intent.putExtra("notify_timers_values",Globals.notify_timers.values.toArray[Parcelable])
+    setResult(Activity.RESULT_OK,intent)
+    finish
+  }
   def onTimerStartClick(v:View){
     if(Globals.alarm_manager.isEmpty){
       Utils.messageDialog(this,Right(R.string.alarm_service_not_supported))
       return
     }
     setAllTimeAlarm
-    finish
+    myfinish
   }
   def onTimerCancelClick(v:View){
     Globals.global_lock.synchronized{
@@ -45,7 +54,7 @@ class NotifyTimerActivity extends Activity{
         }catch{case e:Exception => Unit}
       }
     }
-    finish
+    myfinish
   }
   def setAllTimeAlarm(){
     Globals.global_lock.synchronized{

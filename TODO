@@ -1,12 +1,17 @@
 Priority High:
   * Able to show all the list of Kimari-ji, and Special words when editing fuda sets.
-  * Able to play simo-no-ku afuter kami-no-ku.
+  * Able to play simo-no-ku afuter kami-no-ku. or even in any order with any times.
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
   * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
   * Able to switch how to play silence (play silence or sleep thread)
   * Able to switch AudioTrack mode ( STREAM or STATIC )
+  * Able to call Activity / Dialog using GestureDetector onFling (set FLAG_ACTIVITY_NO_ANIMATION to each Intent)
+    - Up -> openOptionsMenu
+    - Down -> Move Dialog
+    - (Left -> Config Activity)
+    - (Right -> Timer Activity)
 
 Priority Middle:
   * Fuda-otoshi mode

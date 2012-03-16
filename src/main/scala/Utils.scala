@@ -4,6 +4,7 @@ import _root_.android.os.Handler
 import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager,ProgressDialog}
 import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
+import _root_.android.preference.PreferenceManager
 import _root_.java.io.File
 import _root_.java.util.Date
 import _root_.java.text.SimpleDateFormat
@@ -46,6 +47,21 @@ class ProgressDialogWithHandler(context:Context,handler:Handler) extends Progres
 }
 
 object Utils {
+  // Since every Activity has a possibility to be killed by android when it is background,
+  // all the Activity in this application should call this method in onCreate()
+  def initGlobals(app_context:Context) {
+    Globals.global_lock.synchronized{
+      if(Globals.database.isEmpty){
+        Globals.database = Some(new DictionaryOpenHelper(app_context))
+      }
+      PreferenceManager.setDefaultValues(app_context,R.xml.conf,false)
+      if(Globals.prefs.isEmpty){
+        Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
+      }
+      ReaderList.setDefaultReader(app_context) 
+    }
+  }
+
   def makeTimerText(context:Context):String = {
      val nt = Globals.notify_timers
      var title = context.getResources.getString(R.string.timers_remaining)

@@ -33,6 +33,7 @@ object General {
       -keep class scala.collection.immutable.Set
       -keep class scala.collection.mutable.ArrayBuffer
       -keep class scala.collection.mutable.Queue
+      -keep class scala.collection.mutable.HashMap
       -keep class scala.runtime.LongRef
       -keep class scala.runtime.VolatileIntRef
       -keep class scala.runtime.ObjectRef

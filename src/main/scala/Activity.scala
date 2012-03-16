@@ -2,16 +2,17 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.Activity
 import _root_.android.media.AudioManager
-import _root_.android.preference.PreferenceManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.os.{Bundle,Handler,PowerManager}
+import _root_.android.os.{Bundle,Handler,PowerManager,Parcelable}
 import _root_.android.view.{View,Menu,MenuItem}
 import _root_.android.widget.Button
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
+import scala.collection.mutable
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
+  val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
   var release_lock = None:Option[Unit=>Unit]
   var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
@@ -60,7 +61,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,_=>refreshAndSetButton()).show
-      case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
+      case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
     }
     return true
@@ -68,6 +69,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
     super.onCreate(savedInstanceState)
+    Utils.initGlobals(getApplicationContext())
 
     //try loading 'libvorbis.so'
     val decoder = new OggVorbisDecoder()
@@ -75,11 +77,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
       return
     }
-
-    Globals.database = Some(new DictionaryOpenHelper(getApplicationContext()))
-    PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,false)
-    Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))
-    ReaderList.setDefaultReader(getApplicationContext())
     setContentView(R.layout.main)
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     val handler = new Handler()
@@ -95,6 +92,38 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
           }
         }
       }))
+    if(savedInstanceState != null && savedInstanceState.containsKey("notify_timers_keys")){
+      var values = savedInstanceState.getParcelableArray("notify_timers_values").map{_.asInstanceOf[Intent]}
+      var keys = savedInstanceState.getIntArray("notify_timers_keys")
+      Globals.notify_timers.clear()
+      Globals.notify_timers ++= keys.zip(values)
+      // Since there is a possibility that Globals.notify_timers are updated during NotifyTimerReceiver.onReceive,
+      // we should remove the timers in the past.
+      // However if we can update the savedInstanceState value which is passed to onCreate
+      // in the NotifyTimerReceiver.onReceive, it is a much more general way.
+      // Therefore the following code is a tentative method.
+      // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code. 
+      Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
+    }
+  }
+  override def onSaveInstanceState(instanceState: Bundle){
+    // Sending HashMap in Bundle across the Activity using Serializable does not work.
+    // This is maybe because launchMode is singleTask or singleInstance.
+    // Thus we send keys and values separately as IntArray and ParcelableArray.
+    // TODO: implement Parcelable HashMap and send the following data in one row.
+    super.onSaveInstanceState(instanceState)
+    instanceState.putIntArray("notify_timers_keys",Globals.notify_timers.keys.toArray[Int])
+    instanceState.putParcelableArray("notify_timers_values",Globals.notify_timers.values.toArray[Parcelable])
+  }
+  override def onActivityResult(requestCode:Int,resultCode:Int,data:Intent){
+    if(requestCode == ACTIVITY_REQUEST_NOTIFY_TIMER && resultCode == Activity.RESULT_OK && data != null){
+      val keys = data.getIntArrayExtra("notify_timers_keys")
+      val values = data.getParcelableArrayExtra("notify_timers_values").map{_.asInstanceOf[Intent]}
+      Globals.notify_timers.clear()
+      Globals.notify_timers ++= keys.zip(values)
+    }else{
+      super.onActivityResult(requestCode,resultCode,data)
+    }
   }
   override def onStart(){
     super.onStart()

@@ -10,6 +10,11 @@ READER_DIR="${ROOT}/players/"
 READER_ASSETS="${ROOT}/src/main/assets/reader"
 TARGET_BASE="${ROOT}"
 
+function die(){
+  echo "$@"
+  exit
+}
+
 if [ $# -eq 0 ];then
   echo "USAGE: $0 [reader]"
   exit
@@ -27,7 +32,7 @@ done
 ln -s "${READER_DIR}"/$1 "${READER_ASSETS}"
 cd ${ROOT}
 
-sbt android:package-release
+sbt android:package-release || die compile FAILED
 
 APK_FILE=$(ls ${ROOT}/target/wasuramoti-*.apk)
 if [ $? -ne 0 ];then
@@ -44,10 +49,13 @@ fi
 
 VERSION=$(echo "${APK_FILE}" | sed -re 's!.*/wasuramoti-(.*).apk!\1!')
 TARGET_DIR="${TARGET_BASE}/wasuramoti-android-${READER}-${VERSION}"
+if [ -e "${TARGET_DIR}" ];then
+  rm -rf "${TARGET_DIR}"
+fi
 mkdir "${TARGET_DIR}"
-jarsigner -verbose -keystore "${KEYSTORE}" "${APK_FILE}" techkey
+jarsigner -verbose -keystore "${KEYSTORE}" "${APK_FILE}" techkey || die jarsigner FAILED
 TARGET_FILE="${TARGET_DIR}/wasuramoti-${READER}-${VERSION}.apk"
-zipalign -v 4 "${APK_FILE}" "${TARGET_FILE}"
+zipalign -v 4 "${APK_FILE}" "${TARGET_FILE}" || die zipalign FAILED
 echo "${TARGET_FILE} created"
 cat "${ROOT}/README" | sed -e "/__WRITE_AUDIO_LICENCE_HERE__/{
 r ${AUDIO_LICENCE}
