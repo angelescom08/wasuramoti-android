@@ -6,9 +6,9 @@ import AndroidKeys._
 object General {
   val settings = Defaults.defaultSettings ++ Seq (
     name := "Wasuramoti",
-    version := "0.6.1",
+    version := "0.6.2",
     scalaVersion := "2.9.1",
-    platformName in Android := "android-15"
+    platformName in Android := "android-7"
   )
 
   lazy val fullAndroidSettings =
