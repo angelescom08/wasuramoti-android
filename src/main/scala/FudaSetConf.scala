@@ -37,16 +37,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       }
       cursor.close()
       db.close()
-      var haveto_read = Set[String]()
-      if(! TextUtils.isEmpty(body)){
-        val trie = CreateTrie.makeTrie(AllFuda.list)
-        for( s <- body.split(" ") ){
-          val ss = trie.traversePrefix(s).toSet
-          haveto_read ++= ss
-        }
-      }else{
-        haveto_read = AllFuda.list.toSet
-      }
+      val haveto_read = AllFuda.makeHaveToRead(body)
       val skip = AllFuda.list.toSet -- haveto_read
       val dbw = Globals.database.get.getWritableDatabase
       Utils.withTransaction(dbw, ()=>
@@ -103,6 +94,7 @@ trait FudaSetTrait{
     return (adapter,pos)
   }
   def editFudaSetBase(view:View,is_add:Boolean,orig_title:String=""){
+    val PATTERN_HIRAGANA = new Regex("[あ-ん]+")
     val context = this
     val (adapter,pos) = getSpinnerSelected(view)
     val dialog = new Dialog(this)
@@ -121,6 +113,9 @@ trait FudaSetTrait{
       cursor.close()
       db.close()
       body_view.setLocalizationText(body)
+    }
+    val makeKimarijiSetFromBodyView = { _:Unit =>
+       AllFuda.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(body_view.getLocalizationText()).toList)
     }
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
@@ -145,9 +140,8 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
         }
-        val body = body_view.getLocalizationText()
-        var pat = new Regex("[あ-ん]+")
-        AllFuda.makeKimarijiSet(pat.findAllIn(body).toList) match {
+        val body = 
+        makeKimarijiSetFromBodyView() match {
         case None => 
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
@@ -180,6 +174,13 @@ trait FudaSetTrait{
     dialog.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
          dialog.dismiss()
+      }
+    })
+    dialog.findViewById(R.id.button_fudasetedit_list).setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        val s = body_view.getLocalizationText()
+        val d = new FudaSetEditListDialog(context,s,{body_view.setLocalizationText(_)})
+        d.show()
       }
     })
     dialog.show()

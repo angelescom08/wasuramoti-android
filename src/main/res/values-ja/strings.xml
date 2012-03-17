@@ -71,6 +71,7 @@
   <string name="fudasetedit_title">札セットの追加/編集</string>
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
+  <string name="button_fudasetedit_list">一覧</string>
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
   <string name="fudasetedit_titleempty">タイトルが空白です</string>
   <string name="fudasetedit_titleduplicated">すでに同じタイトルの札セットが存在します</string>

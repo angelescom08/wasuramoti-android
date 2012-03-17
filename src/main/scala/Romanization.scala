@@ -16,11 +16,7 @@ class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(
     return text
   }
   def setLocalizationText(text:String){
-    if(!Romanization.is_japanese(context)){
-      setText(Romanization.jap_to_roma(text))
-    }else{
-      setText(text)
-    }
+    setText(Romanization.jap_to_local(context,text))
   }
 }
 
@@ -63,4 +59,5 @@ object Romanization{
     val loc = context.getResources.getConfiguration.locale
     loc.equals(Locale.JAPAN) || loc.equals(Locale.JAPANESE)
   }
+  def jap_to_local(context:Context,text:String):String = if (is_japanese(context)){ text } else {jap_to_roma(text)}
 }

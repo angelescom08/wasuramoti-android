@@ -22,15 +22,26 @@
   <karuta.hpnpwd.wasuramoti.LocalizationEditText android:id="@+id/fudasetedit_text"
     android:layout_width="fill_parent" android:layout_height="170sp"
     android:gravity="top" />
-  <LinearLayout
+  <RelativeLayout
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal" >
     <Button android:id="@+id/button_ok"
       android:layout_width="100sp" android:layout_height="wrap_content"
-      android:text="@string/button_ok" />
+      android:text="@string/button_ok"
+      android:layout_alignParentTop="true"
+      />
     <Button android:id="@+id/button_cancel"
       android:layout_width="100sp" android:layout_height="wrap_content"
-      android:text="@string/button_cancel" />
-  </LinearLayout>
+      android:text="@string/button_cancel"
+      android:layout_alignParentTop="true"
+      android:layout_toRightOf="@+id/button_ok"
+      />
+    <Button android:id="@+id/button_fudasetedit_list"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/button_fudasetedit_list" 
+      android:layout_alignParentTop="true"
+      android:layout_alignParentRight="true"
+      />
+  </RelativeLayout>
 </LinearLayout>
 </ScrollView>

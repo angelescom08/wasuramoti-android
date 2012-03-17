@@ -1,5 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
+import _root_.android.text.TextUtils
+import scala.collection.mutable
+
 object AllFuda{
   val list:Array[String] = Array(
 "あきの","はるす","あし","たご","おく",
@@ -52,7 +55,7 @@ object AllFuda{
   }
   def makeKimarijiSet(str_list:List[String]):Option[(String,Int)] = {
     val trie = CreateTrie.makeTrie(AllFuda.list)
-    var st = Set[String]()
+    var st = mutable.Set[String]()
     for( m <- str_list ){
       st ++= trie.traversePrefix(m)
     }
@@ -64,5 +67,16 @@ object AllFuda{
         .sortWith(AllFuda.compareMusumefusahose).mkString(" ")
       Some((kimari,st.size))
     }
+  }
+  def makeHaveToRead(str:String):Set[String] = {
+    if(TextUtils.isEmpty(str)){
+      return AllFuda.list.toSet
+    }
+    var ret = mutable.Set[String]()
+    val trie = CreateTrie.makeTrie(AllFuda.list)
+    for( s <- str.split(" ") ){
+      ret ++= trie.traversePrefix(s).toSet
+    }
+    return ret.toSet
   }
 }

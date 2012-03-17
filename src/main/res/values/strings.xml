@@ -70,6 +70,7 @@
   <string name="fudasetedit_title">Add/Edit Fuda sets</string>
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_text">First chracters of upper phase in romanization. (e.g. asazi, koi, oo)</string>
+  <string name="button_fudasetedit_list">List</string>
   <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
   <string name="fudasetedit_titleempty">The title is empty</string>
   <string name="fudasetedit_titleduplicated">Fuda sets with same name already exists.</string>
