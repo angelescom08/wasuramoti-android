@@ -249,7 +249,11 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     }
   }
   def waitDecode(){
-    audio_queue ++= decode_task.get()
+    Globals.global_lock.synchronized{
+      if(audio_queue.isEmpty){
+        audio_queue ++= decode_task.get()
+      }
+    }
   }
   class OggDecodeTask extends AsyncTask[AnyRef,Void,AudioQueue] {
     var progress = None:Option[ProgressDialog]
