@@ -4,6 +4,8 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.content.Context
 import _root_.android.view.Gravity
+import _root_.android.os.AsyncTask
+import _root_.android.app.ProgressDialog
 import _root_.java.io.{File,FileInputStream,RandomAccessFile}
 import _root_.java.nio.{ByteBuffer,ByteOrder,ShortBuffer}
 import _root_.java.nio.channels.FileChannel
@@ -11,21 +13,22 @@ import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable
 
 object AudioHelper{
-  def refreshKarutaPlayer(context:Context,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
-    val maybe_reader = ReaderList.makeCurrentReader(context)
+  def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
+    val app_context = activity.getApplicationContext()
+    val maybe_reader = ReaderList.makeCurrentReader(app_context)
     if(maybe_reader.isEmpty){
       return None
     }
-    val current_index = FudaListHelper.getCurrentIndex(context)
+    val current_index = FudaListHelper.getCurrentIndex(app_context)
     val num = if("RANDOM" == Globals.prefs.get.getString("read_order",null)){
       val cur_num = Globals.player match {
         case Some(player) => player.kami_num
         case None => 0
       }
-      val next_num = FudaListHelper.queryRandom(context)
+      val next_num = FudaListHelper.queryRandom(app_context)
       Some(cur_num,next_num)
     }else{
-      FudaListHelper.queryNext(context,current_index).map{
+      FudaListHelper.queryNext(app_context,current_index).map{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
@@ -35,7 +38,7 @@ object AudioHelper{
         }else if(force || old_player.isEmpty || old_player.get.reader.path != maybe_reader.get.path || 
         old_player.get.simo_num != cur_num || old_player.get.kami_num != next_num
         ){
-          Some(new KarutaPlayer(context,maybe_reader.get,cur_num,next_num))
+          Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{
           old_player
         }
@@ -156,18 +159,17 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   }
 }
 
-class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_num:Int){
+class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:Int,val kami_num:Int){
+  type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
 
-  var decode_thread = None:Option[Thread]
   var audio_thread = None:Option[Thread]
   var simo_millsec = 0:Long
   var timer_start = None:Option[Timer]
   var timer_simoend = None:Option[Timer]
-  var is_decoding = false
   var is_kaminoku = false
   var audio_track = None:Option[AudioTrack]
-  var audio_queue = None:Option[mutable.Queue[Either[WavBuffer,Int]]] // file or silence in millisec 
-  startDecode()
+  val audio_queue = new AudioQueue() // file or silence in millisec 
+  val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
   def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
@@ -175,7 +177,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
         return
       }
       Globals.is_playing = true
-      Utils.setButtonTextByState(context)
+      Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
       timer_start.get.schedule(new TimerTask(){
         override def run(){
@@ -195,12 +197,12 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
             onSimoEnd()
             is_kaminoku=true
           }},simo_millsec)
-      audio_track = Some(AudioHelper.makeAudioTrack(audio_queue.get.find{_.isLeft}.get match{case Left(w)=>w.decoder}))
+      audio_track = Some(AudioHelper.makeAudioTrack(audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}))
       audio_track.get.play()
 
       audio_thread = Some(new Thread(new Runnable(){
         override def run(){
-          audio_queue.foreach{_.foreach{ arg =>{
+          audio_queue.foreach{ arg =>{
             audio_track.foreach{ track =>
               arg match {
                 case Left(w) => w.writeToAudioTrack(track)
@@ -210,7 +212,7 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
             if(Thread.interrupted()){
               return
             }
-          }}}
+          }}
           audio_track.foreach(x => {x.stop();x.release()})
           audio_track = None
           Globals.is_playing=false
@@ -246,62 +248,65 @@ class KarutaPlayer(context:Context,val reader:Reader,val simo_num:Int,val kami_n
 
     }
   }
-  def startDecode(){ 
-    Globals.global_lock.synchronized{
-      if(is_decoding){
-        return
-      }
-      Globals.progress_dialog.foreach{ pd => {
-        pd.setMessage(context.getResources.getString(R.string.now_decoding))
-        pd.getWindow.setGravity(Gravity.BOTTOM)
-        pd.showWithHandler()
-      }}
-      is_decoding = true
-      val t = new Thread(new Runnable(){
+  def waitDecode(){
+    audio_queue ++= decode_task.get()
+  }
+  class OggDecodeTask extends AsyncTask[AnyRef,Void,AudioQueue] {
+    var progress = None:Option[ProgressDialog]
+    override def onPreExecute(){
+      activity.runOnUiThread(new Runnable{
         override def run(){
-          Utils.deleteCache(context,path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
-          audio_queue = Some(new mutable.Queue[Either[WavBuffer,Int]]())
-          simo_millsec = 0
-          val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami",1.0) * 1000).toInt
-          def add_to_audio_queue(w:Either[WavBuffer,Int],is_kami:Boolean){
-            audio_queue.foreach{_.enqueue(w)}
-            val alen = w match{
-              case Left(wav) => wav.audioLength
-              case Right(len) => len
-            }
-            if(!is_kami){
-              simo_millsec += alen
-            }
-          }
-          if(simo_num == 0 && reader.exists(simo_num,1)){
-            reader.withDecodedWav(simo_num, 1, wav => {
-               wav.trimFadeSimo()
-               add_to_audio_queue(Left(wav),false)
-            })
-            add_to_audio_queue(Right(span_simokami),false)
-          }
-          reader.withDecodedWav(simo_num, 2, wav => {
-             wav.trimFadeSimo()
-             add_to_audio_queue(Left(wav),false)
-             if(simo_num == 0 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-               add_to_audio_queue(Right(span_simokami),false)
-               add_to_audio_queue(Left(wav),false)
-             }
-          })
-          add_to_audio_queue(Right(span_simokami),false)
-          reader.withDecodedWav(kami_num, 1, wav => {
-             wav.trimFadeKami()
-             add_to_audio_queue(Left(wav),true)
-          })
-          is_decoding = false
-          Globals.progress_dialog.foreach{_.dismissWithHandler()}
+          progress = Some(new ProgressDialog(activity))
+          progress.get.setMessage(activity.getApplicationContext().getResources.getString(R.string.now_decoding))
+          progress.get.getWindow.setGravity(Gravity.BOTTOM)
+          progress.get.show()
         }
       })
-      decode_thread = Some(t)
-      t.start
+    }
+    override def onPostExecute(unused:AudioQueue){
+      activity.runOnUiThread(new Runnable{
+        override def run(){
+          progress.get.dismiss()
+        }
+      })
+    }
+    override def doInBackground(unused:AnyRef*):AudioQueue = {
+      Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
+      val res_queue = new AudioQueue()
+      simo_millsec = 0
+      val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami",1.0) * 1000).toInt
+      def add_to_audio_queue(w:Either[WavBuffer,Int],is_kami:Boolean){
+        res_queue.enqueue(w)
+        val alen = w match{
+          case Left(wav) => wav.audioLength
+          case Right(len) => len
+        }
+        if(!is_kami){
+          simo_millsec += alen
+        }
+      }
+      if(simo_num == 0 && reader.exists(simo_num,1)){
+        reader.withDecodedWav(simo_num, 1, wav => {
+           wav.trimFadeSimo()
+           add_to_audio_queue(Left(wav),false)
+        })
+        add_to_audio_queue(Right(span_simokami),false)
+      }
+      reader.withDecodedWav(simo_num, 2, wav => {
+         wav.trimFadeSimo()
+         add_to_audio_queue(Left(wav),false)
+         if(simo_num == 0 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
+           add_to_audio_queue(Right(span_simokami),false)
+           add_to_audio_queue(Left(wav),false)
+         }
+      })
+      add_to_audio_queue(Right(span_simokami),false)
+      reader.withDecodedWav(kami_num, 1, wav => {
+         wav.trimFadeKami()
+         add_to_audio_queue(Left(wav),true)
+      })
+      return(res_queue)
     }
   }
-  def waitDecode(){
-    decode_thread.foreach(_.join())
-  }
 }
+

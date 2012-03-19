@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.os.Handler
-import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager,ProgressDialog}
+import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
 import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
@@ -29,21 +29,7 @@ object Globals {
   var setButtonText = None:Option[Either[String,Int]=>Unit]
   var alarm_manager = None:Option[AlarmManager]
   var notify_manager = None:Option[NotificationManager]
-  var progress_dialog = None:Option[ProgressDialogWithHandler]
   var is_playing = false
-}
-
-class ProgressDialogWithHandler(context:Context,handler:Handler) extends ProgressDialog(context){
-  def showWithHandler(){
-    handler.post(new Runnable{
-      override def run(){show()}
-    })
-  }
-  def dismissWithHandler(){
-    handler.post(new Runnable{
-      override def run(){dismiss()}  
-    })
-  }
 }
 
 object Utils {

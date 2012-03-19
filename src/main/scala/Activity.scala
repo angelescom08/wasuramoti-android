@@ -38,7 +38,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
   }
   def refreshAndSetButton(force:Boolean = false){
-    Globals.player = AudioHelper.refreshKarutaPlayer(getApplicationContext(),Globals.player,force)
+    Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
     Utils.setButtonTextByState(getApplicationContext())
   }
   override def onCreateOptionsMenu(menu: Menu) : Boolean = {
@@ -80,7 +80,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     setContentView(R.layout.main)
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     val handler = new Handler()
-    Globals.progress_dialog = Some(new ProgressDialogWithHandler(this,handler))
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
