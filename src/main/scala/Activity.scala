@@ -213,14 +213,11 @@ trait MainButtonTrait{
       timer_autoread = None
 
       if(Globals.is_playing){
-        if(!player.is_kaminoku){
-          player.stop()
-          Utils.setButtonTextByState(self.getApplicationContext())
-        }
+        player.stop()
+        Utils.setButtonTextByState(self.getApplicationContext())
       }else{
         startDimLockTimer()
         player.play(
-          identity[Unit],
           _ => {
             val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
             if(is_shuffle){ 

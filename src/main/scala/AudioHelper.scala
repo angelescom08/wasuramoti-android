@@ -163,15 +163,12 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
 
   var audio_thread = None:Option[Thread]
-  var simo_millsec = 0:Long
   var timer_start = None:Option[Timer]
-  var timer_simoend = None:Option[Timer]
-  var is_kaminoku = false
   var audio_track = None:Option[AudioTrack]
   val audio_queue = new AudioQueue() // file or silence in millisec 
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
-  def play(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
+  def play(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -181,22 +178,16 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       timer_start = Some(new Timer())
       timer_start.get.schedule(new TimerTask(){
         override def run(){
-          onReallyStart(onSimoEnd,onKamiEnd)
+          onReallyStart(onKamiEnd)
           timer_start.foreach(_.cancel())
           timer_start = None
         }},(Utils.getPrefAs[Double]("wav_begin_read",0.5)*1000.0).toLong)
     }
   }
 
-  def onReallyStart(onSimoEnd:Unit=>Unit=identity[Unit],onKamiEnd:Unit=>Unit=identity[Unit]){
+  def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       waitDecode()
-      timer_simoend = Some(new Timer())
-      timer_simoend.get.schedule(new TimerTask(){
-          override def run(){
-            onSimoEnd()
-            is_kaminoku=true
-          }},simo_millsec)
       audio_track = Some(AudioHelper.makeAudioTrack(audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}))
       audio_track.get.play()
 
@@ -222,12 +213,11 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       audio_thread.get.start()
     }
   }
+  
   def stop(){
     Globals.global_lock.synchronized{
       timer_start.foreach(_.cancel())
       timer_start = None
-      timer_simoend.foreach(_.cancel())
-      timer_simoend = None
       audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
       audio_track.foreach(track => {
           track.flush()
@@ -277,37 +267,33 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     override def doInBackground(unused:AnyRef*):AudioQueue = {
       Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
       val res_queue = new AudioQueue()
-      simo_millsec = 0
       val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami",1.0) * 1000).toInt
-      def add_to_audio_queue(w:Either[WavBuffer,Int],is_kami:Boolean){
+      def add_to_audio_queue(w:Either[WavBuffer,Int]){
         res_queue.enqueue(w)
         val alen = w match{
           case Left(wav) => wav.audioLength
           case Right(len) => len
         }
-        if(!is_kami){
-          simo_millsec += alen
-        }
       }
       if(simo_num == 0 && reader.exists(simo_num,1)){
         reader.withDecodedWav(simo_num, 1, wav => {
            wav.trimFadeSimo()
-           add_to_audio_queue(Left(wav),false)
+           add_to_audio_queue(Left(wav))
         })
-        add_to_audio_queue(Right(span_simokami),false)
+        add_to_audio_queue(Right(span_simokami))
       }
       reader.withDecodedWav(simo_num, 2, wav => {
          wav.trimFadeSimo()
-         add_to_audio_queue(Left(wav),false)
+         add_to_audio_queue(Left(wav))
          if(simo_num == 0 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-           add_to_audio_queue(Right(span_simokami),false)
-           add_to_audio_queue(Left(wav),false)
+           add_to_audio_queue(Right(span_simokami))
+           add_to_audio_queue(Left(wav))
          }
       })
-      add_to_audio_queue(Right(span_simokami),false)
+      add_to_audio_queue(Right(span_simokami))
       reader.withDecodedWav(kami_num, 1, wav => {
          wav.trimFadeKami()
-         add_to_audio_queue(Left(wav),true)
+         add_to_audio_queue(Left(wav))
       })
       return(res_queue)
     }
