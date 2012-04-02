@@ -41,6 +41,17 @@
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_silent_mode_on_start">Silent Mode</string>
   <string name="conf_silent_mode_on_start_summary">Set Silent Mode on start-up, unset on close.</string>
+  <string name="conf_audio_track_mode">AudioTrack Mode</string>
+  <string name="conf_audio_track_mode_summary">Choose `Stream` if your device has small memory. However, setting it may cause some noise.</string>
+  <string-array name="conf_audio_track_entries">
+    <item>Static</item>
+    <item>Stream</item>
+  </string-array>
+  <string-array name="conf_audio_track_entryValues">
+    <item>STATIC</item>
+    <item>STREAM</item>
+  </string-array>
+
   <string name="conf_read_simo_joka_twice">Lower phase of 0th poem twice</string>
   <string name="conf_read_simo_joka_twice_summary">Whether to play &lt;name&gt;_000_2.ogg twice.</string>
   <string name="conf_wav_begin_read">Beginnig to read</string>

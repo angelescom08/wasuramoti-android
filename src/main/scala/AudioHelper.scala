@@ -13,6 +13,10 @@ import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable
 
 object AudioHelper{
+  def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
+    // TODO: Consider Stereo
+    (java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000
+  }
   def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
     val maybe_reader = ReaderList.makeCurrentReader(app_context)
@@ -45,28 +49,32 @@ object AudioHelper{
       }
     }
   }
-  def makeAudioTrack(decoder:OggVorbisDecoder):AudioTrack ={
-    val audio_format = if(decoder.bit_depth == 16){
-      AudioFormat.ENCODING_PCM_16BIT
+  def makeAudioTrack(decoder:OggVorbisDecoder,is_stream:Boolean,buffer_size_bytes:Int=0):AudioTrack ={
+    val (audio_format,rate_1) = if(decoder.bit_depth == 16){
+      (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
       //TODO:set appropriate value
-      AudioFormat.ENCODING_PCM_8BIT
+      (AudioFormat.ENCODING_PCM_8BIT,1)
     }
-    val channels = if(decoder.channels == 1){
-      AudioFormat.CHANNEL_CONFIGURATION_MONO
+    val (channels,rate_2) = if(decoder.channels == 1){
+      (AudioFormat.CHANNEL_CONFIGURATION_MONO,1)
     }else{
-      AudioFormat.CHANNEL_CONFIGURATION_STEREO
+      (AudioFormat.CHANNEL_CONFIGURATION_STEREO,2)
     }
 
-    val buffer_size = AudioTrack.getMinBufferSize(
-      decoder.rate.toInt, channels, audio_format); 
+    val (buffer_size,mode) = if(is_stream){
+        (AudioTrack.getMinBufferSize(
+          decoder.rate.toInt, channels, audio_format), AudioTrack.MODE_STREAM)
+      }else{
+        (buffer_size_bytes, AudioTrack.MODE_STATIC)
+      }
 
     new AudioTrack( AudioManager.STREAM_MUSIC,
       decoder.rate.toInt,
       channels,
       audio_format,
       buffer_size,
-      AudioTrack.MODE_STREAM )
+      mode )
   }
   def writeSilence(track:AudioTrack,millisec:Int){
     val buf = new Array[Short](track.getSampleRate()*millisec/1000)
@@ -88,7 +96,7 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   def audioLength():Long = {
     (1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong
   }
-  def bufferSize():Int = {
+  def bufferSizeInBytes():Int = {
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
   }
   def writeToAudioTrack(track:AudioTrack){
@@ -100,6 +108,13 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     buffer.get(b,0,b_size)
     buffer.rewind()
     track.write(b,0,b_size)
+  }
+  def WriteToShortBuffer(dst:Array[Short],offset:Int):Int = {
+    val b_size = index_end-index_begin
+    buffer.position(index_begin)
+    buffer.get(dst,offset,if(offset+b_size > dst.length){dst.length-offset}else{b_size})
+    buffer.rewind()
+    return(b_size)
   }
   def threasholdIndex(threashold:Double,fromEnd:Boolean):Int = {
     val (bg,ed,step) = if(fromEnd){
@@ -164,6 +179,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
 
   var audio_thread = None:Option[Thread]
   var timer_start = None:Option[Timer]
+  var timer_onend = None:Option[Timer]
   var audio_track = None:Option[AudioTrack]
   val audio_queue = new AudioQueue() // file or silence in millisec 
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
@@ -188,29 +204,73 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       waitDecode()
-      audio_track = Some(AudioHelper.makeAudioTrack(audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}))
-      audio_track.get.play()
+      val firstDecoder = audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
+      val do_when_done = { _:Unit => {  
+        audio_track.foreach(x => {x.stop();x.release()})
+        audio_track = None
+        Globals.is_playing=false
+        onKamiEnd()
+      }}
+      if(Globals.prefs.get.getString("audio_track_mode","STATIC") == "STREAM"){
+        // Play with AudioTrack.MODE_STREAM
+        // This method requires small memory, but there is possibility of noize at few seconds after writeToAudioTrack.
+        // I could not confirm such noice in my device, but some users claim that they have a noize in the beggining of upper poem.
 
-      audio_thread = Some(new Thread(new Runnable(){
-        override def run(){
-          audio_queue.foreach{ arg =>{
-            audio_track.foreach{ track =>
-              arg match {
-                case Left(w) => w.writeToAudioTrack(track)
-                case Right(millisec) => AudioHelper.writeSilence(track,millisec)
+        audio_track = Some(AudioHelper.makeAudioTrack(firstDecoder,true))
+        audio_track.get.play()
+        audio_thread = Some(new Thread(new Runnable(){
+          override def run(){
+            audio_queue.foreach{ arg =>{
+              audio_track.foreach{ track =>
+                arg match {
+                  case Left(w) => w.writeToAudioTrack(track)
+                  case Right(millisec) => AudioHelper.writeSilence(track,millisec)
+                }
               }
+              if(Thread.interrupted()){
+                return
+              }
+            }}
+            do_when_done()
+          }
+        }))
+        audio_thread.get.start()
+      }else{
+        // Play with AudioTrack.MODE_STATIC
+        // This method requires some memory overhead, but able to reduce possibility of noize since it only writes to AudioTrack once.
+
+        val buffer_size = audio_queue.map{ arg =>{
+            arg match {
+              case Left(w) => w.bufferSizeInBytes()
+              case Right(millisec) => AudioHelper.millisecToBufferSizeInBytes(firstDecoder,millisec)
             }
-            if(Thread.interrupted()){
-              return
+          }
+        }.sum
+        val buffer_length_millisec = audio_queue.map{ arg =>{
+          arg match {
+            case Left(w) => w.audioLength()
+            case Right(millisec) => millisec
             }
-          }}
-          audio_track.foreach(x => {x.stop();x.release()})
-          audio_track = None
-          Globals.is_playing=false
-          onKamiEnd()
+          }
+        }.sum
+        val buf = new Array[Short](buffer_size/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
+        var offset = 0
+        audio_queue.foreach{ arg => {
+            arg match {
+              case Left(w) => offset += w.WriteToShortBuffer(buf,offset) 
+              case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(firstDecoder,millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
+              }
+          }
         }
-      }))
-      audio_thread.get.start()
+        audio_track = Some(AudioHelper.makeAudioTrack(firstDecoder,false,buffer_size))
+        audio_track.get.write(buf,0,buf.length)
+        timer_onend = Some(new Timer())
+        timer_onend.get.schedule(new TimerTask(){
+          override def run(){
+            do_when_done()
+          }},buffer_length_millisec +200) // +200 is just for sure that audio is finished playing
+        audio_track.get.play()
+      }
     }
   }
   
@@ -218,6 +278,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     Globals.global_lock.synchronized{
       timer_start.foreach(_.cancel())
       timer_start = None
+      timer_onend.foreach(_.cancel())
+      timer_onend = None
       audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
       audio_track.foreach(track => {
           track.flush()

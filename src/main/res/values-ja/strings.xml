@@ -42,6 +42,8 @@
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定，終了時に元に戻す</string>
+  <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
+  <string name="conf_audio_track_mode_summary">メモリの少ない端末では「Stream」を使用して下さい．ただし上の句の最初に雑音が入る可能性があります</string>
   <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
   <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>

@@ -47,6 +47,14 @@
       android:title="@string/conf_silent_mode_on_start"
       android:summary="@string/conf_silent_mode_on_start_summary"
       />
+    <ListPreference
+      android:key="audio_track_mode"
+      android:title="@string/conf_audio_track_mode"
+      android:summary="@string/conf_audio_track_mode_summary"
+      android:entries="@array/conf_audio_track_entries"
+      android:entryValues="@array/conf_audio_track_entryValues" 
+      android:defaultValue="STATIC"
+      />
     <CheckBoxPreference
       android:key="read_simo_joka_twice"
       android:title="@string/conf_read_simo_joka_twice"
