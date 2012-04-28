@@ -23,9 +23,13 @@
     <item>シャッフル</item>
     <item>ランダム</item>
   </string-array>
-  <string-array name="conf_read_order_entryValues">
-    <item>SHUFFLE</item>
-    <item>RANDOM</item>
+
+  <string name="conf_read_order_each_title">札ごとの詠み順</string>
+  <string name="conf_read_order_each_summary">下の句-&gt;上の句, 上の句-&gt;下の句, 下の句2回</string>
+  <string-array name="conf_read_order_each_entries">
+    <item>下の句-&gt;上の句</item>
+    <item>上の句-&gt;下の句</item>
+    <item>下の句-&gt;上の句 -&gt;下の句</item>
   </string-array>
 
   <string name="conf_reader_list">詠み手</string>
@@ -53,9 +57,9 @@
   <string name="conf_wav_threshold">閾値</string>
   <string name="conf_wav_threshold_summary">音の強さがこれ以下の音は無音とみなす</string>
   <string name="conf_wav_fadeout_simo">フェードアウト</string>
-  <string name="conf_wav_fadout_simo_summary">下の句のフェードアウト秒数</string>
+  <string name="conf_wav_fadout_simo_summary">フェードアウト秒数</string>
   <string name="conf_wav_fadein_kami">フェードイン</string>
-  <string name="conf_wav_fadein_kami_summary">上の句のフェードイン秒数</string>
+  <string name="conf_wav_fadein_kami_summary">フェードイン秒数</string>
   <!-- CATEGORY_CLEAR -->
   <string name="category_init">初期化</string>
   <string name="conf_init_fudaset">札セットの初期化</string>

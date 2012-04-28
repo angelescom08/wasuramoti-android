@@ -15,6 +15,14 @@
       android:entryValues="@array/conf_read_order_entryValues" 
       android:defaultValue="SHUFFLE"
       />
+    <ListPreference
+      android:key="read_order_each"
+      android:title="@string/conf_read_order_each_title"
+      android:summary="@string/conf_read_order_each_summary"
+      android:entries="@array/conf_read_order_each_entries"
+      android:entryValues="@array/conf_read_order_each_entryValues" 
+      android:defaultValue="CUR2_NEXT1"
+      />
     <karuta.hpnpwd.wasuramoti.ReaderListPreference
       android:key="reader_path"
       android:title="@string/conf_reader_list"

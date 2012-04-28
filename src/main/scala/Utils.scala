@@ -30,6 +30,7 @@ object Globals {
   var alarm_manager = None:Option[AlarmManager]
   var notify_manager = None:Option[NotificationManager]
   var is_playing = false
+  var forceRefresh = false
 }
 
 object Utils {

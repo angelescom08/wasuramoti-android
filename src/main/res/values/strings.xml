@@ -27,6 +27,18 @@
     <item>RANDOM</item>
   </string-array>
 
+  <string name="conf_read_order_each_title">Read order of each fuda</string>
+  <string name="conf_read_order_each_summary">Lower to Upper, Upper to Lower, and so on</string>
+  <string-array name="conf_read_order_each_entries">
+    <item>Lower -&gt; Uppper</item>
+    <item>Upper -&gt; Lower</item>
+    <item>Lower -&gt; Uppper -&gt; Lower</item>
+  </string-array>
+  <string-array name="conf_read_order_each_entryValues">
+    <item>CUR2_NEXT1</item>
+    <item>CUR1_CUR2</item>
+    <item>CUR2_NEXT1_NEXT2</item>
+  </string-array>
   <string name="conf_reader_list">Reader</string>
   <string name="conf_reader_list_summary">To add new audio file, place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg in SD Card</string>
   <!-- CATEGORY_AUTO -->
@@ -61,9 +73,9 @@
   <string name="conf_wav_threshold">Threshold</string>
   <string name="conf_wav_threshold_summary">Treat as silence if amplitude is lower than this value</string>
   <string name="conf_wav_fadeout_simo">Fade Out</string>
-  <string name="conf_wav_fadout_simo_summary">How many seconds to fade out for lower phase.</string>
+  <string name="conf_wav_fadout_simo_summary">How many seconds to fade out.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
-  <string name="conf_wav_fadein_kami_summary">How many seconds to fade in for upper phase</string>
+  <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
   <!-- CATEGORY_CLEAR -->
   <string name="category_init">Initialize</string>
   <string name="conf_init_fudaset">Initialize Fudasets</string>

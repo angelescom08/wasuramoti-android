@@ -39,9 +39,10 @@ object AudioHelper{
     num.flatMap{case(cur_num,next_num) =>{
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
-        }else if(force || old_player.isEmpty || old_player.get.reader.path != maybe_reader.get.path || 
+        }else if(force || Globals.forceRefresh || old_player.isEmpty || 
         old_player.get.simo_num != cur_num || old_player.get.kami_num != next_num
         ){
+          Globals.forceRefresh = false
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{
           old_player
@@ -147,7 +148,7 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     }
   }
   // fadein
-  def trimFadeKami(){
+  def trimFadeIn(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
     val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami",0.1) * decoder.rate).toInt
     val beg = threasholdIndex(threashold,false)
@@ -160,7 +161,7 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     }
   }
   // fadeout
-  def trimFadeSimo(){
+  def trimFadeOut(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
     val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo",0.2) * decoder.rate).toInt
     val end = threasholdIndex(threashold,true)
@@ -337,26 +338,42 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
           case Right(len) => len
         }
       }
-      if(simo_num == 0 && reader.exists(simo_num,1)){
+      val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+      val ss = read_order_each.split("_")
+      if(simo_num == 0 && read_order_each.startsWith("CUR2") && reader.exists(simo_num,1)){
         reader.withDecodedWav(simo_num, 1, wav => {
-           wav.trimFadeSimo()
+           wav.trimFadeOut()
            add_to_audio_queue(Left(wav))
         })
         add_to_audio_queue(Right(span_simokami))
       }
-      reader.withDecodedWav(simo_num, 2, wav => {
-         wav.trimFadeSimo()
-         add_to_audio_queue(Left(wav))
-         if(simo_num == 0 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-           add_to_audio_queue(Right(span_simokami))
-           add_to_audio_queue(Left(wav))
-         }
-      })
-      add_to_audio_queue(Right(span_simokami))
-      reader.withDecodedWav(kami_num, 1, wav => {
-         wav.trimFadeKami()
-         add_to_audio_queue(Left(wav))
-      })
+      for (i <- 0 until ss.length ){
+        val s = ss(i)
+        val read_num = if(s.startsWith("CUR")){
+          simo_num
+        }else{
+          kami_num
+        }
+        val kami_simo = if(s.endsWith("1")){
+          1
+        }else{
+          2
+        }
+        if(!(read_num == 0 && kami_simo == 1 && ! reader.exists(read_num,kami_simo))){
+          reader.withDecodedWav(read_num, kami_simo, wav => {
+             wav.trimFadeIn()
+             wav.trimFadeOut()
+             add_to_audio_queue(Left(wav))
+             if(read_num == 0 && kami_simo == 2 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
+               add_to_audio_queue(Right(span_simokami))
+               add_to_audio_queue(Left(wav))
+             }
+          })
+          if( i != ss.length - 1 ){
+            add_to_audio_queue(Right(span_simokami))
+          }
+        }
+      }
       return(res_queue)
     }
   }
