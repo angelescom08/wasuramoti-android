@@ -313,17 +313,21 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     override def onPreExecute(){
       activity.runOnUiThread(new Runnable{
         override def run(){
-          progress = Some(new ProgressDialog(activity))
-          progress.get.setMessage(activity.getApplicationContext().getResources.getString(R.string.now_decoding))
-          progress.get.getWindow.setGravity(Gravity.BOTTOM)
-          progress.get.show()
+          //We have to check whether activity is in finishing phase or not to avoid the following error:
+          //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@XXXXXXXX is not valid; is your activity running?
+          if(!activity.isFinishing()){
+            progress = Some(new ProgressDialog(activity))
+            progress.get.setMessage(activity.getApplicationContext().getResources.getString(R.string.now_decoding))
+            progress.get.getWindow.setGravity(Gravity.BOTTOM)
+            progress.get.show()
+          }
         }
       })
     }
     override def onPostExecute(unused:AudioQueue){
       activity.runOnUiThread(new Runnable{
         override def run(){
-          progress.get.dismiss()
+          progress.foreach(_.dismiss())
         }
       })
     }

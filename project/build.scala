@@ -6,8 +6,8 @@ import AndroidKeys._
 object General {
   val settings = Defaults.defaultSettings ++ Seq (
     name := "Wasuramoti",
-    version := "0.6.5",
-    scalaVersion := "2.9.1",
+    version := "0.6.6",
+    scalaVersion := "2.9.2",
     platformName in Android := "android-7"
   )
 
@@ -34,6 +34,7 @@ object General {
       -keep class scala.collection.mutable.ArrayBuffer
       -keep class scala.collection.mutable.Queue
       -keep class scala.collection.mutable.HashMap
+      -keep class scala.runtime.IntRef
       -keep class scala.runtime.LongRef
       -keep class scala.runtime.VolatileIntRef
       -keep class scala.runtime.ObjectRef
