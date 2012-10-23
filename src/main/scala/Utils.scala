@@ -5,9 +5,10 @@ import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
 import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
-import _root_.java.io.File
+import _root_.java.io.{File,ByteArrayOutputStream,ObjectOutputStream,ByteArrayInputStream,ObjectInputStream}
 import _root_.java.util.Date
 import _root_.java.text.SimpleDateFormat
+import _root_.android.util.Base64
 import scala.collection.mutable
 
 object Globals {
@@ -21,6 +22,7 @@ object Globals {
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
   val CACHE_SUFFIX_WAV = "_decoded.wav"
+  val HEAD_SILENCE_LENGTH = 200 // in milliseconds
   val global_lock = new Object()
   val notify_timers = new mutable.HashMap[Int,Intent]()
   var database = None:Option[DictionaryOpenHelper]
@@ -34,6 +36,7 @@ object Globals {
 }
 
 object Utils {
+  type EqualizerSeq = Seq[Option[Double]]
   // Since every Activity has a possibility to be killed by android when it is background,
   // all the Activity in this application should call this method in onCreate()
   def initGlobals(app_context:Context) {
@@ -166,6 +169,29 @@ object Utils {
           }
         }
       }
+    }
+  }
+  // NOTE: Base64 is only supported on Android 2.3+(API Level 8)
+  def serializeToString(obj:Any):String = {
+    val baos = new ByteArrayOutputStream()
+    val oos = new ObjectOutputStream(baos)
+    oos.writeObject(obj)
+    oos.close()
+    return Base64.encodeToString(baos.toByteArray,Base64.DEFAULT)
+  }
+  def deserializeFromString(str:String):Any = {
+    val data = Base64.decode(str,Base64.DEFAULT)
+    val ois = new ObjectInputStream(new ByteArrayInputStream(data))
+    val o = ois.readObject()
+    ois.close()
+    return o
+  }
+  def getPrefsEqualizer():EqualizerSeq = {
+    val str = Globals.prefs.get.getString("effect_equalizer","")
+    if(str.isEmpty){
+      Seq()
+    }else{
+      Utils.deserializeFromString(str).asInstanceOf[EqualizerSeq]
     }
   }
 }

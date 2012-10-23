@@ -27,6 +27,10 @@
       android:key="reader_path"
       android:title="@string/conf_reader_list"
       android:summary="@string/conf_reader_list_summary" />
+    <karuta.hpnpwd.wasuramoti.EqualizerPreference
+      android:key="effect_equalizer"
+      android:title="@string/conf_equalizer"
+      android:summary="@string/conf_equalizer_summary" />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_auto">
     <CheckBoxPreference

@@ -10,7 +10,8 @@ Priority High:
     - (Left -> Config Activity)
     - (Right -> Timer Activity)
   * Fix problem that have to click "Start Timer" twice (set focus and start).
-  * Show "Read Done" messeage instead of "No Audio File for Current Reader" when all fuda has been read.
+  * Show "Read Done" message instead of "No Audio File for Current Reader" when all fuda has been read.
+  * In Equalizer conf, the "Play" button text keeps to be "Stop" even when play done.
 
 Priority Middle:
   * Fuda-otoshi mode
@@ -20,6 +21,7 @@ Priority Middle:
   * Able to change notify timer sound.
   * Pitch and Speed change using picola and FFT
   * Able to read stereo audio file
+  * Use other effects in android.media.audiofx.AudioEffect
 
 Priority Low:
   * Able to change style / theme

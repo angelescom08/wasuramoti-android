@@ -6,6 +6,7 @@ import _root_.android.content.Context
 import _root_.android.view.Gravity
 import _root_.android.os.AsyncTask
 import _root_.android.app.ProgressDialog
+import _root_.android.media.audiofx.Equalizer
 import _root_.java.io.{File,FileInputStream,RandomAccessFile}
 import _root_.java.nio.{ByteBuffer,ByteOrder,ShortBuffer}
 import _root_.java.nio.channels.FileChannel
@@ -13,6 +14,7 @@ import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable
 
 object AudioHelper{
+  type EqualizerSeq = Utils.EqualizerSeq
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
     // TODO: Consider Stereo
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000
@@ -50,7 +52,7 @@ object AudioHelper{
       }
     }
   }
-  def makeAudioTrack(decoder:OggVorbisDecoder,is_stream:Boolean,buffer_size_bytes:Int=0):AudioTrack ={
+  def makeAudioTrack(decoder:OggVorbisDecoder,is_stream:Boolean,buffer_size_bytes:Int=0,equalizer_seq:Option[EqualizerSeq]=None):(AudioTrack,Option[Equalizer]) ={
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
@@ -70,12 +72,33 @@ object AudioHelper{
         (buffer_size_bytes, AudioTrack.MODE_STATIC)
       }
 
-    new AudioTrack( AudioManager.STREAM_MUSIC,
+    val audio_track = new AudioTrack( AudioManager.STREAM_MUSIC,
       decoder.rate.toInt,
       channels,
       audio_format,
       buffer_size,
       mode )
+    val eqlz = try{
+      val e = new Equalizer(0, audio_track.getAudioSessionId)
+      setEqualizer(equalizer_seq.getOrElse(Utils.getPrefsEqualizer()),e) 
+      Some(e)
+     }catch{
+       // Equalizer is only supported in Android 2.3+(API Level 9)
+       case e:NoClassDefFoundError => None
+     }
+    return (audio_track,eqlz)
+  }
+  def setEqualizer(ar:EqualizerSeq,dest:Equalizer){
+    dest.setEnabled(!ar.isEmpty)
+    val Array(min_eq,max_eq) = dest.getBandLevelRange
+    for( i <- 0 until dest.getNumberOfBands){
+      try{
+        var r = ar(i).getOrElse(0.5)
+        dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
+      }catch{
+        case e:Exception => Unit
+      }
+    }
   }
   def writeSilence(track:AudioTrack,millisec:Int){
     val buf = new Array[Short](track.getSampleRate()*millisec/1000)
@@ -182,9 +205,10 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   var timer_start = None:Option[Timer]
   var timer_onend = None:Option[Timer]
   var audio_track = None:Option[AudioTrack]
+  var equalizer = None:Option[Equalizer]
+  var equalizer_seq = None:Option[Utils.EqualizerSeq]
   val audio_queue = new AudioQueue() // file or silence in millisec 
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
-
   def play(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
@@ -193,20 +217,33 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       Globals.is_playing = true
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
+      // Since we insert some silence at beginning of audio,
+      // the actual wait_time should be shorter.
+      var wait_time = Utils.getPrefAs[Double]("wav_begin_read",0.5)*1000.0 - Globals.HEAD_SILENCE_LENGTH
+      if(wait_time < 100){
+        wait_time = 100
+      }
+
       timer_start.get.schedule(new TimerTask(){
         override def run(){
           onReallyStart(onKamiEnd)
           timer_start.foreach(_.cancel())
           timer_start = None
-        }},(Utils.getPrefAs[Double]("wav_begin_read",0.5)*1000.0).toLong)
+        }},wait_time.toLong)
     }
+  }
+
+  def getFirstDecoder():OggVorbisDecoder = {
+    waitDecode()
+    audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
   }
 
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
-      waitDecode()
-      val firstDecoder = audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
+      val firstDecoder = getFirstDecoder() 
       val do_when_done = { _:Unit => {  
+        equalizer.foreach(_.release())
+        equalizer = None
         audio_track.foreach(x => {x.stop();x.release()})
         audio_track = None
         Globals.is_playing=false
@@ -217,7 +254,9 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
         // This method requires small memory, but there is possibility of noize at few seconds after writeToAudioTrack.
         // I could not confirm such noice in my device, but some users claim that they have a noize in the beggining of upper poem.
 
-        audio_track = Some(AudioHelper.makeAudioTrack(firstDecoder,true))
+        val (temp_a,temp_e) = AudioHelper.makeAudioTrack(firstDecoder,true,equalizer_seq=equalizer_seq)
+        audio_track = Some(temp_a)
+        equalizer = temp_e
         audio_track.get.play()
         audio_thread = Some(new Thread(new Runnable(){
           override def run(){
@@ -263,7 +302,11 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
               }
           }
         }
-        audio_track = Some(AudioHelper.makeAudioTrack(firstDecoder,false,buffer_size))
+        // TODO: var x; var y; (x,y) = List(3,7) cannot be compiled.
+        // Therefore, we reluctantly use temporary variable.
+        val (temp_a,temp_e) = AudioHelper.makeAudioTrack(firstDecoder,false,buffer_size,equalizer_seq=equalizer_seq)
+        audio_track = Some(temp_a)
+        equalizer = temp_e
         audio_track.get.write(buf,0,buf.length)
         timer_onend = Some(new Timer())
         timer_onend.get.schedule(new TimerTask(){
@@ -282,6 +325,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       timer_onend.foreach(_.cancel())
       timer_onend = None
       audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
+      equalizer.foreach(_.release())
+      equalizer = None
       audio_track.foreach(track => {
           track.flush()
           track.stop() // calling this methods terminates AudioTrack.write() called in audio_thread.
@@ -342,6 +387,9 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
           case Right(len) => len
         }
       }
+      // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
+      // we insert additional silence as wave data.
+      add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
       val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
       val ss = read_order_each.split("_")
       if(simo_num == 0 && read_order_each.startsWith("CUR2") && reader.exists(simo_num,1)){
