@@ -12,13 +12,11 @@
       android:layout_width="100sp" android:layout_height="wrap_content"
       android:text="@string/button_cancel" />
   </LinearLayout>
-  <ScrollView 
+  <ListView 
     android:layout_width="fill_parent" android:layout_height="280dp"
-    android:fillViewport="true" >
-    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-      android:orientation="vertical"
-      android:id="@+id/fudaseteditlist_container"
-      >
-    </LinearLayout>
-  </ScrollView>
+    android:id="@+id/fudaseteditlist_container" 
+    android:choiceMode="multipleChoice"
+    android:fastScrollEnabled="true"
+    >
+  </ListView>
 </LinearLayout>
