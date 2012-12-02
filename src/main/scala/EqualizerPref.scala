@@ -4,6 +4,7 @@ import _root_.android.content.Context
 import _root_.android.preference.DialogPreference
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{LinearLayout,TextView,SeekBar,Button}
+import _root_.android.os.Handler
 import _root_.android.media.audiofx.Equalizer
 
 class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
@@ -51,6 +52,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   def set_button_listeners(view:View){
     // Play Button
     val btn = view.findViewById(R.id.equalizer_play).asInstanceOf[Button]
+    val handler = new Handler()
     btn.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         Globals.player.foreach{ pl => {
@@ -59,7 +61,13 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
             btn.setText(context.getResources().getString(R.string.equalizer_play))
           }else{
             pl.equalizer_seq = Some(makeSeq())
-            pl.play()
+            pl.play( _ => {
+              handler.post(new Runnable(){
+                override def run(){
+                  btn.setText(context.getResources().getString(R.string.equalizer_play))
+                }
+              })
+            })
             btn.setText(context.getResources().getString(R.string.equalizer_stop))
           }
         }}

@@ -171,7 +171,7 @@ object Utils {
       }
     }
   }
-  // NOTE: Base64 is only supported on Android 2.3+(API Level 8)
+  // NOTE: Base64 is only supported on Android 2.2+(API Level 8)
   def serializeToString(obj:Any):String = {
     val baos = new ByteArrayOutputStream()
     val oos = new ObjectOutputStream(baos)

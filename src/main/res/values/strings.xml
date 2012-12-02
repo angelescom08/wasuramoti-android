@@ -56,8 +56,12 @@
   <string name="conf_read_auto_summary">After reading is done, stop a while, and start reading next fuda.</string>
   <string name="conf_read_auto_span">Interval of auto-reading</string>
   <string name="conf_read_auto_span_summary">How many seconds to stop until reading next fuda.</string>
+
+  <string name="category_others">Others</string>
+  <string name="subscreen_others">Other Settings</string>
+
   <!-- CATEGORY_SUB -->
-  <string name="category_sub">Detail</string> 
+  <string name="category_sub">Device</string> 
   <string name="conf_dimlock_minutes">Lock Screen</string>
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_silent_mode_on_start">Silent Mode</string>

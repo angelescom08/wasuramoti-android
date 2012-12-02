@@ -59,59 +59,67 @@
       android:title="@string/conf_silent_mode_on_start"
       android:summary="@string/conf_silent_mode_on_start_summary"
       />
-    <ListPreference
-      android:key="audio_track_mode"
-      android:title="@string/conf_audio_track_mode"
-      android:summary="@string/conf_audio_track_mode_summary"
-      android:entries="@array/conf_audio_track_entries"
-      android:entryValues="@array/conf_audio_track_entryValues" 
-      android:defaultValue="STATIC"
-      />
-    <CheckBoxPreference
-      android:key="read_simo_joka_twice"
-      android:title="@string/conf_read_simo_joka_twice"
-      android:summary="@string/conf_read_simo_joka_twice_summary"
-      />
-    <EditTextPreference
-      android:key="wav_begin_read"
-      android:title="@string/conf_wav_begin_read"
-      android:summary="@string/conf_wav_begin_read_summary"
-      android:numeric="decimal"
-      android:defaultValue="0.5"
-      />
-
-    <EditTextPreference
-      android:key="wav_span_simokami"
-      android:title="@string/conf_wav_span_simokami"
-      android:summary="@string/conf_wav_span_simokami_summary"
-      android:numeric="decimal"
-      android:defaultValue="1.0"
-      />
-    <EditTextPreference
-      android:key="wav_threashold"
-      android:title="@string/conf_wav_threshold"
-      android:summary="@string/conf_wav_threshold_summary"
-      android:numeric="decimal"
-      android:defaultValue="0.01"
-      />
-
-    <EditTextPreference
-      android:key="wav_fadeout_simo"
-      android:title="@string/conf_wav_fadeout_simo"
-      android:summary="@string/conf_wav_fadout_simo_summary"
-      android:numeric="decimal"
-      android:defaultValue="0.2"
-      />
-    <EditTextPreference
-      android:key="wav_fadein_kami"
-      android:title="@string/conf_wav_fadein_kami"
-      android:summary="@string/conf_wav_fadein_kami_summary"
-      android:numeric="decimal"
-      android:defaultValue="0.1"
-      />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_init">
-    <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
-    <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
+  <PreferenceCategory android:title="@string/category_others">
+    <PreferenceScreen
+      android:key="conf_others"
+      android:title="@string/subscreen_others"
+      android:persistent="false">
+      <PreferenceCategory android:title="@string/category_others">
+        <EditTextPreference
+          android:key="wav_begin_read"
+          android:title="@string/conf_wav_begin_read"
+          android:summary="@string/conf_wav_begin_read_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.5"
+          />
+        <EditTextPreference
+          android:key="wav_span_simokami"
+          android:title="@string/conf_wav_span_simokami"
+          android:summary="@string/conf_wav_span_simokami_summary"
+          android:numeric="decimal"
+          android:defaultValue="1.0"
+          />
+        <EditTextPreference
+          android:key="wav_threashold"
+          android:title="@string/conf_wav_threshold"
+          android:summary="@string/conf_wav_threshold_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.01"
+          />
+
+        <EditTextPreference
+          android:key="wav_fadeout_simo"
+          android:title="@string/conf_wav_fadeout_simo"
+          android:summary="@string/conf_wav_fadout_simo_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.2"
+          />
+        <EditTextPreference
+          android:key="wav_fadein_kami"
+          android:title="@string/conf_wav_fadein_kami"
+          android:summary="@string/conf_wav_fadein_kami_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.1"
+          />
+        <ListPreference
+          android:key="audio_track_mode"
+          android:title="@string/conf_audio_track_mode"
+          android:summary="@string/conf_audio_track_mode_summary"
+          android:entries="@array/conf_audio_track_entries"
+          android:entryValues="@array/conf_audio_track_entryValues" 
+          android:defaultValue="STATIC"
+          />
+        <CheckBoxPreference
+          android:key="read_simo_joka_twice"
+          android:title="@string/conf_read_simo_joka_twice"
+          android:summary="@string/conf_read_simo_joka_twice_summary"
+          />
+      </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_init">
+        <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
+        <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
+      </PreferenceCategory>
+    </PreferenceScreen>
   </PreferenceCategory>
 </PreferenceScreen>

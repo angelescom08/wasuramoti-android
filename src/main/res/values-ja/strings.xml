@@ -49,8 +49,11 @@
   <string name="conf_read_auto_summary">札を詠み終えた後しばらく停止し，その後次の札を詠み始める</string>
   <string name="conf_read_auto_span">詠み上げ間隔</string>
   <string name="conf_read_auto_span_summary">何秒間停止してから次の札を詠むか</string>
-  <!-- CATEGORI_SUB -->
-  <string name="category_sub">詳細</string> 
+
+  <string name="category_others">その他</string>
+  <string name="subscreen_others">その他の設定</string>
+  <!-- CATEGORY_SUB -->
+  <string name="category_sub">端末</string> 
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_silent_mode_on_start">マナーモード</string>
