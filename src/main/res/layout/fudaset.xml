@@ -14,21 +14,30 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/fudaset_add"
-            android:onClick="addFudaSet" />
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:onClick="addFudaSet"
+            />
      <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/fudaset_delete"
+            android:layout_marginLeft="20dip"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
             android:onClick="deleteFudaSet" />
      <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/fudaset_edit"
+            android:layout_marginLeft="20dip"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
             android:onClick="editFudaSet" />
     </LinearLayout>
     <Spinner android:id="@+id/fudaset_list"
-            android:layout_height="50sp"
-            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
              />
 </LinearLayout>
 </ScrollView>

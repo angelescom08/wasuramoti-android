@@ -6,7 +6,7 @@ import _root_.android.content.Context
 import _root_.android.view.View
 import _root_.android.widget.{ArrayAdapter,ListView}
 
-class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context){
+class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
 
   class FudaListItem(val str:String, val fudanum:Int) {
     override def toString():String = Romanization.jap_to_local(context,str)

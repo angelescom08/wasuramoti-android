@@ -13,7 +13,7 @@
       android:text="@string/button_cancel" />
   </LinearLayout>
   <ListView 
-    android:layout_width="fill_parent" android:layout_height="280dp"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:id="@+id/fudaseteditlist_container" 
     android:choiceMode="multipleChoice"
     android:fastScrollEnabled="true"

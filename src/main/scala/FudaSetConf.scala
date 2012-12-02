@@ -63,6 +63,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
 
     var persisted = getPersistedString("")
     adapter = Some(new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,listItems))
+    adapter.get.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)

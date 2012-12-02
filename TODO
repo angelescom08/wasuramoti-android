@@ -13,7 +13,6 @@ Priority High:
   * Show "Read Done" message instead of "No Audio File for Current Reader" when all fuda has been read.
   * In Equalizer conf, the "Play" button text keeps to be "Stop" even when play done.
   * Able to choose fuda by fudanum -> *1 or 2*
-  * More Larger window fuda list
   * Able to add kara fuda
 
 Priority Middle:
