@@ -153,8 +153,21 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     }
     return(ed)
   }
+
+  def indexInBuffer(i:Int):Int = {
+    if(i < 0){
+      return 0
+    }
+    if(i >= buffer.limit()){
+      return (buffer.limit() - 1)
+    }
+    return i
+  }
+
   // if begin < end then fade-in else fade-out
-  def fade(begin:Int,end:Int){
+  def fade(i_begin:Int,i_end:Int){
+    val begin = indexInBuffer(i_begin)
+    val end = indexInBuffer(i_end)
     if(begin == end){
       return
     }
@@ -167,7 +180,10 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
         buffer.put(i,(buffer.get(i)*amp).toShort)
       }
     }catch{
+      // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
+      // Therefore these catches are just for sure.
       case e:ArrayIndexOutOfBoundsException => None
+      case e:IndexOutOfBoundsException => None
     }
   }
   // fadein
@@ -336,7 +352,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
           // Before calling AudioTrack.relase(), we have to wait for audio_thread to end.
           // The reason why I have to do this is assumed that
           // calling AudioTrack.stop() does not immediately terminate AudioTrack.write(), and
-          // calling AudioTrack.release() before the termination is illecal.
+          // calling AudioTrack.release() before the termination is illegal.
           audio_thread.foreach{_.join()} 
           track.release()
         })

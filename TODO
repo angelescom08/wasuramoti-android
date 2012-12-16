@@ -13,6 +13,8 @@ Priority High:
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Able to choose fuda by fudanum -> *1 or 2*
   * Able to add kara fuda
+  * Do not fade in if fade length is too short
+  * Avoid localization is called on toString
 
 Priority Middle:
   * Fuda-otoshi mode
