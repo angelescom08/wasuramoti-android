@@ -19,14 +19,20 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       editor.putString(getKey(),Utils.serializeToString(seq))
       editor.commit()
     }
-    Globals.player.foreach{ p => {p.stop(); p.equalizer_seq = None} }
+    Globals.player.foreach{ p => {
+      if(Globals.is_playing){
+        p.stop();
+      }
+      p.equalizer_seq = None} }
   }
   def makeSeq():Utils.EqualizerSeq={
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
       Some(for( i <- 0 until nb ) yield {
         val seek = view.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]
-        if(seek.getProgress == seek.getMax / 2){
+        val half = seek.getMax / 2
+        val prog = seek.getProgress
+        if(prog >= half - 2 && prog <= half + 2){
           None
         }else{
           Some(seek.getProgress.toDouble/seek.getMax.toDouble)
@@ -116,11 +122,14 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
           override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
             if(Globals.is_playing){
-              Globals.player.foreach{_.equalizer.foreach{ e =>
-                val Array(min_eq,max_eq) = e.getBandLevelRange
-                val r = progress.toDouble/seek.getMax.toDouble
-                e.setEnabled(true)
-                e.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
+              Globals.player.foreach{pl=>{
+                pl.makeEqualizer(true)
+                pl.equalizer.foreach{ e =>
+                  val Array(min_eq,max_eq) = e.getBandLevelRange
+                  val r = progress.toDouble/seek.getMax.toDouble
+                  e.setEnabled(true)
+                  e.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
+                }
               }}
             }
           }
@@ -147,20 +156,23 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
     Globals.player match{ 
       case Some(pl) => {
-          val (audio_track,equalizer) = AudioHelper.makeAudioTrack(pl.getFirstDecoder(),true) 
-          equalizer match{
+          pl.makeAudioTrack() 
+          pl.makeEqualizer(true)
+          pl.equalizer match{
             case Some(eqlz) => {
               number_of_bands = Some(eqlz.getNumberOfBands)
               set_button_listeners(view)
               add_seekbars(view,eqlz,inflater)
-              // Don't forget to release equalizer or you get "java.lang.UnsupportedOperationException: Effect library not loaded"
               eqlz.release()
-              audio_track.release()
+              pl.equalizer = None
             }
             case None => {
               view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.equalizer_error_notsupported))
             }
           }
+          
+          pl.audio_track.foreach(_.release())
+          pl.audio_track = None
       }
       case None => {
         view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.equalizer_error_noplay))

@@ -8,6 +8,7 @@ import _root_.android.preference.PreferenceManager
 import _root_.java.io.{File,ByteArrayOutputStream,ObjectOutputStream,ByteArrayInputStream,ObjectInputStream}
 import _root_.java.util.Date
 import _root_.java.text.SimpleDateFormat
+import _root_.android.text.TextUtils
 import _root_.android.util.Base64
 import scala.collection.mutable
 
@@ -188,7 +189,7 @@ object Utils {
   }
   def getPrefsEqualizer():EqualizerSeq = {
     val str = Globals.prefs.get.getString("effect_equalizer","")
-    if(str.isEmpty){
+    if(TextUtils.isEmpty(str)){
       Seq()
     }else{
       Utils.deserializeFromString(str).asInstanceOf[EqualizerSeq]
