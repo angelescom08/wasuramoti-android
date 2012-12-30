@@ -4,6 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
+  <string name="button_invert">Invert</string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
 

@@ -16,7 +16,6 @@ Priority High:
   * Do not fade in if fade length is too short
   * Avoid Romanization.jap_to_local called on FudaListItem.toString()
   * Create Fuda List from camera shot
-  * Fudalist Edit -> Check All, Invert Check
 
 Priority Middle:
   * Fuda-otoshi mode

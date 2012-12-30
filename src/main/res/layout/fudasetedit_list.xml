@@ -8,6 +8,9 @@
     <Button android:id="@+id/button_ok"
       android:layout_width="100sp" android:layout_height="wrap_content"
       android:text="@string/button_ok" />
+    <Button android:id="@+id/button_invert"
+      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:text="@string/button_invert" />
     <Button android:id="@+id/button_cancel"
       android:layout_width="100sp" android:layout_height="wrap_content"
       android:text="@string/button_cancel" />

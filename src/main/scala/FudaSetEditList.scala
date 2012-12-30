@@ -31,6 +31,14 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     addItemsToListView(container_view)
 
+    findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        for( pos <- 0 until container_view.getCount ){
+          val q = container_view.isItemChecked(pos)
+          container_view.setItemChecked(pos,!q)
+        }
+      }
+    })
     findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         dismiss()

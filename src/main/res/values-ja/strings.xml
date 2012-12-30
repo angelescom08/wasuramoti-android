@@ -4,6 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
+  <string name="button_invert">反転</string>
   <string name="now_playing">再生中</string>
   <string name="now_decoding">準備中</string>
 
