@@ -1,6 +1,6 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.6.9
+  App Version: 0.7.0
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
@@ -62,7 +62,7 @@
   Requirements:
     openjdk6 (or some other Java JDK)
     scala 2.9.2
-    sbt 0.11 (A Scala-Based Simple Build Tool)
+    sbt 0.12.1 (A Scala-Based Simple Build Tool)
     sbt-android-plugin 0.6.x
     android-sdk r16
     android-sdk-platform-tools r10

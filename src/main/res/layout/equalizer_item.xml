@@ -10,7 +10,7 @@
     />
   <SeekBar android:id="@+id/equalizer_seek"
           android:layout_height="30sp"
-          android:layout_width="240sp"
+          android:layout_width="fill_parent"
           android:max="100"
           android:progress="50"
            />

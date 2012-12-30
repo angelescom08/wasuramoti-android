@@ -1,4 +1,7 @@
 package karuta.hpnpwd.wasuramoti
+
+import scala.collection.mutable.Buffer
+
 import _root_.android.preference.ListPreference
 import _root_.android.content.Context
 import _root_.android.util.AttributeSet
@@ -54,25 +57,29 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     }
   }
   override def onPrepareDialogBuilder(builder:Builder){
-    var entries = for(i <- context.getAssets.list(Globals.ASSETS_READER_DIR))yield ("INT:"+i).asInstanceOf[CharSequence]
+    val entvals = Buffer[CharSequence]()
+    val entries = Buffer[CharSequence]()
+    for(i <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
+      entvals += "INT:"+i
+      entries += i
+    }
     val state = Environment.getExternalStorageState
     if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
-      var seq = Seq[String]()
       val expath = Environment.getExternalStorageDirectory
       Utils.walkDir(expath,5, f =>{
         if(f.getName == Globals.READER_DIR){
           val files = f.listFiles()
           if(files != null){
             for( i <- files if i.isDirectory() ){
-              seq ++= Seq("EXT:"+i.getAbsolutePath.replaceFirst("^"+expath,"").replaceFirst("/"+Globals.READER_DIR+"/","/<>/"))
+              entvals += "EXT:"+i.getAbsolutePath.replaceFirst("^"+expath,"").replaceFirst("/"+Globals.READER_DIR+"/","/<>/")
+              entries += i.getName
             }
           }
         }}
       )
-      entries ++= seq
     }
-    setEntries(entries)
-    setEntryValues(entries)
+    setEntries(entries.toArray)
+    setEntryValues(entvals.toArray)
     super.onPrepareDialogBuilder(builder)
   }
 }
