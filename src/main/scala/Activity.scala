@@ -12,6 +12,7 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
 class WasuramotiActivity extends Activity with MainButtonTrait{
+  val MINUTE_MILLISEC = 60000
   val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
   var release_lock = None:Option[Unit=>Unit]
   var timer_autoread = None:Option[Timer]
@@ -33,7 +34,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
             }
             Utils.setButtonTextByState(getApplicationContext())
           }
-        },0,60*1000)
+        },0,MINUTE_MILLISEC)
       }
     }
   }
@@ -186,15 +187,20 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
           None
         }
       }
-      val dimlock_minutes = Utils.getPrefAs[Int]("dimlock_minutes",5)
       timer_dimlock.foreach(_.cancel())
-      timer_dimlock = Some(new Timer())
-      timer_dimlock.get.schedule(new TimerTask(){
-        override def run(){
-          release_lock.foreach(_())
-          release_lock = None
-        }
-      },1000*60*dimlock_minutes)
+      timer_dimlock = None
+      val dimlock_minutes = Utils.getPrefAs[Int]("dimlock_minutes",5)
+      val dimlock_millisec = dimlock_minutes.toLong * MINUTE_MILLISEC
+      // if dimlock_millisec overflows then never release dimlock
+      if(dimlock_millisec > 0){
+        timer_dimlock = Some(new Timer())
+        timer_dimlock.get.schedule(new TimerTask(){
+          override def run(){
+            release_lock.foreach(_())
+            release_lock = None
+          }
+        },dimlock_millisec)
+      }
     }
   }
 }

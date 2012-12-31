@@ -1,11 +1,12 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.text.TextUtils
+import scala.collection.mutable.Buffer
 
 class TrieVertex{
   var char:Char = '\0'
   var isLeaf:Boolean = false
   var flag:Boolean = false
-  var childs:Seq[TrieVertex] = Seq()
+  var childs:Buffer[TrieVertex] = Buffer()
   def traverseSingle(str:String, func: (TrieVertex) => Unit ){
       var cur = this
       func(cur)
@@ -31,23 +32,23 @@ class TrieVertex{
   }
 
   def traversePrefix(str:String):Seq[String] = {
-    var r = Seq[String]()
+    val r = Buffer[String]()
     if(TextUtils.isEmpty(str)){
       return r
     }
     this.traverseAll( (v,s) => {
         val b = str.startsWith(s) || s.startsWith(str)
         if(b && v.isLeaf){
-          r ++= Seq(s);
+          r += s;
         }
         b
       }
     )
-    return r
+    return r.toSeq
   }
 
   def traverseWithout(seq:Seq[String]):Seq[String] = {
-    var r = Seq[String]()
+    val r = Buffer[String]()
     // preprocess
     this.flag = true
     for(s <- seq){
@@ -56,7 +57,7 @@ class TrieVertex{
     // traverse
     this.traverseAll( (v,s) => {
       if(!v.flag){
-        r ++= Seq(s)
+        r += s
       }
       v.flag}
     )
@@ -65,7 +66,7 @@ class TrieVertex{
       traverseSingle(s, _.flag = false)
     }
     this.flag = false
-    return r
+    return r.toSeq
   }
       
 }
@@ -78,7 +79,7 @@ object CreateTrie{
       for( c <- s ){
         cur.childs.find(_.char == c) match{
           case Some(x) => cur = x
-          case None => val v = new TrieVertex{ char = c }; cur.childs ++= Seq(v); cur = v
+          case None => val v = new TrieVertex{ char = c }; cur.childs += v; cur = v
         }
       }
       cur.isLeaf = true
