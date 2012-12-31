@@ -11,6 +11,7 @@ import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
+
 class WasuramotiActivity extends Activity with MainButtonTrait{
   val MINUTE_MILLISEC = 60000
   val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
@@ -105,6 +106,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code. 
       Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
     }
+    setLongClickButtons()
   }
   override def onSaveInstanceState(instanceState: Bundle){
     // Sending HashMap in Bundle across the Activity using Serializable does not work.
@@ -203,11 +205,25 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       }
     }
   }
+  def setLongClickButtons(){
+    for(i <- Array(R.id.read_button_top,R.id.read_button_bottom)){
+      val btn = findViewById(i).asInstanceOf[Button]
+      btn.setOnLongClickListener(new View.OnLongClickListener(){
+          override def onLongClick(v:View):Boolean = {
+            openOptionsMenu()
+            return true
+          }
+        })
+    }
+  }
 }
 
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
+    doMainButtonClick()
+  }
+  def doMainButtonClick() {
     Globals.global_lock.synchronized{
       val handler = new Handler()
       if(Globals.player.isEmpty){
@@ -238,7 +254,7 @@ trait MainButtonTrait{
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
                   handler.post(new Runnable(){
-                    override def run(){onMainButtonClick(v)}
+                    override def run(){doMainButtonClick()}
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None

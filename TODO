@@ -3,11 +3,6 @@ Priority High:
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
   * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
   * Able to switch how to play silence (play silence or sleep thread)
-  * Able to call Activity / Dialog using GestureDetector onFling (set FLAG_ACTIVITY_NO_ANIMATION to each Intent)
-    - Up -> openOptionsMenu
-    - Down -> Move Dialog
-    - (Left -> Config Activity)
-    - (Right -> Timer Activity)
   * Fix problem that have to click "Start Timer" twice (set focus and start).
   * Show "Read Done" message instead of "No Audio File for Current Reader" when all fuda has been read.
   * Special words such as 'one' 'two' 'red' in fuda sets
@@ -15,7 +10,6 @@ Priority High:
   * Able to add kara fuda
   * Do not fade in if fade length is too short
   * Avoid Romanization.jap_to_local called on FudaListItem.toString()
-  * Create Fuda List from camera shot
 
 Priority Middle:
   * Fuda-otoshi mode
@@ -26,6 +20,7 @@ Priority Middle:
   * Pitch and Speed change using picola and FFT
   * Able to read stereo audio file
   * Use other effects in android.media.audiofx.AudioEffect
+  * Create Fuda List from camera photo
 
 Priority Low:
   * Able to change style / theme

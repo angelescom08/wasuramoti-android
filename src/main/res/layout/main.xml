@@ -2,14 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" 
               android:layout_height="fill_parent" 
-              android:orientation="vertical" >
+              android:orientation="vertical"
+              android:weightSum="1.0"
+              >
+    <Button
+            android:id="@+id/read_button_top"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:onClick="onMainButtonClick"
+            android:background="@android:color/black"
+            />
     <Button android:id="@+id/read_button"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
             android:text="Push Here" 
             android:textSize="36dp"
             android:onClick="onMainButtonClick"
             android:background="@android:color/black"
             android:textColor="@android:color/white"
+            />
+    <Button
+            android:id="@+id/read_button_bottom"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:onClick="onMainButtonClick"
+            android:background="@android:color/black"
             />
 </LinearLayout>
