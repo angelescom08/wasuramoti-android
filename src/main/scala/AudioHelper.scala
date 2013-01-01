@@ -140,8 +140,8 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   }
   // fadein
   def trimFadeIn(){
-    val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami",0.1) * decoder.rate).toInt
+    val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 9999.0) * decoder.rate).toInt
     val beg = threasholdIndex(threashold,false)
     val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
     fade(fadebegin,beg) 
@@ -153,8 +153,8 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   }
   // fadeout
   def trimFadeOut(){
-    val threashold = Utils.getPrefAs[Double]("wav_threashold",0.01)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo",0.2) * decoder.rate).toInt
+    val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 9999.0) * decoder.rate).toInt
     val end = threasholdIndex(threashold,true)
     val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
     fade(end,fadeend) 
@@ -261,7 +261,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       timer_start = Some(new Timer())
       // Since we insert some silence at beginning of audio,
       // the actual wait_time should be shorter.
-      var wait_time = Utils.getPrefAs[Double]("wav_begin_read",0.5)*1000.0 - Globals.HEAD_SILENCE_LENGTH
+      var wait_time = Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH
       if(wait_time < 100){
         wait_time = 100
       }
@@ -407,7 +407,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     override def doInBackground(unused:AnyRef*):AudioQueue = {
       Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
       val res_queue = new AudioQueue()
-      val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami",1.0) * 1000).toInt
+      val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
       def add_to_audio_queue(w:Either[WavBuffer,Int]){
         res_queue.enqueue(w)
         val alen = w match{

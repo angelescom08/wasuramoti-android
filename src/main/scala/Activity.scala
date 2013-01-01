@@ -191,8 +191,8 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       }
       timer_dimlock.foreach(_.cancel())
       timer_dimlock = None
-      val dimlock_minutes = Utils.getPrefAs[Int]("dimlock_minutes",5)
-      val dimlock_millisec = dimlock_minutes.toLong * MINUTE_MILLISEC
+      val dimlock_minutes = Utils.getPrefAs[Long]("dimlock_minutes", 5, 9999)
+      val dimlock_millisec = dimlock_minutes * MINUTE_MILLISEC
       // if dimlock_millisec overflows then never release dimlock
       if(dimlock_millisec > 0){
         timer_dimlock = Some(new Timer())
@@ -258,7 +258,7 @@ trait MainButtonTrait{
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None
-                }},(Utils.getPrefAs[Double]("read_auto_span",5.0)*1000.0).toLong
+                }},(Utils.getPrefAs[Double]("read_auto_span", 5.0, 9999.0)*1000.0).toLong
               )
             }
         })

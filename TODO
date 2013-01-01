@@ -1,12 +1,9 @@
 Priority High:
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
-  * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
-  * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
-  * Able to switch how to play silence (play silence or sleep thread)
   * Fix problem that have to click "Start Timer" twice (set focus and start).
   * Show "Read Done" message instead of "No Audio File for Current Reader" when all fuda has been read.
   * Special words such as 'one' 'two' 'red' in fuda sets
-  * Able to choose fuda by fudanum -> #1 or 2#
+  * Able to choose fuda by fudanum -> ?1 or 2? ( ? matches to any digit )
   * Able to add kara fuda
   * Do not fade in if fade length is too short
   * Avoid Romanization.jap_to_local called on FudaListItem.toString()
@@ -28,3 +25,6 @@ Priority Low:
   * Able to read .wav file in case cannot load libvorbis.so
   * Able to record the voice of the player and use it as reader
   * Score the recoded voice (whether it is as good as the official karuta reader). 
+  * Able to switch how to play silence (play silence or sleep thread)
+  * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
+  * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
