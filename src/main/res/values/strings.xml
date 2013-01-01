@@ -107,6 +107,18 @@
   <string name="fudasetedit_title">Add/Edit Fuda sets</string>
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_text">First chracters of upper phase in romanization. (e.g. asazi, koi, oo)</string>
+  <string name="fudasetedit_fudanum_html">
+    <![CDATA[
+    <h3>Fuda Number</h3>
+    <div><b>?</b> &rArr; any single character</div>
+    <div><b>*</b> &rArr; any string, including empty string</div>
+    <div><b>[xyz]</b> &rArr; x, y or z</div>
+    <div><b>[x-y]</b> &rArr; character between x and z</div>
+    <h3>Examples</h3>
+    <div><b>8?</b> &rArr; 80,81, ..., 89</div>
+    <div><b>*[13579]</b> &rArr; odd number</div>
+    ]]>
+  </string>
   <string name="button_fudasetedit_list">List</string>
   <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
   <string name="fudasetedit_titleempty">The title is empty</string>

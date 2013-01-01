@@ -1,6 +1,5 @@
 package karuta.hpnpwd.wasuramoti
 
-import scala.util.matching.Regex
 import _root_.android.content.Context
 import _root_.android.widget.EditText
 import _root_.android.text.Editable
@@ -21,7 +20,7 @@ class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(
 }
 
 object Romanization{
-  val pat_roma = new Regex("([kstnhmyrwgzdbp]?[aiueo]| +)")
+  val pat_roma = "([kstnhmyrwgzdbp]?[aiueo]| +)".r
   val roma_to_jap = Array(
     ("a", "あ"), ("i", "い"), ("u", "う"), ("e", "え"),  ("o","お"),
     ("ka","か"), ("ki","き"), ("ku","く"), ("ke","け"), ("ko","こ"),

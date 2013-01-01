@@ -93,15 +93,24 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     return(b_size)
   }
   def threasholdIndex(threashold:Double,fromEnd:Boolean):Int = {
-    val (bg,ed,step) = if(fromEnd){
+    var (bg,ed,step) = if(fromEnd){
       (index_end-1,index_begin,-1)
     }else{
       (index_begin,index_end-1,1)
     }
-    for( i <- bg to (ed,step) ){
-      if( scala.math.abs(buffer.get(i)) / max_amp > threashold ){
-        return i
+    bg = indexInBuffer(bg)
+    ed = indexInBuffer(ed)
+    try{
+      for( i <- bg to (ed,step) ){
+        if( scala.math.abs(buffer.get(i)) / max_amp > threashold ){
+          return i
+        }
       }
+    }catch{
+      // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
+      // Therefore these catches are just for sure.
+      case e:ArrayIndexOutOfBoundsException => return(bg)
+      case e:IndexOutOfBoundsException => return(bg)
     }
     return(ed)
   }

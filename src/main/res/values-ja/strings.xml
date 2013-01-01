@@ -90,6 +90,18 @@
   <string name="fudasetedit_title">札セットの追加/編集</string>
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
+  <string name="fudasetedit_fudanum_html">
+    <![CDATA[
+    <h3>札番号指定</h3>
+    <div><b>?</b> &rArr; 任意の一文字</div>
+    <div><b>*</b> &rArr; 任意の0文字以上の文字列</div>
+    <div><b>[xyz]</b> &rArr; x, y, z のいずれかの一文字</div>
+    <div><b>[x-y]</b> &rArr; x以上y以下の一文字</div>
+    <h3>例</h3>
+    <div><b>8?</b> &rArr; 十の位が8の二桁の数字</div>
+    <div><b>*[13579]</b> &rArr; 奇数</div>
+    ]]>
+  </string>
   <string name="button_fudasetedit_list">一覧</string>
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
   <string name="fudasetedit_titleempty">タイトルが空白です</string>

@@ -1,18 +1,16 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.Dialog
+import _root_.android.app.{Dialog,AlertDialog}
 import _root_.android.content.ContentValues
 import _root_.android.content.{Context,DialogInterface}
 import _root_.android.os.Bundle
 import _root_.android.preference.DialogPreference
 import _root_.android.preference.PreferenceActivity
-import _root_.android.text.TextUtils
+import _root_.android.text.{TextUtils,Html}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText}
+import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText,TextView}
 import _root_.java.util.ArrayList
-
-import scala.util.matching.Regex
 
 class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
   var listItems = new ArrayList[String]()
@@ -94,8 +92,13 @@ trait FudaSetTrait{
     val pos = spinner.getSelectedItemPosition()
     return (adapter,pos)
   }
+  def makeKimarijiSetFromBodyView(body_view:LocalizationEditText):Option[(String,Int)] = {
+    val PATTERN_HIRAGANA = "[あ-ん]+".r
+    var text = body_view.getLocalizationText()
+    text = AllFuda.replaceFudaNumPattern(text)
+    AllFuda.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
+  }
   def editFudaSetBase(view:View,is_add:Boolean,orig_title:String=""){
-    val PATTERN_HIRAGANA = new Regex("[あ-ん]+")
     val context = this
     val (adapter,pos) = getSpinnerSelected(view)
     val dialog = new Dialog(this)
@@ -115,9 +118,19 @@ trait FudaSetTrait{
       db.close()
       body_view.setLocalizationText(body)
     }
-    val makeKimarijiSetFromBodyView = { _:Unit =>
-       AllFuda.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(body_view.getLocalizationText()).toList)
-    }
+    dialog.findViewById(R.id.fudasetedit_tap).setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        val builder= new AlertDialog.Builder(dialog.getContext)
+        val view = LayoutInflater.from(dialog.getContext).inflate(R.layout.fudasetedit_fudanum,null)
+        view.findViewById(R.id.fudasetedit_fudanum_text).asInstanceOf[TextView].setText(Html.fromHtml(getString(R.string.fudasetedit_fudanum_html)))
+        builder.setView(view)
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            override def onClick(interface:DialogInterface,which:Int){
+            }
+          });
+        builder.create.show()
+      }
+    })
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val title = title_view.getText().toString()
@@ -142,7 +155,7 @@ trait FudaSetTrait{
           return()
         }
         val body = 
-        makeKimarijiSetFromBodyView() match {
+        makeKimarijiSetFromBodyView(body_view) match {
         case None => 
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
@@ -179,8 +192,11 @@ trait FudaSetTrait{
     })
     dialog.findViewById(R.id.button_fudasetedit_list).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val s = body_view.getLocalizationText()
-        val d = new FudaSetEditListDialog(context,s,{body_view.setLocalizationText(_)})
+        val kms = makeKimarijiSetFromBodyView(body_view) match{
+          case None => ""
+          case Some((s,_)) => s
+        }
+        val d = new FudaSetEditListDialog(context,kms,{body_view.setLocalizationText(_)})
         d.show()
       }
     })

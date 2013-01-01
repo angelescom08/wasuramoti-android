@@ -79,4 +79,19 @@ object AllFuda{
     }
     return ret.toSet
   }
+
+  def replaceFudaNumPattern(str:String):String = {
+    val PATTERN_FUDANUM = """[0-9?*\-\[\]]+""".r
+    val patterns = PATTERN_FUDANUM.findAllIn(str).map({
+        s => s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r
+    }).toList
+    val r = new StringBuilder(str.replaceAll(PATTERN_FUDANUM.pattern.pattern,""))
+    for( i <- 0 until list.length){
+      val s = (i+1).toString
+      if(patterns.exists(_.pattern.matcher(s).matches)){
+        r.append(" " + list(i))
+      }
+    }
+    r.toString
+  }
 }
