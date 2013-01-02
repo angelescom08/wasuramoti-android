@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vorbis/codec.h>
+
+#include <android/log.h>
 #include "wav_ogg_file_codec_jni.h"
 
 #ifdef _WIN32 /* We need the following two to set fin/fout to binary */
@@ -62,12 +64,12 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
 
   FILE *fin, *fout;
   if (!(fin = fopen(fin_path, "rb"))){
-    printf("cannot open file: %s",fin_path);
+    __android_log_print(ANDROID_LOG_INFO,"wasuramoti","cannot read file: %s",fin_path);
     return(0);
   }
 
   if (!(fout = fopen(fout_path,"wb"))){
-    printf("cannot open file: %s",fout_path);
+    __android_log_print(ANDROID_LOG_INFO,"wasuramoti","cannot write file: %s",fout_path);
     fclose(fin);
     return(0);
   }
@@ -112,7 +114,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
       if(bytes<4096)break;
       
       /* error case.  Must not be Vorbis data */
-      fprintf(stderr,"Input does not appear to be an Ogg bitstream.\n");
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Input does not appear to be an Ogg bitstream.\n");
       return(0);
     }
   
@@ -132,19 +134,19 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
     vorbis_comment_init(&vc);
     if(ogg_stream_pagein(&os,&og)<0){ 
       /* error; stream version mismatch perhaps */
-      fprintf(stderr,"Error reading first page of Ogg bitstream data.\n");
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Error reading first page of Ogg bitstream data.\n");
       return(0);
     }
     
     if(ogg_stream_packetout(&os,&op)!=1){ 
       /* no page? must not be vorbis */
-      fprintf(stderr,"Error reading initial header packet.\n");
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Error reading initial header packet.\n");
       return(0);
     }
     
     if(vorbis_synthesis_headerin(&vi,&vc,&op)<0){ 
       /* error case; not a vorbis header */
-      fprintf(stderr,"This Ogg bitstream does not contain Vorbis "
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","This Ogg bitstream does not contain Vorbis "
               "audio data.\n");
       return(0);
     }
@@ -179,12 +181,12 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
             if(result<0){
               /* Uh oh; data at some point was corrupted or missing!
                  We can't tolerate that in a header.  Die. */
-              fprintf(stderr,"Corrupt secondary header.  Exiting.\n");
+              __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Corrupt secondary header.  Exiting.\n");
               return(0);
             }
             result=vorbis_synthesis_headerin(&vi,&vc,&op);
             if(result<0){
-              fprintf(stderr,"Corrupt secondary header.  Exiting.\n");
+              __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Corrupt secondary header.  Exiting.\n");
               return(0);
             }
             i++;
@@ -195,7 +197,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
       buffer=ogg_sync_buffer(&oy,4096);
       bytes=fread(buffer,1,4096,fin);
       if(bytes==0 && i<2){
-        fprintf(stderr,"End of file before finding all Vorbis headers!\n");
+        __android_log_print(ANDROID_LOG_INFO,"wasuramoti","End of file before finding all Vorbis headers!\n");
         return(0);
       }
       ogg_sync_wrote(&oy,bytes);
@@ -204,13 +206,17 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
     /* Throw the comments plus a few lines about the bitstream we're
        decoding */
     {
+      /*
       char **ptr=vc.user_comments;
       while(*ptr){
-        fprintf(stderr,"%s\n",*ptr);
+        __android_log_print(ANDROID_LOG_INFO,"wasuramoti","%s\n",*ptr);
         ++ptr;
       }
-      fprintf(stderr,"\nBitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
-      fprintf(stderr,"Encoded by: %s\n\n",vc.vendor);
+      */
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Bitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
+      /*
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Encoded by: %s\n",vc.vendor);
+      */
     }
     
     convsize=4096/vi.channels;
@@ -230,7 +236,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
           int result=ogg_sync_pageout(&oy,&og);
           if(result==0)break; /* need more data */
           if(result<0){ /* missing or corrupt data at this page position */
-            fprintf(stderr,"Corrupt or missing data in bitstream; "
+            __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Corrupt or missing data in bitstream; "
                     "continuing...\n");
           }else{
             ogg_stream_pagein(&os,&og); /* can safely ignore errors at
@@ -286,7 +292,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
                   }
                   
                   if(clipflag)
-                    fprintf(stderr,"Clipping in frame %ld\n",(long)(vd.sequence));
+                    __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Clipping in frame %ld\n",(long)(vd.sequence));
                   
                   
                   fwrite(convbuffer,2*vi.channels,bout,fout);
@@ -314,7 +320,7 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
       vorbis_block_clear(&vb);
       vorbis_dsp_clear(&vd);
     }else{
-      fprintf(stderr,"Error: Corrupt header during playback initialization.\n");
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Error: Corrupt header during playback initialization.\n");
     }
 
     /* clean up this logical bitstream; before exit we see if we're
@@ -330,6 +336,6 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
   
   fclose(fin);
   fclose(fout);
-  fprintf(stderr,"Done.\n");
+  /*__android_log_print(ANDROID_LOG_INFO,"wasuramoti","Ogg Decode Done.\n"); */
   return(1);
 }

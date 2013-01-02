@@ -36,7 +36,6 @@
 [Where to put .ogg file in the external storage such as SD Card]
   Make directory named `wasuramoti_reader' and make subdirectory named `inaba' or whatever.
   Then put the .ogg files in it.
-  Currently only monaural ogg file is supported.
   Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
   First %03d indicates fuda number (refer to AllFuda.scala).
   The second %d indicates 1 for Kami-no-Ku(upper phrase), and 2 for Shimo-no-Ku(lower phrase).

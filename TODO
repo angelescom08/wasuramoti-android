@@ -14,7 +14,6 @@ Priority Middle:
   * Able to customize notify timer (add new, set default minutes,set icons)
   * Able to change notify timer sound.
   * Pitch and Speed change using picola and FFT
-  * Able to read stereo audio file
   * Use other effects in android.media.audiofx.AudioEffect
   * Create Fuda List from camera photo
 

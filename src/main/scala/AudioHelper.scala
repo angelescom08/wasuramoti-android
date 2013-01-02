@@ -16,8 +16,7 @@ import scala.collection.mutable
 object AudioHelper{
   type EqualizerSeq = Utils.EqualizerSeq
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
-    // TODO: Consider Stereo
-    (java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000
+    ((java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000)*decoder.channels
   }
   def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
@@ -63,14 +62,13 @@ object AudioHelper{
     raf.close()
   }
 }
-//TODO: handle stereo audio
 class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecoder){
   val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = orig_file.length().toInt / 2
   // in milliseconds
   def audioLength():Long = {
-    (1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong
+    ((1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong)/decoder.channels
   }
   def bufferSizeInBytes():Int = {
     (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
@@ -150,27 +148,27 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   // fadein
   def trimFadeIn(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 9999.0) * decoder.rate).toInt
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 9999.0) * decoder.rate * decoder.channels ).toInt
     val beg = threasholdIndex(threashold,false)
     val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
     fade(fadebegin,beg) 
-    index_begin = fadebegin
+    index_begin = ( fadebegin / decoder.channels ) * decoder.channels
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_begin >= index_end){
-      index_begin = index_end - 1
+      index_begin = index_end - decoder.channels
     }
   }
   // fadeout
   def trimFadeOut(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 9999.0) * decoder.rate).toInt
+    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 9999.0) * decoder.rate * decoder.channels).toInt
     val end = threasholdIndex(threashold,true)
     val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
     fade(end,fadeend) 
-    index_end = end
+    index_end = ( end / decoder.channels ) * decoder.channels
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_end <= index_begin){
-      index_end = index_begin + 1
+      index_end = index_begin + decoder.channels
     }
   }
 }
@@ -220,12 +218,15 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
       (AudioFormat.CHANNEL_CONFIGURATION_STEREO,2)
     }
 
-    val (buffer_size,mode) = if(is_stream){
+    var (buffer_size,mode) = if(is_stream){
         (AudioTrack.getMinBufferSize(
           decoder.rate.toInt, channels, audio_format), AudioTrack.MODE_STREAM)
       }else{
         (buffer_size_bytes, AudioTrack.MODE_STATIC)
       }
+    // In order to avoid 'Invalid audio buffer size' from AudioTrack.audioBuffSizeCheck()
+    val rate_3 = rate_1 * rate_2
+    buffer_size = (buffer_size / rate_3) * rate_3
 
     audio_track = Some(new AudioTrack( AudioManager.STREAM_MUSIC,
       decoder.rate.toInt,

@@ -18,6 +18,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libvorbis
 #LOCAL_C_INCLUDES := d:/work/android/ogg/libogg/include/ogg
+LOCAL_LDLIBS := -llog
 
 LIBOGG_PATH := $(LOCAL_PATH)/libogg-1.3.0
 LIBVORBIS_PATH := $(LOCAL_PATH)/libvorbis-1.3.2/
