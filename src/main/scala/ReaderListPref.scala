@@ -84,6 +84,8 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
   }
 }
 
+class OggDecodeFailException(s:String) extends Exception(s){
+}
 
 abstract class Reader(context:Context,val path:String){
   def basename:String = new File(path).getName()
@@ -96,12 +98,17 @@ abstract class Reader(context:Context,val path:String){
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
     val wav_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_WAV,context.getCacheDir())
     val decoder = new OggVorbisDecoder()
+    var rval = true
     withFile(num,kamisimo,temp_file => {
-      decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-      AudioHelper.withMappedShortsFromFile(wav_file,buffer => {
-        val wav = new WavBuffer(buffer,wav_file,decoder)
-        func(wav)
-      })
+      rval = decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
+      if(rval){
+        AudioHelper.withMappedShortsFromFile(wav_file,buffer => {
+          val wav = new WavBuffer(buffer,wav_file,decoder)
+          func(wav)
+        })
+      }else{
+        throw new OggDecodeFailException("ogg decode failed: "+temp_file.getName)
+      }
     })
   }
   def existsAll():(Boolean,String) = {

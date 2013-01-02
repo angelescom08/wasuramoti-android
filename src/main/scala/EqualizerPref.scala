@@ -156,7 +156,13 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
     Globals.player match{ 
       case Some(pl) => {
-          pl.makeAudioTrack() 
+          try{
+            pl.makeAudioTrack() 
+          }catch{
+            case e:OggDecodeFailException => 
+            view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(e.getMessage())
+            return view
+          }
           pl.makeEqualizer(true)
           pl.equalizer match{
             case Some(eqlz) => {

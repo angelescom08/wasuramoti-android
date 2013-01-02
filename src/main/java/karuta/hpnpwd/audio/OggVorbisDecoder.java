@@ -13,9 +13,9 @@ public class OggVorbisDecoder {
 
     }
   }
-  public void decode(String a,String b){
-    decodeFile(a,b);
+  public boolean decode(String a,String b){
+    return (decodeFile(a,b) == 1);
   }
-  public native void decodeFile(String a,String b);
+  public native int decodeFile(String a,String b);
 }
 

@@ -300,7 +300,18 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
         Globals.is_playing=false
         onKamiEnd()
       }}
-      makeAudioTrack()
+      try{
+        makeAudioTrack()
+      }catch{
+        case e:OggDecodeFailException => {
+            activity.runOnUiThread(new Runnable{
+                override def run(){
+                  Utils.messageDialog(activity,Left(e.getMessage),{_=>do_when_done()})
+                }
+            })
+            return
+          }
+      }
       if(isStreamMode()){
         // Play with AudioTrack.MODE_STREAM
         // This method requires small memory, but there is possibility of noize at few seconds after writeToAudioTrack.
@@ -386,11 +397,14 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   def waitDecode(){
     Globals.global_lock.synchronized{
       if(audio_queue.isEmpty){
-        audio_queue ++= decode_task.get()
+        decode_task.get match{
+          case Left(aq) => audio_queue ++= aq
+          case Right(e) => throw e
+        }
       }
     }
   }
-  class OggDecodeTask extends AsyncTask[AnyRef,Void,AudioQueue] {
+  class OggDecodeTask extends AsyncTask[AnyRef,Void,Either[AudioQueue,Exception]] {
     var progress = None:Option[ProgressDialog]
     override def onPreExecute(){
       activity.runOnUiThread(new Runnable{
@@ -406,64 +420,68 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
         }
       })
     }
-    override def onPostExecute(unused:AudioQueue){
+    override def onPostExecute(unused:Either[AudioQueue,Exception]){
       activity.runOnUiThread(new Runnable{
         override def run(){
           progress.foreach(_.dismiss())
         }
       })
     }
-    override def doInBackground(unused:AnyRef*):AudioQueue = {
-      Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
-      val res_queue = new AudioQueue()
-      val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
-      def add_to_audio_queue(w:Either[WavBuffer,Int]){
-        res_queue.enqueue(w)
-        val alen = w match{
-          case Left(wav) => wav.audioLength
-          case Right(len) => len
-        }
-      }
-      // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
-      // we insert additional silence as wave data.
-      add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
-      val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
-      val ss = read_order_each.split("_")
-      if(simo_num == 0 && read_order_each.startsWith("CUR2") && reader.exists(simo_num,1)){
-        reader.withDecodedWav(simo_num, 1, wav => {
-           wav.trimFadeOut()
-           add_to_audio_queue(Left(wav))
-        })
-        add_to_audio_queue(Right(span_simokami))
-      }
-      for (i <- 0 until ss.length ){
-        val s = ss(i)
-        val read_num = if(s.startsWith("CUR")){
-          simo_num
-        }else{
-          kami_num
-        }
-        val kami_simo = if(s.endsWith("1")){
-          1
-        }else{
-          2
-        }
-        if(!(read_num == 0 && kami_simo == 1 && ! reader.exists(read_num,kami_simo))){
-          reader.withDecodedWav(read_num, kami_simo, wav => {
-             wav.trimFadeIn()
-             wav.trimFadeOut()
-             add_to_audio_queue(Left(wav))
-             if(read_num == 0 && kami_simo == 2 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-               add_to_audio_queue(Right(span_simokami))
-               add_to_audio_queue(Left(wav))
-             }
-          })
-          if( i != ss.length - 1 ){
-            add_to_audio_queue(Right(span_simokami))
+    override def doInBackground(unused:AnyRef*):Either[AudioQueue,Exception] = {
+      try{
+        Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
+        val res_queue = new AudioQueue()
+        val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
+        def add_to_audio_queue(w:Either[WavBuffer,Int]){
+          res_queue.enqueue(w)
+          val alen = w match{
+            case Left(wav) => wav.audioLength
+            case Right(len) => len
           }
         }
+        // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
+        // we insert additional silence as wave data.
+        add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
+        val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+        val ss = read_order_each.split("_")
+        if(simo_num == 0 && read_order_each.startsWith("CUR2") && reader.exists(simo_num,1)){
+          reader.withDecodedWav(simo_num, 1, wav => {
+             wav.trimFadeOut()
+             add_to_audio_queue(Left(wav))
+          })
+          add_to_audio_queue(Right(span_simokami))
+        }
+        for (i <- 0 until ss.length ){
+          val s = ss(i)
+          val read_num = if(s.startsWith("CUR")){
+            simo_num
+          }else{
+            kami_num
+          }
+          val kami_simo = if(s.endsWith("1")){
+            1
+          }else{
+            2
+          }
+          if(!(read_num == 0 && kami_simo == 1 && ! reader.exists(read_num,kami_simo))){
+            reader.withDecodedWav(read_num, kami_simo, wav => {
+               wav.trimFadeIn()
+               wav.trimFadeOut()
+               add_to_audio_queue(Left(wav))
+               if(read_num == 0 && kami_simo == 2 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
+                 add_to_audio_queue(Right(span_simokami))
+                 add_to_audio_queue(Left(wav))
+               }
+            })
+            if( i != ss.length - 1 ){
+              add_to_audio_queue(Right(span_simokami))
+            }
+          }
+        }
+        return(Left(res_queue))
+      }catch{
+        case e:OggDecodeFailException => return(Right(e))
       }
-      return(res_queue)
     }
   }
 }
