@@ -1,6 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.text.TextUtils
+import _root_.java.util.regex.PatternSyntaxException
 import scala.collection.mutable
 
 object AllFuda{
@@ -82,8 +83,12 @@ object AllFuda{
 
   def replaceFudaNumPattern(str:String):String = {
     val PATTERN_FUDANUM = """[0-9?*\-\[\]]+""".r
-    val patterns = PATTERN_FUDANUM.findAllIn(str).map({
-        s => s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r
+    val patterns = PATTERN_FUDANUM.findAllIn(str).flatMap({
+        s => try{
+          Some(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r)
+        }catch{
+          case e:PatternSyntaxException => None
+        }
     }).toList
     val r = new StringBuilder(str.replaceAll(PATTERN_FUDANUM.pattern.pattern,""))
     for( i <- 0 until list.length){

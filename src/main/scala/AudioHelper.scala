@@ -14,7 +14,6 @@ import _root_.java.util.{Timer,TimerTask}
 import scala.collection.mutable
 
 object AudioHelper{
-  type EqualizerSeq = Utils.EqualizerSeq
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
     ((java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000)*decoder.channels
   }
@@ -181,7 +180,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   var timer_onend = None:Option[Timer]
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
-  var equalizer_seq = None:Option[Utils.EqualizerSeq]
+  var equalizer_seq = None:Option[EqualizerSeq]
   val audio_queue = new AudioQueue() // file or silence in millisec 
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
@@ -239,7 +238,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   // Precondition: audio_track is not None
   def makeEqualizer(force:Boolean=false){
     val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer())
-    if(!equalizer.isEmpty || (!force && ar.isEmpty)){
+    if(!equalizer.isEmpty || (!force && ar.seq.isEmpty)){
       return
     }
     try{
@@ -249,7 +248,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
         val Array(min_eq,max_eq) = dest.getBandLevelRange
         for( i <- 0 until dest.getNumberOfBands){
           try{
-            var r = ar(i).getOrElse(0.5)
+            var r = ar.seq(i).getOrElse(0.5)
             dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
           }catch{
             case e:Exception => Unit

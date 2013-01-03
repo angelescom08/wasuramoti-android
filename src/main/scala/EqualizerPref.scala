@@ -25,7 +25,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       }
       p.equalizer_seq = None} }
   }
-  def makeSeq():Utils.EqualizerSeq={
+  def makeSeq():EqualizerSeq={
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
       Some(for( i <- 0 until nb ) yield {
@@ -40,9 +40,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       })
     }.getOrElse(Seq())
     if(seq.forall{_.isEmpty}){
-      Seq()
+      new EqualizerSeq()
     }else{
-      seq
+      new EqualizerSeq(seq)
     }
   }
 
@@ -139,8 +139,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
           }
         })
         seek.setTag("equalizer_"+i.toString)
-        if(i < prev_seq.length){
-          prev_seq(i).foreach{ x => seek.setProgress((x*seek.getMax).toInt) }
+        if(i < prev_seq.seq.length){
+          prev_seq.seq(i).foreach{ x => seek.setProgress((x*seek.getMax).toInt) }
         }
         view.findViewById(R.id.equalizer_linear).asInstanceOf[LinearLayout].addView(vw)
     }
