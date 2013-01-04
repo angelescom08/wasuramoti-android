@@ -42,7 +42,7 @@ object Romanization{
     str.toCharArray.map(_.toString).map( x =>
       roma_to_jap.find({case (roma,jap) => jap == x }) match {
         case Some((roma,jap)) => roma
-        case None => " "
+        case None => x
       }
     ).mkString
   }
@@ -50,9 +50,9 @@ object Romanization{
     pat_roma.findAllIn(str.toLowerCase).map(_.toString).map( x =>
       roma_to_jap.find({case (roma,jap) => roma == x }) match {
         case Some((roma,jap)) => jap
-        case None => " "
+        case None => x
       }
-    ).mkString
+    ).mkString + pat_roma.replaceAllIn(str,"")
   }
   def is_japanese(context:Context):Boolean = {
     val loc = context.getResources.getConfiguration.locale

@@ -4,7 +4,8 @@ import _root_.android.app.Dialog
 import _root_.android.os.Bundle
 import _root_.android.content.Context
 import _root_.android.view.View
-import _root_.android.widget.{ArrayAdapter,ListView}
+import _root_.android.text.Html
+import _root_.android.widget.{ArrayAdapter,AdapterView,ListView,TextView,Button}
 
 class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
 
@@ -28,8 +29,27 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     super.onCreate(bundle)
     setContentView(R.layout.fudasetedit_list)
     setTitle(R.string.button_fudasetedit_list)
+    findViewById(R.id.button_invert).asInstanceOf[Button].setText(
+      Html.fromHtml(context.getString(R.string.button_invert))
+    )
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     addItemsToListView(container_view)
+    val get_num_list = ()=> {
+      val poss = container_view.getCheckedItemPositions()
+      val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
+      (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_).fudanum }.toList
+    }
+
+    val update_fudanum = ()=> {
+      findViewById(R.id.fudaseteditlist_fudanum).asInstanceOf[TextView].setText(get_num_list().length.toString)
+    }
+    update_fudanum()
+
+    container_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        override def onItemClick(a:AdapterView[_],v:View,i:Int,l:Long){
+          update_fudanum()
+        }
+      })
 
     findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
@@ -37,6 +57,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
           val q = container_view.isItemChecked(pos)
           container_view.setItemChecked(pos,!q)
         }
+        update_fudanum()
       }
     })
     findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
@@ -46,10 +67,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     })
     findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val poss = container_view.getCheckedItemPositions()
-        val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
-        val num_list = (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_).fudanum }.toList
-        val body = AllFuda.makeKimarijiSetFromNumList(num_list) match {
+        val body = AllFuda.makeKimarijiSetFromNumList(get_num_list()) match {
           case None => ""
           case Some((s,_)) => s
         }

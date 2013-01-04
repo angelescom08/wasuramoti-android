@@ -118,7 +118,9 @@ trait FudaSetTrait{
       db.close()
       body_view.setLocalizationText(body)
     }
-    dialog.findViewById(R.id.fudasetedit_tap).setOnClickListener(new View.OnClickListener(){
+    val help_view = dialog.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
+    help_view.setText(Html.fromHtml(getString(R.string.fudasetedit_help_html)))
+    help_view.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val builder= new AlertDialog.Builder(dialog.getContext)
         val view = LayoutInflater.from(dialog.getContext).inflate(R.layout.fudasetedit_fudanum,null)
@@ -177,11 +179,8 @@ trait FudaSetTrait{
               adapter.remove(orig_title)
               adapter.insert(title,pos)
             }
-            dialog.dismiss()},
-            _ => {
-              body_view.setLocalizationText(kimari)
-            }
-          )
+            dialog.dismiss()
+          })
         }
       }
     })

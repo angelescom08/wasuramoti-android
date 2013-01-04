@@ -16,9 +16,11 @@
       android:singleLine="true" />
   </LinearLayout>
   <TextView
-    android:id="@+id/fudasetedit_tap"
+    android:id="@+id/fudasetedit_help_html"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:text="@string/fudasetedit_text" />
+    android:paddingTop="4dip"
+    android:paddingBottom="4dip"
+    />
 
   <karuta.hpnpwd.wasuramoti.LocalizationEditText android:id="@+id/fudasetedit_text"
     android:layout_width="fill_parent" android:layout_height="170sp"
@@ -27,18 +29,18 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal" >
     <Button android:id="@+id/button_ok"
-      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/button_ok"
       android:layout_alignParentTop="true"
       />
     <Button android:id="@+id/button_cancel"
-      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/button_cancel"
       android:layout_alignParentTop="true"
-      android:layout_toRightOf="@+id/button_ok"
+      android:layout_toRightOf="@id/button_ok"
       />
     <Button android:id="@+id/button_fudasetedit_list"
-      android:layout_width="100sp" android:layout_height="wrap_content"
+      android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/button_fudasetedit_list" 
       android:layout_alignParentTop="true"
       android:layout_alignParentRight="true"

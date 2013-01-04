@@ -4,7 +4,6 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
-  <string name="button_invert">反転</string>
   <string name="now_playing">再生中</string>
   <string name="now_decoding">準備中</string>
 
@@ -89,7 +88,11 @@
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの追加/編集</string>
   <string name="fudasetedit_name">名前</string>
-  <string name="fudasetedit_text">現代仮名遣いで決まり字まで，空白で区切る(例: あさじ こい おお)</string>
+  <string name="fudasetedit_help_html">
+    <![CDATA[
+    現代仮名遣いで決まり字まで，空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>札番号</u>]</font>
+    ]]>
+  </string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>札番号指定</h3>

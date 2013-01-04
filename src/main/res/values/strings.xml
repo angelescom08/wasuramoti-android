@@ -4,7 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
-  <string name="button_invert">Invert</string>
+  <string name="button_invert"><![CDATA[&notin;]]></string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
 
@@ -106,7 +106,11 @@
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
   <string name="fudasetedit_title">Add/Edit Fuda sets</string>
   <string name="fudasetedit_name">Title</string>
-  <string name="fudasetedit_text">First chracters of upper phase in romanization. (e.g. asazi, koi, oo)</string>
+  <string name="fudasetedit_help_html">
+    <![CDATA[
+    First chracters of upper phase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Fuda No.</u>]</font>
+    ]]>
+  </string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>Fuda Number</h3>

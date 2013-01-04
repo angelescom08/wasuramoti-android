@@ -70,10 +70,10 @@ object AllFuda{
     }
   }
   def makeHaveToRead(str:String):Set[String] = {
-    if(TextUtils.isEmpty(str)){
-      return AllFuda.list.toSet
-    }
     var ret = mutable.Set[String]()
+    if(TextUtils.isEmpty(str)){
+      return ret.toSet
+    }
     val trie = CreateTrie.makeTrie(AllFuda.list)
     for( s <- str.split(" ") ){
       ret ++= trie.traversePrefix(s).toSet
@@ -90,7 +90,7 @@ object AllFuda{
           case e:PatternSyntaxException => None
         }
     }).toList
-    val r = new StringBuilder(str.replaceAll(PATTERN_FUDANUM.pattern.pattern,""))
+    val r = new StringBuilder(PATTERN_FUDANUM.replaceAllIn(str,""))
     for( i <- 0 until list.length){
       val s = (i+1).toString
       if(patterns.exists(_.pattern.matcher(s).matches)){
