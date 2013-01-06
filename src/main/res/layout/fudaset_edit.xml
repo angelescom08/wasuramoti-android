@@ -18,8 +18,8 @@
   <TextView
     android:id="@+id/fudasetedit_help_html"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:paddingTop="4dip"
-    android:paddingBottom="4dip"
+    android:paddingTop="6dip"
+    android:paddingBottom="6dip"
     />
 
   <karuta.hpnpwd.wasuramoti.LocalizationEditText android:id="@+id/fudasetedit_text"

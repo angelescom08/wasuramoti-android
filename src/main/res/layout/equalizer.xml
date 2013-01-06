@@ -11,13 +11,13 @@
                 android:layout_height="wrap_content" 
                 android:orientation="horizontal" 
                 >
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <Button android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/equalizer_play" android:id="@+id/equalizer_play"
       android:layout_alignParentTop="true"
       android:paddingLeft="20sp"
       android:paddingRight="20sp"
       />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <Button android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/equalizer_reset" android:id="@+id/equalizer_reset"
       android:layout_alignParentTop="true"
       android:layout_alignParentRight="true"
@@ -25,6 +25,6 @@
   </RelativeLayout>
   <TextView
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:text="@string/equalizer_message" android:id="@+id/equalizer_message"/>
+    android:id="@+id/equalizer_message"/>
 </LinearLayout>
 </ScrollView>

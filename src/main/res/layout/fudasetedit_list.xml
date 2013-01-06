@@ -35,7 +35,7 @@
       android:textStyle="bold"
       android:textSize="24sp"
       android:gravity="center"
-      android:layout_marginRight="16sp"
+      android:layout_marginRight="14sp"
       />
   </RelativeLayout>
   <ListView 

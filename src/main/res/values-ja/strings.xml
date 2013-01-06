@@ -15,10 +15,10 @@
   <!-- CATEGORY_MAIN -->
   <string name="category_main">メイン</string>
   <string name="conf_fudaset_title">詠み札のセット</string>
-  <string name="conf_fudaset_summary">一字札のみ，あ札のみなど一部の札のみ詠む</string>
+  <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
   <string name="conf_read_order_title">詠む順番</string>
-  <string name="conf_read_order_summary">ランダム，シャッフル</string>
+  <string name="conf_read_order_summary">ランダムまたはシャッフル</string>
   <string-array name="conf_read_order_entries">
     <item>シャッフル</item>
     <item>ランダム</item>
@@ -33,14 +33,13 @@
   </string-array>
 
   <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加する場合はSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg形式のファイルを置いて下さい</string>
+  <string name="conf_reader_list_summary">追加するにはSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg形式のファイルを置いて下さい</string>
   <string name="conf_equalizer">イコライザー</string>
   <string name="equalizer_play">再生</string>
   <string name="equalizer_stop">停止</string>
   <string name="equalizer_reset">リセット</string>
   <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
 
-  <string name="equalizer_message">人間の音声の周波数帯は300Hzから700Hzぐらいです</string>
   <string name="equalizer_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
   <!-- CATEGORY_AUTO -->
@@ -57,9 +56,9 @@
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_silent_mode_on_start">マナーモード</string>
-  <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定，終了時に元に戻す</string>
+  <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
-  <string name="conf_audio_track_mode_summary">「Stream」にするとメモリ節約できるが，詠みの区切り目に雑音が入る可能性有</string>
+  <string name="conf_audio_track_mode_summary">「Stream」にするとメモリ節約できるが，詠み始めに雑音が入る可能性有り</string>
   <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
   <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>
@@ -90,7 +89,7 @@
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    現代仮名遣いで決まり字まで，空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>札番号</u>]</font>
+    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>札番号</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
@@ -109,8 +108,9 @@
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
   <string name="fudasetedit_titleempty">タイトルが空白です</string>
   <string name="fudasetedit_titleduplicated">すでに同じタイトルの札セットが存在します</string>
-  <string name="fudasetedit_setempty">決まり字に該当する札がありません</string>
-  <string name="reader_not_found">詠み手の音声ファイルがありません．</string>
+  <string name="fudasetedit_setempty">該当する札がありません</string>
+  <string name="reader_not_found">詠み手の音声ファイルがありません</string>
+  <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
   <string name="message_readindex_random">ランダム / %d 首</string>

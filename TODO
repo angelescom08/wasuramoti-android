@@ -1,7 +1,6 @@
 Priority High:
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Fix problem that have to click "Start Timer" twice (set focus and start).
-  * Show "Read Done" message instead of "No Audio File for Current Reader" when all fuda has been read.
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Able to add kara fuda
   * Do not fade in if fade length is too short

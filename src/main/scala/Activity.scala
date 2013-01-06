@@ -227,7 +227,11 @@ trait MainButtonTrait{
     Globals.global_lock.synchronized{
       val handler = new Handler()
       if(Globals.player.isEmpty){
-        Utils.messageDialog(self,Right(R.string.reader_not_found))
+        if(FudaListHelper.allReadDone(self.getApplicationContext())){
+          Utils.messageDialog(self,Right(R.string.all_read_done),{_=>openOptionsMenu()})
+        }else{
+          Utils.messageDialog(self,Right(R.string.reader_not_found))
+        }
         return
       }
       val player = Globals.player.get

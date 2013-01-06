@@ -92,7 +92,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   def add_seekbars(view:View,equalizer:Equalizer,inflater:LayoutInflater){
     // SeekBar ALL
     val vw = inflater.inflate(R.layout.equalizer_item, null)
-    vw.setPadding(0,0,0,20)
+    vw.setPadding(0,0,0,16)
     vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar].setTag("equalizer_all")
     vw.findViewById(R.id.equalizer_seek_text).asInstanceOf[TextView].setText("ALL")
     val seek = vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar]

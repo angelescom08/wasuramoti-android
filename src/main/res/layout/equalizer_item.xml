@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content" 
               android:layout_height="wrap_content" 
-              android:orientation="horizontal" >
+              android:orientation="horizontal"
+              android:paddingBottom="3sp" >
   <TextView
     android:id="@+id/equalizer_seek_text"
     android:gravity="right"
     android:layout_width="60sp" android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
     />
   <SeekBar android:id="@+id/equalizer_seek"
-          android:layout_height="30sp"
+          android:layout_height="32sp"
           android:layout_width="fill_parent"
           android:max="100"
           android:progress="50"

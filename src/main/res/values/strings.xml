@@ -16,8 +16,8 @@
   <!-- CATEGORY_MAIN -->
   <string name="category_main">Main</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
-  <string name="conf_fudaset_summary">Which subsets of Fuda to read.</string>
-  <string name="conf_read_order_title">Read order</string>
+  <string name="conf_fudaset_summary">Which subset of fuda to play.</string>
+  <string name="conf_read_order_title">Play Order</string>
   <string name="conf_read_order_summary">Random or shuffle.</string>
   <string-array name="conf_read_order_entries">
     <item>Shuffle</item>
@@ -28,8 +28,8 @@
     <item>RANDOM</item>
   </string-array>
 
-  <string name="conf_read_order_each_title">Read order of each fuda</string>
-  <string name="conf_read_order_each_summary">Lower to Upper, Upper to Lower, and so on</string>
+  <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
+  <string name="conf_read_order_each_summary">Lower to upper, upper to lower, and so on</string>
   <string-array name="conf_read_order_each_entries">
     <item>Lower -&gt; Uppper</item>
     <item>Upper -&gt; Lower</item>
@@ -37,26 +37,25 @@
   </string-array>
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>
-    <item>CUR1_CUR2</item>
+    <item>NEXT1_NEXT2</item>
     <item>CUR2_NEXT1_NEXT2</item>
   </string-array>
   <string name="conf_reader_list">Reader</string>
-  <string name="conf_reader_list_summary">To add new audio file, place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg in SD Card</string>
+  <string name="conf_reader_list_summary">To add new audio file, place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg in SD Card.</string>
   <string name="conf_equalizer">Equalizer</string>
-  <string name="conf_equalizer_summary">Set volume for each frequency range</string>
+  <string name="conf_equalizer_summary">Set volume for each frequency range.</string>
 
   <string name="equalizer_play">Play</string>
   <string name="equalizer_stop">Stop</string>
   <string name="equalizer_reset">Reset</string>
-  <string name="equalizer_message">The frequency range of human voice is about 300Hz - 700Hz</string>
   <string name="equalizer_error_noplay">You must go back to previous fuda to edit this setting</string>
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">Auto</string>
-  <string name="conf_read_auto_title">Auto reading</string>
-  <string name="conf_read_auto_summary">After reading is done, stop a while, and start reading next fuda.</string>
-  <string name="conf_read_auto_span">Interval of auto-reading</string>
-  <string name="conf_read_auto_span_summary">How many seconds to stop until reading next fuda.</string>
+  <string name="conf_read_auto_title">Auto Play</string>
+  <string name="conf_read_auto_summary">After playing is done, stop a while, and start playing next fuda.</string>
+  <string name="conf_read_auto_span">Interval of Auto Play</string>
+  <string name="conf_read_auto_span_summary">How many seconds to stop until playing next fuda.</string>
 
   <string name="category_others">Others</string>
   <string name="subscreen_others">Other Settings</string>
@@ -66,9 +65,9 @@
   <string name="conf_dimlock_minutes">Lock Screen</string>
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_silent_mode_on_start">Silent Mode</string>
-  <string name="conf_silent_mode_on_start_summary">Set Silent Mode on start-up, unset on close.</string>
+  <string name="conf_silent_mode_on_start_summary">Set silent mode on start up, unset on close.</string>
   <string name="conf_audio_track_mode">AudioTrack Mode</string>
-  <string name="conf_audio_track_mode_summary">Choose `Stream` if your device has small memory. However, setting it may cause some noise.</string>
+  <string name="conf_audio_track_mode_summary">`Stream` uses less memory. However, setting it may cause some noise.</string>
   <string-array name="conf_audio_track_entries">
     <item>Static</item>
     <item>Stream</item>
@@ -78,26 +77,26 @@
     <item>STREAM</item>
   </string-array>
 
-  <string name="conf_read_simo_joka_twice">Lower phase of 0th poem twice</string>
+  <string name="conf_read_simo_joka_twice">Lower Phase of Joka Twice</string>
   <string name="conf_read_simo_joka_twice_summary">Whether to play &lt;name&gt;_000_2.ogg twice.</string>
-  <string name="conf_wav_begin_read">Beginning to read</string>
-  <string name="conf_wav_begin_read_summary">How many seconds to wait before reading.</string>
+  <string name="conf_wav_begin_read">Beginning of Play</string>
+  <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
   <string name="conf_wav_span_simokami_summary">Interval between lower phase and upper phase.</string>
   <string name="conf_wav_threshold">Threshold</string>
-  <string name="conf_wav_threshold_summary">Treat as silence if amplitude is lower than this value</string>
+  <string name="conf_wav_threshold_summary">Treat as silence if amplitude is lower than this value.</string>
   <string name="conf_wav_fadeout_simo">Fade Out</string>
   <string name="conf_wav_fadout_simo_summary">How many seconds to fade out.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
   <!-- CATEGORY_CLEAR -->
   <string name="category_init">Initialize</string>
-  <string name="conf_init_fudaset">Initialize Fudasets</string>
-  <string name="conf_init_fudaset_summary">Initialize all the Fudasets</string>
-  <string name="confirm_init_fudaset">Really Initialize all the Fudasets?</string>
+  <string name="conf_init_fudaset">Initialize Fuda Sets</string>
+  <string name="conf_init_fudaset_summary">Initialize all the fuda sets.</string>
+  <string name="confirm_init_fudaset">Really Initialize all the fuda sets?</string>
   <string name="conf_init_preference">Initialize Config</string>
-  <string name="conf_init_preference_summary">Initialize all the config except Fudasets</string>
-  <string name="confirm_init_preference">Really Initialize all the config except Fudasets?</string>
+  <string name="conf_init_preference_summary">Initialize all the config except fuda sets.</string>
+  <string name="confirm_init_preference">Really Initialize all the config except fuda sets?</string>
 
   <string name="fudaset_add">Add</string>
   <string name="fudaset_delete">Delete</string>
@@ -125,10 +124,11 @@
   </string>
   <string name="button_fudasetedit_list">List</string>
   <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
-  <string name="fudasetedit_titleempty">The title is empty</string>
+  <string name="fudasetedit_titleempty">The title is empty.</string>
   <string name="fudasetedit_titleduplicated">Fuda sets with same name already exists.</string>
   <string name="fudasetedit_setempty">Empty fuda set.</string>
   <string name="reader_not_found">No audio file for current reader.</string>
+  <string name="all_read_done">No more fuda to play. Choose shuffle to restart.</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
   <string name="message_readindex_random">Random / %d</string>

@@ -47,6 +47,14 @@ object FudaListHelper{
     })+body
   }
 
+  def allReadDone(context:Context):Boolean = {
+    if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+      false
+    }else{
+      queryCurrentIndexWithSkip(context) > queryNumbersToRead(context)
+    }
+  }
+
   def queryNumbersToRead(context:Context):Int = {
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip=0 AND num > 0",null,null,null,null,null)
