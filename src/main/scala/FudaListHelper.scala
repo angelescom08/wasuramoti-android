@@ -7,6 +7,8 @@ import scala.util.Random
 object FudaListHelper{
   val PREFS_NAME="wasuramoti.pref"
   val KEY_CURRENT_INDEX="fuda_current_index"
+  var current_index_with_skip = None:Option[Int]
+  var numbers_to_read = None:Option[Int]
 
   def getCurrentIndex(context:Context):Int = {
     val prefs = context.getSharedPreferences(PREFS_NAME,0)
@@ -18,6 +20,7 @@ object FudaListHelper{
     val editor = prefs.edit()
     editor.putInt(KEY_CURRENT_INDEX,index)
     editor.commit() 
+    current_index_with_skip = None
   }
 
   def moveToFirst(context:Context){
@@ -33,11 +36,11 @@ object FudaListHelper{
   }
 
   def makeReadIndexMessage(context:Context):String = {
-    val num_to_read = new java.lang.Integer(queryNumbersToRead(context))
+    val num_to_read = new java.lang.Integer(getOrQueryNumbersToRead(context))
     val body = if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
       context.getResources().getString(R.string.message_readindex_random,num_to_read)
     }else{
-      val current_index = new java.lang.Integer(queryCurrentIndexWithSkip(context))
+      val current_index = new java.lang.Integer(getOrQueryCurrentIndexWithSkip(context))
       context.getResources().getString(R.string.message_readindex_shuffle,current_index,num_to_read)
     }
     (if(num_to_read < AllFuda.list.size){ 
@@ -51,7 +54,15 @@ object FudaListHelper{
     if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
       false
     }else{
-      queryCurrentIndexWithSkip(context) > queryNumbersToRead(context)
+      getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToRead(context)
+    }
+  }
+
+  def isLastFuda(context:Context):Boolean = {
+    if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+      false
+    }else{
+      getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToRead(context)
     }
   }
 
@@ -96,7 +107,6 @@ object FudaListHelper{
   }
   def queryIndexWithSkip(context:Context,fake_index:Int):Int = {
     val db = Globals.database.get.getReadableDatabase
-    //val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip = 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip = 0 AND rnk = ?",Array(fake_index.toString))
     val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip = 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip = 0 AND rnk = "+fake_index,null)
     cursor.moveToFirst()
     val ret = cursor.getInt(1)
@@ -124,6 +134,54 @@ object FudaListHelper{
         db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array((i+1).toString))
       })
     db.close()
+  }
+  def updateSkipList(fudaset_title:String){
+    val dbr = Globals.database.get.getReadableDatabase
+    var cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
+    var body = ""
+    if( cursor.getCount > 0 ){
+      cursor.moveToFirst()
+      body = cursor.getString(1)
+    }
+    cursor.close()
+    dbr.close()
+
+    val haveto_read = AllFuda.makeHaveToRead(body)
+    val skip = AllFuda.list.toSet -- haveto_read
+    val dbw = Globals.database.get.getWritableDatabase
+    Utils.withTransaction(dbw, ()=>
+      for((ss,flag) <- Array((haveto_read,0),(skip,1))){
+        for( s <- ss ){
+          val cv = new ContentValues()
+          cv.put("skip",new java.lang.Integer(flag))
+          val num = AllFuda.getFudaNum(s)
+          dbw.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(num.toString))
+        }
+      })
+    dbw.close()
+    numbers_to_read = None
+    current_index_with_skip = None
+  }
+
+  def getOrQueryCurrentIndexWithSkip(context:Context):Int = {
+    current_index_with_skip match{
+      case Some(x) => x
+      case None => {
+        val r = queryCurrentIndexWithSkip(context)
+        current_index_with_skip = Some(r)
+        r
+      }
+    }
+  }
+  def getOrQueryNumbersToRead(context:Context):Int = {
+    numbers_to_read match{
+      case Some(x) => x
+      case None =>{
+        val r = queryNumbersToRead(context)
+        numbers_to_read = Some(r)
+        r
+      }
+    }
   }
 }
 

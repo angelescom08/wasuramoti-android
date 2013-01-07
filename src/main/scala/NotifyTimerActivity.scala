@@ -111,7 +111,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
           if(vib != null){
             vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(2000,500).map{_.toLong}}.flatten),-1)
           }else{
-            println("WARNING: This device does not support VIBRATOR_SERVICE")
+            println("WARNING: VIBRATOR_SERVICE is not supported on this device.")
           }
         }
       }

@@ -26,28 +26,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
         case e:ArrayIndexOutOfBoundsException => return
       }
       persistString(title)
-      val db = Globals.database.get.getWritableDatabase
-      var cursor = db.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(title),null,null,null,null)
-      var body = ""
-      if( cursor.getCount > 0 ){
-        cursor.moveToFirst()
-        body = cursor.getString(1)
-      }
-      cursor.close()
-      db.close()
-      val haveto_read = AllFuda.makeHaveToRead(body)
-      val skip = AllFuda.list.toSet -- haveto_read
-      val dbw = Globals.database.get.getWritableDatabase
-      Utils.withTransaction(dbw, ()=>
-        for((ss,flag) <- Array((haveto_read,0),(skip,1))){
-          for( s <- ss ){
-            val cv = new ContentValues()
-            cv.put("skip",new java.lang.Integer(flag))
-            val num = AllFuda.getFudaNum(s)
-            dbw.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(num.toString))
-          }
-        })
-      dbw.close()
+      FudaListHelper.updateSkipList(title)
     }
     super.onDialogClosed(positiveResult)
   }

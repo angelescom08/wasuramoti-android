@@ -182,6 +182,9 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[EqualizerSeq]
   val audio_queue = new AudioQueue() // file or silence in millisec 
+  // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
+  // Therfore, we execute it here
+  val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
   def isStreamMode():Boolean={
@@ -409,6 +412,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
     override def onPreExecute(){
       activity.runOnUiThread(new Runnable{
         override def run(){
+
           //We have to check whether activity is in finishing phase or not to avoid the following error:
           //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@XXXXXXXX is not valid; is your activity running?
           if(!activity.isFinishing()){
@@ -443,13 +447,17 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
         // we insert additional silence as wave data.
         add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
         val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
-        val ss = read_order_each.split("_")
-        if(simo_num == 0 && read_order_each.startsWith("CUR2") && reader.exists(simo_num,1)){
-          reader.withDecodedWav(simo_num, 1, wav => {
-             wav.trimFadeOut()
-             add_to_audio_queue(Left(wav))
-          })
-          add_to_audio_queue(Right(span_simokami))
+        var ss = read_order_each.split("_")
+        if(simo_num == 0 && read_order_each.startsWith("CUR2")){
+          if(Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
+            ss = Array("CUR2") ++ ss 
+          }
+          if(reader.exists(simo_num,1)){
+            ss = Array("CUR1") ++ ss 
+          }
+        }
+        if(is_last_fuda && !read_order_each.endsWith("NEXT2")){
+          ss ++= Array("NEXT2")
         }
         for (i <- 0 until ss.length ){
           val s = ss(i)
@@ -463,15 +471,11 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val simo_num:In
           }else{
             2
           }
-          if(!(read_num == 0 && kami_simo == 1 && ! reader.exists(read_num,kami_simo))){
+          if(reader.exists(read_num,kami_simo)){
             reader.withDecodedWav(read_num, kami_simo, wav => {
                wav.trimFadeIn()
                wav.trimFadeOut()
                add_to_audio_queue(Left(wav))
-               if(read_num == 0 && kami_simo == 2 && Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-                 add_to_audio_queue(Right(span_simokami))
-                 add_to_audio_queue(Left(wav))
-               }
             })
             if( i != ss.length - 1 ){
               add_to_audio_queue(Right(span_simokami))

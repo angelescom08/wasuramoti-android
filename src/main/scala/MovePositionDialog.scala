@@ -7,8 +7,8 @@ import _root_.android.view.View
 import _root_.android.widget.Button
 
 class MovePositionDialog(context:Context,doWhenOk:Unit=>Unit) extends Dialog(context){
-  val numbers_to_read = FudaListHelper.queryNumbersToRead(context)
-  var current_index = FudaListHelper.queryCurrentIndexWithSkip(context)
+  val numbers_to_read = FudaListHelper.getOrQueryNumbersToRead(context)
+  var current_index = FudaListHelper.getOrQueryCurrentIndexWithSkip(context)
   def setTitleWithNum(){
     val title = context.getResources().getString(R.string.move_position_title) + ": " + current_index + " / " + numbers_to_read
     setTitle(title)
