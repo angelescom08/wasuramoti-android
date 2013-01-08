@@ -36,6 +36,7 @@ object General {
       -keep class scala.collection.mutable.HashMap
       -keep class scala.collection.mutable.Queue
       -keep class scala.collection.mutable.StringBuilder
+      -keep class scala.Enumeration$Value
       -keep class scala.runtime.BooleanRef
       -keep class scala.runtime.BoxedUnit
       -keep class scala.runtime.IntRef

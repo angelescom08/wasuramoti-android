@@ -123,6 +123,14 @@
     ]]>
   </string>
   <string name="button_fudasetedit_list">List</string>
+  <string-array name="fudaseteditlist_menuitems">
+    <item>Invert Select</item>
+    <item>Switch Order ( ABC / Fuda No. )</item>
+  </string-array>
+  <string-array name="fudaseteditlist_menuitems_values">
+    <item>INVERT_SELECT</item>
+    <item>SORT_ORDER</item>
+  </string-array>
   <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
   <string name="fudasetedit_titleempty">The title is empty.</string>
   <string name="fudasetedit_titleduplicated">Fuda sets with same name already exists.</string>

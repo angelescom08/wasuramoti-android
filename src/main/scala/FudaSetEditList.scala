@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.Dialog
 import _root_.android.os.Bundle
 import _root_.android.content.Context
-import _root_.android.view.View
+import _root_.android.view.{View,Window}
 import _root_.android.text.Html
 import _root_.android.widget.{ArrayAdapter,AdapterView,ListView,TextView,Button}
 import _root_.java.util.Comparator
@@ -12,19 +12,29 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
   object SortMode extends Enumeration {
     type SortMode = Value
     val ABC,NUM = Value
+    def nextMode(v:SortMode.SortMode) = SortMode((v.id+1)%SortMode.maxId)
   }
   var sort_mode = SortMode.ABC
 
+  object ListItemMode extends Enumeration {
+    type ListItemMode = Value
+    val FULL,KIMARIJI = Value
+    def nextMode(v:ListItemMode.ListItemMode) = ListItemMode((v.id+1)%ListItemMode.maxId)
+  }
+  var list_item_mode = ListItemMode.KIMARIJI
+
   class FudaListItem(val str:String, val fudanum:Int) {
     override def toString():String = {
-      var r = (sort_mode match{
+      val prefix = sort_mode match{
         case SortMode.ABC => ""
-        case SortMode.NUM => fudanum + ". "}) + 
+        case SortMode.NUM => fudanum + ". " 
+        }
+      val body = if(Romanization.is_japanese(context) && list_item_mode == ListItemMode.FULL){
+        AllFuda.list_full(fudanum-1) + " (" + AllFuda.author(fudanum-1)  + ")"
+      }else{
         Romanization.jap_to_local(context,str)
-      if(sort_mode == SortMode.NUM && Romanization.is_japanese(context)){
-        r += " (" + AllFuda.author(fudanum-1)  + ")"
       }
-      return r
+      prefix + body
     }
     def compareTo(that:FudaListItem):Int = {
       sort_mode match{
@@ -57,7 +67,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     val have_to_read = AllFuda.makeHaveToRead(kimarijis)
     val fudalist = AllFuda.list.zipWithIndex.map{ x => new FudaListItem(x._1,x._2+1) }
-    val adapter = new ArrayAdapter[FudaListItem](context,android.R.layout.simple_list_item_multiple_choice,fudalist)
+    val adapter = new ArrayAdapter[FudaListItem](context,R.layout.my_simple_list_item_multiple_choice,fudalist)
     adapter.sort(fudalistitem_comp)
     container_view.setAdapter(adapter)
     checkListBy(x=>have_to_read.contains(x.str))
@@ -89,26 +99,57 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
         }
       })
 
+    val invert_select = () => {
+      for( pos <- 0 until container_view.getCount ){
+        val q = container_view.isItemChecked(pos)
+        container_view.setItemChecked(pos,!q)
+      }
+      update_fudanum()
+    }
+
+    val show_full = () => {
+      list_item_mode = ListItemMode.nextMode(list_item_mode)
+      val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
+      adapter.notifyDataSetChanged()
+    }
+    val sort_order = () => {
+      sort_mode = SortMode.nextMode(sort_mode)
+      val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
+      val num_list = get_num_list().toSet
+      adapter.sort(fudalistitem_comp)
+      adapter.notifyDataSetChanged()
+      // I could not find a way to preserve checkbox state after sort() is called.
+      // Therefore I do it by hand.
+      checkListBy(x=>num_list.contains(x.fudanum))
+    }
+
+
     findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        for( pos <- 0 until container_view.getCount ){
-          val q = container_view.isItemChecked(pos)
-          container_view.setItemChecked(pos,!q)
+        val d = new Dialog(context){
+          override def onCreate(bundle:Bundle){
+            super.onCreate(bundle)
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(R.layout.fudaseteditlist_menu)
+            val lv = findViewById(R.id.fudaseteditlist_menu).asInstanceOf[ListView]
+            lv.setItemsCanFocus(false)
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
+                  val arr = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems_values)
+                  if(position > arr.length){
+                    return
+                  }
+                  arr(position) match{
+                    case "INVERT_SELECT" => invert_select()
+                    case "SHOW_FULL" => show_full()
+                    case "SORT_ORDER" => sort_order()
+                  }
+                  dismiss()
+                }
+              })
+          }
         }
-        update_fudanum()
-      }
-    })
-    findViewById(R.id.button_invert).setOnLongClickListener(new View.OnLongClickListener(){
-      override def onLongClick(v:View):Boolean = {
-        sort_mode = if(sort_mode == SortMode.NUM){SortMode.ABC}else{SortMode.NUM}
-        val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
-        val num_list = get_num_list().toSet
-        adapter.sort(fudalistitem_comp)
-        adapter.notifyDataSetChanged()
-        // I could not find a way to preserve checkbox state after sort() is called.
-        // Therefore I do it by hand.
-        checkListBy(x=>num_list.contains(x.fudanum))
-        return(true)
+        d.show()
       }
     })
     findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){

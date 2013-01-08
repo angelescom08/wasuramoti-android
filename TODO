@@ -4,7 +4,6 @@ Priority High:
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Able to add kara fuda
   * Do not fade in if fade length is too short
-  * Avoid Romanization.jap_to_local called on FudaListItem.toString()
 
 Priority Middle:
   * Fuda-otoshi mode
