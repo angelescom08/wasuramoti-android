@@ -2,16 +2,18 @@ Priority High:
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Fix problem that have to click "Start Timer" twice (set focus and start).
   * Special words such as 'one' 'two' 'red' in fuda sets
-  * Able to add kara fuda
-  * Do not fade in if fade length is too short
+  * Able to add kara fuda.
+  * Do not fade in if fade length is too short.
+  * Show Information of poem when each item of fuda list is long pressed.
+  * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
+  * Able to show which poem is reading
 
 Priority Middle:
   * Fuda-otoshi mode
-  * Able to show fuda during reading
   * Yomi-fuda mode
   * Able to customize notify timer (add new, set default minutes,set icons)
   * Able to change notify timer sound.
-  * Pitch and Speed change using picola and FFT
+  * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Use other effects in android.media.audiofx.AudioEffect
   * Create Fuda List from camera photo
 

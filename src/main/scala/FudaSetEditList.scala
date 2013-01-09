@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.Dialog
+import _root_.android.app.{Dialog,AlertDialog}
 import _root_.android.os.Bundle
-import _root_.android.content.Context
+import _root_.android.content.{Context,DialogInterface}
 import _root_.android.view.{View,Window}
 import _root_.android.text.Html
 import _root_.android.widget.{ArrayAdapter,AdapterView,ListView,TextView,Button}
@@ -126,30 +126,28 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
 
     findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val d = new Dialog(context){
-          override def onCreate(bundle:Bundle){
-            super.onCreate(bundle)
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setContentView(R.layout.fudaseteditlist_menu)
-            val lv = findViewById(R.id.fudaseteditlist_menu).asInstanceOf[ListView]
-            lv.setItemsCanFocus(false)
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
-                  val arr = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems_values)
-                  if(position > arr.length){
-                    return
-                  }
-                  arr(position) match{
-                    case "INVERT_SELECT" => invert_select()
-                    case "SHOW_FULL" => show_full()
-                    case "SORT_ORDER" => sort_order()
-                  }
-                  dismiss()
-                }
-              })
-          }
-        }
-        d.show()
+        val items = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems)
+        val values = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems_values)
+        val builder = new AlertDialog.Builder(context)
+        builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
+            override def onClick(d:DialogInterface,position:Int){
+              if(position > values.length){
+                return
+              }
+              values(position) match{
+                case "INVERT_SELECT" => invert_select()
+                case "SHOW_FULL" => show_full()
+                case "SORT_ORDER" => sort_order()
+              }
+              d.dismiss()
+            }
+          })
+        builder.setNeutralButton(context.getResources().getString(R.string.button_cancel),new DialogInterface.OnClickListener(){
+            override def onClick(d:DialogInterface,position:Int){
+              d.dismiss()
+            }
+          })
+        builder.create.show()
       }
     })
     findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
