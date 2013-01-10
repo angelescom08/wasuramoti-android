@@ -177,7 +177,7 @@ object AllFuda{
     }
   }
   def makeKimarijiSetFromNumList(num_list:List[Int]):Option[(String,Int)] = {
-    makeKimarijiSet(num_list.map(i => AllFuda.list(i-1))) 
+    makeKimarijiSet(num_list.map(i => AllFuda.list(i-1)))
   }
   def makeKimarijiSet(str_list:List[String]):Option[(String,Int)] = {
     val trie = CreateTrie.makeTrie(AllFuda.list)
@@ -207,15 +207,16 @@ object AllFuda{
   }
 
   def replaceFudaNumPattern(str:String):String = {
-    val PATTERN_FUDANUM = """[0-9?*\-\[\]]+""".r
-    val patterns = PATTERN_FUDANUM.findAllIn(str).flatMap({
+    val PATTERN_FUDANUM = """[0-9?*\[\]]+""".r
+    val buf = Romanization.zenkaku_to_hankaku(str) 
+    val patterns = PATTERN_FUDANUM.findAllIn(buf).flatMap({
         s => try{
           Some(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r)
         }catch{
           case e:PatternSyntaxException => None
         }
     }).toList
-    val r = new StringBuilder(PATTERN_FUDANUM.replaceAllIn(str,""))
+    val r = new StringBuilder(PATTERN_FUDANUM.replaceAllIn(buf,""))
     for( i <- 0 until list.length){
       val s = (i+1).toString
       if(patterns.exists(_.pattern.matcher(s).matches)){

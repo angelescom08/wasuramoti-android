@@ -43,7 +43,7 @@ class MovePositionDialog(context:Context,doWhenOk:Unit=>Unit) extends Dialog(con
     setOnClick(R.id.move_button_next_ten, _ => onNextTen )
   }
   def onOk(){
-    val index = FudaListHelper.queryIndexWithSkip(context,current_index)    
+    val index = FudaListHelper.queryIndexWithSkip(context,current_index)
     FudaListHelper.putCurrentIndex(context,index)
     doWhenOk()
     dismiss()

@@ -103,7 +103,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       // However if we can update the savedInstanceState value which is passed to onCreate
       // in the NotifyTimerReceiver.onReceive, it is a much more general way.
       // Therefore the following code is a tentative method.
-      // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code. 
+      // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code.
       Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
     }
     setLongClickButtons()
@@ -162,7 +162,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     timer_refresh_text = None
   }
   override def onStop(){
-    super.onStop() 
+    super.onStop()
     ringer_mode_bkup.foreach{ mode =>
       val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
@@ -246,13 +246,13 @@ trait MainButtonTrait{
         player.play(
           _ => {
             val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
-            if(is_shuffle){ 
+            if(is_shuffle){
               FudaListHelper.moveNext(self.getApplicationContext())
             }
             // In random mode, there is a possobility that same pairs of fuda are read in a row.
             // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
             // Therefore we give force flag to true for refreshAndSetButton.
-            self.refreshAndSetButton(!is_shuffle) 
+            self.refreshAndSetButton(!is_shuffle)
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){

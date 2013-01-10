@@ -27,7 +27,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     override def toString():String = {
       val prefix = sort_mode match{
         case SortMode.ABC => ""
-        case SortMode.NUM => fudanum + ". " 
+        case SortMode.NUM => fudanum + ". "
         }
       val body = if(Romanization.is_japanese(context) && list_item_mode == ListItemMode.FULL){
         AllFuda.list_full(fudanum-1) + " (" + AllFuda.author(fudanum-1)  + ")"

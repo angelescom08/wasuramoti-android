@@ -35,7 +35,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     // Using XML Attribute ``android:dialogLayout="@layout/fudaset"'' with ``android:onClick="..."'' does not work in Android 3.x.
     // That is because it creates each button with context instanciated from ContextThemeWrapper, and causes
     // ``java.lang.IllegalStateException: Could not find a method ... for onClick handler on view class android.widget.Button''
-    // Therefore we set the layout here. 
+    // Therefore we set the layout here.
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
 
     var persisted = getPersistedString("")
@@ -64,7 +64,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
 }
 
 trait FudaSetTrait{
-  this:Context => 
+  this:Context =>
   def getSpinnerSelected(view:View):(ArrayAdapter[String],Int) = {
     val spinner = view.getRootView().findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     val adapter = spinner.getAdapter().asInstanceOf[ArrayAdapter[String]]
@@ -87,7 +87,7 @@ trait FudaSetTrait{
     val body_view = dialog.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     var data_id = -1L
     if(!is_add){
-      title_view.setText(orig_title) 
+      title_view.setText(orig_title)
       val db = Globals.database.get.getReadableDatabase
       var cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title","body"),"title = ?",Array(orig_title),null,null,null,null)
       cursor.moveToFirst()
@@ -123,7 +123,7 @@ trait FudaSetTrait{
         var cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title"),"title = ?",Array(title),null,null,null,null)
         val count = cursor.getCount()
         cursor.moveToFirst()
-        val is_duplicate = 
+        val is_duplicate =
           if(!is_add && count > 0){
             data_id != cursor.getLong(0)
           }else{
@@ -135,9 +135,9 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
         }
-        val body = 
+        val body =
         makeKimarijiSetFromBodyView(body_view) match {
-        case None => 
+        case None =>
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
           val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
@@ -183,7 +183,7 @@ trait FudaSetTrait{
   def addFudaSet(view:View){
     editFudaSetBase(view, true)
   }
-   
+
   def editFudaSet(view: View){
     val (adapter,pos) = getSpinnerSelected(view)
     if(pos == AdapterView.INVALID_POSITION){

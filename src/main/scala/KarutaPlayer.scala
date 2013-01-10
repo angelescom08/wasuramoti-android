@@ -19,7 +19,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[EqualizerSeq]
-  val audio_queue = new AudioQueue() // file or silence in millisec 
+  val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therfore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
@@ -74,7 +74,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       audio_format,
       buffer_size,
       mode ))
-    makeEqualizer() 
+    makeEqualizer()
   }
   // Precondition: audio_track is not None
   def makeEqualizer(force:Boolean=false){
@@ -133,7 +133,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
 
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
-      val do_when_done = { _:Unit => {  
+      val do_when_done = { _:Unit => {
         audio_track.foreach(x => {x.stop();x.release()})
         audio_track = None
         equalizer.foreach(_.release())
@@ -191,7 +191,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         var offset = 0
         audio_queue.foreach{ arg => {
             arg match {
-              case Left(w) => offset += w.WriteToShortBuffer(buf,offset) 
+              case Left(w) => offset += w.WriteToShortBuffer(buf,offset)
               case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
               }
           }
@@ -206,7 +206,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       }
     }
   }
-  
+
   def stop(){
     Globals.global_lock.synchronized{
       timer_start.foreach(_.cancel())
@@ -219,12 +219,12 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
           track.stop() // calling this methods terminates AudioTrack.write() called in audio_thread.
 
           // Now since audio_thread.isInterrupted is true and AudioTrack.write() is terminated,
-          // the audio_thread have to end immediately. 
+          // the audio_thread have to end immediately.
           // Before calling AudioTrack.relase(), we have to wait for audio_thread to end.
           // The reason why I have to do this is assumed that
           // calling AudioTrack.stop() does not immediately terminate AudioTrack.write(), and
           // calling AudioTrack.release() before the termination is illegal.
-          audio_thread.foreach{_.join()} 
+          audio_thread.foreach{_.join()}
           track.release()
         })
       audio_thread = None
@@ -288,10 +288,10 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         var ss = read_order_each.split("_")
         if(cur_num == 0 && read_order_each.startsWith("CUR2")){
           if(Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-            ss = Array("CUR2") ++ ss 
+            ss = Array("CUR2") ++ ss
           }
           if(reader.exists(cur_num,1)){
-            ss = Array("CUR1") ++ ss 
+            ss = Array("CUR1") ++ ss
           }
         }
         if(is_last_fuda && !read_order_each.endsWith("NEXT2")){

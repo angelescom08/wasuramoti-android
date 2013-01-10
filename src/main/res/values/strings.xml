@@ -4,7 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
-  <string name="button_invert"><![CDATA[&notin;]]></string>
+  <string name="button_invert"><![CDATA[&spades;]]></string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
 
@@ -116,7 +116,6 @@
     <div><b>?</b> &rArr; any single character</div>
     <div><b>*</b> &rArr; any string, including empty string</div>
     <div><b>[xyz]</b> &rArr; x, y or z</div>
-    <div><b>[x-y]</b> &rArr; character between x and z</div>
     <h3>Examples</h3>
     <div><b>8?</b> &rArr; 80,81, ..., 89</div>
     <div><b>*[13579]</b> &rArr; odd number</div>
@@ -124,8 +123,8 @@
   </string>
   <string name="button_fudasetedit_list">List</string>
   <string-array name="fudaseteditlist_menuitems">
-    <item>Invert Select</item>
-    <item>Switch Order ( ABC / Fuda No. )</item>
+    <item>Invert Selection</item>
+    <item>Change Order ( AIUEO / Fuda No. )</item>
   </string-array>
   <string-array name="fudaseteditlist_menuitems_values">
     <item>INVERT_SELECT</item>

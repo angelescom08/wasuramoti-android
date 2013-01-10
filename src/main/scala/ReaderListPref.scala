@@ -122,7 +122,7 @@ abstract class Reader(context:Context,val path:String){
 }
 class Asset(context:Context,path:String) extends Reader(context,path){
   def getAssetPath(num:Int, kamisimo:Int):String = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
-  
+
   override def exists(num:Int, kamisimo:Int):Boolean = {
     try{
       val fp = context.getAssets.open(getAssetPath(num,kamisimo))

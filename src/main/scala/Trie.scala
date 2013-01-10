@@ -68,7 +68,7 @@ class TrieVertex{
     this.flag = false
     return r.toSeq
   }
-      
+
 }
 
 object CreateTrie{

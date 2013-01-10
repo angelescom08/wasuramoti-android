@@ -46,8 +46,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     }
   }
 
-  def set_all_seekbar(x:Int){ 
-    number_of_bands.foreach{ n => 
+  def set_all_seekbar(x:Int){
+    number_of_bands.foreach{ n =>
       for(i <- 0 until n){
         val seek = root_view.get.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]
         seek.setProgress(x)
@@ -154,12 +154,12 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
 
-    Globals.player match{ 
+    Globals.player match{
       case Some(pl) => {
           try{
-            pl.makeAudioTrack() 
+            pl.makeAudioTrack()
           }catch{
-            case e:OggDecodeFailException => 
+            case e:OggDecodeFailException =>
             view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(e.getMessage())
             return view
           }
@@ -176,7 +176,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
               view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.equalizer_error_notsupported))
             }
           }
-          
+
           pl.audio_track.foreach(_.release())
           pl.audio_track = None
       }

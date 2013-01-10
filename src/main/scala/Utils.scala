@@ -54,7 +54,7 @@ object Utils {
       if(Globals.prefs.isEmpty){
         Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
       }
-      ReaderList.setDefaultReader(app_context) 
+      ReaderList.setDefaultReader(app_context)
     }
   }
 
@@ -110,7 +110,7 @@ object Utils {
       }).create.show()
   }
   def walkDir(cur:File,depth:Int,func:(File)=>Unit){
-    // Checking whether File object is not null is usually not required. 
+    // Checking whether File object is not null is usually not required.
     // However I will check it just for sure.
     if(depth == 0 || cur == null){
       return
@@ -131,7 +131,7 @@ object Utils {
     }
   }
   def setButtonTextByState(context:Context){
-    Globals.setButtonText.foreach( func => 
+    Globals.setButtonText.foreach( func =>
       func(
       if(Globals.is_playing){
         Right(R.string.now_playing)
@@ -145,16 +145,16 @@ object Utils {
     def from(s:String):T
     def >(a:T,b:T):Boolean
   }
-  implicit val LongPrefTrait = new PrefTrait[Long] { 
+  implicit val LongPrefTrait = new PrefTrait[Long] {
     def from(s : String) = s.toLong
     def >(a:Long,b:Long):Boolean = a > b
   }
-  implicit val IntPrefTrait = new PrefTrait[Int] { 
-    def from(s : String) = s.toInt 
+  implicit val IntPrefTrait = new PrefTrait[Int] {
+    def from(s : String) = s.toInt
     def >(a:Int,b:Int):Boolean = a > b
   }
-  implicit val DoublePrefTrait = new PrefTrait[Double] { 
-    def from(s : String) = s.toDouble 
+  implicit val DoublePrefTrait = new PrefTrait[Double] {
+    def from(s : String) = s.toDouble
     def >(a:Double,b:Double):Boolean = a > b
   }
 
@@ -219,14 +219,14 @@ object Utils {
         // Using ProGuard to Serializable class causes 'InvalidClassException: Incompatible class (SUID)'.
         // This problem is already solved by adding @SerialVersionUID to EqualizerSeq.
         // However upgrading wasuramoti from old version still occures this exception.
-        // NOTE: it seems that as for scala, it does not need to set proguardOption = 
+        // NOTE: it seems that as for scala, it does not need to set proguardOption =
         //       -keepclassmembers class karuta.hpnpwd.wasuramoti.EqualizerSeq{
         //          static final long serialVersionUID;
         //          ... }
         //       However, if something wrong occures for serialization, try adding these options to build.scala.
         //       See ProGuard manual for further information.
-        case e:InvalidClassException => new EqualizerSeq() 
-        case e:ClassCastException => new EqualizerSeq() 
+        case e:InvalidClassException => new EqualizerSeq()
+        case e:ClassCastException => new EqualizerSeq()
       }
     }
   }

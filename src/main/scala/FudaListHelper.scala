@@ -19,7 +19,7 @@ object FudaListHelper{
     val prefs = context.getSharedPreferences(PREFS_NAME,0)
     val editor = prefs.edit()
     editor.putInt(KEY_CURRENT_INDEX,index)
-    editor.commit() 
+    editor.commit()
     current_index_with_skip = None
   }
 
@@ -43,7 +43,7 @@ object FudaListHelper{
       val current_index = new java.lang.Integer(getOrQueryCurrentIndexWithSkip(context))
       context.getResources().getString(R.string.message_readindex_shuffle,current_index,num_to_read)
     }
-    (if(num_to_read < AllFuda.list.size){ 
+    (if(num_to_read < AllFuda.list.size){
       Globals.prefs.get.getString("fudaset","") + "\n"
     }else{
       ""

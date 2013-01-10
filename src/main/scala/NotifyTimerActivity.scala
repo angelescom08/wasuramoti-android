@@ -77,7 +77,7 @@ class NotifyTimerActivity extends Activity{
         intent.putExtra("limit_millis",limit_millis)
         intent.putExtra("timer_icon",timer_icon)
         val pendingIntent = PendingIntent.getBroadcast(this, timer_id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        Globals.alarm_manager.foreach{ x => 
+        Globals.alarm_manager.foreach{ x =>
           x.set(AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
           Globals.notify_timers.update(timer_id,intent)
         }
@@ -101,7 +101,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       val from = context.getResources.getString(R.string.app_name)
       val notif = new Notification(icon,message, System.currentTimeMillis())
       if(!Globals.is_playing){
-        if(intent.getExtras.getBoolean("play_sound")){ 
+        if(intent.getExtras.getBoolean("play_sound")){
           notif.defaults |= Notification.DEFAULT_SOUND
           notif.audioStreamType = AudioManager.STREAM_ALARM // able to play sound even when it is silent mode.
         }

@@ -34,7 +34,7 @@ object AudioHelper{
     num.flatMap{case(cur_num,next_num) =>{
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
-        }else if(force || Globals.forceRefresh || old_player.isEmpty || 
+        }else if(force || Globals.forceRefresh || old_player.isEmpty ||
         old_player.get.cur_num != cur_num || old_player.get.next_num != next_num
         ){
           Globals.forceRefresh = false
@@ -146,7 +146,7 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 9999.0) * decoder.rate * decoder.channels ).toInt
     val beg = threasholdIndex(threashold,false)
     val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
-    fade(fadebegin,beg) 
+    fade(fadebegin,beg)
     index_begin = ( fadebegin / decoder.channels ) * decoder.channels
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_begin >= index_end){
@@ -159,7 +159,7 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
     val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 9999.0) * decoder.rate * decoder.channels).toInt
     val end = threasholdIndex(threashold,true)
     val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
-    fade(end,fadeend) 
+    fade(end,fadeend)
     index_end = ( end / decoder.channels ) * decoder.channels
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_end <= index_begin){

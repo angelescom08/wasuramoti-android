@@ -33,7 +33,7 @@
   </string-array>
 
   <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加するにはSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg形式のファイルを置いて下さい</string>
+  <string name="conf_reader_list_summary">追加するにはSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.oggのファイルを置いて下さい</string>
   <string name="conf_equalizer">イコライザー</string>
   <string name="equalizer_play">再生</string>
   <string name="equalizer_stop">停止</string>
@@ -58,7 +58,7 @@
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
-  <string name="conf_audio_track_mode_summary">「Stream」にするとメモリ節約できるが，詠み始めに雑音が入る可能性有り</string>
+  <string name="conf_audio_track_mode_summary">Streamにするとメモリ節約できるが，詠みの区切りに雑音が入る可能性有り</string>
   <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
   <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
   <string name="conf_wav_begin_read">詠み始め</string>
@@ -95,10 +95,9 @@
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>札番号指定</h3>
-    <div><b>?</b> &rArr; 任意の一文字</div>
-    <div><b>*</b> &rArr; 任意の0文字以上の文字列</div>
-    <div><b>[xyz]</b> &rArr; x, y, z のいずれかの一文字</div>
-    <div><b>[x-y]</b> &rArr; x以上y以下の一文字</div>
+    <div><b>?</b> &rArr; 任意の一文字の数字</div>
+    <div><b>*</b> &rArr; 任意の0文字以上の数字</div>
+    <div><b>[xyz]</b> &rArr; x, y, z のいずれかの数字</div>
     <h3>例</h3>
     <div><b>8?</b> &rArr; 十の位が8の二桁の数字</div>
     <div><b>*[13579]</b> &rArr; 奇数</div>
@@ -116,8 +115,8 @@
     <item>SORT_ORDER</item>
   </string-array>
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
-  <string name="fudasetedit_titleempty">タイトルが空白です</string>
-  <string name="fudasetedit_titleduplicated">すでに同じタイトルの札セットが存在します</string>
+  <string name="fudasetedit_titleempty">名前が空です</string>
+  <string name="fudasetedit_titleduplicated">すでに同じ名前の札セットが存在します</string>
   <string name="fudasetedit_setempty">該当する札がありません</string>
   <string name="reader_not_found">詠み手の音声ファイルがありません</string>
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
