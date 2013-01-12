@@ -6,7 +6,11 @@ Priority High:
   * Do not fade in if fade length is too short.
   * Show Information of poem when each item of fuda list is long pressed.
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
-  * Able to show which poem is reading
+  * Add Option: show which poem is reading
+  * Add Option: show skip/replay button
+  * Add Option: Play in arbitrary order
+  * In battery mode, the auto play stops when screen is locked
+    -> Add Option: do not sleep CPU when auto play mode (use PARTIAL_WAKE_LOCK ?)
 
 Priority Middle:
   * Fuda-otoshi mode

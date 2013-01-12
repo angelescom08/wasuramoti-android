@@ -163,7 +163,7 @@ object Utils {
       return defValue
     }
     val r = try{
-      val v =Globals.prefs.get.getString(key,defValue.toString)
+      val v = Globals.prefs.get.getString(key,defValue.toString)
       implicitly[PrefTrait[T]].from(v)
     }catch{
       case e:NumberFormatException => defValue

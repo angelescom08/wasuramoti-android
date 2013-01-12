@@ -134,11 +134,13 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       val do_when_done = { _:Unit => {
-        audio_track.foreach(x => {x.stop();x.release()})
-        audio_track = None
-        equalizer.foreach(_.release())
-        equalizer = None
-        Globals.is_playing=false
+        Globals.global_lock.synchronized{
+          audio_track.foreach(x => {x.stop();x.release()})
+          audio_track = None
+          equalizer.foreach(_.release())
+          equalizer = None
+          Globals.is_playing=false
+        }
         onKamiEnd()
       }}
       try{

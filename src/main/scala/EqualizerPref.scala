@@ -20,10 +20,13 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       editor.commit()
     }
     Globals.player.foreach{ p => {
-      if(Globals.is_playing){
-        p.stop();
+      Globals.global_lock.synchronized{
+        if(Globals.is_playing){
+          p.stop();
+        }
+        p.equalizer_seq = None
       }
-      p.equalizer_seq = None} }
+      }}
   }
   def makeSeq():EqualizerSeq={
     val view = root_view.get
@@ -61,22 +64,24 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     val handler = new Handler()
     btn.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        Globals.player.foreach{ pl => {
-          if(Globals.is_playing){
-            pl.stop()
-            btn.setText(context.getResources().getString(R.string.equalizer_play))
-          }else{
-            pl.equalizer_seq = Some(makeSeq())
-            pl.play( _ => {
-              handler.post(new Runnable(){
-                override def run(){
-                  btn.setText(context.getResources().getString(R.string.equalizer_play))
-                }
+        Globals.global_lock.synchronized{
+          Globals.player.foreach{ pl => {
+            if(Globals.is_playing){
+              pl.stop()
+              btn.setText(context.getResources().getString(R.string.equalizer_play))
+            }else{
+              pl.equalizer_seq = Some(makeSeq())
+              pl.play( _ => {
+                handler.post(new Runnable(){
+                  override def run(){
+                    btn.setText(context.getResources().getString(R.string.equalizer_play))
+                  }
+                })
               })
-            })
-            btn.setText(context.getResources().getString(R.string.equalizer_stop))
-          }
-        }}
+              btn.setText(context.getResources().getString(R.string.equalizer_stop))
+            }
+          }}
+        }
       }
     })
     // Reset Button
@@ -121,16 +126,18 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
         val seek = vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar]
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
           override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
-            if(Globals.is_playing){
-              Globals.player.foreach{pl=>{
-                pl.makeEqualizer(true)
-                pl.equalizer.foreach{ e =>
-                  val Array(min_eq,max_eq) = e.getBandLevelRange
-                  val r = progress.toDouble/seek.getMax.toDouble
-                  e.setEnabled(true)
-                  e.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
-                }
-              }}
+            Globals.global_lock.synchronized{
+              if(Globals.is_playing){
+                Globals.player.foreach{pl=>{
+                  pl.makeEqualizer(true)
+                  pl.equalizer.foreach{ e =>
+                    val Array(min_eq,max_eq) = e.getBandLevelRange
+                    val r = progress.toDouble/seek.getMax.toDouble
+                    e.setEnabled(true)
+                    e.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
+                  }
+                }}
+              }
             }
           }
           override def onStartTrackingTouch(bar:SeekBar){

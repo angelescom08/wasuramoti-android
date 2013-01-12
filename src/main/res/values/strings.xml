@@ -29,11 +29,11 @@
   </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
-  <string name="conf_read_order_each_summary">Lower to upper, upper to lower, and so on</string>
+  <string name="conf_read_order_each_summary">Lower to upper, upper to lower, and lower twice.</string>
   <string-array name="conf_read_order_each_entries">
-    <item>Lower -&gt; Uppper</item>
-    <item>Upper -&gt; Lower</item>
-    <item>Lower -&gt; Uppper -&gt; Lower</item>
+    <item>Lower A -&gt; Uppper B</item>
+    <item>Upper A -&gt; Lower A</item>
+    <item>Lower A -&gt; Uppper B -&gt; Lower B</item>
   </string-array>
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>

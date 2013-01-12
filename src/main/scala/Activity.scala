@@ -191,18 +191,20 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
       }
       timer_dimlock.foreach(_.cancel())
       timer_dimlock = None
-      val dimlock_minutes = Utils.getPrefAs[Long]("dimlock_minutes", 5, 9999)
-      val dimlock_millisec = dimlock_minutes * MINUTE_MILLISEC
-      // if dimlock_millisec overflows then never release dimlock
-      if(dimlock_millisec > 0){
-        timer_dimlock = Some(new Timer())
-        timer_dimlock.get.schedule(new TimerTask(){
-          override def run(){
-            release_lock.foreach(_())
-            release_lock = None
-          }
-        },dimlock_millisec)
+      val DEFAULT_DIMLOCK_MINUTES = 5
+      val dimlock_minutes = Utils.getPrefAs[Long]("dimlock_minutes", DEFAULT_DIMLOCK_MINUTES, 9999)
+      var dimlock_millisec = dimlock_minutes * MINUTE_MILLISEC
+      // if dimlock_millisec overflows then set default value
+      if(dimlock_millisec < 0){
+        dimlock_millisec = DEFAULT_DIMLOCK_MINUTES * MINUTE_MILLISEC
       }
+      timer_dimlock = Some(new Timer())
+      timer_dimlock.get.schedule(new TimerTask(){
+        override def run(){
+          release_lock.foreach(_())
+          release_lock = None
+        }
+      },dimlock_millisec)
     }
   }
   def setLongClickButtons(){
@@ -221,9 +223,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
-    doMainButtonClick()
-  }
-  def doMainButtonClick() {
     Globals.global_lock.synchronized{
       val handler = new Handler()
       if(Globals.player.isEmpty){
@@ -258,7 +257,7 @@ trait MainButtonTrait{
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
                   handler.post(new Runnable(){
-                    override def run(){doMainButtonClick()}
+                    override def run(){onMainButtonClick(v)}
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None
