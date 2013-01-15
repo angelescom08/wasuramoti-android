@@ -4,7 +4,7 @@ import _root_.android.app.Activity
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,PowerManager,Parcelable}
-import _root_.android.view.{View,Menu,MenuItem}
+import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.widget.Button
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
@@ -178,22 +178,28 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
   def startDimLockTimer(){
     Globals.global_lock.synchronized{
       release_lock.foreach(_())
+      getWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
       release_lock = {
-        val power_manager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-        if(power_manager != null){
-          val wake_lock = power_manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"DoNotDimScreen")
-          wake_lock.acquire()
-          Some( _ => wake_lock.release )
-        }else{
-          println("WARNING: POWER_SERVICE is not supported on this device.")
-          None
-        }
+          Some( _ => {
+            runOnUiThread(new Runnable{
+                override def run(){
+                  getWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
+            })
+          })
       }
+      rescheduleDimLockTimer()
+    }
+  }
+
+  def rescheduleDimLockTimer(millisec:Option[Long]=None){
+    val DEFAULT_DIMLOCK_MINUTES = 5
+    Globals.global_lock.synchronized{
       timer_dimlock.foreach(_.cancel())
       timer_dimlock = None
-      val DEFAULT_DIMLOCK_MINUTES = 5
-      val dimlock_minutes = Utils.getPrefAs[Long]("dimlock_minutes", DEFAULT_DIMLOCK_MINUTES, 9999)
-      var dimlock_millisec = dimlock_minutes * MINUTE_MILLISEC
+      var dimlock_millisec = millisec.getOrElse({
+        MINUTE_MILLISEC * Utils.getPrefAs[Long]("dimlock_minutes", DEFAULT_DIMLOCK_MINUTES, 9999)
+      })
       // if dimlock_millisec overflows then set default value
       if(dimlock_millisec < 0){
         dimlock_millisec = DEFAULT_DIMLOCK_MINUTES * MINUTE_MILLISEC
@@ -223,6 +229,9 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
+    doPlay(false)
+  }
+  def doPlay(auto_play:Boolean){
     Globals.global_lock.synchronized{
       val handler = new Handler()
       if(Globals.player.isEmpty){
@@ -241,7 +250,10 @@ trait MainButtonTrait{
         player.stop()
         Utils.setButtonTextByState(self.getApplicationContext())
       }else{
-        startDimLockTimer()
+        // TODO: if auto_play then turn off display
+        if(!auto_play){
+          startDimLockTimer()
+        }
         player.play(
           _ => {
             val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
@@ -257,7 +269,7 @@ trait MainButtonTrait{
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
                   handler.post(new Runnable(){
-                    override def run(){onMainButtonClick(v)}
+                    override def run(){doPlay(true)}
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None

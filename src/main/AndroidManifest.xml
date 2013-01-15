@@ -13,6 +13,5 @@ android:versionName="0.7.0" android:versionCode="28" package="karuta.hpnpwd.wasu
         <activity android:launchMode="singleInstance" android:name=".ConfActivity" android:configChanges="orientation|keyboardHidden"/>
         <activity android:launchMode="singleTop" android:name=".NotifyTimerActivity" android:configChanges="orientation|keyboardHidden"/>
     </application>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

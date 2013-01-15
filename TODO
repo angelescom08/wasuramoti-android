@@ -10,7 +10,7 @@ Priority High:
   * Add Option: show skip/replay button
   * Add Option: Play in arbitrary order
   * In battery mode, the auto play stops when screen is locked
-    -> Add Option: do not sleep CPU when auto play mode (use PARTIAL_WAKE_LOCK ?)
+    -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
 
 Priority Middle:
   * Fuda-otoshi mode
