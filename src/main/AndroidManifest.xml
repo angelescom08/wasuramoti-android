@@ -1,5 +1,7 @@
 <manifest 
-android:versionName="0.7.0" android:versionCode="28" package="karuta.hpnpwd.wasuramoti" xmlns:android="http://schemas.android.com/apk/res/android">
+xmlns:android="http://schemas.android.com/apk/res/android"
+package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
+android:versionName="0.7.1" android:versionCode="29" >
 <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" ></uses-sdk>
     <application android:icon="@drawable/animals_dolphin" android:label="@string/app_name">
         <receiver android:name=".NotifyTimerReceiver" />
