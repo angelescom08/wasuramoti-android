@@ -8,6 +8,7 @@ syntax: glob
 target/*
 src/main/assets/*
 obj/*
+uitest/bin/*
 
 src/main/jni/libogg-**/Makefile
 src/main/jni/libogg-*/config.{h,log,status}
