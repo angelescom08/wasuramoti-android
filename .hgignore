@@ -19,3 +19,4 @@ src/main/jni/libogg-*/src/.libs/*
 src/main/jni/libogg-*/src/*.{o,lo,la}
 src/main/jni/libogg-*/src/test_*
 
+wasuramoti-android-*/{COPYING,COPYING-OGGVORBIS,README}

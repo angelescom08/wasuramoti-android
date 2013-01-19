@@ -12,7 +12,7 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
 
-class WasuramotiActivity extends Activity with MainButtonTrait{
+class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
   val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
   var release_lock = None:Option[Unit=>Unit]
@@ -40,9 +40,12 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     }
   }
   def refreshAndSetButton(force:Boolean = false){
-    Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
-    Utils.setButtonTextByState(getApplicationContext())
+    Globals.global_lock.synchronized{
+      Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
+      Utils.setButtonTextByState(getApplicationContext())
+    }
   }
+
   override def onCreateOptionsMenu(menu: Menu) : Boolean = {
     super.onCreateOptionsMenu(menu)
     val inflater = getMenuInflater()
@@ -72,6 +75,9 @@ class WasuramotiActivity extends Activity with MainButtonTrait{
     val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
+    if(Globals.IS_DEBUG){
+      setTitle(getResources().getString(R.string.app_name) + " DEBUG")
+    }
 
     //try loading 'libvorbis.so'
     val decoder = new OggVorbisDecoder()
@@ -278,6 +284,25 @@ trait MainButtonTrait{
             }
         })
       }
+    }
+  }
+}
+
+trait ActivityDebugTrait{
+  self:WasuramotiActivity =>
+  def showBottomInfo(key:String,value:String){
+    if(Globals.IS_DEBUG){
+      val btn = findViewById(R.id.read_button_bottom).asInstanceOf[Button]
+      var found = false
+      val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
+        case Array(k,v)=>(k,v)
+      }.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")
+      btn.setText(txt)
+    }
+  }
+  def showAudioLength(len:Long){
+    if(Globals.IS_DEBUG){
+      showBottomInfo("len",len.toString)
     }
   }
 }

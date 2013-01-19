@@ -9,6 +9,17 @@ import _root_.java.nio.channels.FileChannel
 import scala.collection.mutable
 
 object AudioHelper{
+  type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
+  def calcTotalMillisec(audio_queue:AudioQueue):Long = {
+    audio_queue.map{ arg =>{
+      arg match {
+        case Left(w) => w.audioLength()
+        case Right(millisec) => millisec
+        }
+      }
+    }.sum
+  }
+
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
     ((java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000)*decoder.channels
   }
@@ -57,10 +68,11 @@ object AudioHelper{
   }
 }
 
-class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecoder){
+class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecoder) extends WavBufferDebugTrait{
   val max_amp = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = orig_file.length().toInt / 2
+
   // in milliseconds
   def audioLength():Long = {
     ((1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong)/decoder.channels
@@ -168,3 +180,18 @@ class WavBuffer(buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecod
   }
 }
 
+trait WavBufferDebugTrait{
+  self:WavBuffer =>
+  def checkSum():String = {
+    if(Globals.IS_DEBUG){
+      var (bg,ed) = (index_begin,index_end-1)
+      bg = indexInBuffer(bg)
+      ed = indexInBuffer(ed)
+      // sampling in every 128 elems
+      val s = (for( i <- bg to (ed,128) )yield buffer.get(i)).sum
+      audioLength().toString + ":" + ("%04X".format(s))
+    }else{
+      ""
+    }
+  }
+}

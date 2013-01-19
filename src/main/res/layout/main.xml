@@ -12,6 +12,8 @@
             android:layout_weight="0.1"
             android:onClick="onMainButtonClick"
             android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:contentDescription="ReadButtonTop"
             />
     <Button android:id="@+id/read_button"
             android:layout_width="fill_parent"
@@ -22,6 +24,7 @@
             android:onClick="onMainButtonClick"
             android:background="@android:color/black"
             android:textColor="@android:color/white"
+            android:contentDescription="ReadButton"
             />
     <Button
             android:id="@+id/read_button_bottom"
@@ -30,5 +33,7 @@
             android:layout_weight="0.1"
             android:onClick="onMainButtonClick"
             android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:contentDescription="ReadButtonBottom"
             />
 </LinearLayout>

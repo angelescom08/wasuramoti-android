@@ -10,6 +10,24 @@ import _root_.java.util.{Timer,TimerTask}
 
 import scala.collection.mutable
 
+object KarutaPlayerDebug{
+  val checksum_table = new mutable.HashMap[(String,Int,Int),String]
+  def checkValid(w:WavBuffer,read_num:Int,kami_simo:Int){
+    if(Globals.IS_DEBUG){
+      val cs = w.checkSum
+      val reader = Globals.prefs.get.getString("reader_path",null)
+      val key = (reader,read_num,kami_simo)
+      println("wasuramoti_debug: key="+key+" , checksum="+cs)
+      checksum_table.get(key) match{
+        case None => checksum_table += {(key,cs)}
+        case Some(x) => if( x != cs ){
+                          throw new Exception("checksum mismatch for " + key + ": " + x + " != " + cs)
+                        }
+      }
+    }
+  }
+}
+
 class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
 
@@ -37,6 +55,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         }
       }.sum
   }
+
   def makeAudioTrack(){
     if(isStreamMode()){
       makeAudioTrackAux(getFirstDecoder(),true)
@@ -130,7 +149,6 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
     audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
   }
 
-
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       val do_when_done = { _:Unit => {
@@ -140,8 +158,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
           equalizer.foreach(_.release())
           equalizer = None
           Globals.is_playing=false
+          onKamiEnd()
         }
-        onKamiEnd()
       }}
       try{
         makeAudioTrack()
@@ -182,13 +200,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         // Play with AudioTrack.MODE_STATIC
         // This method requires some memory overhead, but able to reduce possibility of noize since it only writes to AudioTrack once.
 
-        val buffer_length_millisec = audio_queue.map{ arg =>{
-          arg match {
-            case Left(w) => w.audioLength()
-            case Right(millisec) => millisec
-            }
-          }
-        }.sum
+        val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
         val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
         var offset = 0
         audio_queue.foreach{ arg => {
@@ -203,7 +215,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         timer_onend.get.schedule(new TimerTask(){
           override def run(){
             do_when_done()
-          }},buffer_length_millisec +200) // +200 is just for sure that audio is finished playing
+          }},buffer_length_millisec+200) // +200 is just for sure that audio is finished playing
         audio_track.get.play()
       }
     }
@@ -264,14 +276,20 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         }
       })
     }
-    override def onPostExecute(unused:Either[AudioQueue,Exception]){
+    override def onPostExecute(rval:Either[AudioQueue,Exception]){
       activity.runOnUiThread(new Runnable{
         override def run(){
           progress.foreach(_.dismiss())
+          if(Globals.IS_DEBUG){
+            if(rval.isLeft){
+              activity.showAudioLength(AudioHelper.calcTotalMillisec(rval.left.get))
+            }
+          }
         }
       })
     }
     override def doInBackground(unused:AnyRef*):Either[AudioQueue,Exception] = {
+      this.synchronized{
       try{
         Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
         val res_queue = new AudioQueue()
@@ -316,6 +334,9 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
                wav.trimFadeIn()
                wav.trimFadeOut()
                add_to_audio_queue(Left(wav))
+               if(Globals.IS_DEBUG){
+                 KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
+               }
             })
             if( i != ss.length - 1 ){
               add_to_audio_queue(Right(span_simokami))
@@ -325,6 +346,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         return(Left(res_queue))
       }catch{
         case e:OggDecodeFailException => return(Right(e))
+      }
       }
     }
   }

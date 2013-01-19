@@ -208,7 +208,7 @@ object AllFuda{
 
   def replaceFudaNumPattern(str:String):String = {
     val PATTERN_FUDANUM = """[0-9?*\[\]]+""".r
-    val buf = Romanization.zenkaku_to_hankaku(str) 
+    val buf = Romanization.zenkaku_to_hankaku(str)
     val patterns = PATTERN_FUDANUM.findAllIn(buf).flatMap({
         s => try{
           Some(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r)

@@ -13,6 +13,7 @@ import _root_.android.util.Base64
 import scala.collection.mutable
 
 object Globals {
+  val IS_DEBUG = false
   val TABLE_FUDASETS = "fudasets"
   val TABLE_FUDALIST = "fudalist"
   val TABLE_READFILTER = "readfilter"
