@@ -18,7 +18,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
     addPreferencesFromResource(R.xml.conf)
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
       override def onSharedPreferenceChanged(sharedPreferences:SharedPreferences, key:String){
-        if(Array("read_order_each","reader_path","read_simo_joka_twice","wav_span_simokami",
+        if(Array("read_order_each","reader_path","not_read_kami_joka","read_simo_joka_twice","wav_span_simokami",
                  "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
           Globals.forceRefresh = true
         }

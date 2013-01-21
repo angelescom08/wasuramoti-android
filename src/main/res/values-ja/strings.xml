@@ -12,8 +12,8 @@
   <string name="menu_move">移動</string>
   <string name="menu_timer">タイマー</string>
   <string name="menu_conf">設定</string>
-  <!-- CATEGORY_MAIN -->
-  <string name="category_main">メイン</string>
+  <!-- CATEGORY_GLOBAL -->
+  <string name="category_global">全体</string>
   <string name="conf_fudaset_title">詠み札のセット</string>
   <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
@@ -23,22 +23,14 @@
     <item>シャッフル</item>
     <item>ランダム</item>
   </string-array>
-
-  <string name="conf_read_order_each_title">札ごとの詠み順</string>
-  <string name="conf_read_order_each_summary">下の句-&gt;上の句，上の句-&gt;下の句，下の句2回</string>
-  <string-array name="conf_read_order_each_entries">
-    <item>下の句A -&gt; 上の句B</item>
-    <item>上の句A -&gt; 下の句A</item>
-    <item>下の句A -&gt; 上の句B -&gt; 下の句B</item>
-  </string-array>
-
   <string name="conf_reader_list">詠み手</string>
   <string name="conf_reader_list_summary">追加するにはSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.oggのファイルを置いて下さい</string>
   <string name="conf_equalizer">イコライザー</string>
+  <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
+
   <string name="equalizer_play">再生</string>
   <string name="equalizer_stop">停止</string>
   <string name="equalizer_reset">リセット</string>
-  <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
 
   <string name="equalizer_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
@@ -49,28 +41,42 @@
   <string name="conf_read_auto_span">詠み上げ間隔</string>
   <string name="conf_read_auto_span_summary">何秒間停止してから次の札を詠むか</string>
 
+  <!-- CATEGORY_DETAIL -->
+  <string name="category_detail">詳細</string>
+  <string name="conf_read_order_each_title">札ごとの詠み順</string>
+  <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
+  <string-array name="conf_read_order_each_entries">
+    <item>下の句A - 上の句B</item>
+    <item>下の句A - 上の句B - 下の句B</item>
+    <item>上の句A - 下の句A</item>
+    <item>下の句A - 下の句B</item>
+  </string-array>
+  <string name="conf_not_read_kami_joka">序歌の上の句を詠まない</string>
+  <string name="conf_not_read_kami_joka_summary">&lt;name&gt;_000_1.oggを再生しない</string>
+  <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
+  <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生する</string>
+  <!-- CATEGORY_ELSE -->
   <string name="category_others">その他</string>
   <string name="subscreen_others">その他の設定</string>
-  <!-- CATEGORY_SUB -->
-  <string name="category_sub">端末</string> 
+  <string name="category_misc">色々</string>
+  <string name="conf_wav_begin_read">詠み始め</string>
+  <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
+  <string name="conf_wav_span_simokami">間</string>
+  <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
   <string name="conf_audio_track_mode_summary">Streamにするとメモリ節約できるが，詠みの区切りに雑音が入る可能性有り</string>
-  <string name="conf_read_simo_joka_twice">序歌の下の句を二回詠む</string>
-  <string name="conf_read_simo_joka_twice_summary">&lt;name&gt;_000_2.oggを二回再生するかどうか</string>
-  <string name="conf_wav_begin_read">詠み始め</string>
-  <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
-  <string name="conf_wav_span_simokami">間</string>
-  <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
+  <!-- CATEGORY_PROCESSINNG -->
+  <string name="category_processing">音声処理</string>
   <string name="conf_wav_threshold">閾値</string>
-  <string name="conf_wav_threshold_summary">音の強さがこれ以下の音は無音とみなす</string>
+  <string name="conf_wav_threshold_summary">音の強さがこれ以下ならば無音とみなす</string>
   <string name="conf_wav_fadeout_simo">フェードアウト</string>
-  <string name="conf_wav_fadout_simo_summary">フェードアウト秒数</string>
+  <string name="conf_wav_fadout_simo_summary">末尾のフェードアウト秒数</string>
   <string name="conf_wav_fadein_kami">フェードイン</string>
-  <string name="conf_wav_fadein_kami_summary">フェードイン秒数</string>
+  <string name="conf_wav_fadein_kami_summary">先頭のフェードイン秒数</string>
   <!-- CATEGORY_CLEAR -->
   <string name="category_init">初期化</string>
   <string name="conf_init_fudaset">札セットの初期化</string>
@@ -79,7 +85,7 @@
   <string name="conf_init_preference">設定の初期化</string>
   <string name="conf_init_preference_summary">札セット以外の設定を全て初期化</string>
   <string name="confirm_init_preference">本当に札セット以外の設定を全て初期化しますか？</string>
-
+  <!-- FUDASET_EDIT -->
   <string name="fudaset_add">追加</string>
   <string name="fudaset_delete">削除</string>
   <string name="fudaset_edit">編集</string>
@@ -118,6 +124,9 @@
   <string name="fudasetedit_titleempty">名前が空です</string>
   <string name="fudasetedit_titleduplicated">すでに同じ名前の札セットが存在します</string>
   <string name="fudasetedit_setempty">該当する札がありません</string>
+
+
+  <!-- MESSAGES -->
   <string name="reader_not_found">詠み手の音声ファイルがありません</string>
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
 

@@ -310,7 +310,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
           if(Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
             ss = Array("CUR2") ++ ss
           }
-          if(reader.exists(cur_num,1)){
+          if(reader.exists(cur_num,1) && ! Globals.prefs.get.getBoolean("not_read_kami_joka",false)){
             ss = Array("CUR1") ++ ss
           }
         }

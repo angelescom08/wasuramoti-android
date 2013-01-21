@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-  <PreferenceCategory android:title="@string/category_main">
+  <PreferenceCategory android:title="@string/category_global">
     <karuta.hpnpwd.wasuramoti.FudaSetPreference
       android:key="fudaset"
       android:title="@string/conf_fudaset_title"
@@ -14,14 +14,6 @@
       android:entries="@array/conf_read_order_entries"
       android:entryValues="@array/conf_read_order_entryValues" 
       android:defaultValue="SHUFFLE"
-      />
-    <ListPreference
-      android:key="read_order_each"
-      android:title="@string/conf_read_order_each_title"
-      android:summary="@string/conf_read_order_each_summary"
-      android:entries="@array/conf_read_order_each_entries"
-      android:entryValues="@array/conf_read_order_each_entryValues" 
-      android:defaultValue="CUR2_NEXT1"
       />
     <karuta.hpnpwd.wasuramoti.ReaderListPreference
       android:key="reader_path"
@@ -44,20 +36,25 @@
       android:numeric="decimal"
       android:defaultValue="5.0"
       />
-
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_sub">
-    <EditTextPreference
-      android:key="dimlock_minutes"
-      android:title="@string/conf_dimlock_minutes"
-      android:summary="@string/conf_dimlock_minutes_summary"
-      android:numeric="integer"
-      android:defaultValue="5"
+  <PreferenceCategory android:title="@string/category_detail">
+    <ListPreference
+      android:key="read_order_each"
+      android:title="@string/conf_read_order_each_title"
+      android:summary="@string/conf_read_order_each_summary"
+      android:entries="@array/conf_read_order_each_entries"
+      android:entryValues="@array/conf_read_order_each_entryValues" 
+      android:defaultValue="CUR2_NEXT1"
       />
     <CheckBoxPreference
-      android:key="silent_mode_on_start"
-      android:title="@string/conf_silent_mode_on_start"
-      android:summary="@string/conf_silent_mode_on_start_summary"
+      android:key="not_read_kami_joka"
+      android:title="@string/conf_not_read_kami_joka"
+      android:summary="@string/conf_not_read_kami_joka_summary"
+      />
+    <CheckBoxPreference
+      android:key="read_simo_joka_twice"
+      android:title="@string/conf_read_simo_joka_twice"
+      android:summary="@string/conf_read_simo_joka_twice_summary"
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_others">
@@ -65,7 +62,7 @@
       android:key="conf_others"
       android:title="@string/subscreen_others"
       android:persistent="false">
-      <PreferenceCategory android:title="@string/category_others">
+      <PreferenceCategory android:title="@string/category_misc">
         <EditTextPreference
           android:key="wav_begin_read"
           android:title="@string/conf_wav_begin_read"
@@ -80,6 +77,28 @@
           android:numeric="decimal"
           android:defaultValue="1.0"
           />
+        <EditTextPreference
+          android:key="dimlock_minutes"
+          android:title="@string/conf_dimlock_minutes"
+          android:summary="@string/conf_dimlock_minutes_summary"
+          android:numeric="integer"
+          android:defaultValue="5"
+          />
+        <CheckBoxPreference
+          android:key="silent_mode_on_start"
+          android:title="@string/conf_silent_mode_on_start"
+          android:summary="@string/conf_silent_mode_on_start_summary"
+          />
+        <ListPreference
+          android:key="audio_track_mode"
+          android:title="@string/conf_audio_track_mode"
+          android:summary="@string/conf_audio_track_mode_summary"
+          android:entries="@array/conf_audio_track_entries"
+          android:entryValues="@array/conf_audio_track_entryValues" 
+          android:defaultValue="STATIC"
+          />
+      </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_processing">
         <EditTextPreference
           android:key="wav_threashold"
           android:title="@string/conf_wav_threshold"
@@ -101,19 +120,6 @@
           android:summary="@string/conf_wav_fadein_kami_summary"
           android:numeric="decimal"
           android:defaultValue="0.1"
-          />
-        <ListPreference
-          android:key="audio_track_mode"
-          android:title="@string/conf_audio_track_mode"
-          android:summary="@string/conf_audio_track_mode_summary"
-          android:entries="@array/conf_audio_track_entries"
-          android:entryValues="@array/conf_audio_track_entryValues" 
-          android:defaultValue="STATIC"
-          />
-        <CheckBoxPreference
-          android:key="read_simo_joka_twice"
-          android:title="@string/conf_read_simo_joka_twice"
-          android:summary="@string/conf_read_simo_joka_twice_summary"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_init">
