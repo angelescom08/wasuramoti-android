@@ -59,6 +59,8 @@
   <string name="category_others">その他</string>
   <string name="subscreen_others">その他の設定</string>
   <string name="category_misc">色々</string>
+  <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
+  <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
   <string name="conf_wav_begin_read">詠み始め</string>
   <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
   <string name="conf_wav_span_simokami">間</string>
@@ -95,12 +97,12 @@
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>札番号指定</u>]</font>
+    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>歌番号指定</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
-    <h3>札番号指定</h3>
+    <h3>歌番号指定</h3>
     <div><b>?</b> &rArr; 任意の一文字の数字</div>
     <div><b>*</b> &rArr; 任意の0文字以上の数字</div>
     <div><b>[xyz]</b> &rArr; x, y, z のいずれかの数字</div>
@@ -113,7 +115,7 @@
   <string-array name="fudaseteditlist_menuitems">
     <item>選択の反転</item>
     <item>表示の切り替え (決まり字/歌と歌人)</item>
-    <item>順序の並び替え (五十音/札番号)</item>
+    <item>順序の並び替え (五十音/歌番号)</item>
   </string-array>
   <string-array name="fudaseteditlist_menuitems_values">
     <item>INVERT_SELECT</item>

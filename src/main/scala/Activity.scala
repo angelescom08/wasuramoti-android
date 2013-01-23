@@ -159,6 +159,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
     timer_autoread = None
     refreshAndSetButton()
     startDimLockTimer()
+    setLongClickButtonOnResume()
   }
   override def onPause(){
     super.onPause()
@@ -230,6 +231,29 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
         })
     }
   }
+  def setLongClickButtonOnResume(){
+    val btn = findViewById(R.id.read_button).asInstanceOf[Button]
+    btn.setOnLongClickListener(
+      if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+        new View.OnLongClickListener(){
+          override def onLongClick(v:View):Boolean = {
+            Globals.global_lock.synchronized{
+              if(Globals.is_playing){
+                Globals.player.foreach{p=>
+                  p.stop()
+                  moveToNextFuda()
+                  doPlay(false)
+                }
+              }
+            }
+            return true
+          }
+        }
+      }else{
+        null
+      }
+    )
+  }
 }
 
 trait MainButtonTrait{
@@ -237,9 +261,18 @@ trait MainButtonTrait{
   def onMainButtonClick(v:View) {
     doPlay(false)
   }
+  def moveToNextFuda(){
+    val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
+    if(is_shuffle){
+      FudaListHelper.moveNext(self.getApplicationContext())
+    }
+    // In random mode, there is a possobility that same pairs of fuda are read in a row.
+    // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
+    // Therefore we give force flag to true for refreshAndSetButton.
+    self.refreshAndSetButton(!is_shuffle)
+  }
   def doPlay(auto_play:Boolean){
     Globals.global_lock.synchronized{
-      val handler = new Handler()
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
           Utils.messageDialog(self,Right(R.string.all_read_done),{_=>openOptionsMenu()})
@@ -262,19 +295,12 @@ trait MainButtonTrait{
         }
         player.play(
           _ => {
-            val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
-            if(is_shuffle){
-              FudaListHelper.moveNext(self.getApplicationContext())
-            }
-            // In random mode, there is a possobility that same pairs of fuda are read in a row.
-            // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
-            // Therefore we give force flag to true for refreshAndSetButton.
-            self.refreshAndSetButton(!is_shuffle)
+            moveToNextFuda()
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
-                  handler.post(new Runnable(){
+                  runOnUiThread(new Runnable(){
                     override def run(){doPlay(true)}
                   })
                   timer_autoread.foreach(_.cancel())

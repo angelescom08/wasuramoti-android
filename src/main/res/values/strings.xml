@@ -70,6 +70,8 @@
   <string name="category_others">Others</string>
   <string name="subscreen_others">Other Settings</string>
   <string name="category_misc">Misc</string>
+  <string name="conf_skip_on_longclick">Skip On Ling Click</string>
+  <string name="conf_skip_on_longclick_summary">Play next fuda when long pressed during play.</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
@@ -115,12 +117,12 @@
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    First chracters of upper phase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Fuda No.</u>]</font>
+    First chracters of upper phase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
-    <h3>Fuda Number</h3>
+    <h3>Select By Poem Number</h3>
     <div><b>?</b> &rArr; any single character</div>
     <div><b>*</b> &rArr; any string, including empty string</div>
     <div><b>[xyz]</b> &rArr; x, y or z</div>
@@ -132,7 +134,7 @@
   <string name="button_fudasetedit_list">List</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>
-    <item>Change Order ( AIUEO / Fuda No. )</item>
+    <item>Change Order ( AIUEO / Poem No. )</item>
   </string-array>
   <string-array name="fudaseteditlist_menuitems_values">
     <item>INVERT_SELECT</item>
