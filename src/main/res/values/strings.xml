@@ -4,6 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
+  <string name="button_help">Help</string>
   <string name="button_invert"><![CDATA[&spades;]]></string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
@@ -33,7 +34,7 @@
   </string-array>
 
   <string name="conf_reader_list">Reader</string>
-  <string name="conf_reader_list_summary">To add new audio file, place .ogg files to wasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.ogg in SD Card.</string>
+  <string name="conf_reader_list_summary">Press `Help` to show how to add new audio file.</string>
   <string name="conf_equalizer">Equalizer</string>
   <string name="conf_equalizer_summary">Set volume for each frequency range.</string>
 
@@ -157,6 +158,30 @@
 
 
   <!-- MESSAGES -->
+  <string name="how_to_add_reader_html">
+    <![CDATA[
+    <h3>Audio Format</h3>
+    Only Ogg Vorbis is supported．Monaural audio is recommended.
+    <h3>Name Convention</h3>
+    <p>
+    (1) Create 202 ogg files which upper phase and lower phase is recorded separately from 101 poems (+1 is for Joka).
+    </p>
+    <p>
+    (2) Rename each file to <tt><font color="#FFFF00">[Reader]_[Poem No.]_[Upper=1,Lower=2].ogg</font></tt><br/>
+    If poem number is less than 100, zero must be padded to fit three digits. Poem number of Joka is 000.<br/>
+    (Example: Lower phase of `Hototogisu` read by Inaba &rArr; <font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+    </p>
+    <h3>Where to Place</h3>
+    <p>
+    (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage.
+    </p>
+    <p>
+    (2) Make folder named <tt><font color="#FFFF00">[Reader]</font></tt>, and place 202 ogg files in it.
+    </p>
+    (Example: Upper phase of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+    Now you can choose new reader from reader choices.
+    ]]>
+  </string>
   <string name="reader_not_found">No audio file for current reader.</string>
   <string name="all_read_done">No more fuda to play. Choose shuffle to restart.</string>
 

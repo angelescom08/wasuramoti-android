@@ -9,13 +9,18 @@ import _root_.android.content.{Context,SharedPreferences}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
 
 trait PreferenceCustom extends Preference{
-  self:{ def getKey():String; def onBindView(v:View) } =>
+  self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
   abstract override def onBindView(v:View) {
     v.findViewWithTag("conf_current_value").asInstanceOf[TextView].setText(getAbbrValue())
     super.onBindView(v)
   }
   def getAbbrValue():String = {
     Globals.prefs.get.getString(getKey(),"")
+  }
+  // We have to call notifyChanged() to to reflect the change to view.
+  // However, notifyChanged() is protected method. Therefore we use this method.
+  def notifyChangedPublic(){
+    super.notifyChanged()
   }
 }
 class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTextPreference(context,aset) with PreferenceCustom{
@@ -62,13 +67,10 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
                  "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
           Globals.forceRefresh = true
         }
-        // We have to call Preference.notifyChanged() to call Preference.onBindView() and reflect the change to custom property.
-        // However, Preference.notifyChanged() is protected method. Therefore we call it by following hack.
-        // TODO: fix it to more cleaner way
         val pref = findPreference(key)
-        pref.setEnabled(false)
-        pref.setEnabled(true)
-
+        if(classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){
+          pref.asInstanceOf[Preference with PreferenceCustom].notifyChangedPublic()
+        }
       }
     })
     Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)

@@ -101,15 +101,7 @@ trait FudaSetTrait{
     help_view.setText(Html.fromHtml(getString(R.string.fudasetedit_help_html)))
     help_view.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val builder= new AlertDialog.Builder(dialog.getContext)
-        val view = LayoutInflater.from(dialog.getContext).inflate(R.layout.fudasetedit_fudanum,null)
-        view.findViewById(R.id.fudasetedit_fudanum_text).asInstanceOf[TextView].setText(Html.fromHtml(getString(R.string.fudasetedit_fudanum_html)))
-        builder.setView(view)
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-            override def onClick(interface:DialogInterface,which:Int){
-            }
-          });
-        builder.create.show()
+        Utils.generalHtmlDialog(dialog.getContext,R.string.fudasetedit_fudanum_html)
       }
     })
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){

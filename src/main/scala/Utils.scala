@@ -1,15 +1,18 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.os.Handler
 import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
 import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
-import _root_.java.io.{File,ByteArrayOutputStream,ObjectOutputStream,ByteArrayInputStream,ObjectInputStream,InvalidClassException}
-import _root_.java.util.Date
-import _root_.java.text.SimpleDateFormat
-import _root_.android.text.TextUtils
+import _root_.android.text.{TextUtils,Html}
 import _root_.android.util.Base64
+import _root_.android.view.LayoutInflater
+import _root_.android.widget.TextView
+
+import _root_.java.io.{File,ByteArrayOutputStream,ObjectOutputStream,ByteArrayInputStream,ObjectInputStream,InvalidClassException}
+import _root_.java.text.SimpleDateFormat
+import _root_.java.util.Date
+
 import scala.collection.mutable
 
 object Globals {
@@ -110,6 +113,20 @@ object Utils {
         }
       }).create.show()
   }
+
+  def generalHtmlDialog(context:Context,html_id:Int){
+    val builder= new AlertDialog.Builder(context)
+    val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
+    val html = context.getResources().getString(html_id)
+    view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView].setText(Html.fromHtml(html))
+    builder.setView(view)
+    builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+        override def onClick(interface:DialogInterface,which:Int){
+        }
+      });
+    builder.create.show()
+  }
+
   def walkDir(cur:File,depth:Int,func:(File)=>Unit){
     // Checking whether File object is not null is usually not required.
     // However I will check it just for sure.

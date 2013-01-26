@@ -4,6 +4,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
+  <string name="button_help">ヘルプ</string>
   <string name="now_playing">再生中</string>
   <string name="now_decoding">準備中</string>
 
@@ -28,7 +29,7 @@
     <item>ランダム</item>
   </string-array>
   <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加するにはSDカードにwasuramoti_reader/&lt;name&gt;/&lt;name&gt;_{000..100}_{1,2}.oggのファイルを置いて下さい</string>
+  <string name="conf_reader_list_summary">追加する方法はヘルプを押すと表示されます</string>
   <string name="conf_equalizer">イコライザー</string>
   <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
 
@@ -41,7 +42,7 @@
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">連続</string>
   <string name="conf_read_auto_title">自動詠み上げ</string>
-  <string name="conf_read_auto_summary">札を詠み終えた後しばらく停止し，その後次の札を詠む</string>
+  <string name="conf_read_auto_summary">詠み終えた後しばらく停止し，その後次の札を詠む</string>
   <string name="conf_read_auto_span">詠み上げ間隔</string>
   <string name="conf_read_auto_span_summary">何秒間停止してから次の札を詠むか</string>
 
@@ -72,7 +73,7 @@
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
   <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
   <string name="conf_wav_begin_read">詠み始め</string>
-  <string name="conf_wav_begin_read_summary">ボタンをクリックしてから詠み始めるまでの秒数</string>
+  <string name="conf_wav_begin_read_summary">ボタンを押してから詠み始めるまでの秒数</string>
   <string name="conf_wav_span_simokami">間</string>
   <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>
@@ -139,6 +140,30 @@
 
 
   <!-- MESSAGES -->
+  <string name="how_to_add_reader_html">
+    <![CDATA[
+    <h3>音声形式</h3>
+    Ogg Vorbisのみ対応．モノラル音声推奨．
+    <h3>命名規則</h3>
+    <p>
+    (1) 序歌を含む全101首をそれぞれ上の句と下の句に分割して録音された202個のoggファイルを用意する．
+    </p>
+    <p>
+    (2) 各ファイルを <tt><font color="#FFFF00">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前にする．<br/>
+    ただし歌番号は3桁になるように0を先頭に付ける．また序歌は000番とする．<br/>
+    (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+    </p>
+    <h3>配置方法</h3>
+    <p>
+    (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．
+    </p>
+    <p>
+    (2) そのフォルダの下に <tt><font color="#FFFF00">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
+    </p>
+    (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+    以上でわすらもちの詠み手の選択肢に追加される．
+    ]]>
+  </string>
   <string name="reader_not_found">詠み手の音声ファイルがありません</string>
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
 

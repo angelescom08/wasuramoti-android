@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import scala.collection.mutable.Buffer
 
 import _root_.android.preference.ListPreference
-import _root_.android.content.Context
+import _root_.android.content.{Context,DialogInterface}
 import _root_.android.util.AttributeSet
 import _root_.android.app.AlertDialog.Builder
 import _root_.android.os.Environment
@@ -88,6 +88,13 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     }
     setEntries(entries.toArray)
     setEntryValues(entvals.toArray)
+    
+    builder.setNeutralButton(R.string.button_help, new DialogInterface.OnClickListener(){
+        override def onClick(dialog:DialogInterface,which:Int){
+          Utils.generalHtmlDialog(context,R.string.how_to_add_reader_html)
+        }
+      })
+
     super.onPrepareDialogBuilder(builder)
   }
 }
