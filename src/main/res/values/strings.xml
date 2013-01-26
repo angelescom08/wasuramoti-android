@@ -13,6 +13,10 @@
   <string name="menu_move">Move</string>
   <string name="menu_timer">Timer</string>
   <string name="menu_conf">Configure</string>
+
+  <string name="conf_unit_minute">&#160;min</string>
+  <string name="conf_unit_second">&#160;sec</string>
+
   <!-- CATEGORY_GLOBAL -->
   <string name="category_global">Global</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
@@ -47,6 +51,12 @@
     <item>Lower A - Uppper B - Lower B</item>
     <item>Upper A - Lower A</item>
     <item>Lower A - Lower B</item>
+  </string-array>
+  <string-array name="conf_read_order_each_entries_abbr">
+    <item>L-U</item>
+    <item>L-U-L</item>
+    <item>U-L</item>
+    <item>L-L</item>
   </string-array>
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>

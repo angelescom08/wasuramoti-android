@@ -42,7 +42,15 @@ object ReaderList{
   }
 }
 
-class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs){
+class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs) with PreferenceCustom{
+  override def getAbbrValue():String = {
+    val path = getValue()
+    if(path.startsWith("INT:")){
+      path.replaceFirst("INT:","")
+    }else{
+      new File(path).getName()
+    }
+  }
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val prev_value = getValue()

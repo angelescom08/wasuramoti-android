@@ -3,8 +3,48 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.preference.PreferenceActivity
 import _root_.android.os.Bundle
 import _root_.android.view.View
+import _root_.android.widget.TextView
+import _root_.android.util.AttributeSet
 import _root_.android.content.{Context,SharedPreferences}
-import _root_.android.preference.{Preference,PreferenceManager}
+import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
+
+trait PreferenceCustom extends Preference{
+  self:{ def getKey():String; def onBindView(v:View) } =>
+  abstract override def onBindView(v:View) {
+    v.findViewWithTag("conf_current_value").asInstanceOf[TextView].setText(getAbbrValue())
+    super.onBindView(v)
+  }
+  def getAbbrValue():String = {
+    Globals.prefs.get.getString(getKey(),"")
+  }
+}
+class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTextPreference(context,aset) with PreferenceCustom{
+  // value of AttributeSet can only be acquired in constructor
+  val unit = aset.getAttributeResourceValue(null,"unit",-1) match{
+    case -1 => ""
+    case x => context.getResources.getString(x)
+  }
+  override def getAbbrValue():String = {
+    Globals.prefs.get.getString(getKey(),"") + unit
+  }
+}
+class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPreference(context,aset) with PreferenceCustom{
+  override def getAbbrValue():String = {
+    val key = getKey()
+    val value = getValue()
+    val resources = context.getResources
+    val get_entry_from_value = (values:Int,entries:Int) => {
+      val index = resources.getStringArray(values).indexOf(value)
+      resources.getStringArray(entries)(index)
+    }
+    key match{
+      case "read_order" => get_entry_from_value(R.array.conf_read_order_entryValues,R.array.conf_read_order_entries)
+      case "read_order_each" => get_entry_from_value(R.array.conf_read_order_each_entryValues,R.array.conf_read_order_each_entries_abbr)
+      case "audio_track_mode" => get_entry_from_value(R.array.conf_audio_track_entryValues,R.array.conf_audio_track_entries)
+      case _ => value
+    }
+  }
+}
 
 class ConfActivity extends PreferenceActivity with FudaSetTrait{
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
@@ -22,6 +62,13 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
                  "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
           Globals.forceRefresh = true
         }
+        // We have to call Preference.notifyChanged() to call Preference.onBindView() and reflect the change to custom property.
+        // However, Preference.notifyChanged() is protected method. Therefore we call it by following hack.
+        // TODO: fix it to more cleaner way
+        val pref = findPreference(key)
+        pref.setEnabled(false)
+        pref.setEnabled(true)
+
       }
     })
     Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)

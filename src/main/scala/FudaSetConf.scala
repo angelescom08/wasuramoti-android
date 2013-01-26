@@ -12,7 +12,7 @@ import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText,TextView}
 import _root_.java.util.ArrayList
 
-class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
+class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var listItems = new ArrayList[String]()
   var adapter = None:Option[ArrayAdapter[String]]
   var spinner = None:Option[Spinner]

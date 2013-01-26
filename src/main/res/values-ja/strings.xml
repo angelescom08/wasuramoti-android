@@ -12,9 +12,13 @@
   <string name="menu_move">移動</string>
   <string name="menu_timer">タイマー</string>
   <string name="menu_conf">設定</string>
+
+  <string name="conf_unit_minute">分</string>
+  <string name="conf_unit_second">秒</string>
+
   <!-- CATEGORY_GLOBAL -->
   <string name="category_global">全体</string>
-  <string name="conf_fudaset_title">詠み札のセット</string>
+  <string name="conf_fudaset_title">札セット</string>
   <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
   <string name="conf_read_order_title">詠む順番</string>
@@ -50,6 +54,12 @@
     <item>下の句A - 上の句B - 下の句B</item>
     <item>上の句A - 下の句A</item>
     <item>下の句A - 下の句B</item>
+  </string-array>
+  <string-array name="conf_read_order_each_entries_abbr">
+    <item>下-上</item>
+    <item>下-上-下</item>
+    <item>上-下</item>
+    <item>下-下</item>
   </string-array>
   <string name="conf_not_read_kami_joka">序歌の上の句を詠まない</string>
   <string name="conf_not_read_kami_joka_summary">&lt;name&gt;_000_1.oggを再生しない</string>
