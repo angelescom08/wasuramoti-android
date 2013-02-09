@@ -9,8 +9,6 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content">
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:text="@string/timer_start_button" 
-            android:focusable = "true"
-            android:focusableInTouchMode = "true"
             android:onClick="onTimerStartClick">
       <requestFocus/>
     </Button>

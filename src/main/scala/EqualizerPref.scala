@@ -14,10 +14,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   override def onDialogClosed(positiveResult:Boolean){
     super.onDialogClosed(positiveResult)
     if(positiveResult && !number_of_bands.isEmpty){
-      val editor = getEditor()
-      val seq = makeSeq()
-      editor.putString(getKey(),Utils.serializeToString(seq))
-      editor.commit()
+      getEditor().putString(getKey(),Utils.serializeToString(makeSeq())).commit()
     }
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{

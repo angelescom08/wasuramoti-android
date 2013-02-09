@@ -12,14 +12,26 @@ class NotifyTimerActivity extends Activity{
     (R.drawable.baby_tux,13), // icon_id, default_minutes
     (R.drawable.animals_dolphin,15)
   )
-  val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,default),i) => (icon,default,i+1,new Object())}
+  val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,_),i) => (icon,i+1,new Object())}
+
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
     setContentView(R.layout.notify_timer)
     Globals.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)
-    for( (icon,default,id,tag) <- timer_iter ){
+
+    val timer_defaults = timer_icons.zip(
+      Globals.prefs.get.getString("timer_default_minutes","").split(",").toStream  ++
+      Stream.continually("")
+      ).map{case((_,default_minutes),s) =>
+        try{
+          s.toInt
+        }catch{
+          case e:java.lang.NumberFormatException => default_minutes
+        }} 
+
+    for( ((icon,id,tag),default) <- timer_iter.zip(timer_defaults) ){
       val vw = inflater.inflate(R.layout.notify_timer_item,null)
       vw.setTag(tag)
       vw.findViewById(R.id.timer_icon).asInstanceOf[ImageView].setImageResource(icon)
@@ -59,7 +71,7 @@ class NotifyTimerActivity extends Activity{
   def setAllTimeAlarm(){
     Globals.global_lock.synchronized{
       Globals.notify_manager.foreach{_.cancelAll}
-      for( (timer_icon,_,timer_id,timer_tag) <- timer_iter ){
+      val timer_minutes = timer_iter.map{case (timer_icon,timer_id,timer_tag) => {
         val vw_item = findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].findViewWithTag(timer_tag)
         val limit = try{
           vw_item.findViewById(R.id.timer_limit).asInstanceOf[EditText].getText.toString.toInt
@@ -81,7 +93,9 @@ class NotifyTimerActivity extends Activity{
           x.set(AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
           Globals.notify_timers.update(timer_id,intent)
         }
-      }
+        limit
+      }}
+      Globals.prefs.get.edit().putString("timer_default_minutes",timer_minutes.mkString(",")).commit()
     }
   }
 }

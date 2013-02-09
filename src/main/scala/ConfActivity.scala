@@ -68,7 +68,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
           Globals.forceRefresh = true
         }
         val pref = findPreference(key)
-        if(classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){
+        if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){
           pref.asInstanceOf[Preference with PreferenceCustom].notifyChangedPublic()
         }
       }
