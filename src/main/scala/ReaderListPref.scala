@@ -17,9 +17,7 @@ object ReaderList{
         val reader_path = "INT:" + p
         val reader = makeReader(context,reader_path)
         if(reader.existsAll() match {case (b,m) => b}){
-          val edit = Globals.prefs.get.edit
-          edit.putString("reader_path",reader_path)
-          edit.commit
+          Globals.prefs.get.edit.putString("reader_path",reader_path).commit
           return
         }
       }

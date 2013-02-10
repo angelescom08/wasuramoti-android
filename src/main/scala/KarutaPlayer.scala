@@ -306,13 +306,17 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
         val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
         var ss = read_order_each.split("_")
-        if(cur_num == 0 && read_order_each.startsWith("CUR2")){
-          if(Globals.prefs.get.getBoolean("read_simo_joka_twice",false)){
-            ss = Array("CUR2") ++ ss
-          }
-          if(reader.exists(cur_num,1) && ! Globals.prefs.get.getBoolean("not_read_kami_joka",false)){
-            ss = Array("CUR1") ++ ss
-          }
+        if(cur_num == 0){
+          val read_order_joka = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+          ss = read_order_joka.split(",").flatMap{ s =>
+            val Array(t,num) = s.split("_")
+            Array.fill(num.toInt){
+              t match{
+                case "upper" => "CUR1"
+                case "lower" => "CUR2"
+              } 
+            }
+          } ++ ss.filter(_.startsWith("NEXT"))
         }
         if(is_last_fuda && !read_order_each.endsWith("NEXT2")){
           ss ++= Array("NEXT2")

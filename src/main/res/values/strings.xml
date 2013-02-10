@@ -65,10 +65,21 @@
     <item>NEXT1_NEXT2</item>
     <item>CUR2_NEXT2</item>
   </string-array>
-  <string name="conf_not_read_kami_joka">Don\'t Play Upper Phase of Joka</string>
-  <string name="conf_not_read_kami_joka_summary">Do not play &lt;name&gt;_000_1.ogg.</string>
-  <string name="conf_read_simo_joka_twice">Lower Phase of Joka Twice</string>
-  <string name="conf_read_simo_joka_twice_summary">Play &lt;name&gt;_000_2.ogg twice.</string>
+
+  <string name="conf_read_order_joka">How to Play Joka</string>
+  <string name="conf_read_order_joka_summary">How many times to play upper/lower phrase of Joka.</string>
+  <string name="conf_joka_upper_phrase">Upper Phrase (000_1.ogg)</string>
+  <string name="conf_joka_lower_phrase">Lower Phrase (000_2.ogg)</string>
+
+  <string name="conf_upper_abbr">U</string>
+  <string name="conf_lower_abbr">L</string>
+
+  <string name="conf_num_0">None</string>
+  <string name="conf_num_1">Once</string>
+  <string name="conf_num_2">Twice</string>
+
+  <string name="conf_joka_caveat">Note: Actually, there might be a case that both upper phrase and lower phrase is included in 000_1.ogg.</string>
+
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">Auto</string>
   <string name="conf_read_auto_title">Auto Play</string>
@@ -86,7 +97,7 @@
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
-  <string name="conf_wav_span_simokami_summary">Interval between lower phase and upper phase.</string>
+  <string name="conf_wav_span_simokami_summary">Interval between lower phrase and upper phrase.</string>
   <string name="conf_dimlock_minutes">Lock Screen</string>
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_silent_mode_on_start">Silent Mode</string>
@@ -128,7 +139,7 @@
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    First chracters of upper phase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
+    First chracters of upper phrase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
@@ -164,12 +175,12 @@
     Only Ogg Vorbis is supported．Monaural audio is recommended.
     <h3>Name Convention</h3>
     <p>
-    (1) Create 202 ogg files which upper phase and lower phase is recorded separately from 101 poems (+1 is for Joka).
+    (1) Create 202 ogg files which upper phrase and lower phrase is recorded separately from 101 poems (+1 is for Joka).
     </p>
     <p>
     (2) Rename each file to <tt><font color="#FFFF00">[Reader]_[Poem No.]_[Upper=1,Lower=2].ogg</font></tt><br/>
     If poem number is less than 100, zero must be padded to fit three digits. Poem number of Joka is 000.<br/>
-    (Example: Lower phase of `Hototogisu` read by Inaba &rArr; <font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+    (Example: Lower phrase of `Hototogisu` read by Inaba &rArr; <font color="#FFFF00">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>Where to Place</h3>
     <p>
@@ -178,7 +189,7 @@
     <p>
     (2) Make folder named <tt><font color="#FFFF00">[Reader]</font></tt>, and place 202 ogg files in it.
     </p>
-    (Example: Upper phase of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+    (Example: Upper phrase of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
     Now you can choose new reader from reader choices.
     ]]>
   </string>

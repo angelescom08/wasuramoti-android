@@ -1,9 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.preference.PreferenceActivity
+import _root_.android.preference.{PreferenceActivity,DialogPreference}
 import _root_.android.os.Bundle
-import _root_.android.view.View
-import _root_.android.widget.TextView
+import _root_.android.view.{View,LayoutInflater}
+import _root_.android.widget.{TextView,RadioGroup,RadioButton}
 import _root_.android.util.AttributeSet
 import _root_.android.content.{Context,SharedPreferences}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
@@ -51,6 +51,49 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
   }
 }
 
+class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  // We can set defaultValue="..." in src/main/res/xml/conf.xml
+  // and reflect it to actual preference by calling:
+  //   PreferenceManager.setDefaultValues(context, R.xml.conf, true)
+  // As for custom DialogPreference, we have to override
+  // onSetInitialValue() and onGetDefaultValue() to get it to work.
+  // See 'Building a Custom Preference' in android developer document: 
+  //   http://developer.android.com/guide/topics/ui/settings.html#Custom
+  // However this solution does not seem to work in Android 4.x+
+  // Therefore we use this old dirty hack.
+  val DEFAULT_VALUE = "upper_1,lower_1"
+  var root_view = None:Option[View]
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  override def onDialogClosed(positiveResult:Boolean){
+    if(positiveResult){
+      persistString(Array(R.id.conf_joka_upper_num,R.id.conf_joka_lower_num).map{ rid =>
+        val btn = root_view.get.findViewById(rid).asInstanceOf[RadioGroup].getCheckedRadioButtonId()
+        root_view.get.findViewById(btn).getTag()
+      }.mkString(","))
+    }
+    super.onDialogClosed(positiveResult)
+  }
+  override def onCreateDialogView():View = {
+    super.onCreateDialogView()
+    val view = LayoutInflater.from(context).inflate(R.layout.read_order_joka,null)
+    // getDialog() returns null on onDialogClosed(), so we save view
+    root_view = Some(view)
+    for( t <- getPersistedString(DEFAULT_VALUE).split(",")){
+      view.findViewWithTag(t).asInstanceOf[RadioButton].toggle()
+    }
+    return view
+  }
+  override def getAbbrValue():String = {
+    getPersistedString(DEFAULT_VALUE).split(",").map{ x =>{
+      val Array(ul,num) = x.split("_")
+      context.getResources.getString(ul match{
+        case "upper" => R.string.conf_upper_abbr
+        case "lower" => R.string.conf_lower_abbr
+      }) + num
+    }}.mkString("")
+  }
+}
+
 class ConfActivity extends PreferenceActivity with FudaSetTrait{
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
 
@@ -63,7 +106,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
     addPreferencesFromResource(R.xml.conf)
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
       override def onSharedPreferenceChanged(sharedPreferences:SharedPreferences, key:String){
-        if(Array("read_order_each","reader_path","not_read_kami_joka","read_simo_joka_twice","wav_span_simokami",
+        if(Array("read_order_each","reader_path","read_order_joka","wav_span_simokami",
                  "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
           Globals.forceRefresh = true
         }

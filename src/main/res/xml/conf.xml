@@ -54,15 +54,17 @@
       android:defaultValue="CUR2_NEXT1"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <CheckBoxPreference
-      android:key="not_read_kami_joka"
-      android:title="@string/conf_not_read_kami_joka"
-      android:summary="@string/conf_not_read_kami_joka_summary"
+    <karuta.hpnpwd.wasuramoti.JokaOrderPreference 
+      android:key="read_order_joka"
+      android:title="@string/conf_read_order_joka"
+      android:summary="@string/conf_read_order_joka_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      android:defaultValue="upper_1,lower_1"
       />
     <CheckBoxPreference
-      android:key="read_simo_joka_twice"
-      android:title="@string/conf_read_simo_joka_twice"
-      android:summary="@string/conf_read_simo_joka_twice_summary"
+      android:key="skip_on_longclick"
+      android:title="@string/conf_skip_on_longclick"
+      android:summary="@string/conf_skip_on_longclick_summary"
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_others">
@@ -71,11 +73,6 @@
       android:title="@string/subscreen_others"
       android:persistent="false">
       <PreferenceCategory android:title="@string/category_misc">
-        <CheckBoxPreference
-          android:key="skip_on_longclick"
-          android:title="@string/conf_skip_on_longclick"
-          android:summary="@string/conf_skip_on_longclick_summary"
-          />
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
           android:key="wav_begin_read"
           android:title="@string/conf_wav_begin_read"

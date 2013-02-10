@@ -7,8 +7,6 @@ Priority High:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
   * Add Option: show which poem is reading
   * Add Option: play in arbitrary order
-  * Add Option: how to play joka
-    -> Show dialog and choose how many times to play lower/upper phase of joka
   * In battery mode, the auto play stops when screen is locked
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
