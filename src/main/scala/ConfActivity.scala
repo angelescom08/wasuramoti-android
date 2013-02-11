@@ -39,8 +39,14 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
     val value = getValue()
     val resources = context.getResources
     val get_entry_from_value = (values:Int,entries:Int) => {
-      val index = resources.getStringArray(values).indexOf(value)
-      resources.getStringArray(entries)(index)
+      try{
+        val index = resources.getStringArray(values).indexOf(value)
+        resources.getStringArray(entries)(index)
+      }catch{
+        // Upgrading from older version causes this exception since value is empty.
+        case _:IndexOutOfBoundsException => ""
+        case _:ArrayIndexOutOfBoundsException => ""
+      }
     }
     key match{
       case "read_order" => get_entry_from_value(R.array.conf_read_order_entryValues,R.array.conf_read_order_entries)

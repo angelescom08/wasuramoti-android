@@ -6,7 +6,7 @@ import AndroidKeys._
 object General {
   val settings = Defaults.defaultSettings ++ Seq (
     name := "Wasuramoti",
-    version := "0.7.2",
+    version := "0.7.3",
     scalaVersion := "2.9.2",
     platformName in Android := "android-10"
   )
