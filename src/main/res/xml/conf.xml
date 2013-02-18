@@ -23,6 +23,12 @@
       android:summary="@string/conf_reader_list_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
+    <karuta.hpnpwd.wasuramoti.AudioVolumePreference
+      android:key="audio_volume"
+      android:title="@string/conf_audio_volume"
+      android:summary="@string/conf_audio_volume_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <karuta.hpnpwd.wasuramoti.EqualizerPreference
       android:key="effect_equalizer"
       android:title="@string/conf_equalizer"
@@ -61,11 +67,6 @@
       android:widgetLayout="@layout/conf_current_value"
       android:defaultValue="upper_1,lower_1"
       />
-    <CheckBoxPreference
-      android:key="skip_on_longclick"
-      android:title="@string/conf_skip_on_longclick"
-      android:summary="@string/conf_skip_on_longclick_summary"
-      />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_others">
     <PreferenceScreen
@@ -73,6 +74,11 @@
       android:title="@string/subscreen_others"
       android:persistent="false">
       <PreferenceCategory android:title="@string/category_misc">
+        <CheckBoxPreference
+          android:key="skip_on_longclick"
+          android:title="@string/conf_skip_on_longclick"
+          android:summary="@string/conf_skip_on_longclick_summary"
+          />
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
           android:key="wav_begin_read"
           android:title="@string/conf_wav_begin_read"

@@ -12,7 +12,7 @@
                 android:orientation="horizontal" 
                 >
     <Button android:layout_width="96sp" android:layout_height="wrap_content"
-      android:text="@string/equalizer_play" android:id="@+id/equalizer_play"
+      android:text="@string/audio_play" android:id="@+id/audio_play"
       android:layout_alignParentTop="true"
       android:paddingLeft="20sp"
       android:paddingRight="20sp"

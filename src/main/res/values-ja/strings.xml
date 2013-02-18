@@ -30,14 +30,20 @@
   </string-array>
   <string name="conf_reader_list">詠み手</string>
   <string name="conf_reader_list_summary">追加する方法はヘルプを押すと表示されます</string>
+
+  <string name="conf_audio_volume">音量</string>
+  <string name="conf_audio_volume_summary">詠み上げ時の端末の音量</string>
+  <string name="volume_set_each_play">詠み上げ開始時にこの音量に設定し，終了後に元に戻す</string>
+
   <string name="conf_equalizer">イコライザー</string>
   <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
 
-  <string name="equalizer_play">再生</string>
-  <string name="equalizer_stop">停止</string>
+  <string name="audio_play">再生</string>
+  <string name="audio_stop">停止</string>
+
   <string name="equalizer_reset">リセット</string>
 
-  <string name="equalizer_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
+  <string name="player_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">連続</string>

@@ -6,7 +6,7 @@ import AndroidKeys._
 object General {
   val settings = Defaults.defaultSettings ++ Seq (
     name := "Wasuramoti",
-    version := "0.7.3",
+    version := "0.7.4",
     scalaVersion := "2.9.2",
     platformName in Android := "android-10"
   )
@@ -25,6 +25,7 @@ object General {
       -keep class scala.Function0
       -keep class scala.Function1
       -keep class scala.Function2
+      -keep class scala.Function3
       -keep class scala.Option
       -keep class scala.Tuple2
       -keep class scala.Tuple3

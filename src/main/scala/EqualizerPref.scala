@@ -12,9 +12,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   var number_of_bands = None:Option[Short]
 
   override def onDialogClosed(positiveResult:Boolean){
-    super.onDialogClosed(positiveResult)
     if(positiveResult && !number_of_bands.isEmpty){
-      getEditor().putString(getKey(),Utils.serializeToString(makeSeq())).commit()
+      persistString(Utils.serializeToString(makeSeq()))
     }
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{
@@ -24,6 +23,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
         p.equalizer_seq = None
       }
       }}
+    super.onDialogClosed(positiveResult)
   }
   def makeSeq():EqualizerSeq={
     val view = root_view.get
@@ -57,30 +57,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
   def set_button_listeners(view:View){
     // Play Button
-    val btn = view.findViewById(R.id.equalizer_play).asInstanceOf[Button]
-    val handler = new Handler()
-    btn.setOnClickListener(new View.OnClickListener(){
-      override def onClick(v:View){
-        Globals.global_lock.synchronized{
-          Globals.player.foreach{ pl => {
-            if(Globals.is_playing){
-              pl.stop()
-              btn.setText(context.getResources().getString(R.string.equalizer_play))
-            }else{
-              pl.equalizer_seq = Some(makeSeq())
-              pl.play( _ => {
-                handler.post(new Runnable(){
-                  override def run(){
-                    btn.setText(context.getResources().getString(R.string.equalizer_play))
-                  }
-                })
-              })
-              btn.setText(context.getResources().getString(R.string.equalizer_stop))
-            }
-          }}
-        }
-      }
-    })
+    Utils.setAudioPlayButton(view,context,Some({
+        pl => pl.equalizer_seq = Some(makeSeq())
+      }))
     // Reset Button
     val rst = view.findViewById(R.id.equalizer_reset).asInstanceOf[Button]
     rst.setOnClickListener(new View.OnClickListener(){
@@ -185,7 +164,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
           pl.audio_track = None
       }
       case None => {
-        view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.equalizer_error_noplay))
+        view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.player_error_noplay))
       }
     }
     return view

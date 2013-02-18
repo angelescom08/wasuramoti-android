@@ -35,13 +35,19 @@
 
   <string name="conf_reader_list">Reader</string>
   <string name="conf_reader_list_summary">Press `Help` to show how to add new audio file.</string>
+
+  <string name="conf_audio_volume">Volume</string>
+  <string name="conf_audio_volume_summary">Set audio volume of device when playing.</string>
+  <string name="volume_set_each_play">Set volume when it starts playing, and reset after it.</string>
+
   <string name="conf_equalizer">Equalizer</string>
   <string name="conf_equalizer_summary">Set volume for each frequency range.</string>
 
-  <string name="equalizer_play">Play</string>
-  <string name="equalizer_stop">Stop</string>
+  <string name="audio_play">Play</string>
+  <string name="audio_stop">Stop</string>
+
   <string name="equalizer_reset">Reset</string>
-  <string name="equalizer_error_noplay">You must go back to previous fuda to edit this setting</string>
+  <string name="player_error_noplay">Cannot play current fuga. Please go back to previous fuda.</string>
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">Detail</string>

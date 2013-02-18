@@ -37,6 +37,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[EqualizerSeq]
+  var set_audio_volume = true
+
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therfore, we execute it here
@@ -125,6 +127,9 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       if(Globals.is_playing){
         return
       }
+      if(set_audio_volume){
+        Utils.saveAndSetAudioVolume(activity.getApplicationContext())
+      }
       Globals.is_playing = true
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
@@ -149,15 +154,22 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
     audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
   }
 
+  def doWhenStop(){
+    equalizer.foreach(_.release())
+    equalizer = None
+    Globals.is_playing = false
+    if(set_audio_volume){
+      Utils.restoreAudioVolume(activity.getApplicationContext())
+    }
+  }
+
   def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
     Globals.global_lock.synchronized{
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{
           audio_track.foreach(x => {x.stop();x.release()})
           audio_track = None
-          equalizer.foreach(_.release())
-          equalizer = None
-          Globals.is_playing=false
+          doWhenStop()
           onKamiEnd()
         }
       }}
@@ -243,10 +255,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         })
       audio_thread = None
       audio_track = None
-      equalizer.foreach(_.release())
-      equalizer = None
-      Globals.is_playing = false
-
+      doWhenStop()
     }
   }
   def waitDecode(){
