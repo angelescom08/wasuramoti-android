@@ -47,7 +47,6 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
       }catch{
         // Upgrading from older version causes this exception since value is empty.
         case _:IndexOutOfBoundsException => ""
-        case _:ArrayIndexOutOfBoundsException => ""
       }
     }
     key match{
@@ -65,7 +64,7 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   //   PreferenceManager.setDefaultValues(context, R.xml.conf, true)
   // As for custom DialogPreference, we have to override
   // onSetInitialValue() and onGetDefaultValue() to get it to work.
-  // See 'Building a Custom Preference' in android developer document: 
+  // See 'Building a Custom Preference' in android developer document:
   //   http://developer.android.com/guide/topics/ui/settings.html#Custom
   // However this solution does not seem to work in Android 4.x+
   // Therefore we use this old dirty hack.
@@ -106,7 +105,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
   var root_view = None:Option[View]
   var default_volume = None:Option[Int]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  
+
   def withAudioVolume(defValue:Any,func:(AudioManager,Int,Int)=>Any):Any = {
     val audio_manager = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(audio_manager != null){
@@ -117,7 +116,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
       defValue
     }
   }
-  
+
   override def getAbbrValue():String={
     val volume = getPersistedString("")
     if(TextUtils.isEmpty(volume)){
@@ -139,7 +138,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
       }
       }}
     if(positiveResult){
-      root_view.foreach{ view => 
+      root_view.foreach{ view =>
         val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
         val new_value = if(check.isChecked){
           val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
@@ -168,7 +167,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
     root_view = Some(view)
 
     Utils.setAudioPlayButton(view,context)
-    
+
     val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
     check.setChecked(!TextUtils.isEmpty(getPersistedString("")))
 

@@ -28,8 +28,8 @@ class NotifyTimerActivity extends Activity{
         try{
           s.toInt
         }catch{
-          case e:java.lang.NumberFormatException => default_minutes
-        }} 
+          case _:java.lang.NumberFormatException => default_minutes
+        }}
 
     for( ((icon,id,tag),default) <- timer_iter.zip(timer_defaults) ){
       val vw = inflater.inflate(R.layout.notify_timer_item,null)
@@ -63,7 +63,9 @@ class NotifyTimerActivity extends Activity{
         try{
           Globals.alarm_manager.foreach{_.cancel(pendingIntent)}
           Globals.notify_timers.remove(k)
-        }catch{case e:Exception => Unit}
+        }catch{
+          case _:Exception => Unit
+        }
       }
     }
     myfinish

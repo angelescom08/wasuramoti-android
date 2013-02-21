@@ -2,7 +2,7 @@ Priority High:
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
   * Special words such as 'one' 'two' 'red' in fuda sets
   * Able to add kara fuda.
-  * Do not fade in if fade length is too short.
+  * Do not fade in/out if fade length is too short.
   * Show Information of poem when each item of fuda list is long pressed.
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
   * Add Option: show which poem is reading

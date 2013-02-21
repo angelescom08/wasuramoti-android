@@ -98,7 +98,7 @@ object FudaListHelper{
       val kami_order = cursor.getInt(1)
       return Some((simo_num,kami_num,simo_order,kami_order))
     }catch{
-      case e:CursorIndexOutOfBoundsException =>
+      case _:CursorIndexOutOfBoundsException =>
        return None
     }finally{
       cursor.close()

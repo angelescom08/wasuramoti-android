@@ -187,7 +187,7 @@ object Utils {
       val v = Globals.prefs.get.getString(key,defValue.toString)
       implicitly[PrefTrait[T]].from(v)
     }catch{
-      case e:NumberFormatException => defValue
+      case _:NumberFormatException => defValue
     }
     if( implicitly[PrefTrait[T]].>(r,maxValue)  ){
       maxValue
@@ -304,8 +304,8 @@ object Utils {
         //          ... }
         //       However, if something wrong occures for serialization, try adding these options to build.scala.
         //       See ProGuard manual for further information.
-        case e:InvalidClassException => new EqualizerSeq()
-        case e:ClassCastException => new EqualizerSeq()
+        case _:InvalidClassException => new EqualizerSeq()
+        case _:ClassCastException => new EqualizerSeq()
       }
     }
   }

@@ -114,8 +114,7 @@ class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisD
     }catch{
       // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
       // Therefore these catches are just for sure.
-      case e:ArrayIndexOutOfBoundsException => return(bg)
-      case e:IndexOutOfBoundsException => return(bg)
+      case _:IndexOutOfBoundsException => return(bg)
     }
     return(ed)
   }
@@ -148,8 +147,7 @@ class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisD
     }catch{
       // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
       // Therefore these catches are just for sure.
-      case e:ArrayIndexOutOfBoundsException => None
-      case e:IndexOutOfBoundsException => None
+      case _:IndexOutOfBoundsException => None
     }
   }
   // fadein

@@ -113,7 +113,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
             var r = ar.seq(i).getOrElse(0.5)
             dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
           }catch{
-            case e:Exception => Unit
+            case _:Exception => Unit
           }
         }
       })
@@ -323,7 +323,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
               t match{
                 case "upper" => "CUR1"
                 case "lower" => "CUR2"
-              } 
+              }
             }
           } ++ ss.filter(_.startsWith("NEXT"))
         }

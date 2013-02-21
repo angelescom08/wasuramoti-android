@@ -60,7 +60,7 @@
       android:defaultValue="CUR2_NEXT1"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <karuta.hpnpwd.wasuramoti.JokaOrderPreference 
+    <karuta.hpnpwd.wasuramoti.JokaOrderPreference
       android:key="read_order_joka"
       android:title="@string/conf_read_order_joka"
       android:summary="@string/conf_read_order_joka_summary"

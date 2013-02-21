@@ -23,7 +23,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       val title = try{
         listItems.get(pos)
       }catch{
-        case e:ArrayIndexOutOfBoundsException => return
+        case _:IndexOutOfBoundsException => return
       }
       persistString(title)
       FudaListHelper.updateSkipList(title)

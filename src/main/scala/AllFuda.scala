@@ -213,7 +213,7 @@ object AllFuda{
         s => try{
           Some(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r)
         }catch{
-          case e:PatternSyntaxException => None
+          case _:PatternSyntaxException => None
         }
     }).toList
     val r = new StringBuilder(PATTERN_FUDANUM.replaceAllIn(buf,""))
