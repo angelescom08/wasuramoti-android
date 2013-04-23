@@ -68,17 +68,18 @@ object AudioHelper{
   }
 }
 
-class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisDecoder) extends WavBufferDebugTrait{
-  val max_amp = (1 << (decoder.bit_depth-1)).toDouble
+class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder) extends WavBufferDebugTrait{
+  val SHORT_BYTE = java.lang.Short.SIZE/java.lang.Byte.SIZE
+  val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
-  var index_end = orig_file.length().toInt / 2
+  var index_end = orig_file.length().toInt / SHORT_BYTE
 
   // in milliseconds
   def audioLength():Long = {
     ((1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong)/decoder.channels
   }
   def bufferSizeInBytes():Int = {
-    (java.lang.Short.SIZE/java.lang.Byte.SIZE) * (index_end - index_begin)
+    SHORT_BYTE * (index_end - index_begin)
   }
   def writeToAudioTrack(track:AudioTrack){
     // Since using ShortBuffer.array() throws UnsupportedOperationException (maybe because we are using FileChannel.map() ?),
@@ -90,14 +91,14 @@ class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisD
     buffer.rewind()
     track.write(b,0,b_size)
   }
-  def WriteToShortBuffer(dst:Array[Short],offset:Int):Int = {
+  def WriteToShortBuffer(dst:Array[Short], offset:Int):Int = {
     val b_size = index_end-index_begin
     buffer.position(index_begin)
-    buffer.get(dst,offset,if(offset+b_size > dst.length){dst.length-offset}else{b_size})
+    buffer.get(dst, offset, if(offset+b_size > dst.length){dst.length-offset}else{b_size})
     buffer.rewind()
     return(b_size)
   }
-  def threasholdIndex(threashold:Double,fromEnd:Boolean):Int = {
+  def threasholdIndex(threashold:Double, fromEnd:Boolean):Int = {
     var (bg,ed,step) = if(fromEnd){
       (index_end-1,index_begin,-1)
     }else{
@@ -107,7 +108,7 @@ class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisD
     ed = indexInBuffer(ed)
     try{
       for( i <- bg to (ed,step) ){
-        if( scala.math.abs(buffer.get(i)) / max_amp > threashold ){
+        if( scala.math.abs(buffer.get(i)) / MAX_AMP > threashold ){
           return i
         }
       }
@@ -130,7 +131,7 @@ class WavBuffer(val buffer:ShortBuffer,val orig_file:File,val decoder:OggVorbisD
   }
 
   // if begin < end then fade-in else fade-out
-  def fade(i_begin:Int,i_end:Int){
+  def fade(i_begin:Int, i_end:Int){
     val begin = indexInBuffer(i_begin)
     val end = indexInBuffer(i_end)
     if(begin == end){

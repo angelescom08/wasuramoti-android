@@ -13,7 +13,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult && !number_of_bands.isEmpty){
-      persistString(Utils.serializeToString(makeSeq()))
+      persistString(Utils.equalizerToString(makeSeq()))
     }
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{
@@ -25,7 +25,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       }}
     super.onDialogClosed(positiveResult)
   }
-  def makeSeq():EqualizerSeq={
+  def makeSeq():Utils.EqualizerSeq={
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
       Some(for( i <- 0 until nb ) yield {
@@ -40,9 +40,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
       })
     }.getOrElse(Seq())
     if(seq.forall{_.isEmpty}){
-      new EqualizerSeq()
+      Seq()
     }else{
-      new EqualizerSeq(seq)
+      seq
     }
   }
 

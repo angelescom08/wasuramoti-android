@@ -30,7 +30,7 @@
       android:widgetLayout="@layout/conf_current_value"
       />
     <karuta.hpnpwd.wasuramoti.EqualizerPreference
-      android:key="effect_equalizer"
+      android:key="effect_equalizer_seq"
       android:title="@string/conf_equalizer"
       android:summary="@string/conf_equalizer_summary"
       />

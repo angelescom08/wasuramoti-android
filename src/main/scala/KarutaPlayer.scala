@@ -36,7 +36,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
   var timer_onend = None:Option[Timer]
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
-  var equalizer_seq = None:Option[EqualizerSeq]
+  var equalizer_seq = None:Option[Utils.EqualizerSeq]
   var set_audio_volume = true
 
   val audio_queue = new AudioQueue() // file or silence in millisec
