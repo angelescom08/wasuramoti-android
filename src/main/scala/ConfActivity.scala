@@ -17,6 +17,7 @@ trait PreferenceCustom extends Preference{
     super.onBindView(v)
   }
   def getAbbrValue():String = {
+    // I don't now why we cannot use getPersistedString() here
     Globals.prefs.get.getString(getKey(),"")
   }
   // We have to call notifyChanged() to to reflect the change to view.
@@ -32,7 +33,7 @@ class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTe
     case x => context.getResources.getString(x)
   }
   override def getAbbrValue():String = {
-    Globals.prefs.get.getString(getKey(),"") + unit
+    getPersistedString("") + unit
   }
 }
 class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPreference(context,aset) with PreferenceCustom{
@@ -99,6 +100,31 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
       }) + num
     }}.mkString("")
   }
+}
+
+class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  var root_view = None:Option[View]
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+
+  override def getAbbrValue():String={
+    //TODO: show prefs
+    ""
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+    if(positiveResult){
+      //TODO: save prefs
+    }
+    super.onDialogClosed(positiveResult)
+  }
+  override def onCreateDialogView():View = {
+    super.onCreateDialogView()
+    val view = LayoutInflater.from(context).inflate(R.layout.karafuda,null)
+    // getDialog() returns null on onDialogClosed(), so we save view
+    root_view = Some(view)
+    // TODO: initialize checkbox and seekbar
+    return view
+  }
+
 }
 
 class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{

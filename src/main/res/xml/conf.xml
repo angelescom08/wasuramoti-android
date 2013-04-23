@@ -8,6 +8,12 @@
       android:summary="@string/conf_fudaset_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
+    <karuta.hpnpwd.wasuramoti.KarafudaPreference
+      android:key="karafuda"
+      android:title="@string/conf_karafuda"
+      android:summary="@string/conf_karafuda_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
       android:key="read_order"
       android:title="@string/conf_read_order_title"
@@ -68,92 +74,90 @@
       android:defaultValue="upper_1,lower_1"
       />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_others">
-    <PreferenceScreen
-      android:key="conf_others"
-      android:title="@string/subscreen_others"
-      android:persistent="false">
-      <PreferenceCategory android:title="@string/category_misc">
-        <CheckBoxPreference
-          android:key="skip_on_longclick"
-          android:title="@string/conf_skip_on_longclick"
-          android:summary="@string/conf_skip_on_longclick_summary"
-          />
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_begin_read"
-          android:title="@string/conf_wav_begin_read"
-          android:summary="@string/conf_wav_begin_read_summary"
-          android:numeric="decimal"
-          android:defaultValue="0.5"
-          android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_second"
-          />
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_span_simokami"
-          android:title="@string/conf_wav_span_simokami"
-          android:summary="@string/conf_wav_span_simokami_summary"
-          android:numeric="decimal"
-          android:defaultValue="1.0"
-          android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_second"
-          />
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="dimlock_minutes"
-          android:title="@string/conf_dimlock_minutes"
-          android:summary="@string/conf_dimlock_minutes_summary"
-          android:numeric="integer"
-          android:defaultValue="5"
-          android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_minute"
-          />
-        <CheckBoxPreference
-          android:key="silent_mode_on_start"
-          android:title="@string/conf_silent_mode_on_start"
-          android:summary="@string/conf_silent_mode_on_start_summary"
-          />
-        <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
-          android:key="audio_track_mode"
-          android:title="@string/conf_audio_track_mode"
-          android:summary="@string/conf_audio_track_mode_summary"
-          android:entries="@array/conf_audio_track_entries"
-          android:entryValues="@array/conf_audio_track_entryValues"
-          android:defaultValue="STATIC"
-          android:widgetLayout="@layout/conf_current_value"
-          />
-      </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_processing">
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_threashold"
-          android:title="@string/conf_wav_threshold"
-          android:summary="@string/conf_wav_threshold_summary"
-          android:numeric="decimal"
-          android:defaultValue="0.01"
-          android:widgetLayout="@layout/conf_current_value"
-          />
+  <PreferenceScreen
+    android:key="conf_others"
+    android:title="@string/subscreen_others"
+    android:persistent="false">
+    <PreferenceCategory android:title="@string/category_misc">
+      <CheckBoxPreference
+        android:key="skip_on_longclick"
+        android:title="@string/conf_skip_on_longclick"
+        android:summary="@string/conf_skip_on_longclick_summary"
+        />
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="wav_begin_read"
+        android:title="@string/conf_wav_begin_read"
+        android:summary="@string/conf_wav_begin_read_summary"
+        android:numeric="decimal"
+        android:defaultValue="0.5"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_second"
+        />
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="wav_span_simokami"
+        android:title="@string/conf_wav_span_simokami"
+        android:summary="@string/conf_wav_span_simokami_summary"
+        android:numeric="decimal"
+        android:defaultValue="1.0"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_second"
+        />
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="dimlock_minutes"
+        android:title="@string/conf_dimlock_minutes"
+        android:summary="@string/conf_dimlock_minutes_summary"
+        android:numeric="integer"
+        android:defaultValue="5"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_minute"
+        />
+      <CheckBoxPreference
+        android:key="silent_mode_on_start"
+        android:title="@string/conf_silent_mode_on_start"
+        android:summary="@string/conf_silent_mode_on_start_summary"
+        />
+      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+        android:key="audio_track_mode"
+        android:title="@string/conf_audio_track_mode"
+        android:summary="@string/conf_audio_track_mode_summary"
+        android:entries="@array/conf_audio_track_entries"
+        android:entryValues="@array/conf_audio_track_entryValues"
+        android:defaultValue="STATIC"
+        android:widgetLayout="@layout/conf_current_value"
+        />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_processing">
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="wav_threashold"
+        android:title="@string/conf_wav_threshold"
+        android:summary="@string/conf_wav_threshold_summary"
+        android:numeric="decimal"
+        android:defaultValue="0.01"
+        android:widgetLayout="@layout/conf_current_value"
+        />
 
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_fadeout_simo"
-          android:title="@string/conf_wav_fadeout_simo"
-          android:summary="@string/conf_wav_fadout_simo_summary"
-          android:numeric="decimal"
-          android:defaultValue="0.2"
-          android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_second"
-          />
-        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_fadein_kami"
-          android:title="@string/conf_wav_fadein_kami"
-          android:summary="@string/conf_wav_fadein_kami_summary"
-          android:numeric="decimal"
-          android:defaultValue="0.1"
-          android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_second"
-          />
-      </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_init">
-        <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
-        <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
-      </PreferenceCategory>
-    </PreferenceScreen>
-  </PreferenceCategory>
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="wav_fadeout_simo"
+        android:title="@string/conf_wav_fadeout_simo"
+        android:summary="@string/conf_wav_fadout_simo_summary"
+        android:numeric="decimal"
+        android:defaultValue="0.2"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_second"
+        />
+      <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+        android:key="wav_fadein_kami"
+        android:title="@string/conf_wav_fadein_kami"
+        android:summary="@string/conf_wav_fadein_kami_summary"
+        android:numeric="decimal"
+        android:defaultValue="0.1"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_second"
+        />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_init">
+      <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
+      <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
+    </PreferenceCategory>
+  </PreferenceScreen>
 </PreferenceScreen>

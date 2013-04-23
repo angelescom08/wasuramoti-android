@@ -22,6 +22,14 @@
   <string name="category_global">Global</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
   <string name="conf_fudaset_summary">Which subset of fuda to play.</string>
+
+  <string name="karafuda_enable">Enable</string>
+  <string name="karafuda_append_num">No. of Karafuda:</string>
+  <string name="karafuda_randomness_left">&lt;= Random</string>
+  <string name="karafuda_randomness_right">Prefer Urafuda =&gt;</string>
+  <string name="conf_karafuda">Add Karafuda</string>
+  <string name="conf_karafuda_summary">In addition to fuda set, play some fuda randomly.</string>
+
   <string name="conf_read_order_title">Play Order</string>
   <string name="conf_read_order_summary">Random or shuffle.</string>
   <string-array name="conf_read_order_entries">
@@ -95,7 +103,6 @@
 
 
   <!-- CATEGORY_ELSE -->
-  <string name="category_others">Others</string>
   <string name="subscreen_others">Other Settings</string>
   <string name="category_misc">Misc</string>
   <string name="conf_skip_on_longclick">Skip On Ling Click</string>

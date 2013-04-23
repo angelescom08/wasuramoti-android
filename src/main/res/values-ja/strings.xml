@@ -22,6 +22,13 @@
   <string name="conf_fudaset_title">札セット</string>
   <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
+  <string name="karafuda_enable">有効</string>
+  <string name="karafuda_append_num">枚数:</string>
+  <string name="karafuda_randomness_left">&lt;= ランダム</string>
+  <string name="karafuda_randomness_right">裏札優先 =&gt;</string>
+  <string name="conf_karafuda">空札追加</string>
+  <string name="conf_karafuda_summary">札セットに加えて何枚かランダムに詠み上げる</string>
+
   <string name="conf_read_order_title">詠む順番</string>
   <string name="conf_read_order_summary">ランダムまたはシャッフル</string>
   <string-array name="conf_read_order_entries">
@@ -85,7 +92,6 @@
   <string name="conf_joka_caveat">※実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意</string>
 
   <!-- CATEGORY_ELSE -->
-  <string name="category_others">その他</string>
   <string name="subscreen_others">その他の設定</string>
   <string name="category_misc">色々</string>
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
