@@ -50,6 +50,7 @@
             android:layout_width="fill_parent"
             android:max="100"
             android:progress="50"
+            android:layout_marginBottom="6dip"
              />
   </LinearLayout>
 </ScrollView>

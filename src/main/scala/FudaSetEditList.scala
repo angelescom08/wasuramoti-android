@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Dialog,AlertDialog}
 import _root_.android.os.Bundle
 import _root_.android.content.{Context,DialogInterface}
-import _root_.android.view.{View,Window}
+import _root_.android.view.View
 import _root_.android.text.Html
 import _root_.android.widget.{ArrayAdapter,AdapterView,ListView,TextView,Button}
 import _root_.java.util.Comparator

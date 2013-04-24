@@ -24,6 +24,8 @@
   <string name="conf_fudaset_summary">Which subset of fuda to play.</string>
 
   <string name="karafuda_enable">Enable</string>
+  <string name="karafuda_disabled">Disabled</string>
+  <string name="karafuda_unit"></string>
   <string name="karafuda_append_num">No. of Karafuda:</string>
   <string name="karafuda_randomness_left">&lt;= Random</string>
   <string name="karafuda_randomness_right">Prefer Urafuda =&gt;</string>

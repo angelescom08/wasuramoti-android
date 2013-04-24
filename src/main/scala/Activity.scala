@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.Activity
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.os.{Bundle,Handler,PowerManager,Parcelable}
+import _root_.android.os.{Bundle,Handler,Parcelable}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.widget.Button
 import _root_.java.lang.Runnable

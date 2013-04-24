@@ -4,7 +4,6 @@ import _root_.android.content.Context
 import _root_.android.preference.DialogPreference
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{LinearLayout,TextView,SeekBar,Button}
-import _root_.android.os.Handler
 import _root_.android.media.audiofx.Equalizer
 
 class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){

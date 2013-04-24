@@ -5,7 +5,7 @@ import scala.collection.mutable.Buffer
 import _root_.android.preference.ListPreference
 import _root_.android.content.{Context,DialogInterface}
 import _root_.android.util.AttributeSet
-import _root_.android.app.AlertDialog.Builder
+import _root_.android.app.AlertDialog
 import _root_.android.os.Environment
 import _root_.java.io.{IOException,File,FileOutputStream}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
@@ -62,7 +62,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       super.onDialogClosed(positiveResult)
     }
   }
-  override def onPrepareDialogBuilder(builder:Builder){
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
     for(i <- context.getAssets.list(Globals.ASSETS_READER_DIR)){

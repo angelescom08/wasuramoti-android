@@ -23,9 +23,11 @@
   <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
   <string name="karafuda_enable">有効</string>
+  <string name="karafuda_disabled">無効</string>
+  <string name="karafuda_unit">枚</string>
   <string name="karafuda_append_num">枚数:</string>
-  <string name="karafuda_randomness_left">&lt;= ランダム</string>
-  <string name="karafuda_randomness_right">裏札優先 =&gt;</string>
+  <string name="karafuda_randomness_left">← ランダム</string>
+  <string name="karafuda_randomness_right">裏札優先 →</string>
   <string name="conf_karafuda">空札追加</string>
   <string name="conf_karafuda_summary">札セットに加えて何枚かランダムに詠み上げる</string>
 

@@ -1,11 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{Dialog,AlertDialog}
+import _root_.android.app.Dialog
 import _root_.android.content.ContentValues
-import _root_.android.content.{Context,DialogInterface}
-import _root_.android.os.Bundle
+import _root_.android.content.Context
 import _root_.android.preference.DialogPreference
-import _root_.android.preference.PreferenceActivity
 import _root_.android.text.{TextUtils,Html}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}

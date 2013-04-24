@@ -5,13 +5,12 @@ import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
 import _root_.android.text.{TextUtils,Html}
-import _root_.android.util.Base64
 import _root_.android.os.Handler
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View}
 import _root_.android.widget.{TextView,Button}
 
-import _root_.java.io.{File,ByteArrayOutputStream,ObjectOutputStream,ByteArrayInputStream,ObjectInputStream,InvalidClassException}
+import _root_.java.io.File
 import _root_.java.text.SimpleDateFormat
 import _root_.java.util.Date
 
