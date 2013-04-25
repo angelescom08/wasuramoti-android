@@ -68,7 +68,7 @@ object FudaListHelper{
 
   def queryNumbersToRead(context:Context):Int = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip=0 AND num > 0",null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"have_to_read > 0 AND num > 0",null,null,null,null,null)
     cursor.moveToFirst()
     val count = cursor.getInt(0)
     cursor.close()
@@ -79,7 +79,7 @@ object FudaListHelper{
   def queryCurrentIndexWithSkip(context:Context):Int = {
     val current_index = getCurrentIndex(context)
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip = 0 AND read_order <= ?",Array(current_index.toString),null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"have_to_read > 0 AND read_order <= ?",Array(current_index.toString),null,null,null,null)
     cursor.moveToFirst()
     val index = cursor.getInt(0)
     cursor.close()
@@ -88,7 +88,7 @@ object FudaListHelper{
   }
   def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip = 0 AND read_order >= ?",Array(index.toString),null,null,"read_order ASC","2")
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"have_to_read > 0 AND read_order >= ?",Array(index.toString),null,null,"read_order ASC","2")
     try{
       cursor.moveToFirst()
       val simo_num = cursor.getInt(0)
@@ -107,7 +107,7 @@ object FudaListHelper{
   }
   def queryIndexWithSkip(context:Context,fake_index:Int):Int = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip = 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip = 0 AND rnk = "+fake_index,null)
+    val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND have_to_read > 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE have_to_read > 0 AND rnk = "+fake_index,null)
     cursor.moveToFirst()
     val ret = cursor.getInt(1)
     cursor.close()
@@ -116,7 +116,7 @@ object FudaListHelper{
   }
   def queryRandom(context:Context):Int = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"skip = 0 AND num > 0",null,null,null,"random()","1")
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"have_to_read > 0 AND num > 0",null,null,null,"random()","1")
     cursor.moveToFirst()
     val num = cursor.getInt(0)
     cursor.close()
@@ -150,10 +150,10 @@ object FudaListHelper{
     val skip = AllFuda.list.toSet -- haveto_read
     val dbw = Globals.database.get.getWritableDatabase
     Utils.withTransaction(dbw, ()=>
-      for((ss,flag) <- Array((haveto_read,0),(skip,1))){
+      for((ss,flag) <- Array((haveto_read,1),(skip,0))){
         for( s <- ss ){
           val cv = new ContentValues()
-          cv.put("skip",new java.lang.Integer(flag))
+          cv.put("have_to_read",new java.lang.Integer(flag))
           val num = AllFuda.getFudaNum(s)
           dbw.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(num.toString))
         }

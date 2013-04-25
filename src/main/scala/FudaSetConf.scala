@@ -10,16 +10,25 @@ import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{AdapterView,ArrayAdapter,Spinner,EditText,TextView}
 import _root_.java.util.ArrayList
 
+class FudaSetWithSize(val title:String, val num:Int){
+  override def toString():String = {
+    title + " (" + num + ")"
+  }
+  def equals(obj:FudaSetWithSize):Boolean = {
+    title.equals(obj.title)
+  }
+
+}
 class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  var listItems = new ArrayList[String]()
-  var adapter = None:Option[ArrayAdapter[String]]
+  var listItems = new ArrayList[FudaSetWithSize]()
+  var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val pos = spinner.get.getSelectedItemPosition()
       val title = try{
-        listItems.get(pos)
+        listItems.get(pos).title
       }catch{
         case _:IndexOutOfBoundsException => return
       }
@@ -37,18 +46,19 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
 
     var persisted = getPersistedString("")
-    adapter = Some(new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,listItems))
+    adapter = Some(new ArrayAdapter[FudaSetWithSize](context,android.R.layout.simple_spinner_item,listItems))
     // adapter.get.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
     val db = Globals.database.get.getReadableDatabase
-    var cursor = db.query(Globals.TABLE_FUDASETS,Array("title"),null,null,null,null,null,null)
+    var cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
     cursor.moveToFirst()
     listItems.clear()
     for( i <- 0 until cursor.getCount){
       val title = cursor.getString(0)
-      listItems.add(title)
+      val num = cursor.getInt(1)
+      listItems.add(new FudaSetWithSize(title,num))
       if(title == persisted){
         spin.setSelection(i)
       }
@@ -63,9 +73,9 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
 
 trait FudaSetTrait{
   this:Context =>
-  def getSpinnerSelected(view:View):(ArrayAdapter[String],Int) = {
+  def getSpinnerSelected(view:View):(ArrayAdapter[FudaSetWithSize],Int) = {
     val spinner = view.getRootView().findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
-    val adapter = spinner.getAdapter().asInstanceOf[ArrayAdapter[String]]
+    val adapter = spinner.getAdapter().asInstanceOf[ArrayAdapter[FudaSetWithSize]]
     val pos = spinner.getSelectedItemPosition()
     return (adapter,pos)
   }
@@ -75,8 +85,9 @@ trait FudaSetTrait{
     text = AllFuda.replaceFudaNumPattern(text)
     AllFuda.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
   }
-  def editFudaSetBase(view:View,is_add:Boolean,orig_title:String=""){
+  def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val context = this
+    val orig_title = if( orig_fs == null ){ "" }else{orig_fs.title}
     val (adapter,pos) = getSpinnerSelected(view)
     val dialog = new Dialog(this)
     dialog.setContentView(R.layout.fudaset_edit)
@@ -136,6 +147,7 @@ trait FudaSetTrait{
             val db = Globals.database.get.getWritableDatabase
             cv.put("title",title)
             cv.put("body",kimari)
+            cv.put("set_size",new java.lang.Integer(st_size))
             if(is_add){
               db.insert(Globals.TABLE_FUDASETS,null,cv)
             }else{
@@ -143,10 +155,10 @@ trait FudaSetTrait{
             }
             db.close()
             if(is_add){
-              adapter.add(title)
+              adapter.add(new FudaSetWithSize(title,st_size))
             }else{
-              adapter.remove(orig_title)
-              adapter.insert(title,pos)
+              adapter.remove(orig_fs)
+              adapter.insert(new FudaSetWithSize(title,st_size),pos)
             }
             dialog.dismiss()
           })
@@ -179,21 +191,21 @@ trait FudaSetTrait{
     if(pos == AdapterView.INVALID_POSITION){
       return
     }
-    val title = adapter.getItem(pos)
-    editFudaSetBase(view, false, title)
+    val fs = adapter.getItem(pos)
+    editFudaSetBase(view, false, fs)
   }
   def deleteFudaSet(view: View){
     val (adapter,pos) = getSpinnerSelected(view)
     if(pos == AdapterView.INVALID_POSITION){
       return
     }
-    val title = adapter.getItem(pos)
-    val message = getResources().getString(R.string.fudaset_confirmdelete,title)
+    val fs = adapter.getItem(pos)
+    val message = getResources().getString(R.string.fudaset_confirmdelete,fs.title)
     Utils.confirmDialog(this,Left(message), _ => {
       val db = Globals.database.get.getWritableDatabase
-      db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(title))
+      db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
       db.close()
-      adapter.remove(title)
+      adapter.remove(fs)
     })
   }
 }
