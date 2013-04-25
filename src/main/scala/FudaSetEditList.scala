@@ -65,7 +65,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
 
   def addItemsToListView(){
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
-    val have_to_read = AllFuda.makeHaveToRead(kimarijis)
+    val have_to_read = TrieUtils.makeHaveToRead(kimarijis)
     val fudalist = AllFuda.list.zipWithIndex.map{ x => new FudaListItem(x._1,x._2+1) }
     val adapter = new ArrayAdapter[FudaListItem](context,R.layout.my_simple_list_item_multiple_choice,fudalist)
     adapter.sort(fudalistitem_comp)
@@ -157,7 +157,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     })
     findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val body = AllFuda.makeKimarijiSetFromNumList(get_num_list()) match {
+        val body = TrieUtils.makeKimarijiSetFromNumList(get_num_list()) match {
           case None => ""
           case Some((s,_)) => s
         }

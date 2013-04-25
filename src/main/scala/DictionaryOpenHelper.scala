@@ -15,10 +15,10 @@ object DbUtils{
     val cv = new ContentValues()
     Utils.withTransaction(db, () => {
       for( (name_id,list) <- AllFuda.goshoku ){
-        AllFuda.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
+        TrieUtils.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
           cv.put("title",context.getResources().getString(name_id))
           cv.put("body",str)
-          val num = AllFuda.makeHaveToRead(str).size
+          val num = TrieUtils.makeHaveToRead(str).size
           cv.put("set_size",new java.lang.Integer(num))
         }})
         db.insert(Globals.TABLE_FUDASETS,null,cv)
@@ -35,7 +35,7 @@ object DbUtils{
         val body = AllFuda.list.filter(cond).map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).mkString(" ")
         cv.put("title",context.getResources().getString(title_id))
         cv.put("body",body)
-        val num = AllFuda.makeHaveToRead(body).size
+        val num = TrieUtils.makeHaveToRead(body).size
         cv.put("set_size",new java.lang.Integer(num))
         db.insert(Globals.TABLE_FUDASETS,null,cv)
       }
@@ -58,7 +58,7 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
         for( i <- 0 until cursor.getCount ){
           val id = cursor.getLong(0)
           val body = cursor.getString(1)
-          val num = AllFuda.makeHaveToRead(body).size
+          val num = TrieUtils.makeHaveToRead(body).size
           db.execSQL("UPDATE "+Globals.TABLE_FUDASETS+" SET set_size = " + num + " WHERE id = " + id + ";")
           cursor.moveToNext
         }

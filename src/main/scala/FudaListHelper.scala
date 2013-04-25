@@ -146,7 +146,7 @@ object FudaListHelper{
     cursor.close()
     dbr.close()
 
-    val haveto_read = AllFuda.makeHaveToRead(body)
+    val haveto_read = TrieUtils.makeHaveToRead(body)
     val skip = AllFuda.list.toSet -- haveto_read
     val dbw = Globals.database.get.getWritableDatabase
     Utils.withTransaction(dbw, ()=>

@@ -83,7 +83,7 @@ trait FudaSetTrait{
     val PATTERN_HIRAGANA = "[あ-ん]+".r
     var text = body_view.getLocalizationText()
     text = AllFuda.replaceFudaNumPattern(text)
-    AllFuda.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
+    TrieUtils.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
   }
   def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val context = this

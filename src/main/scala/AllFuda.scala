@@ -2,7 +2,6 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.text.TextUtils
 import _root_.java.util.regex.PatternSyntaxException
-import scala.collection.mutable
 
 object AllFuda{
   val list:Array[String] = Array(
@@ -175,35 +174,6 @@ object AllFuda{
     }else{
       return r+1
     }
-  }
-  def makeKimarijiSetFromNumList(num_list:List[Int]):Option[(String,Int)] = {
-    makeKimarijiSet(num_list.map(i => AllFuda.list(i-1)))
-  }
-  def makeKimarijiSet(str_list:List[String]):Option[(String,Int)] = {
-    val trie = CreateTrie.makeTrie(AllFuda.list)
-    var st = mutable.Set[String]()
-    for( m <- str_list ){
-      st ++= trie.traversePrefix(m)
-    }
-    if(st.isEmpty){
-      None
-    }else{
-      val excl = AllFuda.list.toSet -- st
-      val kimari = trie.traverseWithout(excl.toSeq).toList
-        .sortWith(AllFuda.compareMusumefusahose).mkString(" ")
-      Some((kimari,st.size))
-    }
-  }
-  def makeHaveToRead(str:String):Set[String] = {
-    var ret = mutable.Set[String]()
-    if(TextUtils.isEmpty(str)){
-      return ret.toSet
-    }
-    val trie = CreateTrie.makeTrie(AllFuda.list)
-    for( s <- str.split(" ") ){
-      ret ++= trie.traversePrefix(s).toSet
-    }
-    return ret.toSet
   }
 
   def replaceFudaNumPattern(str:String):String = {
