@@ -27,8 +27,8 @@
   <string name="karafuda_disabled">Disabled</string>
   <string name="karafuda_unit"></string>
   <string name="karafuda_append_num">No. of Karafuda:</string>
-  <string name="karafuda_randomness_left">&lt;= Random</string>
-  <string name="karafuda_randomness_right">Prefer Urafuda =&gt;</string>
+  <string name="karafuda_urafuda_prob_left">&lt;= Random</string>
+  <string name="karafuda_urafuda_prob_right">Prefer Urafuda =&gt;</string>
   <string name="conf_karafuda">Add Karafuda</string>
   <string name="conf_karafuda_summary">In addition to fuda set, play some fuda randomly.</string>
 
@@ -212,6 +212,7 @@
   <string name="all_read_done">No more fuda to play. Choose shuffle to restart.</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
+  <string name="message_karafuda_num">Karafuda: %d</string>
   <string name="message_readindex_random">Random / %d</string>
 
   <string name="fudaset_title_all">All Fuda</string>

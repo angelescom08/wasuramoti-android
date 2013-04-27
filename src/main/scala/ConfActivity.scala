@@ -105,7 +105,7 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
 class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
-    val rand = view.findViewById(R.id.karafuda_randomness).asInstanceOf[SeekBar]
+    val rand = view.findViewById(R.id.karafuda_urafuda_prob).asInstanceOf[SeekBar]
     val num = view.findViewById(R.id.karafuda_append_num).asInstanceOf[TextView]
     val enable = view.findViewById(R.id.karafuda_enable).asInstanceOf[CheckBox]
     (enable,num,rand)
@@ -130,9 +130,10 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
           }catch{
             case _:NumberFormatException => 0
           })
-        edit.putFloat("karafuda_randomness",rand.getProgress.toFloat/rand.getMax.toFloat)
+        edit.putFloat("karafuda_urafuda_prob",rand.getProgress.toFloat/rand.getMax.toFloat)
         edit.commit
         notifyChangedPublic
+        FudaListHelper.updateSkipList()
       }
 
     }
@@ -147,7 +148,7 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val prefs = Globals.prefs.get
     enable.setChecked(prefs.getBoolean("karafuda_enable",false))
     num.setText(prefs.getInt("karafuda_append_num",0).toString)
-    rand.setProgress((prefs.getFloat("karafuda_randomness",0.5f)*rand.getMax).toInt)
+    rand.setProgress((prefs.getFloat("karafuda_urafuda_prob",0.5f)*rand.getMax).toInt)
     return view
   }
 

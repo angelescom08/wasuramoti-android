@@ -26,8 +26,8 @@
   <string name="karafuda_disabled">無効</string>
   <string name="karafuda_unit">枚</string>
   <string name="karafuda_append_num">枚数:</string>
-  <string name="karafuda_randomness_left">← ランダム</string>
-  <string name="karafuda_randomness_right">裏札優先 →</string>
+  <string name="karafuda_urafuda_prob_left">← ランダム</string>
+  <string name="karafuda_urafuda_prob_right">裏札優先 →</string>
   <string name="conf_karafuda">空札追加</string>
   <string name="conf_karafuda_summary">札セットに加えて何枚かランダムに詠み上げる</string>
 
@@ -194,6 +194,7 @@
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
+  <string name="message_karafuda_num">空札 %d枚</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
 
   <string name="fudaset_title_all">全部の札</string>

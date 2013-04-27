@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.text.TextUtils
 import scala.collection.mutable
 import scala.collection.mutable.Buffer
+import scala.util.Random
 
 class TrieVertex{
   var char:Char = '\0'
@@ -118,5 +119,30 @@ object TrieUtils{
       ret ++= trie.traversePrefix(s).toSet
     }
     return ret.toSet
+  }
+  def makeWeightedKarafuda(fudaset:Set[String],candidate:Set[String]):Seq[(Float,String)] = {
+    val bias = 1.618034f
+    val trie = CreateTrie.makeTrie(fudaset.toSeq)
+    val ura_prob = Globals.prefs.get.getFloat("karafuda_urafuda_prob",0.5f)
+    candidate.map{ s =>
+      var count = -1
+      trie.traverseSingle(s, {_ => count += 1 })
+      val w = math.max(0.0f, bias + (count.toFloat-bias) * ura_prob )
+      (w,s)
+    }.toSeq.sortBy(_._1).reverse // sorting in a descending order makes it faster when choosing random with weight.
+  }
+  def makeKarafuda(fudaset:Set[String],candidate:Set[String], num:Int):Set[String] = {
+    var wlist = makeWeightedKarafuda(fudaset,candidate).toBuffer
+    var weight_sum = wlist.map(_._1).sum
+    val rand = new Random()
+    ( 0 until math.min(num,candidate.size) ).map{ i =>
+      val r = rand.nextDouble * weight_sum
+      var ws = 0.0f
+      val index = math.max(0,wlist.toStream.indexWhere{case(w,s)=>{ws+=w;ws>=r}})
+      val (w,s) = wlist(index)
+      weight_sum -= w
+      wlist.remove(index)
+      s
+    }.toSet
   }
 }

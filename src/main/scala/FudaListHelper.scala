@@ -9,6 +9,7 @@ object FudaListHelper{
   val KEY_CURRENT_INDEX="fuda_current_index"
   var current_index_with_skip = None:Option[Int]
   var numbers_to_read = None:Option[Int]
+  var numbers_of_karafuda = None:Option[Int]
 
   def getCurrentIndex(context:Context):Int = {
     val prefs = context.getSharedPreferences(PREFS_NAME,0)
@@ -37,17 +38,23 @@ object FudaListHelper{
 
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = new java.lang.Integer(getOrQueryNumbersToRead(context))
+    val num_of_kara = getOrQueryNumbersOfKarafuda(context)
     val body = if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
-      context.getResources().getString(R.string.message_readindex_random,num_to_read)
+      context.getResources.getString(R.string.message_readindex_random,num_to_read)
     }else{
       val current_index = new java.lang.Integer(getOrQueryCurrentIndexWithSkip(context))
-      context.getResources().getString(R.string.message_readindex_shuffle,current_index,num_to_read)
+      context.getResources.getString(R.string.message_readindex_shuffle,current_index,num_to_read)
     }
-    (if(num_to_read < AllFuda.list.size){
+    (if(num_to_read == AllFuda.list.size && num_of_kara == 0){
+      ""
+    }else{
       Globals.prefs.get.getString("fudaset","") + "\n"
+    })+
+    (if(num_of_kara > 0){
+      context.getResources.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)) + "\n"
     }else{
       ""
-    })+body
+    }) +body
   }
 
   def allReadDone(context:Context):Boolean = {
@@ -66,9 +73,9 @@ object FudaListHelper{
     }
   }
 
-  def queryNumbersToRead(context:Context):Int = {
+  def queryNumbersToRead(context:Context,cond:String):Int = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"have_to_read > 0 AND num > 0",null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"have_to_read "+cond+" AND num > 0",null,null,null,null,null)
     cursor.moveToFirst()
     val count = cursor.getInt(0)
     cursor.close()
@@ -114,9 +121,39 @@ object FudaListHelper{
     db.close()
     return(ret)
   }
-  def queryRandom(context:Context):Int = {
+
+  def getHaveToReadFromDB(cond:String):Set[String]={
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"have_to_read > 0 AND num > 0",null,null,null,"random()","1")
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"have_to_read "+cond+" AND num > 0",null,null,null,null,null)
+    cursor.moveToFirst
+    val have_to_read = ( 0 until cursor.getCount ).map{ x=>
+      val r = AllFuda.list(cursor.getInt(0)-1)
+      cursor.moveToNext
+      r
+    }.toSet
+    cursor.close
+    db.close
+    have_to_read
+  }
+  def chooseKarafuda():Int={
+    val have_to_read = getHaveToReadFromDB("= 1")
+    val not_read = AllFuda.list.toSet -- have_to_read
+    val kara = TrieUtils.makeKarafuda(have_to_read, not_read, 1)
+    AllFuda.getFudaNum(kara.head)
+  }
+
+  def queryRandom(context:Context):Int = {
+    val num_read = getOrQueryNumbersToRead(context)
+    val num_kara = getOrQueryNumbersOfKarafuda(context)
+    if(num_kara > 0){
+      val rand = new Random()
+      val r = rand.nextDouble * num_read.toDouble
+      if(r < num_kara.toDouble){
+        return chooseKarafuda()
+      }
+    }
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"have_to_read = 1 AND num > 0",null,null,null,"random()","1")
     cursor.moveToFirst()
     val num = cursor.getInt(0)
     cursor.close()
@@ -124,6 +161,9 @@ object FudaListHelper{
     return num
   }
   def shuffle(context:Context){
+    if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
+      updateSkipList()
+    }
     val rand = new Random()
     val shuffled = rand.shuffle( (1 to AllFuda.list.length).toList )
     val db = Globals.database.get.getWritableDatabase
@@ -135,22 +175,35 @@ object FudaListHelper{
       })
     db.close()
   }
-  def updateSkipList(fudaset_title:String){
+  def updateSkipList(title:String=null){
+    val fudaset_title = if(title == null){
+      Globals.prefs.get.getString("fudaset","")
+    }else{
+      title
+    }
     val dbr = Globals.database.get.getReadableDatabase
     var cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
-    var body = ""
-    if( cursor.getCount > 0 ){
+    val have_to_read = if( cursor.getCount > 0 ){
       cursor.moveToFirst()
-      body = cursor.getString(1)
+      val body = cursor.getString(1)
+      TrieUtils.makeHaveToRead(body)
+    }else{
+      AllFuda.list.toSet
     }
     cursor.close()
     dbr.close()
 
-    val haveto_read = TrieUtils.makeHaveToRead(body)
-    val skip = AllFuda.list.toSet -- haveto_read
+    var skip_temp = AllFuda.list.toSet -- have_to_read
+    val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
+      val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
+      TrieUtils.makeKarafuda(have_to_read,skip_temp,kara_num)
+    }else{
+      Set()
+    }
+    val skip = skip_temp -- karafuda
     val dbw = Globals.database.get.getWritableDatabase
     Utils.withTransaction(dbw, ()=>
-      for((ss,flag) <- Array((haveto_read,1),(skip,0))){
+      for((ss,flag) <- Array((karafuda,2),(have_to_read,1),(skip,0))){
         for( s <- ss ){
           val cv = new ContentValues()
           cv.put("have_to_read",new java.lang.Integer(flag))
@@ -160,27 +213,29 @@ object FudaListHelper{
       })
     dbw.close()
     numbers_to_read = None
+    numbers_of_karafuda = None
     current_index_with_skip = None
   }
 
   def getOrQueryCurrentIndexWithSkip(context:Context):Int = {
-    current_index_with_skip match{
-      case Some(x) => x
-      case None => {
-        val r = queryCurrentIndexWithSkip(context)
-        current_index_with_skip = Some(r)
-        r
-      }
+    current_index_with_skip.getOrElse{
+      val r = queryCurrentIndexWithSkip(context)
+      current_index_with_skip = Some(r)
+      r
     }
   }
   def getOrQueryNumbersToRead(context:Context):Int = {
-    numbers_to_read match{
-      case Some(x) => x
-      case None =>{
-        val r = queryNumbersToRead(context)
-        numbers_to_read = Some(r)
-        r
-      }
+    numbers_to_read.getOrElse{
+      val r = queryNumbersToRead(context,"> 0")
+      numbers_to_read = Some(r)
+      r
+    }
+  }
+  def getOrQueryNumbersOfKarafuda(context:Context):Int = {
+    numbers_of_karafuda.getOrElse{
+      val r = queryNumbersToRead(context,"= 2")
+      numbers_of_karafuda = Some(r)
+      r
     }
   }
 }
