@@ -24,6 +24,22 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  
+  override def getAbbrValue():String = {
+    val title = getPersistedString("")
+    if(!TextUtils.isEmpty(title)){
+      val db = Globals.database.get.getReadableDatabase
+      val cursor = db.query(Globals.TABLE_FUDASETS,Array("set_size"),"title = ?",Array(title),null,null,null,null)
+      cursor.moveToFirst
+      val set_size = if(cursor.getCount > 0){ cursor.getInt(0) }else{0}
+      cursor.close
+      db.close
+      title + " ("+set_size+")"
+    }else{
+      ""
+    }
+  }
+
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val pos = spinner.get.getSelectedItemPosition()

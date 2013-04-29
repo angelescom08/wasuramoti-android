@@ -42,10 +42,12 @@ object General {
       -keep class scala.runtime.BooleanRef
       -keep class scala.runtime.BoxedUnit
       -keep class scala.runtime.IntRef
+      -keep class scala.runtime.FloatRef
       -keep class scala.runtime.LongRef
       -keep class scala.runtime.ObjectRef
       -keep class scala.runtime.VolatileIntRef
       -keep class scala.util.matching.Regex
+      -keep class scala.util.Random
       -verbose
       """,
       useProguard in Android := true,
