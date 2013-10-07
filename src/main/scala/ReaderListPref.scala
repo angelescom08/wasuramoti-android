@@ -72,7 +72,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     val state = Environment.getExternalStorageState
     if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
       val expath = Environment.getExternalStorageDirectory
-      Utils.walkDir(expath,5, f =>{
+      Utils.walkDir(expath,4, f =>{
         if(f.getName == Globals.READER_DIR){
           val files = f.listFiles()
           if(files != null){

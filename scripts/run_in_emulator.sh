@@ -1,5 +1,5 @@
 #!/bin/sh
-ROOT=$(hg root)
+ROOT="$(git rev-parse --show-toplevel)"
 alias am_start_main="adb -e shell am start -a android.intent.action.MAIN"
 adb -e uninstall karuta.hpnpwd.wasuramoti
 adb -e install ${ROOT}/wasuramoti-android-*/*.apk

@@ -59,6 +59,14 @@ object Utils {
     }
   }
 
+  def findAncestorViewById(v:View,id:Int):Option[View] = {
+    var cur = v
+    while( cur != null && cur.getId != id ){
+      cur = cur.getParent.asInstanceOf[View]
+    }
+    if(cur == null){None}else{Some(cur)}
+  }
+
   def makeTimerText(context:Context):String = {
      val nt = Globals.notify_timers
      var title = context.getResources.getString(R.string.timers_remaining)

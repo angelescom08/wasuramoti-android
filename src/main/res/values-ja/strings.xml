@@ -212,10 +212,15 @@
   <string name="move_button_next_ten">10個次の札</string>
 
   <string name="timer_minutes_elapsed">分経過しました</string>
+  <string name="timer_unit">分</string>
   <string name="timer_play_sound">音を鳴らす</string>
   <string name="timer_do_vibrate">振動</string>
   <string name="timer_start_button">タイマー開始</string>
   <string name="timer_cancel_button">タイマーキャンセル</string>
+  <string name="timer_sound_name">音: </string>
+  <string name="timer_sound_change">変更</string>
+  <string name="timer_sound_test">テスト</string>
+
   <string name="timers_remaining">タイマー</string>
   <string name="timers_minutes_left">分前</string>
 

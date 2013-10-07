@@ -230,10 +230,15 @@
   <string name="move_button_next_ten">+ 10</string>
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
+  <string name="timer_unit">minutes</string>
   <string name="timer_play_sound">Play Sound</string>
   <string name="timer_do_vibrate">Vibrate</string>
   <string name="timer_start_button">Start Timer</string>
   <string name="timer_cancel_button">Cancel Timer</string>
+  <string name="timer_sound_name">Sound: </string>
+  <string name="timer_sound_change">Change</string>
+  <string name="timer_sound_test">Test</string>
+
   <string name="timers_remaining">Timers</string>
   <string name="timers_minutes_left">min. left</string>
 

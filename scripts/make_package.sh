@@ -4,7 +4,7 @@
 # ${READER_DIR}/<name>/<name>_%03d_{1,2}.ogg - audio file
 # ${READER_DIR}/<name>-licence - copyright and licence of audio file
 
-ROOT="$(hg root)"
+ROOT="$(git rev-parse --show-toplevel)"
 KEYSTORE="${ROOT}/keystore/hpnpwd.keystore"
 READER_DIR="${ROOT}/players/"
 READER_ASSETS="${ROOT}/src/main/assets/reader"
