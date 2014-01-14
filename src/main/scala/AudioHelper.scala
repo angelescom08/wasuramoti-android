@@ -81,21 +81,40 @@ class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbi
   def bufferSizeInBytes():Int = {
     SHORT_BYTE * (index_end - index_begin)
   }
+
+  def boundIndex(x:Int) = {
+    math.min(math.max(0,x),buffer.limit)
+  }
+
   def writeToAudioTrack(track:AudioTrack){
     // Since using ShortBuffer.array() throws UnsupportedOperationException (maybe because we are using FileChannel.map() ?),
     // we use ShortBuffer.get() instead.
-    val b_size = index_end-index_begin
+
+    // Some device raises java.lang.IllegalArgumentException in java.nio.Buffer.position().
+    // The Exception should not be raised if there's no bug in previous procedure such as fade().
+    // However I could not find the bug. Therefore I prevent it by checking the index bound here.
+    // TODO: fix the bug in fade() or some other function which causes IllegalArgumentException here.
+    val ib = boundIndex(index_begin)
+    val ie = boundIndex(index_end)
+
+    val b_size = ie - ib
     val b = new Array[Short](b_size)
-    buffer.position(index_begin)
+
+    buffer.position(ib)
     buffer.get(b,0,b_size)
     buffer.rewind()
     track.write(b,0,b_size)
   }
-  def WriteToShortBuffer(dst:Array[Short], offset:Int):Int = {
-    val b_size = index_end-index_begin
-    buffer.position(index_begin)
-    buffer.get(dst, offset, if(offset+b_size > dst.length){dst.length-offset}else{b_size})
+  def writeToShortBuffer(dst:Array[Short], offset:Int):Int = {
+    // See writeToAudioTrack() why we apply boundIndex()
+    val ib = boundIndex(index_begin)
+    val ie = boundIndex(index_end)
+    val b_base = ie - ib
+    val b_size = math.min( b_base, dst.length-offset )
+    buffer.position(ib)
+    buffer.get(dst, offset, b_size)
     buffer.rewind()
+    // TODO: which should we return: b_base or b_size ?
     return(b_size)
   }
   def threasholdIndex(threashold:Double, fromEnd:Boolean):Int = {

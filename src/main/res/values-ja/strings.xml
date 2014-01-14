@@ -2,6 +2,8 @@
 <resources>
   <string name="app_name">わすらもち</string>
 
+  <string name="error_ioerror">エラー: %s．不要なファイルやアプリを削除して再試行して下さい．</string>
+
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
   <string name="button_help">ヘルプ</string>
@@ -66,10 +68,10 @@
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
   <string-array name="conf_read_order_each_entries">
-    <item>下の句A - 上の句B</item>
-    <item>下の句A - 上の句B - 下の句B</item>
-    <item>上の句A - 下の句A</item>
-    <item>下の句A - 下の句B</item>
+    <item>下の句 - 上の句</item>
+    <item>下の句 - 上の句 - 下の句</item>
+    <item>上の句 - 下の句</item>
+    <item>下の句 - 下の句</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>下-上</item>
@@ -218,7 +220,7 @@
   <string name="timer_start_button">タイマー開始</string>
   <string name="timer_cancel_button">タイマーキャンセル</string>
   <string name="timer_sound_name">音: </string>
-  <string name="timer_sound_change">変更</string>
+  <string name="timer_sound_change">音変更</string>
   <string name="timer_sound_test">テスト</string>
 
   <string name="timers_remaining">タイマー</string>

@@ -73,6 +73,8 @@ class NotifyTimerActivity extends Activity{
       vw.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].setChecked(dv)
       findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
     }
+
+    this.setVolumeControlStream(AudioManager.STREAM_ALARM)
   }
 
   override def onPause(){

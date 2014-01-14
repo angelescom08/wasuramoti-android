@@ -217,7 +217,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         var offset = 0
         audio_queue.foreach{ arg => {
             arg match {
-              case Left(w) => offset += w.WriteToShortBuffer(buf,offset)
+              case Left(w) => offset += w.writeToShortBuffer(buf,offset)
               case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
               }
           }
@@ -343,14 +343,27 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
             2
           }
           if(reader.exists(read_num,kami_simo)){
-            reader.withDecodedWav(read_num, kami_simo, wav => {
-               wav.trimFadeIn()
-               wav.trimFadeOut()
-               add_to_audio_queue(Left(wav))
-               if(Globals.IS_DEBUG){
-                 KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
-               }
-            })
+            try{
+              reader.withDecodedWav(read_num, kami_simo, wav => {
+                 wav.trimFadeIn()
+                 wav.trimFadeOut()
+                 add_to_audio_queue(Left(wav))
+                 if(Globals.IS_DEBUG){
+                   KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
+                 }
+              })
+            }catch{
+              // Some device throws 'No space left on device' here
+              case e:java.io.IOException => {
+                activity.runOnUiThread(new Runnable{
+                    override def run(){
+                      val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
+                      Utils.messageDialog(activity,Left(msg),{_=>throw e})
+                    }
+                })
+                return Right(new OggDecodeFailException("ogg decode failed with IOException:"+e.getMessage))
+              }
+            }
             if( i != ss.length - 1 ){
               add_to_audio_queue(Right(span_simokami))
             }

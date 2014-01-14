@@ -113,6 +113,7 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
       Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
     }
     setLongClickButtons()
+    this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
   }
   override def onSaveInstanceState(instanceState: Bundle){
     // Sending HashMap in Bundle across the Activity using Serializable does not work.

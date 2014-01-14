@@ -2,6 +2,8 @@
 <resources>
   <string name="app_name">Wasuramoti</string>
 
+  <string name="error_ioerror">Error: %s. Try again after deleting unnecessary files/apps.</string>
+
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
   <string name="button_help">Help</string>
@@ -62,12 +64,12 @@
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">Detail</string>
   <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
-  <string name="conf_read_order_each_summary">Lower twice, upper to lower, and only lower.</string>
+  <string name="conf_read_order_each_summary">`Upper` means the first half of the poem, and `Lower` means the rest of it.</string>
   <string-array name="conf_read_order_each_entries">
-    <item>Lower A - Uppper B</item>
-    <item>Lower A - Uppper B - Lower B</item>
-    <item>Upper A - Lower A</item>
-    <item>Lower A - Lower B</item>
+    <item>Lower - Upper</item>
+    <item>Lower - Upper - Lower</item>
+    <item>Upper - Lower</item>
+    <item>Lower - Lower</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>L-U</item>
