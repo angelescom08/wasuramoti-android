@@ -10,6 +10,7 @@ object AndroidBuild extends Build{
     versionCode := 36,
     scalaVersion := "2.10.2",
     platformName := "android-16",
+    keyalias := "techkey",
     libraryDependencies ++= Seq(
       "com.android.support" % "support-v4" % "19.0.1",
       aarlib("com.android.support" % "appcompat-v7" % "19.0.1")

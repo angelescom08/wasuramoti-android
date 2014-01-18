@@ -2,17 +2,18 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
 android:versionName="0.7.8" android:versionCode="36" >
-<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" ></uses-sdk>
+    <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11" ></uses-sdk>
     <application android:icon="@drawable/animals_dolphin" android:label="@string/app_name">
         <receiver android:name=".NotifyTimerReceiver" />
         <!-- In order to use startActivityForResult, launchMode must not be settled to singleInstance -->
-        <activity android:launchMode="singleTask" android:label="@string/app_name" android:name=".WasuramotiActivity" android:configChanges="orientation|keyboardHidden" >
+        <activity android:launchMode="singleTask" android:label="@string/app_name" android:name=".WasuramotiActivity" android:configChanges="orientation|keyboardHidden" android:theme="@style/Theme.AppCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
-        <activity android:launchMode="singleInstance" android:name=".ConfActivity" android:configChanges="orientation|keyboardHidden"/>
+        <activity android:launchMode="singleTop" android:name=".ConfActivity" android:configChanges="orientation|keyboardHidden"/>
         <activity android:launchMode="singleTop" android:name=".NotifyTimerActivity" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden"/>
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />

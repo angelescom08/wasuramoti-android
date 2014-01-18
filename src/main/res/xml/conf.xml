@@ -35,11 +35,6 @@
       android:summary="@string/conf_audio_volume_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <karuta.hpnpwd.wasuramoti.EqualizerPreference
-      android:key="effect_equalizer_seq"
-      android:title="@string/conf_equalizer"
-      android:summary="@string/conf_equalizer_summary"
-      />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_auto">
     <CheckBoxPreference
@@ -78,12 +73,7 @@
     android:key="conf_others"
     android:title="@string/subscreen_others"
     android:persistent="false">
-    <PreferenceCategory android:title="@string/category_misc">
-      <CheckBoxPreference
-        android:key="skip_on_longclick"
-        android:title="@string/conf_skip_on_longclick"
-        android:summary="@string/conf_skip_on_longclick_summary"
-        />
+    <PreferenceCategory android:title="@string/category_time">
       <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
         android:key="wav_begin_read"
         android:title="@string/conf_wav_begin_read"
@@ -111,22 +101,13 @@
         android:widgetLayout="@layout/conf_current_value"
         unit="@string/conf_unit_minute"
         />
-      <CheckBoxPreference
-        android:key="silent_mode_on_start"
-        android:title="@string/conf_silent_mode_on_start"
-        android:summary="@string/conf_silent_mode_on_start_summary"
-        />
-      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
-        android:key="audio_track_mode"
-        android:title="@string/conf_audio_track_mode"
-        android:summary="@string/conf_audio_track_mode_summary"
-        android:entries="@array/conf_audio_track_entries"
-        android:entryValues="@array/conf_audio_track_entryValues"
-        android:defaultValue="STATIC"
-        android:widgetLayout="@layout/conf_current_value"
-        />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_processing">
+      <karuta.hpnpwd.wasuramoti.EqualizerPreference
+        android:key="effect_equalizer_seq"
+        android:title="@string/conf_equalizer"
+        android:summary="@string/conf_equalizer_summary"
+        />
       <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
         android:key="wav_threashold"
         android:title="@string/conf_wav_threshold"
@@ -153,6 +134,27 @@
         android:defaultValue="0.1"
         android:widgetLayout="@layout/conf_current_value"
         unit="@string/conf_unit_second"
+        />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_misc">
+      <CheckBoxPreference
+        android:key="skip_on_longclick"
+        android:title="@string/conf_skip_on_longclick"
+        android:summary="@string/conf_skip_on_longclick_summary"
+        />
+      <CheckBoxPreference
+        android:key="silent_mode_on_start"
+        android:title="@string/conf_silent_mode_on_start"
+        android:summary="@string/conf_silent_mode_on_start_summary"
+        />
+      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+        android:key="audio_track_mode"
+        android:title="@string/conf_audio_track_mode"
+        android:summary="@string/conf_audio_track_mode_summary"
+        android:entries="@array/conf_audio_track_entries"
+        android:entryValues="@array/conf_audio_track_entryValues"
+        android:defaultValue="STATIC"
+        android:widgetLayout="@layout/conf_current_value"
         />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_init">

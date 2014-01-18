@@ -6,13 +6,14 @@ import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,Parcelable}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.widget.Button
+import _root_.android.support.v7.app.ActionBarActivity
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
 
-class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebugTrait{
+class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
   val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
   var release_lock = None:Option[Unit=>Unit]
@@ -46,13 +47,12 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
     }
   }
 
-  override def onCreateOptionsMenu(menu: Menu) : Boolean = {
-    super.onCreateOptionsMenu(menu)
-    val inflater = getMenuInflater()
+  override def onCreateOptionsMenu(menu: Menu):Boolean = {
+    val inflater = getMenuInflater
     inflater.inflate(R.menu.main, menu)
-    return true
+    super.onCreateOptionsMenu(menu)
   }
-  override def onOptionsItemSelected(item: MenuItem) : Boolean = {
+  override def onOptionsItemSelected(item: MenuItem):Boolean = {
     Globals.player.foreach(_.stop())
     timer_autoread.foreach(_.cancel())
     timer_autoread = None
@@ -112,7 +112,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
       // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code.
       Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
     }
-    setLongClickButtons()
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
   }
   override def onSaveInstanceState(instanceState: Bundle){
@@ -221,17 +220,6 @@ class WasuramotiActivity extends Activity with MainButtonTrait with ActivityDebu
       },dimlock_millisec)
     }
   }
-  def setLongClickButtons(){
-    for(i <- Array(R.id.read_button_top,R.id.read_button_bottom)){
-      val btn = findViewById(i).asInstanceOf[Button]
-      btn.setOnLongClickListener(new View.OnLongClickListener(){
-          override def onLongClick(v:View):Boolean = {
-            openOptionsMenu()
-            return true
-          }
-        })
-    }
-  }
   def setLongClickButtonOnResume(){
     val btn = findViewById(R.id.read_button).asInstanceOf[Button]
     btn.setOnLongClickListener(
@@ -319,12 +307,14 @@ trait ActivityDebugTrait{
   self:WasuramotiActivity =>
   def showBottomInfo(key:String,value:String){
     if(Globals.IS_DEBUG){
-      val btn = findViewById(R.id.read_button_bottom).asInstanceOf[Button]
-      var found = false
-      val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
-        case Array(k,v)=>(k,v)
-      }.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")
-      btn.setText(txt)
+      // Since button in the bottom is deleted, the following code does not work anymore
+      // TODO: show following `txt` in somewhere else
+      //val btn = findViewById(R.id.read_button_bottom).asInstanceOf[Button]
+      //var found = false
+      //val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
+      //  case Array(k,v)=>(k,v)
+      //}.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")
+      //btn.setText(txt)
     }
   }
   def showAudioLength(len:Long){

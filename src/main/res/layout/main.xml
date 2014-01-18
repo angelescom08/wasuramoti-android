@@ -5,35 +5,14 @@
               android:orientation="vertical"
               android:weightSum="1.0"
               >
-    <Button
-            android:id="@+id/read_button_top"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
-            android:onClick="onMainButtonClick"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:contentDescription="ReadButtonTop"
-            />
     <Button android:id="@+id/read_button"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.8"
-            android:text="Push Here"
+            android:layout_height="fill_parent"
+            android:text="Press Here"
             android:textSize="36dp"
             android:onClick="onMainButtonClick"
             android:background="@android:color/black"
             android:textColor="@android:color/white"
             android:contentDescription="ReadButton"
-            />
-    <Button
-            android:id="@+id/read_button_bottom"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
-            android:onClick="onMainButtonClick"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:contentDescription="ReadButtonBottom"
             />
 </LinearLayout>

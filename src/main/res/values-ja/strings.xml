@@ -5,7 +5,7 @@
   <string name="error_ioerror">エラー: %s．不要なファイルやアプリを削除して再試行して下さい．</string>
 
   <string name="button_ok">OK</string>
-  <string name="button_cancel">キャンセル</string>
+  <string name="button_cancel">取り消し</string>
   <string name="button_help">ヘルプ</string>
   <string name="button_config">設定</string>
   <string name="now_playing">再生中</string>
@@ -105,6 +105,7 @@
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>
   <string name="category_misc">色々</string>
+  <string name="category_time">時間</string>
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
   <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
   <string name="conf_wav_begin_read">詠み始め</string>
@@ -225,7 +226,7 @@
   <string name="timer_play_sound">音を鳴らす</string>
   <string name="timer_do_vibrate">振動</string>
   <string name="timer_start_button">タイマー開始</string>
-  <string name="timer_cancel_button">タイマーキャンセル</string>
+  <string name="timer_cancel_button">タイマー取り消し</string>
   <string name="timer_sound_name">音: </string>
   <string name="timer_sound_change">音変更</string>
   <string name="timer_sound_test">テスト</string>

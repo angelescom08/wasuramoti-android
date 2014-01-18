@@ -32,9 +32,10 @@ done
 ln -s "${READER_DIR}"/$1 "${READER_ASSETS}"
 cd ${ROOT}
 
-sbt apk || die compile FAILED
+# sbt release generates jarsigned and zipaligned apk
+sbt aarlib-dependencies release || die compile FAILED
 
-APK_FILE=$(ls ${ROOT}/target/wasuramoti-compile-*.apk)
+APK_FILE=$(ls ${ROOT}/target/wasuramoti-signed-*.apk)
 if [ $? -ne 0 ];then
   exit
 fi
@@ -47,16 +48,18 @@ if [ ! "${READER}" ];then
   exit
 fi
 
-VERSION=$(echo "${APK_FILE}" | sed -re 's!.*/wasuramoti-compile-(.*).apk!\1!')
+VERSION=$(echo "${APK_FILE}" | sed -re 's!.*/wasuramoti-signed-(.*).apk!\1!')
 TARGET_DIR="${TARGET_BASE}/wasuramoti-android-${READER}-${VERSION}"
 if [ -e "${TARGET_DIR}" ];then
   rm -rf "${TARGET_DIR}"
 fi
 mkdir "${TARGET_DIR}"
-jarsigner -verbose -keystore "${KEYSTORE}" "${APK_FILE}" techkey || die jarsigner FAILED
+
 TARGET_FILE="${TARGET_DIR}/wasuramoti-${READER}-${VERSION}.apk"
-zipalign -v 4 "${APK_FILE}" "${TARGET_FILE}" || die zipalign FAILED
-echo "${TARGET_FILE} created"
+
+cp -f "${APK_FILE}" "${TARGET_FILE}"
+echo "copied to ${TARGET_FILE}"
+
 cat "${ROOT}/README" | sed -e "/__WRITE_AUDIO_LICENCE_HERE__/{
 r ${AUDIO_LICENCE}
 d
