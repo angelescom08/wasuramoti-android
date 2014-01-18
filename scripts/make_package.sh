@@ -32,9 +32,9 @@ done
 ln -s "${READER_DIR}"/$1 "${READER_ASSETS}"
 cd ${ROOT}
 
-sbt android:package-release || die compile FAILED
+sbt apk || die compile FAILED
 
-APK_FILE=$(ls ${ROOT}/target/wasuramoti-*.apk)
+APK_FILE=$(ls ${ROOT}/target/wasuramoti-compile-*.apk)
 if [ $? -ne 0 ];then
   exit
 fi
@@ -47,7 +47,7 @@ if [ ! "${READER}" ];then
   exit
 fi
 
-VERSION=$(echo "${APK_FILE}" | sed -re 's!.*/wasuramoti-(.*).apk!\1!')
+VERSION=$(echo "${APK_FILE}" | sed -re 's!.*/wasuramoti-compile-(.*).apk!\1!')
 TARGET_DIR="${TARGET_BASE}/wasuramoti-android-${READER}-${VERSION}"
 if [ -e "${TARGET_DIR}" ];then
   rm -rf "${TARGET_DIR}"
