@@ -7,8 +7,11 @@
   <string name="button_ok">OK</string>
   <string name="button_cancel">キャンセル</string>
   <string name="button_help">ヘルプ</string>
+  <string name="button_config">設定</string>
   <string name="now_playing">再生中</string>
   <string name="now_decoding">準備中</string>
+  <string name="now_searching">検索中</string>
+
 
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
@@ -40,7 +43,11 @@
     <item>ランダム</item>
   </string-array>
   <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加する方法はヘルプを押すと表示されます</string>
+  <string name="conf_reader_list_summary">追加する方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
+  <string name="scan_reader_title">探索対象パス</string>
+  <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
+  <string name="scan_reader_addition">上記に加えてこの下のテキストボックスに入力したパスもスキャンします</string>
+  <string name="scan_reader_invalid_path">テキストボックスに入力されたパスはディレクトリではありません</string>
 
   <string name="conf_audio_volume">音量</string>
   <string name="conf_audio_volume_summary">詠み上げ時の端末の音量</string>
@@ -183,7 +190,7 @@
     </p>
     <h3>配置方法</h3>
     <p>
-    (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．
+    (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
     </p>
     <p>
     (2) そのフォルダの下に <tt><font color="#FFFF00">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．

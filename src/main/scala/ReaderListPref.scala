@@ -1,13 +1,17 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.collection.mutable.Buffer
+import scala.collection.JavaConversions.bufferAsJavaList
 
 import _root_.android.preference.ListPreference
 import _root_.android.content.{Context,DialogInterface}
 import _root_.android.util.AttributeSet
-import _root_.android.app.AlertDialog
-import _root_.android.os.Environment
+import _root_.android.app.{AlertDialog,ProgressDialog,Activity}
+import _root_.android.os.{Environment,AsyncTask}
+import _root_.android.view.Gravity
+import _root_.android.widget.ArrayAdapter
 import _root_.java.io.{IOException,File,FileOutputStream}
+import _root_.java.util.ArrayList
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 object ReaderList{
@@ -34,13 +38,83 @@ object ReaderList{
   def makeReader(context:Context,path:String):Reader = {
     if(path.startsWith("INT:")){
       new Asset(context,path.replaceFirst("INT:",""))
-    }else{
+    }else if(path.startsWith("EXT:")){
       new External(context,path.replaceFirst("EXT:","").replaceFirst("/<>/","/"+Globals.READER_DIR+"/"))
+    }else{
+      new Absolute(context,path.replaceFirst("ABS:","").replaceFirst("/<>/","/"+Globals.READER_DIR+"/"))
     }
   }
 }
 
 class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs) with PreferenceCustom{
+  var adapter = None:Option[ArrayAdapter[CharSequence]]
+  class SearchDirectoryTask extends AsyncTask[AnyRef,Void,Boolean] {
+    var progress = None:Option[ProgressDialog]
+    override def onPreExecute(){
+      if(context.isInstanceOf[Activity]){
+        val activity = context.asInstanceOf[Activity]
+        activity.runOnUiThread(new Runnable{
+            override def run(){
+              if(!activity.isFinishing){
+                val dlg = new ProgressDialog(activity)
+                dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_searching))
+                dlg.getWindow.setGravity(Gravity.BOTTOM)
+                dlg.show
+                progress = Some(dlg)
+              }
+            }
+          })
+      }
+    }
+    override def onPostExecute(rval:Boolean){
+      if(context.isInstanceOf[Activity]){
+        context.asInstanceOf[Activity].runOnUiThread(new Runnable{
+            override def run(){
+              progress.foreach(_.dismiss())
+            }
+          })
+      }
+    } 
+    override def doInBackground(unused:AnyRef*):Boolean = {
+      val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom()
+      for(path <- paths){
+        Utils.walkDir(path,Globals.READER_SCAN_DEPTH_MAX, f =>{
+          if(f.getName == Globals.READER_DIR){
+            val files = f.listFiles()
+            if(files != null){
+              var entvals = getEntryValues
+              var entries = getEntries
+              val buf = Buffer[CharSequence]()
+              for( i <- files if i.isDirectory() && ! entries.contains(i.getName)){
+                entvals :+= (if(path == Environment.getExternalStorageDirectory){
+                              "EXT:"+i.getAbsolutePath.replaceFirst("^"+path,"").replaceFirst("/"+Globals.READER_DIR+"/","/<>/")
+                            }else{
+                              "ABS:"+i.getAbsolutePath.replaceFirst("/"+Globals.READER_DIR+"/","/<>/")
+                            })
+                entries :+= i.getName
+                buf += i.getName
+              }
+              setEntries(entries)
+              setEntryValues(entvals)
+              context.asInstanceOf[Activity].runOnUiThread(new Runnable{
+                  override def run(){
+                    adapter.foreach{x=>
+                     for(i <- buf){
+                       x.add(i)
+                     }
+                     x.notifyDataSetChanged()
+                   }
+                  }
+                })
+            }
+          }}
+        )
+      }
+    
+      true
+    }
+  }
+
   override def getAbbrValue():String = {
     val path = getValue()
     if(path.startsWith("INT:")){
@@ -69,27 +143,15 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       entvals += "INT:"+i
       entries += i
     }
-    val state = Environment.getExternalStorageState
-    if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
-      val expath = Environment.getExternalStorageDirectory
-      Utils.walkDir(expath,4, f =>{
-        if(f.getName == Globals.READER_DIR){
-          val files = f.listFiles()
-          if(files != null){
-            for( i <- files if i.isDirectory() ){
-              entvals += "EXT:"+i.getAbsolutePath.replaceFirst("^"+expath,"").replaceFirst("/"+Globals.READER_DIR+"/","/<>/")
-              entries += i.getName
-            }
-          }
-        }}
-      )
-    }
     setEntries(entries.toArray)
     setEntryValues(entvals.toArray)
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,bufferAsJavaList(entries)))
+    builder.setAdapter(adapter.get,null)
+    new SearchDirectoryTask().execute(new AnyRef())
 
-    builder.setNeutralButton(R.string.button_help, new DialogInterface.OnClickListener(){
+    builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          Utils.generalHtmlDialog(context,R.string.how_to_add_reader_html)
+          new ScanReaderConfDialog(context).show
         }
       })
 
@@ -158,16 +220,27 @@ class Asset(context:Context,path:String) extends Reader(context,path){
     temp_file.delete()
   }
 }
-class External(context:Context,path:String) extends Reader(context,path){
-  def getFile(num:Int, kamisimo:Int):File = {
-    val dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
-    val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
-    return(file)
-  }
+abstract class ExtAbsBase(context:Context,path:String) extends Reader(context,path){
+  def getFile(num:Int,kamisimo:Int):File
+
   override def exists(num:Int, kamisimo:Int):Boolean = {
     getFile(num,kamisimo).exists()
   }
   override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
     func(getFile(num,kamisimo))
+  }
+}
+class External(context:Context,path:String) extends ExtAbsBase(context,path){
+  override def getFile(num:Int, kamisimo:Int):File = {
+    val dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+path)
+    val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
+    return(file)
+  }
+}
+class Absolute(context:Context,path:String) extends ExtAbsBase(context,path){
+  override def getFile(num:Int, kamisimo:Int):File = {
+    val dir = new File(path)
+    val file = new File(dir.getAbsolutePath+"/"+addSuffix(dir.getName(),num,kamisimo))
+    return(file)
   }
 }

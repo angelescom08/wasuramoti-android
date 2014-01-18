@@ -1,7 +1,7 @@
 <manifest 
 xmlns:android="http://schemas.android.com/apk/res/android"
 package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
-android:versionName="0.7.7" android:versionCode="35" >
+android:versionName="0.7.8" android:versionCode="36" >
 <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" ></uses-sdk>
     <application android:icon="@drawable/animals_dolphin" android:label="@string/app_name">
         <receiver android:name=".NotifyTimerReceiver" />
@@ -16,4 +16,5 @@ android:versionName="0.7.7" android:versionCode="35" >
         <activity android:launchMode="singleTop" android:name=".NotifyTimerActivity" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden"/>
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

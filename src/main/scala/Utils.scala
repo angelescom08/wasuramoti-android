@@ -1,11 +1,12 @@
 package karuta.hpnpwd.wasuramoti
 
+import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
 import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
 import _root_.android.text.{TextUtils,Html}
-import _root_.android.os.Handler
+import _root_.android.os.{Environment,Handler}
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View}
 import _root_.android.widget.{TextView,Button}
@@ -29,6 +30,7 @@ object Globals {
   val CACHE_SUFFIX_OGG = "_copied.ogg"
   val CACHE_SUFFIX_WAV = "_decoded.wav"
   val HEAD_SILENCE_LENGTH = 200 // in milliseconds
+  val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
   val notify_timers = new mutable.HashMap[Int,Intent]()
   var database = None:Option[DictionaryOpenHelper]
@@ -122,7 +124,7 @@ object Utils {
   def generalHtmlDialog(context:Context,html_id:Int){
     val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = context.getResources().getString(html_id)
+    val html = context.getResources.getString(html_id)
     view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView].setText(Html.fromHtml(html))
     builder.setView(view)
     builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
@@ -130,6 +132,46 @@ object Utils {
         }
       });
     builder.create.show()
+  }
+  // Android's Environment.getExternalStorageDirectory does not actually return external SD card's path.
+  // Thus we have to explore where the mount point of SD card is by owr own.
+  // There are several ways to do this , and there seems no best way
+  // (1) Read environment variables such SECONDARY_STORAGE -> not useful since the name of varibale varies between devices.
+  // (2) Parse /system/etc/vold.fstab -> cannot use since Android 4.3 because it is removed.
+  // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> maybe good.
+  // We use third method
+  // see follwing for more infos: 
+  //   http://source.android.com/devices/tech/storage/
+  //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
+  //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0
+  //   https://code.google.com/p/wagic/source/browse/trunk/projects/mtg/Android/src/net/wagic/utils/StorageOptions.java
+  def getAllExternalStorageDirectories():Set[File] = {
+    val ret = mutable.Set[File]()
+    val state = Environment.getExternalStorageState
+    if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
+      ret += Environment.getExternalStorageDirectory
+    }
+    try{
+      for(line <- Source.fromFile("/proc/mounts").getLines){
+        val buf = line.split(" ")
+        // currently we assume that SD card is vfat
+        if(buf.length >= 3 && buf(2) == "vfat"){
+          ret += new File(buf(1))
+        }
+      }
+    }catch{
+      case _:java.io.FileNotFoundException => None
+    }
+    ret.toSet
+  }
+
+  def getAllExternalStorageDirectoriesWithUserCustom():Set[File] = {
+    val dirs = mutable.Set(getAllExternalStorageDirectories.toArray:_*)
+    val user_path = Globals.prefs.get.getString("scan_reader_additional","")
+    if(!TextUtils.isEmpty(user_path)){
+      dirs += new File(user_path).getCanonicalFile
+    }
+    dirs.toSet[File]
   }
 
   def walkDir(cur:File,depth:Int,func:(File)=>Unit){

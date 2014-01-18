@@ -7,9 +7,11 @@
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
   <string name="button_help">Help</string>
+  <string name="button_config">Config</string>
   <string name="button_invert"><![CDATA[&spades;]]></string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
+  <string name="now_searching">Searching</string>
 
   <string name="menu_shuffle">Shuffle</string>
   <string name="menu_shuffle_confirm">Really shuffle and restart from beginning?</string>
@@ -46,7 +48,11 @@
   </string-array>
 
   <string name="conf_reader_list">Reader</string>
-  <string name="conf_reader_list_summary">Press `Help` to show how to add new audio file.</string>
+  <string name="conf_reader_list_summary">Press `Config`-&gt;`Help` to see how to add new audio file.</string>
+  <string name="scan_reader_title">Scan Path</string>
+  <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
+  <string name="scan_reader_addition">In addition to paths above, we scan the following path in text box. </string>
+  <string name="scan_reader_invalid_path">The path in text box is not a valid directory. </string>
 
   <string name="conf_audio_volume">Volume</string>
   <string name="conf_audio_volume_summary">Set audio volume of device when playing.</string>
@@ -201,7 +207,7 @@
     </p>
     <h3>Where to Place</h3>
     <p>
-    (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage.
+    (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
     </p>
     <p>
     (2) Make folder named <tt><font color="#FFFF00">[Reader]</font></tt>, and place 202 ogg files in it.

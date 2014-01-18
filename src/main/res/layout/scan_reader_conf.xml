@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true" >
+<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:id="@+id/scan_reader"
+              android:orientation="vertical" >
+  <LinearLayout
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <Button android:id="@+id/button_help"
+      android:layout_width="96sp" android:layout_height="wrap_content"
+      android:text="@string/button_help" />
+    <Button android:id="@+id/button_ok"
+      android:layout_width="96sp" android:layout_height="wrap_content"
+      android:text="@string/button_ok" />
+    <Button android:id="@+id/button_cancel"
+      android:layout_width="96sp" android:layout_height="wrap_content"
+      android:text="@string/button_cancel" />
+  </LinearLayout>
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/scan_reader_description" />
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/scan_reader_list"
+    />
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/scan_reader_addition"
+    />
+   <EditText
+    android:layout_width="300sp"
+    android:layout_height="wrap_content"
+    android:id="@+id/scan_reader_additional" />
+</LinearLayout>
+</ScrollView>

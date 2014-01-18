@@ -276,11 +276,12 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
 
           //We have to check whether activity is in finishing phase or not to avoid the following error:
           //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@XXXXXXXX is not valid; is your activity running?
-          if(!activity.isFinishing()){
-            progress = Some(new ProgressDialog(activity))
-            progress.get.setMessage(activity.getApplicationContext().getResources.getString(R.string.now_decoding))
-            progress.get.getWindow.setGravity(Gravity.BOTTOM)
-            progress.get.show()
+          if(!activity.isFinishing){
+            val dlg = new ProgressDialog(activity)
+            dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_decoding))
+            dlg.getWindow.setGravity(Gravity.BOTTOM)
+            dlg.show
+            progress = Some(dlg)
           }
         }
       })
