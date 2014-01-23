@@ -2,7 +2,7 @@
 <resources>
   <string name="app_name">Wasuramoti</string>
 
-  <string name="error_ioerror">Error: %s. Try again after deleting unnecessary files/apps.</string>
+  <string name="error_ioerror">Error: %s. Try again after deleting unnecessary files/apps. Please contact us if this occurs frequently.</string>
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">Cancel</string>
@@ -154,12 +154,12 @@
   <string name="confirm_init_preference">Really Initialize all the config except fuda sets?</string>
 
   <!-- FUDASET_EDIT -->
-  <string name="fudaset_add">Add</string>
+  <string name="fudaset_new">New</string>
   <string name="fudaset_delete">Delete</string>
   <string name="fudaset_edit">Edit</string>
 
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
-  <string name="fudasetedit_title">Add/Edit Fuda sets</string>
+  <string name="fudasetedit_title">New/Edit Fuda sets</string>
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[

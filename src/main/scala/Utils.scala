@@ -97,11 +97,11 @@ object Utils {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    builder.setMessage(str).setPositiveButton("YES",new DialogInterface.OnClickListener(){
+    builder.setMessage(str).setPositiveButton(context.getResources.getString(android.R.string.yes),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
         }
-      }).setNegativeButton("NO",new DialogInterface.OnClickListener(){
+      }).setNegativeButton(context.getResources.getString(android.R.string.no),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_no()
         }
@@ -114,21 +114,22 @@ object Utils {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    builder.setMessage(str).setPositiveButton("OK",new DialogInterface.OnClickListener(){
+    builder.setMessage(str).setPositiveButton(context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_done()
         }
       }).create.show()
   }
 
-  def generalHtmlDialog(context:Context,html_id:Int){
+  def generalHtmlDialog(context:Context,html_id:Int,func_done:Unit=>Unit=identity[Unit]){
     val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
     val html = context.getResources.getString(html_id)
     view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView].setText(Html.fromHtml(html))
     builder.setView(view)
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+    builder.setPositiveButton(context.getResources.getString(android.R.string.ok), new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
+          func_done()
         }
       });
     builder.create.show()
@@ -333,5 +334,8 @@ object Utils {
         case Some(x) => "%.3f" format x
       }).mkString(",")
   }
+}
+
+class AlreadyReportedException(s:String) extends Exception(s){
 }
 

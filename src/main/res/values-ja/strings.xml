@@ -2,7 +2,7 @@
 <resources>
   <string name="app_name">わすらもち</string>
 
-  <string name="error_ioerror">エラー: %s．不要なファイルやアプリを削除して再試行して下さい．</string>
+  <string name="error_ioerror">エラー: %s．不要なファイルやアプリを削除して再試行して下さい．それでも起きる場合はその状況や頻度を報告してくれると助かります．</string>
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">取り消し</string>
@@ -135,12 +135,12 @@
   <string name="conf_init_preference_summary">札セット以外の設定を全て初期化</string>
   <string name="confirm_init_preference">本当に札セット以外の設定を全て初期化しますか？</string>
   <!-- FUDASET_EDIT -->
-  <string name="fudaset_add">追加</string>
+  <string name="fudaset_new">新規</string>
   <string name="fudaset_delete">削除</string>
   <string name="fudaset_edit">編集</string>
 
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
-  <string name="fudasetedit_title">札セットの追加/編集</string>
+  <string name="fudasetedit_title">札セットの作成/編集</string>
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_help_html">
     <![CDATA[

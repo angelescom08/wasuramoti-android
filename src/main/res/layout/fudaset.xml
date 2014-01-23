@@ -15,11 +15,11 @@
               android:orientation="horizontal" >
 
      <Button
-            android:id="@+id/button_add"
+            android:id="@+id/button_new"
             android:layout_height="wrap_content"
             android:layout_width="96sp"
-            android:text="@string/fudaset_add"
-            android:onClick="addFudaSet"
+            android:text="@string/fudaset_new"
+            android:onClick="newFudaSet"
             android:layout_alignParentTop="true"
             />
      <Button
@@ -28,7 +28,7 @@
             android:text="@string/fudaset_edit"
             android:onClick="editFudaSet"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/button_add"
+            android:layout_toRightOf="@id/button_new"
             />
      <Button
             android:layout_height="wrap_content"

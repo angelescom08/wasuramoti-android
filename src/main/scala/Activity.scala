@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.Activity
+import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,Parcelable}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager}
-import _root_.android.widget.Button
+import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewGroup}
+import _root_.android.widget.{ImageView,Button,RelativeLayout}
 import _root_.android.support.v7.app.ActionBarActivity
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
@@ -16,6 +16,7 @@ import scala.collection.mutable
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
   val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
+  var haseo_count = 0
   var release_lock = None:Option[Unit=>Unit]
   var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
@@ -68,6 +69,47 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       case R.id.menu_move => new MovePositionDialog(this,_=>refreshAndSetButton()).show
       case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
+      case android.R.id.home => {
+        // android.R.id.home is returned when the Icon is clicked if we are using android.support.v7.app.ActionBarActivity
+        if(haseo_count < 3){
+          haseo_count += 1
+        }else{
+          val layout = new RelativeLayout(this)
+          val builder = new AlertDialog.Builder(this)
+          val iv = new ImageView(this)
+          iv.setImageResource(R.drawable.hasewo)
+          iv.setAdjustViewBounds(true)
+          iv.setScaleType(ImageView.ScaleType.FIT_XY)
+          val metrics = getResources.getDisplayMetrics
+          val maxw = metrics.widthPixels
+          val maxh = metrics.heightPixels
+          val width = iv.getDrawable.getIntrinsicWidth
+          val height = iv.getDrawable.getIntrinsicHeight
+          val ratio = width.toDouble/height.toDouble
+          val OCCUPY_IN_SCREEN = 0.9
+          val Array(tw,th) = (if(maxw/ratio < maxh){
+            Array(maxw,maxw/ratio)
+          }else{
+            Array(maxh*ratio,maxh)
+          })
+          val Array(neww,newh) = (for (i <- Array(tw,th))yield (i*OCCUPY_IN_SCREEN).toInt)
+          val params = new RelativeLayout.LayoutParams(neww,newh)
+          params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+          iv.setLayoutParams(params)
+          layout.addView(iv)
+          builder.setView(layout)
+          val dialog = builder.create
+          dialog.show
+          // we have to get attributes after show()
+          val dparams = dialog.getWindow.getAttributes
+          dparams.height = newh
+          dparams.width = neww
+          dialog.getWindow.setAttributes(dparams)
+          haseo_count = 0
+        }
+      }
+
+      case _ => {}
     }
     return true
   }
@@ -323,3 +365,4 @@ trait ActivityDebugTrait{
     }
   }
 }
+

@@ -5,19 +5,6 @@
 <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
               android:id="@+id/scan_reader"
               android:orientation="vertical" >
-  <LinearLayout
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:orientation="horizontal" >
-    <Button android:id="@+id/button_help"
-      android:layout_width="96sp" android:layout_height="wrap_content"
-      android:text="@string/button_help" />
-    <Button android:id="@+id/button_ok"
-      android:layout_width="96sp" android:layout_height="wrap_content"
-      android:text="@string/button_ok" />
-    <Button android:id="@+id/button_cancel"
-      android:layout_width="96sp" android:layout_height="wrap_content"
-      android:text="@string/button_cancel" />
-  </LinearLayout>
   <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

@@ -10,13 +10,11 @@ Priority High:
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
   * Split strings.xml since it is too long.
-  * change [Add] to [New] when creating fudasets
 
 Priority Middle:
   * Fuda-otoshi mode
   * Yomi-fuda mode
-  * Able to customize notify timer (add new, set default minutes,set icons)
-  * Able to change notify timer sound.
+  * Able to customize notify timer (add new, set icons)
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Use other effects in android.media.audiofx.AudioEffect
   * Create Fuda List from camera photo

@@ -198,7 +198,7 @@ trait FudaSetTrait{
     })
     dialog.show()
   }
-  def addFudaSet(view:View){
+  def newFudaSet(view:View){
     editFudaSetBase(view, true)
   }
 
