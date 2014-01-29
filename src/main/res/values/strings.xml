@@ -69,6 +69,30 @@
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">Detail</string>
+  <string name="conf_show_yomi_info_title">Show Poem Text</string>
+  <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
+  <string name="conf_show_yomi_info_enabled">Since `Show Poem Text` is enabled, the following config is changed.</string>
+  <string name="conf_show_yomi_info_enabled_each">Changed `Play Order of Each Fuda` to `Upper - Lower`.</string>
+  <string name="conf_show_yomi_info_enabled_joka">Changed `How to Play Joka` to `Upper: 0, Lower: 0`.</string>
+  <string-array name="conf_show_yomi_info_entries">
+    <item>None</item>
+    <item>Default</item>
+    <item>AC Kaisho</item>
+    <item>Kouzan Gyousho</item>
+  </string-array>
+  <string-array name="conf_show_yomi_info_entries_abbr">
+    <item>None</item>
+    <item>Default</item>
+    <item>Kaisho</item>
+    <item>Gyousho</item>
+  </string-array>
+  <string-array name="conf_show_yomi_info_entryValues">
+    <item>None</item>
+    <item>Default</item>
+    <item>asset:ac-kaisho.ttf</item>
+    <item>asset:kouzan-gyosho.ttf</item>
+  </string-array>
+
   <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
   <string name="conf_read_order_each_summary">`Upper` means the first half of the poem, and `Lower` means the rest of it.</string>
   <string-array name="conf_read_order_each_entries">

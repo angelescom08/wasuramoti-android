@@ -72,6 +72,23 @@
 
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">詳細</string>
+  <string name="conf_show_yomi_info_title">詠み句の表示</string>
+  <string name="conf_show_yomi_info_enabled">「詠み句の表示」が有効なので下記の設定を強制的に変更しました．</string>
+  <string name="conf_show_yomi_info_enabled_each">「札ごとの詠み順」を「上の句 - 下の句」にしました．</string>
+  <string name="conf_show_yomi_info_enabled_joka">「序歌の詠み方」を「上の句: 0回，下の句:0回」にしました．</string>
+  <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
+  <string-array name="conf_show_yomi_info_entries">
+    <item>なし</item>
+    <item>デフォルト</item>
+    <item>英椎楷書</item>
+    <item>衡山毛筆行書</item>
+  </string-array>
+  <string-array name="conf_show_yomi_info_entries_abbr">
+    <item>なし</item>
+    <item>デフォルト</item>
+    <item>楷書</item>
+    <item>毛筆行書</item>
+  </string-array>
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
   <string-array name="conf_read_order_each_entries">

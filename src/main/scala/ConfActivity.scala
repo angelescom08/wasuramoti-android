@@ -54,6 +54,7 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
       case "read_order" => get_entry_from_value(R.array.conf_read_order_entryValues,R.array.conf_read_order_entries)
       case "read_order_each" => get_entry_from_value(R.array.conf_read_order_each_entryValues,R.array.conf_read_order_each_entries_abbr)
       case "audio_track_mode" => get_entry_from_value(R.array.conf_audio_track_entryValues,R.array.conf_audio_track_entries)
+      case "show_yomi_info" => get_entry_from_value(R.array.conf_show_yomi_info_entryValues,R.array.conf_show_yomi_info_entries_abbr)
       case _ => value
     }
   }
@@ -258,10 +259,35 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait{
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
-      override def onSharedPreferenceChanged(sharedPreferences:SharedPreferences, key:String){
+      override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
         if(Array("read_order_each","reader_path","read_order_joka","wav_span_simokami",
                  "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
           Globals.forceRefresh = true
+        }
+        if(key == "show_yomi_info"){
+          Globals.forceResetContentView = true
+        }
+        if(Array("show_yomi_info","read_order_each","read_order_joka").contains(key) && 
+          prefs.getString("show_yomi_info","None") != "None"){
+            val haveto_each = "NEXT1_NEXT2"
+            val haveto_joka = "upper_0,lower_0"
+            val cur_each = prefs.getString("read_order_each","CUR2_NEXT1") 
+            val cur_joka = prefs.getString("read_order_joka","upper_1,lower_1")
+            val edit = prefs.edit
+            var messages = Array[String]()
+            if(haveto_each != cur_each){
+              edit.putString("read_order_each",haveto_each)
+              messages :+= context.getResources.getString(R.string.conf_show_yomi_info_enabled_each)
+            }
+            if(haveto_joka != cur_joka){
+              edit.putString("read_order_joka",haveto_joka)
+              messages :+= context.getResources.getString(R.string.conf_show_yomi_info_enabled_joka)
+            }
+            if(!messages.isEmpty){
+              edit.commit
+              val s = context.getResources.getString(R.string.conf_show_yomi_info_enabled)
+              Utils.messageDialog(context,Left(s+"\n"+messages.mkString("\n")))
+            }
         }
         val pref = findPreference(key)
         if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){

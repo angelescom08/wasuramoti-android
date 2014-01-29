@@ -53,6 +53,15 @@
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_detail">
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+      android:key="show_yomi_info"
+      android:title="@string/conf_show_yomi_info_title"
+      android:summary="@string/conf_show_yomi_info_summary"
+      android:entries="@array/conf_show_yomi_info_entries"
+      android:entryValues="@array/conf_show_yomi_info_entryValues"
+      android:defaultValue="None"
+      android:widgetLayout="@layout/conf_current_value"
+      />
+    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
       android:key="read_order_each"
       android:title="@string/conf_read_order_each_title"
       android:summary="@string/conf_read_order_each_summary"

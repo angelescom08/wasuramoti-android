@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal"
+              android:weightSum="1.0"
+              >
+    <karuta.hpnpwd.wasuramoti.YomiInfoView
+            android:id="@+id/yomi_info"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+      />
+    <Button android:id="@+id/read_button"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:text="Press Here"
+            android:textSize="24dp"
+            android:onClick="onMainButtonClick"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:contentDescription="ReadButton"
+            />
+</LinearLayout>

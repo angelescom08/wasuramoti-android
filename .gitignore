@@ -2,7 +2,7 @@ keystore/
 players/
 target/
 project/target/
-src/main/assets/
+src/main/assets/reader/
 src/main/obj/
 uitest/bin/
 

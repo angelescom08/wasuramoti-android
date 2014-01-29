@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
+import _root_.android.content.res.Configuration
 import _root_.android.os.{Bundle,Handler,Parcelable}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewGroup}
 import _root_.android.widget.{ImageView,Button,RelativeLayout}
@@ -41,6 +42,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
     }
   }
+
+  override def onConfigurationChanged(newConfig:Configuration){
+    // Since we set android:configChanges = "orientation" in Manifest.xml, this function is called
+    super.onConfigurationChanged(newConfig)
+    setContentViewAndReloadHandler()
+    Utils.setButtonTextByState(getApplicationContext())
+  }
+
   def refreshAndSetButton(force:Boolean = false){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
@@ -113,6 +122,31 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     return true
   }
+  def setContentViewAndReloadHandler(){
+    if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
+      setContentView(R.layout.main)
+    }else{
+      setContentView(R.layout.main_with_info)
+    }
+
+    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
+    val yomi_info = findViewById(R.id.yomi_info)
+    val handler = new Handler()
+    Globals.setButtonText = Some( arg =>
+      handler.post(new Runnable(){
+        override def run(){
+          arg match {
+            // TODO: The following way to call setText is not smart.
+            //       Is there any way to do the follwing two lines in one row ?
+            case Left(text) => read_button.setText(text)
+            case Right(id) => read_button.setText(id)
+          }
+          if(yomi_info != null){
+            yomi_info.invalidate()
+          }
+        }
+      }))
+  }
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
     super.onCreate(savedInstanceState)
@@ -127,20 +161,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
       return
     }
-    setContentView(R.layout.main)
-    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
-    val handler = new Handler()
-    Globals.setButtonText = Some( arg =>
-      handler.post(new Runnable(){
-        override def run(){
-          arg match {
-            // TODO: The following way to call setText is not smart.
-            //       Is there any way to do the follwing two lines in one row ?
-            case Left(text) => read_button.setText(text)
-            case Right(id) => read_button.setText(id)
-          }
-        }
-      }))
+    setContentViewAndReloadHandler()
     if(savedInstanceState != null && savedInstanceState.containsKey("notify_timers_keys")){
       var values = savedInstanceState.getParcelableArray("notify_timers_values").map{_.asInstanceOf[Intent]}
       var keys = savedInstanceState.getIntArray("notify_timers_keys")
@@ -194,6 +215,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     if( Globals.prefs.isEmpty ){
       // onCreate returned before loading preference
       return
+    }
+    if( Globals.forceResetContentView ){
+      setContentViewAndReloadHandler()
+      Globals.forceResetContentView = false
     }
     restartRefreshTimer()
     Globals.player.foreach{_.stop()}
