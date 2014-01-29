@@ -10,7 +10,7 @@ import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
 import _root_.android.provider.Settings
 import _root_.android.text.TextUtils
 
-class NotifyTimerActivity extends Activity{
+class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   var current_ringtone = None:Option[Ringtone]
   val timer_icons = List(
     (R.drawable.baby_tux,13), // icon_id, default_minutes

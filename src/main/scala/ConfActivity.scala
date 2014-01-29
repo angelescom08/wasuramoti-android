@@ -248,7 +248,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
   }
 }
 
-class ConfActivity extends PreferenceActivity with FudaSetTrait{
+class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiBaseTrait {
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
 
   override def onCreate(savedInstanceState: Bundle) {

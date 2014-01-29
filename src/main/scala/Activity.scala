@@ -391,3 +391,15 @@ trait ActivityDebugTrait{
   }
 }
 
+trait WasuramotiBaseTrait {
+  self:Activity =>
+  override def onOptionsItemSelected(item: MenuItem):Boolean = {
+    item.getItemId match {
+      case android.R.id.home => {
+        self.finish()
+      }
+      case _ => {}
+    }
+    return true
+  }
+}
