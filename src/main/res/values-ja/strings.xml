@@ -23,12 +23,12 @@
   <string name="conf_unit_second">秒</string>
 
   <!-- CATEGORY_GLOBAL -->
+  <string name="message_disabled">無効</string>
   <string name="category_global">全体</string>
   <string name="conf_fudaset_title">札セット</string>
   <string name="conf_fudaset_summary">百首のうち一部の札のみを詠む</string>
 
   <string name="karafuda_enable">有効</string>
-  <string name="karafuda_disabled">無効</string>
   <string name="karafuda_unit">枚</string>
   <string name="karafuda_append_num">枚数:</string>
   <string name="karafuda_urafuda_prob_left">← ランダム</string>
@@ -63,19 +63,18 @@
 
   <string name="player_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
-  <!-- CATEGORY_AUTO -->
-  <string name="category_auto">連続</string>
-  <string name="conf_read_auto_title">自動詠み上げ</string>
-  <string name="conf_read_auto_summary">詠み終えた後しばらく停止し，その後次の札を詠む</string>
-  <string name="conf_read_auto_span">詠み上げ間隔</string>
-  <string name="conf_read_auto_span_summary">何秒間停止してから次の札を詠むか</string>
+
+  <string name="conf_autoplay">自動詠み上げ</string>
+  <string name="conf_autoplay_summary">詠み終えた後しばらく停止し，その後次の札を詠む</string>
+  <string name="autoplay_enable">有効</string>
+  <string name="autoplay_span">間隔:</string>
 
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">詳細</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
-  <string name="conf_show_yomi_info_enabled">「詠み句の表示」が有効なので下記の設定を強制的に変更しました．</string>
-  <string name="conf_show_yomi_info_enabled_each">「札ごとの詠み順」を「上の句 - 下の句」にしました．</string>
-  <string name="conf_show_yomi_info_enabled_joka">「序歌の詠み方」を「上の句: 0回，下の句:0回」にしました．</string>
+  <string name="conf_show_yomi_info_enabled">「詠み句の表示」が有効なので以下のように自動変更します．</string>
+  <string name="conf_show_yomi_info_enabled_each">「札ごとの詠み順」を「上の句 - 下の句」にします．</string>
+  <string name="conf_show_yomi_info_enabled_joka">「序歌の詠み方」を「両方0回」にします．</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
@@ -87,7 +86,7 @@
     <item>なし</item>
     <item>デフォルト</item>
     <item>楷書</item>
-    <item>毛筆行書</item>
+    <item>行書</item>
   </string-array>
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>

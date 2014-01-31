@@ -35,21 +35,13 @@
       android:summary="@string/conf_audio_volume_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-  </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_auto">
-    <CheckBoxPreference
-      android:key="read_auto"
-      android:title="@string/conf_read_auto_title"
-      android:summary="@string/conf_read_auto_summary" />
-    <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-      android:key="read_auto_span"
-      android:title="@string/conf_read_auto_span"
-      android:summary="@string/conf_read_auto_span_summary"
-      android:numeric="decimal"
-      android:defaultValue="5.0"
-      android:widgetLayout="@layout/conf_current_value"
-      unit="@string/conf_unit_second"
-      />
+      <karuta.hpnpwd.wasuramoti.AutoPlayPreference
+        android:key="autoplay"
+        android:title="@string/conf_autoplay"
+        android:summary="@string/conf_autoplay_summary"
+        android:widgetLayout="@layout/conf_current_value"
+        unit="@string/conf_unit_second"
+        />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_detail">
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom

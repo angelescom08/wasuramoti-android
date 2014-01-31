@@ -1,17 +1,18 @@
 Priority High:
-  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
-  * Special words such as 'one' 'two' 'red' in fuda sets
   * Do not fade in/out if fade length is too short.
+  * Use Fragment
+  * Show fuda infomation when tapped (kimariji, uta number, creator, key point, how to read kanji)
+  * Show yomi info of last fuda
+
+Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
   * Add Option: play in arbitrary order
   * In battery mode, the auto play stops when screen is locked
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
+  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
+  * Special words such as 'one' 'two' 'red' in fuda sets
   * Split strings.xml since it is too long.
-  * Use Fragment
-  * Show fuda infomation when tapped (kimariji, uta number, yomite)
-
-Priority Middle:
   * Fuda-otoshi mode
   * Yomi-fuda mode
   * Able to customize notify timer (add new, set icons)

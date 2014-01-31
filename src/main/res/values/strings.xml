@@ -23,12 +23,12 @@
   <string name="conf_unit_second">&#160;sec</string>
 
   <!-- CATEGORY_GLOBAL -->
+  <string name="message_disabled">Disabled</string>
   <string name="category_global">Global</string>
   <string name="conf_fudaset_title">Sets of Fuda</string>
   <string name="conf_fudaset_summary">Which subset of fuda to play.</string>
 
   <string name="karafuda_enable">Enable</string>
-  <string name="karafuda_disabled">Disabled</string>
   <string name="karafuda_unit"></string>
   <string name="karafuda_append_num">No. of Karafuda:</string>
   <string name="karafuda_urafuda_prob_left">&lt;= Random</string>
@@ -71,9 +71,9 @@
   <string name="category_detail">Detail</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
-  <string name="conf_show_yomi_info_enabled">Since `Show Poem Text` is enabled, the following config is changed.</string>
-  <string name="conf_show_yomi_info_enabled_each">Changed `Play Order of Each Fuda` to `Upper - Lower`.</string>
-  <string name="conf_show_yomi_info_enabled_joka">Changed `How to Play Joka` to `Upper: 0, Lower: 0`.</string>
+  <string name="conf_show_yomi_info_enabled">Since `Show Poem Text` is enabled, we set following config:</string>
+  <string name="conf_show_yomi_info_enabled_each">`Play Order of Each Fuda` to `Upper - Lower`.</string>
+  <string name="conf_show_yomi_info_enabled_joka">`How to Play Joka` to `Both 0 times`.</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>None</item>
     <item>Default</item>
@@ -128,13 +128,10 @@
 
   <string name="conf_joka_caveat">Note: Actually, there might be a case that both upper phrase and lower phrase is included in 000_1.ogg.</string>
 
-  <!-- CATEGORY_AUTO -->
-  <string name="category_auto">Auto</string>
-  <string name="conf_read_auto_title">Auto Play</string>
-  <string name="conf_read_auto_summary">After playing is done, stop a while, and start playing next fuda.</string>
-  <string name="conf_read_auto_span">Interval of Auto Play</string>
-  <string name="conf_read_auto_span_summary">How many seconds to stop until playing next fuda.</string>
-
+  <string name="conf_autoplay">Auto Play</string>
+  <string name="conf_autoplay_summary">After playing is done, stop a while, and start playing next fuda.</string>
+  <string name="autoplay_enable">Enable</string>
+  <string name="autoplay_span">Span:</string>
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>

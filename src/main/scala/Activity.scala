@@ -352,7 +352,7 @@ trait MainButtonTrait{
         player.play(
           _ => {
             moveToNextFuda()
-            if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("read_auto",false)){
+            if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_enable",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
@@ -361,7 +361,7 @@ trait MainButtonTrait{
                   })
                   timer_autoread.foreach(_.cancel())
                   timer_autoread = None
-                }},(Utils.getPrefAs[Double]("read_auto_span", 5.0, 9999.0)*1000.0).toLong
+                }},(Globals.prefs.get.getLong("autoplay_span", 5)*1000.0).toLong
               )
             }
         })

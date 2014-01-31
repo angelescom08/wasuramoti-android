@@ -102,6 +102,52 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     }}.mkString("")
   }
 }
+class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  val DEFAULT_VALUE = 5
+  var root_view = None:Option[View]
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  def getWidgets(view:View) = {
+    val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
+    val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
+    (enable,span)
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+    if(positiveResult){
+      root_view.foreach{ view =>
+        val edit = Globals.prefs.get.edit
+        val (enable,span) = getWidgets(view)
+        edit.putBoolean("autoplay_enable",enable.isChecked)
+        edit.putLong("autoplay_span",Math.max(1,try{
+            span.getText.toString.toInt
+          }catch{
+            case _:NumberFormatException => 1
+          }))
+        edit.commit
+        notifyChangedPublic
+      }
+    }
+    super.onDialogClosed(positiveResult)
+  }
+  override def onCreateDialogView():View = {
+    super.onCreateDialogView()
+    val view = LayoutInflater.from(context).inflate(R.layout.autoplay,null)
+    // getDialog() returns null on onDialogClosed(), so we save view
+    root_view = Some(view)
+    val (enable,span) = getWidgets(view)
+    val prefs = Globals.prefs.get
+    enable.setChecked(prefs.getBoolean("autoplay_enable",false))
+    span.setText(prefs.getLong("autoplay_span",DEFAULT_VALUE).toString)
+    return view
+  }
+  override def getAbbrValue():String = {
+    if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+      Globals.prefs.get.getLong("autoplay_span",DEFAULT_VALUE) + context.getResources.getString(R.string.conf_unit_second)
+    }else{
+      context.getResources.getString(R.string.message_disabled)
+    }
+  }
+}
+
 
 class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var root_view = None:Option[View]
@@ -117,7 +163,7 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       Globals.prefs.get.getInt("karafuda_append_num",0).toString + context.getResources.getString(R.string.karafuda_unit)
     }else{
-      context.getResources.getString(R.string.karafuda_disabled)
+      context.getResources.getString(R.string.message_disabled)
     }
   }
   override def onDialogClosed(positiveResult:Boolean){
