@@ -47,7 +47,7 @@
     <item>RANDOM</item>
   </string-array>
 
-  <string name="conf_reader_list">Reader</string>
+  <string name="conf_reader_list">Reciter</string>
   <string name="conf_reader_list_summary">Press `Config`-&gt;`Help` to see how to add new audio file.</string>
   <string name="scan_reader_title">Scan Path</string>
   <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
@@ -77,7 +77,7 @@
   <string-array name="conf_show_yomi_info_entries">
     <item>None</item>
     <item>Default</item>
-    <item>AC Kaisho</item>
+    <item>T-Font Kaisho</item>
     <item>Kouzan Gyousho</item>
   </string-array>
   <string-array name="conf_show_yomi_info_entries_abbr">
@@ -89,7 +89,7 @@
   <string-array name="conf_show_yomi_info_entryValues">
     <item>None</item>
     <item>Default</item>
-    <item>asset:ac-kaisho.ttf</item>
+    <item>asset:tfont-kaisho.ttf</item>
     <item>asset:kouzan-gyosho.ttf</item>
   </string-array>
 
@@ -99,18 +99,21 @@
     <item>Lower - Upper</item>
     <item>Lower - Upper - Lower</item>
     <item>Upper - Lower</item>
+    <item>Upper - Lower - Lower</item>
     <item>Lower - Lower</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>L-U</item>
     <item>L-U-L</item>
     <item>U-L</item>
+    <item>U-L-L</item>
     <item>L-L</item>
   </string-array>
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>
     <item>CUR2_NEXT1_NEXT2</item>
     <item>NEXT1_NEXT2</item>
+    <item>NEXT1_NEXT2_NEXT2</item>
     <item>CUR2_NEXT2</item>
   </string-array>
 
@@ -223,7 +226,7 @@
     (1) Create 202 ogg files which upper phrase and lower phrase is recorded separately from 101 poems (+1 is for Joka).
     </p>
     <p>
-    (2) Rename each file to <tt><font color="#FFFF00">[Reader]_[Poem No.]_[Upper=1,Lower=2].ogg</font></tt><br/>
+    (2) Rename each file to <tt><font color="#FFFF00">[Reciter]_[Poem No.]_[Upper=1,Lower=2].ogg</font></tt><br/>
     If poem number is less than 100, zero must be padded to fit three digits. Poem number of Joka is 000.<br/>
     (Example: Lower phrase of `Hototogisu` read by Inaba &rArr; <font color="#FFFF00">inaba_081_2.ogg</font></tt>)
     </p>
@@ -232,7 +235,7 @@
     (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
     </p>
     <p>
-    (2) Make folder named <tt><font color="#FFFF00">[Reader]</font></tt>, and place 202 ogg files in it.
+    (2) Make folder named <tt><font color="#FFFF00">[Reciter]</font></tt>, and place 202 ogg files in it.
     </p>
     (Example: Upper phrase of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
     Now you can choose new reader from reader choices.

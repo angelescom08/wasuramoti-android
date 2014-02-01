@@ -3,6 +3,9 @@ Priority High:
   * Use Fragment
   * Show fuda infomation when tapped (kimariji, uta number, creator, key point, how to read kanji)
   * Show yomi info of last fuda
+  * Volume Boost
+  * Show the log of fuda read
+  * Adjust each character of Tate-Gaki position
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

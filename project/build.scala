@@ -6,8 +6,8 @@ import sbtandroid.AndroidPlugin._
 object AndroidBuild extends Build{
   lazy val globalSettings = Seq (
     name := "Wasuramoti",
-    version := "0.8.1",
-    versionCode := 39,
+    version := "0.8.2",
+    versionCode := 40,
     scalaVersion := "2.10.2",
     platformName := "android-16",
     keyalias := "techkey",

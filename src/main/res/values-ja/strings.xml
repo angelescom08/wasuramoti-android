@@ -79,7 +79,7 @@
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
     <item>デフォルト</item>
-    <item>英椎楷書</item>
+    <item>Tフォント楷書</item>
     <item>衡山毛筆行書</item>
   </string-array>
   <string-array name="conf_show_yomi_info_entries_abbr">
@@ -94,12 +94,14 @@
     <item>下の句 - 上の句</item>
     <item>下の句 - 上の句 - 下の句</item>
     <item>上の句 - 下の句</item>
+    <item>上の句 - 下の句 - 下の句</item>
     <item>下の句 - 下の句</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>下-上</item>
     <item>下-上-下</item>
     <item>上-下</item>
+    <item>上-下-下</item>
     <item>下-下</item>
   </string-array>
 

@@ -43,7 +43,7 @@
         unit="@string/conf_unit_second"
         />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_detail">
+  <PreferenceCategory android:title="@string/category_detail" android:key="category_detail">
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
       android:key="show_yomi_info"
       android:title="@string/conf_show_yomi_info_title"

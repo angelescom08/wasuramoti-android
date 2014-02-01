@@ -36,17 +36,10 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     for(t <- text){
       val r = new Rect()
       paint.getTextBounds(t.toString,0,1,r)
-      val xx = (startx-(r.left+r.right)/2).toInt
+      paint.setTextAlign(Paint.Align.CENTER)
+      val xx = startx.toInt
       val yy = (y - r.top).toInt
       canvas.drawText(t.toString,xx,yy,paint)
-      if(Globals.IS_DEBUG){
-        val pp = new Paint()
-        pp.setColor(Color.RED)
-        pp.setStyle(Paint.Style.STROKE)
-        pp.setStrokeWidth(5)
-        r.offset(xx,yy)
-        canvas.drawRect(r,pp)
-      }
       y += r.bottom - r.top + (getHeight*SPACE_V).toInt
     }
   }
@@ -57,7 +50,11 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     Globals.player.foreach{player =>
       val conf = Globals.prefs.get.getString("show_yomi_info","None")
       val typeface = if(conf.startsWith("asset:")){
-        Typeface.createFromAsset(context.getAssets,conf.substring(6))
+        try{
+          Typeface.createFromAsset(context.getAssets,conf.substring(6))
+        }catch{
+          case _:Throwable => Typeface.DEFAULT
+        }
       }else{
         Typeface.DEFAULT
       }
@@ -69,7 +66,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val text_size = calculateTextSize(text_array,paint).toInt
         paint.setTextSize(text_size)
         paint.setColor(Color.WHITE)
-        var startx = (getWidth/2 + ((SPACE_H*getWidth+text_size)*(text_array.length+1))/2).toInt // center of screen
+        var startx = (getWidth/2 + ((SPACE_H*getWidth+text_size)*(text_array.length+1))/2).toInt // center of line
         for((t,m) <- text_array.zip(MARGIN_TOP)){
           val starty = (canvas.getHeight * m).toInt
           startx -= (getWidth*SPACE_H+text_size).toInt

@@ -8,7 +8,7 @@ import _root_.android.text.TextUtils
 import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import _root_.android.util.AttributeSet
 import _root_.android.content.{Context,SharedPreferences}
-import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
+import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference,PreferenceGroup}
 
 trait PreferenceCustom extends Preference{
   self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
@@ -315,14 +315,14 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
         }
         if(Array("show_yomi_info","read_order_each","read_order_joka").contains(key) && 
           prefs.getString("show_yomi_info","None") != "None"){
-            val haveto_each = "NEXT1_NEXT2"
+            val haveto_each = Array("NEXT1_NEXT2","NEXT1_NEXT2_NEXT2")
             val haveto_joka = "upper_0,lower_0"
             val cur_each = prefs.getString("read_order_each","CUR2_NEXT1") 
             val cur_joka = prefs.getString("read_order_joka","upper_1,lower_1")
             val edit = prefs.edit
             var messages = Array[String]()
-            if(haveto_each != cur_each){
-              edit.putString("read_order_each",haveto_each)
+            if(!haveto_each.contains(cur_each)){
+              edit.putString("read_order_each",haveto_each(0))
               messages :+= context.getResources.getString(R.string.conf_show_yomi_info_enabled_each)
             }
             if(haveto_joka != cur_joka){
@@ -332,7 +332,21 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
             if(!messages.isEmpty){
               edit.commit
               val s = context.getResources.getString(R.string.conf_show_yomi_info_enabled)
-              Utils.messageDialog(context,Left(s+"\n"+messages.mkString("\n")))
+              Utils.messageDialog(context,Left(s+"\n"+messages.mkString("\n")),
+              {Unit=>
+                val pg = findPreference("category_detail").asInstanceOf[PreferenceGroup]
+                if(pg != null){
+                    // Since I could not find a cleaner way to refresh each preference items,
+                    // I would do remove preference then insert same one.
+                    // TODO: Is there any way to refresh preference ?
+
+                    // We can only remove direct child of preference group
+                    val p = pg.findPreference("read_order_each")
+                    if(p != null){
+                      pg.removePreference(p) && pg.addPreference(p)
+                    }
+                }
+              })
             }
         }
         val pref = findPreference(key)
