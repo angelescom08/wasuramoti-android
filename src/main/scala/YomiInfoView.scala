@@ -19,14 +19,18 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends FrameLayout(co
   def invalidateAndScroll(){
     invalidate()
     val sv = findViewById(R.id.yomi_info_scroll).asInstanceOf[HorizontalScrollView]
-    sv.setSmoothScrollingEnabled(false)
-    sv.fullScroll(View.FOCUS_RIGHT)
+    if(sv != null){
+      sv.setSmoothScrollingEnabled(false)
+      sv.fullScroll(View.FOCUS_RIGHT)
+    }
   }
 
   def scrollToNext(){
     val sv = findViewById(R.id.yomi_info_scroll).asInstanceOf[HorizontalScrollView]
-    sv.setSmoothScrollingEnabled(true)
-    sv.fullScroll(View.FOCUS_LEFT)
+    if(sv != null){
+      sv.setSmoothScrollingEnabled(true)
+      sv.fullScroll(View.FOCUS_LEFT)
+    }
   }
 
 }

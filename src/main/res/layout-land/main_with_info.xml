@@ -11,7 +11,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="0.5"
       />
-    <Button android:id="@+id/read_button"
+    <Button android:id="@+id/read_button_small"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="0.5"

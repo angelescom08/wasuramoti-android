@@ -6,7 +6,7 @@ import _root_.android.content.{Intent,Context}
 import _root_.android.content.res.Configuration
 import _root_.android.os.{Bundle,Handler,Parcelable}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewGroup}
-import _root_.android.widget.{ImageView,Button,RelativeLayout}
+import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.ActionBarActivity
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
@@ -43,13 +43,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  override def onConfigurationChanged(newConfig:Configuration){
-    // Since we set android:configChanges = "orientation" in Manifest.xml, this function is called
-    super.onConfigurationChanged(newConfig)
-    setContentViewAndReloadHandler()
-    Utils.setButtonTextByState(getApplicationContext())
-  }
-
   def refreshAndSetButton(force:Boolean = false){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
@@ -72,7 +65,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
+          Globals.play_log.clear()
           refreshAndSetButton()
+          invalidateYomiInfo()
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,_=>refreshAndSetButton()).show
@@ -122,14 +117,16 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     return true
   }
-  def setContentViewAndReloadHandler(){
-    if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
-      setContentView(R.layout.main)
+  def switchViewAndReloadHandler(){
+    val flipper = findViewById(R.id.main_flip).asInstanceOf[ViewFlipper]
+    val (cn,rb) = if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
+        (0,R.id.read_button_large)
     }else{
-      setContentView(R.layout.main_with_info)
+        (1,R.id.read_button_small)
     }
-
-    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
+    flipper.setDisplayedChild(cn)
+    
+    val read_button = findViewById(rb).asInstanceOf[Button]
     val handler = new Handler()
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
@@ -157,7 +154,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
       return
     }
-    setContentViewAndReloadHandler()
+    setContentView(R.layout.main)
+    switchViewAndReloadHandler()
     if(savedInstanceState != null && savedInstanceState.containsKey("notify_timers_keys")){
       var values = savedInstanceState.getParcelableArray("notify_timers_values").map{_.asInstanceOf[Intent]}
       var keys = savedInstanceState.getIntArray("notify_timers_keys")
@@ -219,7 +217,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       return
     }
     if( Globals.forceResetContentView ){
-      setContentViewAndReloadHandler()
+      switchViewAndReloadHandler()
       Globals.forceResetContentView = false
     }
     restartRefreshTimer()
@@ -290,27 +288,29 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
   def setLongClickButtonOnResume(){
-    val btn = findViewById(R.id.read_button).asInstanceOf[Button]
-    btn.setOnLongClickListener(
-      if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
-        new View.OnLongClickListener(){
-          override def onLongClick(v:View):Boolean = {
-            Globals.global_lock.synchronized{
-              if(Globals.is_playing){
-                Globals.player.foreach{p=>
-                  p.stop()
-                  moveToNextFuda()
-                  doPlay(false)
+    for(id <- Array(R.id.read_button_small,R.id.read_button_large)){
+      val btn = findViewById(id).asInstanceOf[Button]
+      btn.setOnLongClickListener(
+        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+          new View.OnLongClickListener(){
+            override def onLongClick(v:View):Boolean = {
+              Globals.global_lock.synchronized{
+                if(Globals.is_playing){
+                  Globals.player.foreach{p=>
+                    p.stop()
+                    moveToNextFuda()
+                    doPlay(false)
+                  }
                 }
               }
+              return true
             }
-            return true
           }
+        }else{
+          null
         }
-      }else{
-        null
-      }
-    )
+      )
+    }
   }
 }
 

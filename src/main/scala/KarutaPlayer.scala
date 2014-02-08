@@ -6,6 +6,8 @@ import _root_.android.view.Gravity
 import _root_.android.os.AsyncTask
 import _root_.android.app.ProgressDialog
 import _root_.android.media.audiofx.Equalizer
+import _root_.android.content.pm.ActivityInfo
+import _root_.android.content.res.Configuration
 import _root_.java.util.{Timer,TimerTask}
 
 import scala.collection.mutable
@@ -38,6 +40,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
+  var old_orientation = None:Option[Int]
   var set_audio_volume = true
 
   val audio_queue = new AudioQueue() // file or silence in millisec
@@ -132,6 +135,15 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         Utils.saveAndSetAudioVolume(activity.getApplicationContext())
       }
       Globals.is_playing = true
+      // prvent screen rotation during play
+      old_orientation = Some(activity.getRequestedOrientation)
+      val o = (activity.getResources.getConfiguration.orientation match {
+        case Configuration.ORIENTATION_LANDSCAPE => ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        case Configuration.ORIENTATION_PORTRAIT => ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        case _ => ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+      })
+      activity.setRequestedOrientation(o)
+      
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
       // Since we insert some silence at beginning of audio,
@@ -160,6 +172,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
     equalizer.foreach(_.release())
     equalizer = None
     Globals.is_playing = false
+    old_orientation.foreach(o => activity.setRequestedOrientation(o))
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
