@@ -30,10 +30,11 @@ object KarutaPlayerDebug{
 
 class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
-
+  var cur_millisec = 0:Long
   var audio_thread = None:Option[Thread]
   var timer_start = None:Option[Timer]
   var timer_onend = None:Option[Timer]
+  var timer_curend = None:Option[Timer]
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
@@ -122,7 +123,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       case e:NoClassDefFoundError => None
     }
   }
-  def play(onKamiEnd:Unit=>Unit=identity[Unit]){
+  def play(onPlayEnd:Unit=>Unit=identity[Unit],onCurEnd:Option[Unit=>Unit]=None){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -142,7 +143,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
 
       timer_start.get.schedule(new TimerTask(){
         override def run(){
-          onReallyStart(onKamiEnd)
+          onReallyStart(onPlayEnd,onCurEnd)
           timer_start.foreach(_.cancel())
           timer_start = None
         }},wait_time.toLong)
@@ -163,14 +164,22 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
     }
   }
 
-  def onReallyStart(onKamiEnd:Unit=>Unit=identity[Unit]){
+  def onReallyStart(onPlayEnd:Unit=>Unit,onCurEnd:Option[Unit=>Unit]){
     Globals.global_lock.synchronized{
+      onCurEnd.foreach{hook =>
+        timer_curend = Some(new Timer())
+        timer_curend.get.schedule(new TimerTask(){
+            override def run(){
+              hook()
+            }
+        },cur_millisec)
+      }
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{
           audio_track.foreach(x => {x.stop();x.release()})
           audio_track = None
           doWhenStop()
-          onKamiEnd()
+          onPlayEnd()
         }
       }}
       try{
@@ -235,6 +244,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
 
   def stop(){
     Globals.global_lock.synchronized{
+      timer_curend.foreach(_.cancel())
+      timer_curend = None
       timer_start.foreach(_.cancel())
       timer_start = None
       timer_onend.foreach(_.cancel())
@@ -304,16 +315,20 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
         Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})
         val res_queue = new AudioQueue()
         val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
-        def add_to_audio_queue(w:Either[WavBuffer,Int]){
+        cur_millisec = 0
+        def add_to_audio_queue(w:Either[WavBuffer,Int],is_cur:Boolean){
           res_queue.enqueue(w)
           val alen = w match{
             case Left(wav) => wav.audioLength
             case Right(len) => len
           }
+          if(is_cur){
+            cur_millisec += alen
+          }
         }
         // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
         // we insert additional silence as wave data.
-        add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH))
+        add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH),true)
         val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
         var ss = read_order_each.split("_")
         if(cur_num == 0){
@@ -348,7 +363,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
               reader.withDecodedWav(read_num, kami_simo, wav => {
                  wav.trimFadeIn()
                  wav.trimFadeOut()
-                 add_to_audio_queue(Left(wav))
+                 add_to_audio_queue(Left(wav),s.startsWith("CUR"))
                  if(Globals.IS_DEBUG){
                    KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
                  }
@@ -366,7 +381,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
               }
             }
             if( i != ss.length - 1 ){
-              add_to_audio_queue(Right(span_simokami))
+              add_to_audio_queue(Right(span_simokami),s.startsWith("CUR"))
             }
           }
         }

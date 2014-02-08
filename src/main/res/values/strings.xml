@@ -140,7 +140,7 @@
   <string name="subscreen_others">Other Settings</string>
   <string name="category_misc">Misc</string>
   <string name="category_time">Time</string>
-  <string name="conf_skip_on_longclick">Skip On Ling Click</string>
+  <string name="conf_skip_on_longclick">Skip On Long Click</string>
   <string name="conf_skip_on_longclick_summary">Play next fuda when long pressed during play.</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
