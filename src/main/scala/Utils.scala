@@ -33,6 +33,7 @@ object Globals {
   val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
   val notify_timers = new mutable.HashMap[Int,Intent]()
+  val play_log = new mutable.ListBuffer[Int]()
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]

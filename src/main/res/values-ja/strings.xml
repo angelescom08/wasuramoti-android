@@ -72,9 +72,6 @@
   <!-- CATEGORY_DETAIL -->
   <string name="category_detail">詳細</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
-  <string name="conf_show_yomi_info_enabled">「詠み句の表示」が有効なので以下のように自動変更します．</string>
-  <string name="conf_show_yomi_info_enabled_each">「札ごとの詠み順」を「上の句 - 下の句」にします．</string>
-  <string name="conf_show_yomi_info_enabled_joka">「序歌の詠み方」を「両方0回」にします．</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>

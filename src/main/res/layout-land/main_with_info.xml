@@ -5,7 +5,7 @@
               android:orientation="horizontal"
               android:weightSum="1.0"
               >
-    <karuta.hpnpwd.wasuramoti.YomiInfoView
+    <karuta.hpnpwd.wasuramoti.YomiInfoLayout
             android:id="@+id/yomi_info"
             android:layout_width="0dp"
             android:layout_height="fill_parent"

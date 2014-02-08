@@ -1,8 +1,36 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
 import _root_.android.view.View
+import _root_.android.widget.{FrameLayout,HorizontalScrollView}
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
+
+class YomiInfoLayout(context:Context, attrs:AttributeSet) extends FrameLayout(context, attrs){
+  override def onLayout(changed:Boolean,left:Int,top:Int,right:Int,bottom:Int){
+    super.onLayout(changed,left,top,right,bottom)
+    View.inflate(context,R.layout.yomi_info_double,this)
+    var width = right-left
+    findViewById(R.id.yomi_info_double).layout(left,top,right+width,bottom)
+    findViewById(R.id.yomi_info_view_next).layout(left,top,right,bottom)
+    findViewById(R.id.yomi_info_view_cur).layout(left+width,top,right+width,bottom) 
+    findViewById(R.id.yomi_info_scroll).asInstanceOf[HorizontalScrollView].fullScroll(View.FOCUS_RIGHT)
+  }
+
+  def invalidateAndScroll(){
+    invalidate()
+    val sv = findViewById(R.id.yomi_info_scroll).asInstanceOf[HorizontalScrollView]
+    sv.setSmoothScrollingEnabled(false)
+    sv.fullScroll(View.FOCUS_RIGHT)
+  }
+
+  def scrollToNext(){
+    val sv = findViewById(R.id.yomi_info_scroll).asInstanceOf[HorizontalScrollView]
+    sv.setSmoothScrollingEnabled(true)
+    sv.fullScroll(View.FOCUS_LEFT)
+  }
+
+}
+
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
   val MARGIN_TOP = Array(0.03,0.06,0.09,0.045,0.075) // from left to right
   val MARGIN_BOTTOM = 0.05
@@ -47,7 +75,21 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
     // TODO: can we cache tho drawing to somewhere?
-    Globals.player.foreach{player =>
+
+    val num = if(Globals.is_playing){
+      if(getId == R.id.yomi_info_view_cur){
+        Globals.play_log.applyOrElse(1,(_:Int)=> -1)
+      }else{
+        Globals.play_log.applyOrElse(0,(_:Int)=> -1)
+      }
+    }else{
+      if(getId == R.id.yomi_info_view_cur){
+        Globals.play_log.applyOrElse(2,(_:Int)=> -1)
+      }else{
+        Globals.play_log.applyOrElse(1,(_:Int)=> -1)
+      }
+    }
+    if(num >= 0){
       val conf = Globals.prefs.get.getString("show_yomi_info","None")
       val typeface = if(conf.startsWith("asset:")){
         try{
@@ -58,21 +100,20 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       }else{
         Typeface.DEFAULT
       }
+      val list_with_joka:Array[String] = AllFuda.list_full.+:(AllFuda.joka)
       val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
-      val num = if(Globals.is_playing){player.next_num}else{player.cur_num}
-      if(num >= 1){
-        val text_array = AllFuda.list_full(num-1).split(" ")
-        paint.setTypeface(typeface)
-        val text_size = calculateTextSize(text_array,paint).toInt
-        paint.setTextSize(text_size)
-        paint.setColor(Color.WHITE)
-        var startx = (getWidth/2 + ((SPACE_H*getWidth+text_size)*(text_array.length+1))/2).toInt // center of line
-        for((t,m) <- text_array.zip(MARGIN_TOP)){
-          val starty = (canvas.getHeight * m).toInt
-          startx -= (getWidth*SPACE_H+text_size).toInt
-          verticalText(paint,canvas,startx,starty,t)
-        }
+      val text_array = list_with_joka(num).split(" ")
+      paint.setTypeface(typeface)
+      val text_size = calculateTextSize(text_array,paint).toInt
+      paint.setTextSize(text_size)
+      paint.setColor(Color.WHITE)
+      var startx = (getWidth/2 + ((SPACE_H*getWidth+text_size)*(text_array.length+1))/2).toInt // center of line
+      for((t,m) <- text_array.zip(MARGIN_TOP)){
+        val starty = (canvas.getHeight * m).toInt
+        startx -= (getWidth*SPACE_H+text_size).toInt
+        verticalText(paint,canvas,startx,starty,t)
       }
     }
+  
   }
 }

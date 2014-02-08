@@ -140,7 +140,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       if(wait_time < 100){
         wait_time = 100
       }
-
+       
+      activity.invalidateYomiInfo()
       timer_start.get.schedule(new TimerTask(){
         override def run(){
           onReallyStart(onPlayEnd,onCurEnd)
@@ -172,7 +173,7 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
             override def run(){
               hook()
             }
-        },cur_millisec)
+        },Math.max(cur_millisec-500,100)) // begin 500ms earlier
       }
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{

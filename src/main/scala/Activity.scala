@@ -130,7 +130,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
 
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
-    val yomi_info = findViewById(R.id.yomi_info)
     val handler = new Handler()
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
@@ -140,9 +139,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
             //       Is there any way to do the follwing two lines in one row ?
             case Left(text) => read_button.setText(text)
             case Right(id) => read_button.setText(id)
-          }
-          if(yomi_info != null){
-            yomi_info.invalidate()
           }
         }
       }))
@@ -194,6 +190,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Globals.notify_timers ++= keys.zip(values)
     }else{
       super.onActivityResult(requestCode,resultCode,data)
+    }
+  }
+  def invalidateYomiInfo(){
+    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(yomi_info != null){
+      yomi_info.invalidateAndScroll()
     }
   }
   override def onStart(){
@@ -349,6 +351,22 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
+        val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+        val after:Option[Unit=>Unit] = if(yomi_info != null){
+          Some(Unit => {
+              runOnUiThread(new Runnable(){
+                  override def run(){
+                    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+                    if(yomi_info!=null){
+                      yomi_info.scrollToNext() 
+                    }
+                  }
+                })
+            })
+        }else{
+          None
+        }
+
         player.play(
           _ => {
             moveToNextFuda()
@@ -364,7 +382,7 @@ trait MainButtonTrait{
                 }},(Globals.prefs.get.getLong("autoplay_span", 5)*1000.0).toLong
               )
             }
-        })
+        },after)
       }
     }
   }

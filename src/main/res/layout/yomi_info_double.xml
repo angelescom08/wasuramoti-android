@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/yomi_info_scroll"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true" >
+  <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+                android:id="@+id/yomi_info_double"
+                android:orientation="horizontal" >
+    <karuta.hpnpwd.wasuramoti.YomiInfoView
+      android:id="@+id/yomi_info_view_next"
+      android:layout_width="wrap_content" android:layout_height="fill_parent"
+      />
+    <karuta.hpnpwd.wasuramoti.YomiInfoView
+      android:id="@+id/yomi_info_view_cur"
+      android:layout_width="wrap_content" android:layout_height="fill_parent"
+      />
+  </LinearLayout>
+</HorizontalScrollView>

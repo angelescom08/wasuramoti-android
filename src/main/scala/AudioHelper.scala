@@ -42,6 +42,16 @@ object AudioHelper{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
+    num.foreach{ case (cur_num,next_num) =>
+      if(Globals.play_log.isEmpty){
+        Globals.play_log.++=:(Array(next_num,cur_num))
+      }else{
+        Globals.play_log.+=:(next_num)
+      }
+      if(Globals.play_log.length > 10){
+        Globals.play_log.trimEnd(Globals.play_log.length-10)
+      }
+    }
     num.flatMap{case(cur_num,next_num) =>{
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
