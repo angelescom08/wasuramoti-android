@@ -30,7 +30,7 @@ object KarutaPlayerDebug{
   }
 }
 
-class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
+class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
   var audio_thread = None:Option[Thread]
@@ -152,8 +152,8 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
       if(wait_time < 100){
         wait_time = 100
       }
-       
-      activity.invalidateYomiInfo()
+      val do_scroll = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").startsWith("CUR")
+      activity.invalidateYomiInfo(do_scroll)
       timer_start.get.schedule(new TimerTask(){
         override def run(){
           onReallyStart(onPlayEnd,onCurEnd)
@@ -182,11 +182,12 @@ class KarutaPlayer(activity:WasuramotiActivity,val reader:Reader,val cur_num:Int
     Globals.global_lock.synchronized{
       onCurEnd.foreach{hook =>
         timer_curend = Some(new Timer())
+        val t = Math.max(10,cur_millisec-500) // begin 500ms earlier
         timer_curend.get.schedule(new TimerTask(){
             override def run(){
               hook()
             }
-        },Math.max(cur_millisec-500,100)) // begin 500ms earlier
+        },t) 
       }
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{

@@ -7,24 +7,27 @@ import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-  def invalidateAndScroll(){
+  def invalidateAndScroll(do_scroll:Boolean){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
       val v = findViewById(i)
       if(v!=null){v.invalidate}
     }
-    setSmoothScrollingEnabled(false)
-    fullScroll(View.FOCUS_RIGHT)
+    if(do_scroll){
+      setSmoothScrollingEnabled(false)
+      fullScroll(View.FOCUS_RIGHT)
+    }
   }
 
   def scrollToNext(){
-    setSmoothScrollingEnabled(true)
+    val smooth = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").startsWith("CUR")
+    setSmoothScrollingEnabled(smooth)
     fullScroll(View.FOCUS_LEFT)
   }
 
 }
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
-  val MARGIN_TOP = Array(0.03,0.06,0.09,0.045,0.075) // from left to right
+  val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from left to right
   val MARGIN_BOTTOM = 0.05
   val MARGIN_LR = 0.1
   val SPACE_H = 0.03
@@ -36,6 +39,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   val DEFAULT_TEXT_SIZE = paint.getTextSize
+  var cur_num = -1
 
   def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
     var w = 0
@@ -95,25 +99,20 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
     
-    if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB && canvas.isHardwareAccelerated){
+    if(android.os.Build.VERSION.SDK_INT >= 11 && canvas.isHardwareAccelerated){
       // The default background has gradation when hardware acceleration is turned on
       // Therefore we have to fill it with black
       canvas.drawColor(Color.BLACK)
     }
 
-    val num = if(Globals.is_playing){
-      if(getId == R.id.yomi_info_view_cur){
-        Globals.play_log.applyOrElse(1,(_:Int)=> -1)
-      }else{
-        Globals.play_log.applyOrElse(0,(_:Int)=> -1)
-      }
-    }else{
-      if(getId == R.id.yomi_info_view_cur){
-        Globals.play_log.applyOrElse(2,(_:Int)=> -1)
-      }else{
-        Globals.play_log.applyOrElse(1,(_:Int)=> -1)
-      }
-    }
+    val num = Globals.play_log.applyOrElse(
+      (Globals.is_playing,getId==R.id.yomi_info_view_cur) match{
+        case (true,true) => 1
+        case (true,false) => 0
+        case (false,true) => 2
+        case (false,false) => 1
+      },(_:Int)=> -1)
+    cur_num = num
     if(num >= 0){
       val conf = Globals.prefs.get.getString("show_yomi_info","None")
       val typeface = if(conf.startsWith("asset:")){

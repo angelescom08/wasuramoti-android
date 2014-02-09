@@ -129,7 +129,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val (cn,rb) = if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
         (0,R.id.read_button_large)
     }else{
-        if(Globals.prefs.get.getBoolean("hardware_accelerate",true)){
+        if(Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
            getWindow.setFlags(
              WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
              WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -202,10 +202,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       super.onActivityResult(requestCode,resultCode,data)
     }
   }
-  def invalidateYomiInfo(){
+  def invalidateYomiInfo(do_scroll:Boolean=true){
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
-      yomi_info.invalidateAndScroll()
+      yomi_info.invalidateAndScroll(do_scroll)
     }
   }
   override def onStart(){
@@ -233,7 +233,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Globals.forceResetContentView = false
     }
     restartRefreshTimer()
-    Globals.player.foreach{_.stop()}
+    Globals.player.foreach{ p =>
+      p.stop()
+      // When screen is rotated, the activity is destroyed and new one is created.
+      // Therefore, we have to reset the KarutaPlayer's activity
+      p.activity = this
+    }
     timer_autoread.foreach(_.cancel())
     timer_autoread = None
     refreshAndSetButton()
@@ -329,6 +334,23 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
+    //TODO: Implement the rest
+    /*val scroll = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    val v = findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
+    val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
+    val player = Globals.player.get
+    val readnum = if(read_order_each.startsWith("CUR")){player.cur_num}else{player.next_num}
+    // The scroll is on the rightmost.
+    if(v != null && scroll != null && !Globals.is_playing && 
+      scroll.getWidth + scroll.getScrollX >= v.getRight*0.9 &&
+      is_shuffle &&
+      v.cur_num > 0 &&
+      v.cur_num != readnum
+    ){
+      ... Go To Previous Fuda And Play
+    }
+    */
     doPlay(false)
   }
   def moveToNextFuda(){
@@ -336,7 +358,7 @@ trait MainButtonTrait{
     if(is_shuffle){
       FudaListHelper.moveNext(self.getApplicationContext())
     }
-    // In random mode, there is a possobility that same pairs of fuda are read in a row.
+    // In random mode, there is a possibility that same pairs of fuda are read in a row.
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
     self.refreshAndSetButton(!is_shuffle)
