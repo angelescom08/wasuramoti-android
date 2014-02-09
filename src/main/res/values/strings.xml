@@ -147,6 +147,8 @@
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_silent_mode_on_start">Silent Mode</string>
   <string name="conf_silent_mode_on_start_summary">Set silent mode on start up, unset on close.</string>
+  <string name="conf_hardware_accelerate">Hardware Acceleration</string>
+  <string name="conf_hardware_accelerate_summary">Use GPU for rendering poem text</string>
   <string name="conf_audio_track_mode">AudioTrack Mode</string>
   <string name="conf_audio_track_mode_summary">`Stream` uses less memory. However, setting it may cause some noise.</string>
   <string-array name="conf_audio_track_entries">

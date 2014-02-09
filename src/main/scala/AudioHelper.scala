@@ -42,22 +42,20 @@ object AudioHelper{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
-    num.foreach{ case (cur_num,next_num) =>
-      if(Globals.play_log.isEmpty){
-        Globals.play_log.++=:(Array(next_num,cur_num))
-      }else{
-        Globals.play_log.+=:(next_num)
-      }
-      if(Globals.play_log.length > 10){
-        Globals.play_log.trimEnd(Globals.play_log.length-10)
-      }
-    }
     num.flatMap{case(cur_num,next_num) =>{
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
         }else if(force || Globals.forceRefresh || old_player.isEmpty ||
         old_player.get.cur_num != cur_num || old_player.get.next_num != next_num
         ){
+          if(Globals.play_log.isEmpty){
+            Globals.play_log.++=:(Array(next_num,cur_num))
+          }else{
+            Globals.play_log.+=:(next_num)
+          }
+          if(Globals.play_log.length > 10){
+            Globals.play_log.trimEnd(Globals.play_log.length-10)
+          }
           Globals.forceRefresh = false
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{

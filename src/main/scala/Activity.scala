@@ -70,7 +70,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           invalidateYomiInfo()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,_=>refreshAndSetButton()).show
+      case R.id.menu_move => new MovePositionDialog(this,
+        _=>{
+          Globals.play_log.clear()
+          refreshAndSetButton()
+          invalidateYomiInfo()
+        }
+        ).show
       case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {
@@ -117,6 +123,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     return true
   }
+  
   def switchViewAndReloadHandler(){
     val flipper = findViewById(R.id.main_flip).asInstanceOf[ViewFlipper]
     val (cn,rb) = if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){

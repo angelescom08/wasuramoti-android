@@ -5,12 +5,12 @@
               android:orientation="vertical"
               android:weightSum="1.0"
               >
-    <karuta.hpnpwd.wasuramoti.YomiInfoLayout
-            android:id="@+id/yomi_info"
+      <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.75"
-      />
+            android:layout_weight="0.75">
+        <include layout="@layout/yomi_info_double" />
+      </LinearLayout>
     <Button android:id="@+id/read_button_small"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
