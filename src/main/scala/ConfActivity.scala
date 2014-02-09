@@ -2,12 +2,13 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.preference.{PreferenceActivity,DialogPreference}
 import _root_.android.os.Bundle
+import _root_.android.app.{PendingIntent,AlarmManager}
 import _root_.android.media.AudioManager
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.text.TextUtils
 import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import _root_.android.util.AttributeSet
-import _root_.android.content.{Context,SharedPreferences}
+import _root_.android.content.{Context,SharedPreferences,Intent}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference,PreferenceGroup}
 
 trait PreferenceCustom extends Preference{
@@ -312,6 +313,20 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
         }
         if(key == "show_yomi_info"){
           Globals.forceResetContentView = true
+        }
+        if(key == "hardware_accelerate"){
+          // Restart Application
+          val start_activity = new Intent(context,classOf[WasuramotiActivity])
+          val pending_id = 271828
+          val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
+          val mgr = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+          if(mgr != null){
+            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),
+              { Unit =>
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
+                System.exit(0)
+              })
+          }
         }
         val pref = findPreference(key)
         if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){

@@ -148,6 +148,12 @@
         android:title="@string/conf_silent_mode_on_start"
         android:summary="@string/conf_silent_mode_on_start_summary"
         />
+      <CheckBoxPreference
+        android:key="hardware_accelerate"
+        android:title="@string/conf_hardware_accelerate"
+        android:summary="@string/conf_hardware_accelerate_summary"
+        android:defaultValue="true"
+        />
       <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
         android:key="audio_track_mode"
         android:title="@string/conf_audio_track_mode"

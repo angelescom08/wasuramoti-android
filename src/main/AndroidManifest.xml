@@ -4,7 +4,7 @@ package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
 android:versionName="0.8.2" android:versionCode="40" >
     <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11" ></uses-sdk>
-    <application android:icon="@drawable/animals_dolphin" android:label="@string/app_name" android:hardwareAccelerated="true">
+    <application android:icon="@drawable/animals_dolphin" android:label="@string/app_name" android:hardwareAccelerated="false">
         <receiver android:name=".NotifyTimerReceiver" />
         <!-- In order to use startActivityForResult, launchMode must not be settled to singleInstance -->
         <activity android:launchMode="singleTask" android:label="@string/app_name" android:name=".WasuramotiActivity" 

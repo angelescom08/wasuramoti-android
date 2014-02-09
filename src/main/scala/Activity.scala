@@ -129,6 +129,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val (cn,rb) = if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
         (0,R.id.read_button_large)
     }else{
+        if(Globals.prefs.get.getBoolean("hardware_accelerate",true)){
+           getWindow.setFlags(
+             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+        }
         (1,R.id.read_button_small)
     }
     flipper.setDisplayedChild(cn)

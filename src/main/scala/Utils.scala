@@ -25,6 +25,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 3
+  val PREFERENCE_VERSION = 2
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -50,14 +51,20 @@ object Utils {
   type EqualizerSeq = Seq[Option[Double]]
   // Since every Activity has a possibility to be killed by android when it is background,
   // all the Activity in this application should call this method in onCreate()
+  // Increment Globals.PREFERENCE_VERSION if you want to read again
   def initGlobals(app_context:Context) {
     Globals.global_lock.synchronized{
       if(Globals.database.isEmpty){
         Globals.database = Some(new DictionaryOpenHelper(app_context))
       }
-      PreferenceManager.setDefaultValues(app_context,R.xml.conf,false)
       if(Globals.prefs.isEmpty){
         Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
+      }
+      if(Globals.prefs.get.getInt("preference_version",0) < Globals.PREFERENCE_VERSION){
+        PreferenceManager.setDefaultValues(app_context,R.xml.conf,true)
+        val edit = Globals.prefs.get.edit
+        edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
+        edit.commit()
       }
       ReaderList.setDefaultReader(app_context)
     }

@@ -131,8 +131,9 @@
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
-  <string name="conf_hardware_accelerate"></string>
-  <string name="conf_hardware_accelerate_summary">Use GPU for rendering poem text</string>
+  <string name="conf_hardware_accelerate">GPUレンダリング</string>
+  <string name="conf_hardware_accelerate_summary">読み句描画が滑らかになるが，メモリを余計に消費する</string>
+  <string name="conf_hardware_accelerate_restart_confirm">GPUレンダリングの設定変更を反映するにはアプリを再起動する必要があります．いますぐ再起動しますか？</string>
   <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
   <string name="conf_audio_track_mode_summary">Streamにするとメモリ節約できるが，詠みの区切りに雑音が入る可能性有り</string>
   <!-- CATEGORY_PROCESSINNG -->
