@@ -67,14 +67,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           FudaListHelper.moveToFirst(getApplicationContext())
           Globals.play_log.clear()
           refreshAndSetButton()
-          invalidateYomiInfo()
+          invalidateYomiInfo(Some(View.FOCUS_LEFT))
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,
         _=>{
           Globals.play_log.clear()
           refreshAndSetButton()
-          invalidateYomiInfo()
+          invalidateYomiInfo(Some(View.FOCUS_LEFT))
         }
         ).show
       case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
@@ -126,7 +126,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   
   def switchViewAndReloadHandler(){
     val flipper = findViewById(R.id.main_flip).asInstanceOf[ViewFlipper]
-    val (cn,rb) = if(Globals.prefs.filter{x=>x.getString("show_yomi_info","None") != "None"}.isEmpty){
+    val (cn,rb) = if(!Utils.showYomiInfo){
         (0,R.id.read_button_large)
     }else{
         if(Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
@@ -202,10 +202,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       super.onActivityResult(requestCode,resultCode,data)
     }
   }
-  def invalidateYomiInfo(do_scroll:Boolean=true){
+  def invalidateYomiInfo(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean=false){
+    if(!Utils.showYomiInfo){
+      return
+    }
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
-      yomi_info.invalidateAndScroll(do_scroll)
+      yomi_info.invalidateAndScroll(scroll,have_to_hide)
     }
   }
   override def onStart(){
@@ -230,6 +233,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     if( Globals.forceResetContentView ){
       switchViewAndReloadHandler()
+      invalidateYomiInfo(Some(View.FOCUS_LEFT))
       Globals.forceResetContentView = false
     }
     restartRefreshTimer()
@@ -337,10 +341,9 @@ trait MainButtonTrait{
     //TODO: Implement the rest
     /*val scroll = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     val v = findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
-    val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
     val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
     val player = Globals.player.get
-    val readnum = if(read_order_each.startsWith("CUR")){player.cur_num}else{player.next_num}
+    val readnum = if(Utils.readCurNext){player.cur_num}else{player.next_num}
     // The scroll is on the rightmost.
     if(v != null && scroll != null && !Globals.is_playing && 
       scroll.getWidth + scroll.getScrollX >= v.getRight*0.9 &&
@@ -385,8 +388,7 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
-        val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-        val after:Option[Unit=>Unit] = if(yomi_info != null){
+        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo){
           Some(Unit => {
               runOnUiThread(new Runnable(){
                   override def run(){

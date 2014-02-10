@@ -2,8 +2,8 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.view.Gravity
-import _root_.android.os.AsyncTask
+import _root_.android.view.{Gravity,View}
+import _root_.android.os.{AsyncTask,Handler}
 import _root_.android.app.ProgressDialog
 import _root_.android.media.audiofx.Equalizer
 import _root_.android.content.pm.ActivityInfo
@@ -33,6 +33,7 @@ object KarutaPlayerDebug{
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
+  var read_both = false
   var audio_thread = None:Option[Thread]
   var timer_start = None:Option[Timer]
   var timer_onend = None:Option[Timer]
@@ -148,12 +149,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       timer_start = Some(new Timer())
       // Since we insert some silence at beginning of audio,
       // the actual wait_time should be shorter.
-      var wait_time = Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH
-      if(wait_time < 100){
-        wait_time = 100
+      val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
+      if(Utils.showYomiInfo){
+        (new Handler()).post(new Runnable(){
+            override def run(){
+              val double_mode = Utils.readCurNext
+              val scroll = if(double_mode){Some(View.FOCUS_RIGHT)}else{None}
+              activity.invalidateYomiInfo(scroll,double_mode)
+            }
+          })
       }
-      val do_scroll = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").startsWith("CUR")
-      activity.invalidateYomiInfo(do_scroll)
       timer_start.get.schedule(new TimerTask(){
         override def run(){
           onReallyStart(onPlayEnd,onCurEnd)
@@ -331,6 +336,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         val res_queue = new AudioQueue()
         val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
         cur_millisec = 0
+        read_both = false
         def add_to_audio_queue(w:Either[WavBuffer,Int],is_cur:Boolean){
           res_queue.enqueue(w)
           val alen = w match{
@@ -339,6 +345,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }
           if(is_cur){
             cur_millisec += alen
+          }
+          if(w.isLeft && is_cur){
+            read_both = true
           }
         }
         // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,

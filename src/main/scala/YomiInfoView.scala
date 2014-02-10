@@ -7,20 +7,27 @@ import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-  def invalidateAndScroll(do_scroll:Boolean){
+  def invalidateAndScroll(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
-      val v = findViewById(i)
-      if(v!=null){v.invalidate}
+      val v = findViewById(i).asInstanceOf[YomiInfoView]
+      if(v!=null){
+        v.hide = (have_to_hide && i == R.id.yomi_info_view_next)
+        v.invalidate
+      }
     }
-    if(do_scroll){
+    scroll.foreach{ x =>
       setSmoothScrollingEnabled(false)
-      fullScroll(View.FOCUS_RIGHT)
+      fullScroll(x)
     }
   }
 
   def scrollToNext(){
-    val smooth = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").startsWith("CUR")
-    setSmoothScrollingEnabled(smooth)
+    val v = findViewById(R.id.yomi_info_view_next).asInstanceOf[YomiInfoView]
+    if(v != null && v.hide){
+      v.hide = false
+      v.invalidate
+    }
+    setSmoothScrollingEnabled(Utils.readCurNext)
     fullScroll(View.FOCUS_LEFT)
   }
 
@@ -29,7 +36,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
   val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from left to right
   val MARGIN_BOTTOM = 0.05
-  val MARGIN_LR = 0.1
+  val MARGIN_LR = 0.08
   val SPACE_H = 0.03
   val SPACE_V = 0.02
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
@@ -40,6 +47,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   paint.setColor(Color.WHITE)
   val DEFAULT_TEXT_SIZE = paint.getTextSize
   var cur_num = -1
+  var hide = false
 
   def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
     var w = 0
@@ -104,6 +112,9 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       // Therefore we have to fill it with black
       canvas.drawColor(Color.BLACK)
     }
+    if(hide){
+      return
+    }
 
     val num = Globals.play_log.applyOrElse(
       (Globals.is_playing,getId==R.id.yomi_info_view_cur) match{
@@ -130,10 +141,11 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       paint.setTextSize(DEFAULT_TEXT_SIZE)
       val text_size = calculateTextSize(text_array,paint).toInt
       paint.setTextSize(text_size)
-      var startx = (getWidth/2 + ((SPACE_H*getWidth+text_size)*(text_array.length+1))/2).toInt // center of line
+      val span_h = SPACE_H*getWidth
+      var startx = (getWidth/2 + ((span_h+text_size)*(text_array.length+1))/2).toInt
       for((t,m) <- text_array.zip(MARGIN_TOP)){
         val starty = (getHeight * m).toInt
-        startx -= (getWidth*SPACE_H+text_size).toInt
+        startx -= (span_h+text_size).toInt
         verticalText(paint,canvas,startx,starty,t)
       }
     }

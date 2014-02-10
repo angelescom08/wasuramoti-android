@@ -70,6 +70,14 @@ object Utils {
     }
   }
 
+  def showYomiInfo():Boolean = {
+    Globals.prefs.exists{_.getString("show_yomi_info","None") != "None"}
+  }
+
+  def readCurNext():Boolean = {
+    Globals.player.exists{_.read_both}
+  }
+
   def findAncestorViewById(v:View,id:Int):Option[View] = {
     var cur = v
     while( cur != null && cur.getId != id ){
