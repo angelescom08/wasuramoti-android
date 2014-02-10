@@ -7,6 +7,17 @@ import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
+  def setChildSize(){
+    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
+      val v = findViewById(i).asInstanceOf[YomiInfoView]
+      if(v!=null){
+        val prop = v.getLayoutParams
+        prop.width = getWidth
+        v.setLayoutParams(prop)
+      }
+    }
+    requestLayout()
+  }
   def invalidateAndScroll(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
       val v = findViewById(i).asInstanceOf[YomiInfoView]
@@ -30,7 +41,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     setSmoothScrollingEnabled(Utils.readCurNext)
     fullScroll(View.FOCUS_LEFT)
   }
-
 }
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
@@ -82,26 +92,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       canvas.drawText(t.toString,xx,yy,paint)
       y += r.bottom - r.top + (getHeight*SPACE_V).toInt
     }
-  }
-
-  override def onMeasure(widthMS:Int,heightMS:Int){
-    val par = getParent.getParent.asInstanceOf[View]
-    val desiredWidth = par.getWidth
-    val desiredHeight = par.getHeight
-    val specifiedWidth = MeasureSpec.getSize(widthMS)
-    val specifiedHeight = MeasureSpec.getSize(heightMS)
-    // As for height, we obey parents specification
-    val pixelHeight = MeasureSpec.getMode(heightMS) match {
-      case MeasureSpec.EXACTLY => specifiedHeight
-      case MeasureSpec.AT_MOST => Math.min(specifiedHeight,desiredHeight)
-      case _ => desiredHeight
-    }
-    // As for width, we force our desired width
-    val pixelWidth = desiredWidth
-
-    val desiredWSpec = View.MeasureSpec.makeMeasureSpec(pixelWidth, View.MeasureSpec.EXACTLY)
-    val desiredHSpec = View.MeasureSpec.makeMeasureSpec(pixelHeight, View.MeasureSpec.EXACTLY)
-    setMeasuredDimension(desiredWSpec,desiredHSpec)
   }
 
   override def onDraw(canvas:Canvas){

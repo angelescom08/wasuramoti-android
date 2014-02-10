@@ -129,14 +129,20 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val (cn,rb) = if(!Utils.showYomiInfo){
         (0,R.id.read_button_large)
     }else{
-        if(Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
-           getWindow.setFlags(
-             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-        }
         (1,R.id.read_button_small)
     }
     flipper.setDisplayedChild(cn)
+    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(cn == 1 && yomi_info != null){
+      val observer = yomi_info.getViewTreeObserver
+      // after layout is done, set the width of YomiInfoView to yomi_info's width
+      observer.addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener(){
+          override def onGlobalLayout(){
+            yomi_info.getViewTreeObserver.removeGlobalOnLayoutListener(this)
+            yomi_info.setChildSize()
+          }
+        })
+    }
     
     val read_button = findViewById(rb).asInstanceOf[Button]
     val handler = new Handler()
@@ -165,6 +171,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     if(!OggVorbisDecoder.library_loaded){
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
       return
+    }
+    if(Utils.showYomiInfo && Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
+         getWindow.setFlags(
+           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
     setContentView(R.layout.main)
     switchViewAndReloadHandler()
@@ -230,11 +241,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     if( Globals.prefs.isEmpty ){
       // onCreate returned before loading preference
       return
-    }
-    if( Globals.forceResetContentView ){
-      switchViewAndReloadHandler()
-      invalidateYomiInfo(Some(View.FOCUS_LEFT))
-      Globals.forceResetContentView = false
     }
     restartRefreshTimer()
     Globals.player.foreach{ p =>

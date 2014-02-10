@@ -312,10 +312,17 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           Globals.forceRefresh = true
         }
         if(key == "show_yomi_info"){
-          Globals.forceResetContentView = true
+          // Since I counld not find the way to dynamically switch ViewFlipper's child correctly, I simply just restart the activity.
+          // More precisely, enabling hardware acceleration after switching ViewFlipper's child seems not working.
+          Globals.player.foreach{player =>
+            var act = player.activity
+            act.finish()
+            act.startActivity(act.getIntent)
+          }
         }
         if(key == "hardware_accelerate"){
-          // Restart Application
+          // Since there is no way to disable hardware acceleration,
+          // we have to restart application. This way totally exits application using System.exit()
           val start_activity = new Intent(context,classOf[WasuramotiActivity])
           val pending_id = 271828
           val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
