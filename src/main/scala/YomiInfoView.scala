@@ -1,22 +1,26 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
 import _root_.android.view.View
-import _root_.android.view.View.MeasureSpec
-import _root_.android.widget.{FrameLayout,HorizontalScrollView}
+import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-  def setChildSize(){
-    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
-      val v = findViewById(i).asInstanceOf[YomiInfoView]
-      if(v!=null){
-        val prop = v.getLayoutParams
-        prop.width = getWidth
-        v.setLayoutParams(prop)
+  override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
+    super.onSizeChanged(w,h,oldw,oldh)
+    post(new Runnable(){
+      override def run(){
+        for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
+          val v = findViewById(i)
+          if(v!=null){
+            val prop = v.getLayoutParams
+            prop.width = w
+            v.setLayoutParams(prop)
+          }
+        }
       }
-    }
-    requestLayout()
+      requestLayout()
+    })
   }
   def invalidateAndScroll(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){

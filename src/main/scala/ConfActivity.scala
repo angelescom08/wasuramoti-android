@@ -312,6 +312,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           Globals.forceRefresh = true
         }
         if(key == "show_yomi_info"){
+          // Note: the following is a comment for old implementation of YomiInfoView TODO: check validness of the following comment.
           // Since I counld not find the way to dynamically switch ViewFlipper's child correctly, I simply just restart the activity.
           // More precisely, enabling hardware acceleration after switching ViewFlipper's child seems not working.
           Globals.player.foreach{player =>

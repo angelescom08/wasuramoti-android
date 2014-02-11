@@ -187,7 +187,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     Globals.global_lock.synchronized{
       onCurEnd.foreach{hook =>
         timer_curend = Some(new Timer())
-        val t = Math.max(10,cur_millisec-500) // begin 500ms earlier
+        val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
         timer_curend.get.schedule(new TimerTask(){
             override def run(){
               hook()

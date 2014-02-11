@@ -132,17 +132,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         (1,R.id.read_button_small)
     }
     flipper.setDisplayedChild(cn)
-    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-    if(cn == 1 && yomi_info != null){
-      val observer = yomi_info.getViewTreeObserver
-      // after layout is done, set the width of YomiInfoView to yomi_info's width
-      observer.addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener(){
-          override def onGlobalLayout(){
-            yomi_info.getViewTreeObserver.removeGlobalOnLayoutListener(this)
-            yomi_info.setChildSize()
-          }
-        })
-    }
     
     val read_button = findViewById(rb).asInstanceOf[Button]
     val handler = new Handler()
