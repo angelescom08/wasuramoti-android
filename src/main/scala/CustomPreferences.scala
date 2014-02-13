@@ -63,7 +63,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     root_view = Some(view)
     val (main,furigana,author) = getWidgets(view)
     val prefs = Globals.prefs.get
-    main.setSelection(getIndexFromValue(prefs.getString("yomi_info","None")))
+    main.setSelection(getIndexFromValue(prefs.getString("show_yomi_info","None")))
     furigana.setSelection(getIndexFromValue(prefs.getString("yomi_info_furigana","None")))
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     return view
