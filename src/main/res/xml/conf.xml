@@ -14,15 +14,6 @@
       android:summary="@string/conf_karafuda_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
-      android:key="read_order"
-      android:title="@string/conf_read_order_title"
-      android:summary="@string/conf_read_order_summary"
-      android:entries="@array/conf_read_order_entries"
-      android:entryValues="@array/conf_read_order_entryValues"
-      android:defaultValue="SHUFFLE"
-      android:widgetLayout="@layout/conf_current_value"
-      />
     <karuta.hpnpwd.wasuramoti.ReaderListPreference
       android:key="reader_path"
       android:title="@string/conf_reader_list"
@@ -35,22 +26,28 @@
       android:summary="@string/conf_audio_volume_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-      <karuta.hpnpwd.wasuramoti.AutoPlayPreference
-        android:key="autoplay"
-        android:title="@string/conf_autoplay"
-        android:summary="@string/conf_autoplay_summary"
-        android:widgetLayout="@layout/conf_current_value"
-        unit="@string/conf_unit_second"
-        />
-  </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_detail" android:key="category_detail">
-    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+    <karuta.hpnpwd.wasuramoti.AutoPlayPreference
+      android:key="autoplay"
+      android:title="@string/conf_autoplay"
+      android:summary="@string/conf_autoplay_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      unit="@string/conf_unit_second"
+      />
+    <karuta.hpnpwd.wasuramoti.YomiInfoPreference
       android:key="show_yomi_info"
       android:title="@string/conf_show_yomi_info_title"
       android:summary="@string/conf_show_yomi_info_summary"
-      android:entries="@array/conf_show_yomi_info_entries"
-      android:entryValues="@array/conf_show_yomi_info_entryValues"
-      android:defaultValue="None"
+      android:widgetLayout="@layout/conf_current_value"
+      />
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_order" android:key="category_order">
+    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+      android:key="read_order"
+      android:title="@string/conf_read_order_title"
+      android:summary="@string/conf_read_order_summary"
+      android:entries="@array/conf_read_order_entries"
+      android:entryValues="@array/conf_read_order_entryValues"
+      android:defaultValue="SHUFFLE"
       android:widgetLayout="@layout/conf_current_value"
       />
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom

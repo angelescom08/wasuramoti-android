@@ -80,20 +80,25 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   def calculateTextSize(text_array:Array[String],paint:Paint):Int ={
     val width = getWidth
     val height = getHeight
-    val bounds = (for(t<-text_array)yield(calcVerticalBound(t,paint)))
-    val r1 = (for((((w,h),m),t) <- bounds.zip(MARGIN_TOP).zip(text_array)) yield (((1-m-MARGIN_BOTTOM-SPACE_V*t.length)*height/h))).min
-    val r2 = (1-MARGIN_LR*2-text_array.length*SPACE_H)*width/bounds.map{case(w,h)=>w}.sum
+    val ar = text_array.map{AllFuda.removeInsideParens(_)}
+    val bounds = (for(t<-ar)yield(calcVerticalBound(t,paint)))
+    val r1 = (for((((w,h),m),t) <- bounds.zip(MARGIN_TOP).zip(ar)) yield (((1-m-MARGIN_BOTTOM-SPACE_V*t.length)*height/h))).min
+    val r2 = (1-MARGIN_LR*2-ar.length*SPACE_H)*width/bounds.map{case(w,h)=>w}.sum
     (Math.min(r1,r2)*paint.getTextSize).toInt
   }
   def verticalText(paint:Paint,canvas:Canvas,startx:Int,starty:Int,text:String){
+
+    // Temporary we just remove furigana
+    // TODO: Implement it
+    val text_s = AllFuda.removeInsideParens(text)
+
     var y = starty
-    for(t <- text){
+    for(t <- text_s){
       val r = new Rect()
       paint.getTextBounds(t.toString,0,1,r)
       paint.setTextAlign(Paint.Align.CENTER)
-      val xx = startx.toInt
       val yy = (y - r.top).toInt
-      canvas.drawText(t.toString,xx,yy,paint)
+      canvas.drawText(t.toString,startx,yy,paint)
       y += r.bottom - r.top + (getHeight*SPACE_V).toInt
     }
   }
@@ -122,15 +127,14 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val conf = Globals.prefs.get.getString("show_yomi_info","None")
       val typeface = if(conf.startsWith("asset:")){
         try{
-          Typeface.createFromAsset(context.getAssets,conf.substring(6))
+          Typeface.createFromAsset(context.getAssets,"font/"+conf.substring(6))
         }catch{
           case _:Throwable => Typeface.DEFAULT
         }
       }else{
         Typeface.DEFAULT
       }
-      val list_with_joka:Array[String] = AllFuda.list_full.+:(AllFuda.joka)
-      val text_array = list_with_joka(num).split(" ")
+      val text_array = AllFuda.list_full(num).split(" ")
       paint.setTypeface(typeface)
       paint.setTextSize(DEFAULT_TEXT_SIZE)
       val text_size = calculateTextSize(text_array,paint).toInt

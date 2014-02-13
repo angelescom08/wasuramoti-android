@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.collection.mutable.Buffer
-import scala.collection.JavaConversions.bufferAsJavaList
+import scala.collection.JavaConversions
 
 import _root_.android.preference.ListPreference
 import _root_.android.content.{Context,DialogInterface}
@@ -11,7 +11,6 @@ import _root_.android.os.{Environment,AsyncTask}
 import _root_.android.view.Gravity
 import _root_.android.widget.ArrayAdapter
 import _root_.java.io.{IOException,File,FileOutputStream}
-import _root_.java.util.ArrayList
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 
 object ReaderList{
@@ -145,7 +144,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     }
     setEntries(entries.toArray)
     setEntryValues(entvals.toArray)
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,bufferAsJavaList(entries)))
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
     new SearchDirectoryTask().execute(new AnyRef())
 

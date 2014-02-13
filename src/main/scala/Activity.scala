@@ -3,9 +3,8 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.content.res.Configuration
 import _root_.android.os.{Bundle,Handler,Parcelable}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewGroup}
+import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.ActionBarActivity
 import _root_.java.lang.Runnable
@@ -230,6 +229,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     if( Globals.prefs.isEmpty ){
       // onCreate returned before loading preference
       return
+    }
+    if(Globals.forceRestart){
+      Globals.forceRestart = false
+      finish
+      startActivity(getIntent)
     }
     restartRefreshTimer()
     Globals.player.foreach{ p =>

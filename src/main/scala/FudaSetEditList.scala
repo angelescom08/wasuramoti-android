@@ -30,7 +30,9 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
         case SortMode.NUM => fudanum + ". "
         }
       val body = if(Romanization.is_japanese(context) && list_item_mode == ListItemMode.FULL){
-        AllFuda.list_full(fudanum-1) + " (" + AllFuda.author(fudanum-1)  + ")"
+        val poem = AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
+        val author = AllFuda.removeInsideParens(AllFuda.author(fudanum))
+        poem + " (" + author + ")"
       }else{
         Romanization.jap_to_local(context,str)
       }
@@ -122,7 +124,6 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
       // Therefore I do it by hand.
       checkListBy(x=>num_list.contains(x.fudanum))
     }
-
 
     findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){

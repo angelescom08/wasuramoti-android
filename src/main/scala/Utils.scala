@@ -43,6 +43,7 @@ object Globals {
   var notify_manager = None:Option[NotificationManager]
   var is_playing = false
   var forceRefresh = false
+  var forceRestart = false
   var audio_volume_bkup = None:Option[Int]
 }
 

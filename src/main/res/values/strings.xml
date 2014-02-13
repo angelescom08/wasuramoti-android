@@ -67,10 +67,15 @@
   <string name="equalizer_reset">Reset</string>
   <string name="player_error_noplay">Cannot play current fuga. Please go back to previous fuda.</string>
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
-  <!-- CATEGORY_DETAIL -->
-  <string name="category_detail">Detail</string>
+  <!-- CATEGORY_ORDER -->
+  <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
+  <string name="yomi_info_main_desc">Poem Text</string>
+  <string name="yomi_info_furigana_desc">Furigana</string>
+  <string name="yomi_info_author_desc">Show Author</string>
+  <string name="yomi_info_abbrev_furigana">F</string>
+  <string name="yomi_info_abbrev_author">A</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>None</item>
     <item>Default</item>

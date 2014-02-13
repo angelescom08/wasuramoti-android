@@ -6,6 +6,8 @@ Priority High:
   * Show the log of fuda read
   * Show furigana
   * When scrolled to previous fuda, and play button is tapped, go back one fuda and play.
+  * In `Auto Play` option, disable the EditText when CheckBox is not checked.
+
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

@@ -4,7 +4,7 @@ import _root_.android.app.AlertDialog
 import _root_.android.content.{Context,DialogInterface}
 import _root_.android.os.Bundle
 import _root_.android.view.{LayoutInflater,View}
-import _root_.android.widget.{TextView,EditText,FrameLayout}
+import _root_.android.widget.{TextView,EditText}
 import _root_.android.graphics.Color
 import _root_.android.text.TextUtils
 import _root_.java.io.File

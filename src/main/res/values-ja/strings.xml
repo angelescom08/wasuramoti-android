@@ -69,10 +69,15 @@
   <string name="autoplay_enable">有効</string>
   <string name="autoplay_span">間隔:</string>
 
-  <!-- CATEGORY_DETAIL -->
-  <string name="category_detail">詳細</string>
+  <!-- CATEGORY_ORDER -->
+  <string name="category_order">順番</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
+  <string name="yomi_info_main_desc">読み句</string>
+  <string name="yomi_info_furigana_desc">ふりがな</string>
+  <string name="yomi_info_author_desc">歌人の表示</string>
+  <string name="yomi_info_abbrev_furigana">ふ</string>
+  <string name="yomi_info_abbrev_author">人</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
     <item>デフォルト</item>
