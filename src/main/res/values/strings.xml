@@ -94,6 +94,17 @@
     <item>asset:tfont-kaisho.ttf</item>
     <item>asset:kouzan-gyosho.ttf</item>
   </string-array>
+  <string name="yomi_info_furigana_size_desc">Firigana Size</string>
+  <string-array name="conf_yomi_info_furigana_size_entries">
+    <item>Small</item>
+    <item>Medium</item>
+    <item>Large</item>
+  </string-array>
+  <string-array name="conf_yomi_info_furigana_size_entryValues">
+    <item>SMALL</item>
+    <item>MEDIUM</item>
+    <item>LARGE</item>
+  </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
   <string name="conf_read_order_each_summary">`Upper` means the first half of the poem, and `Lower` means the rest of it.</string>

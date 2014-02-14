@@ -181,12 +181,17 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
           paint_furigana.setTypeface(typeface)
         }
       }
-      val space_h = if(show_furigana){
-        // TODO: able to change furigana size
-        SPACE_H
+      val space_boost = if(show_furigana){
+        Globals.prefs.get.getString("yomi_info_furigana_size","SMALL") match {
+          case "SMALL" => 1.0
+          case "MEDIUM" => 1.14
+          case "LARGE" => 1.3
+          case _ => 1.0
+        }
       }else{
-        SPACE_H
+        1.0
       }
+      val space_h = SPACE_H * space_boost
 
       val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++ 
         AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)

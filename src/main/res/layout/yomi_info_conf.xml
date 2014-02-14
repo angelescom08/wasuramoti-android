@@ -35,6 +35,21 @@
               android:entries="@array/conf_show_yomi_info_entries"
                />
   </LinearLayout>
+  <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal" >
+    <TextView
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:text="@string/yomi_info_furigana_size_desc"
+      />
+    <Spinner android:id="@+id/yomi_info_furigana_size"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:entries="@array/conf_yomi_info_furigana_size_entries"
+               />
+  </LinearLayout>
   <CheckBox
     android:id="@+id/yomi_info_author"
     android:layout_width="wrap_content" android:layout_height="wrap_content"

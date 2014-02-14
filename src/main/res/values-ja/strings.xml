@@ -90,6 +90,12 @@
     <item>楷書</item>
     <item>行書</item>
   </string-array>
+  <string name="yomi_info_furigana_size_desc">ふりがなの大きさ</string>
+  <string-array name="conf_yomi_info_furigana_size_entries">
+    <item>小</item>
+    <item>中</item>
+    <item>大</item>
+  </string-array>
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
   <string-array name="conf_read_order_each_entries">

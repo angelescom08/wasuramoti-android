@@ -7,7 +7,6 @@ Priority High:
   * Show furigana
   * When scrolled to previous fuda, and play button is tapped, go back one fuda and play.
   * In `Auto Play` option, disable the EditText when CheckBox is not checked.
-  * Able to adjust size of furigana
   * Show Kimariji on Poem Text
 
 Priority Middle:
