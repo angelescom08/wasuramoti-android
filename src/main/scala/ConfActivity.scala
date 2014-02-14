@@ -4,7 +4,7 @@ import _root_.android.preference.{PreferenceActivity}
 import _root_.android.os.Bundle
 import _root_.android.app.{PendingIntent,AlarmManager}
 import _root_.android.view.View
-import _root_.android.widget.TextView
+import _root_.android.widget.{TextView,CheckBox,CompoundButton}
 import _root_.android.util.AttributeSet
 import _root_.android.content.{Context,SharedPreferences,Intent}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
@@ -23,6 +23,22 @@ trait PreferenceCustom extends Preference{
   // However, notifyChanged() is protected method. Therefore we use this method.
   def notifyChangedPublic(){
     super.notifyChanged()
+  }
+  def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
+    val f = (isChecked:Boolean) => {
+      root_view.foreach{ root =>
+        val layout = root.findViewById(layout_id)
+        if(layout != null){
+          layout.setVisibility(if(isChecked){View.VISIBLE}else{View.INVISIBLE})
+        }
+      }
+    }
+    f(checkbox.isChecked)
+    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        override def onCheckedChanged(btn:CompoundButton,isChecked:Boolean){
+          f(isChecked)
+        }
+      })
   }
 }
 class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTextPreference(context,aset) with PreferenceCustom{

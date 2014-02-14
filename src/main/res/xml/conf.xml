@@ -14,16 +14,10 @@
       android:summary="@string/conf_karafuda_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <karuta.hpnpwd.wasuramoti.ReaderListPreference
-      android:key="reader_path"
-      android:title="@string/conf_reader_list"
-      android:summary="@string/conf_reader_list_summary"
-      android:widgetLayout="@layout/conf_current_value"
-      />
-    <karuta.hpnpwd.wasuramoti.AudioVolumePreference
-      android:key="audio_volume"
-      android:title="@string/conf_audio_volume"
-      android:summary="@string/conf_audio_volume_summary"
+    <karuta.hpnpwd.wasuramoti.YomiInfoPreference
+      android:key="show_yomi_info"
+      android:title="@string/conf_show_yomi_info_title"
+      android:summary="@string/conf_show_yomi_info_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
     <karuta.hpnpwd.wasuramoti.AutoPlayPreference
@@ -33,10 +27,16 @@
       android:widgetLayout="@layout/conf_current_value"
       unit="@string/conf_unit_second"
       />
-    <karuta.hpnpwd.wasuramoti.YomiInfoPreference
-      android:key="show_yomi_info"
-      android:title="@string/conf_show_yomi_info_title"
-      android:summary="@string/conf_show_yomi_info_summary"
+    <karuta.hpnpwd.wasuramoti.AudioVolumePreference
+      android:key="audio_volume"
+      android:title="@string/conf_audio_volume"
+      android:summary="@string/conf_audio_volume_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
+    <karuta.hpnpwd.wasuramoti.ReaderListPreference
+      android:key="reader_path"
+      android:title="@string/conf_reader_list"
+      android:summary="@string/conf_reader_list_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
   </PreferenceCategory>

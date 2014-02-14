@@ -57,7 +57,10 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_V = 0.02
   val SPACE_H = 0.05
   val SPACE_V_FURIGANA = 0.01
+  val MARGIN_LEFT_FURIGANA = 0.007
   val FURIGANA_TOP_LIMIT = 0.01
+  val FURIGANA_RATIO = 0.82
+
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   // However, our calculateTextSize() is quite inaccurate when paint's text size is not a default value,
@@ -65,7 +68,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_furigana.setColor(Color.WHITE)
+  paint_furigana.setColor(Color.rgb(199,239,251))
 
   var show_furigana = true
   var show_author = true
@@ -102,18 +105,18 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     val r2 = (1-MARGIN_LR*2-text_array_with_margin.length*space_h)*width/bounds.map{case(w,h)=>w}.sum
     (Math.min(r1,r2)*paint.getTextSize).toInt
   }
-  def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int){
+  def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int,actual_width_furigana:Int){
     val text_s = AllFuda.parseFurigana(text)
     var y = starty
     var prev_furigana_bottom = (getHeight*FURIGANA_TOP_LIMIT).toInt
     for((t,furigana) <- text_s){
-      val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,actual_width,prev_furigana_bottom)
+      val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,actual_width,actual_width_furigana,prev_furigana_bottom)
       // TODO: the following is so ugly
       y = y_
       prev_furigana_bottom = prev_furigana_bottom_
     }
   }
-  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int,prev_furigana_bottom:Int):(Int,Int) = {
+  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int,actual_width_furigana:Int,prev_furigana_bottom:Int):(Int,Int) = {
     val (y,width,height) = drawVertical(paint,canvas,startx,starty,text,(getHeight*SPACE_V).toInt)
     var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
@@ -121,7 +124,8 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana) 
       val this_height = this_height_wo + (furigana.length-1)*span_v
       val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
-      val(furigana_y,_,_) = drawVertical(paint_furigana,canvas,startx+actual_width/2+paint_furigana.getTextSize.toInt/2,sy,furigana,span_v)
+      val sx = (startx+actual_width/2.0+actual_width_furigana/2.0 + getWidth*MARGIN_LEFT_FURIGANA).toInt
+      val(furigana_y,_,_) = drawVertical(paint_furigana,canvas,sx,sy,furigana,span_v)
       new_furigana_bottom = furigana_y
     }
     (y,new_furigana_bottom)
@@ -137,6 +141,13 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val yy = (y - r.top).toInt
       canvas.drawText(t.toString,startx,yy,paint)
       y += r.bottom - r.top + span 
+      if(Globals.IS_DEBUG){
+        val paint_debug = new Paint()
+        paint_debug.setStyle(Paint.Style.STROKE)
+        paint_debug.setColor(Color.RED)
+        paint_debug.setStrokeWidth(3)
+        canvas.drawRect(startx,starty,startx+1,starty+1,paint_debug)
+      }
     }
     (y,width,y-starty-span)
   }
@@ -202,19 +213,18 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val span_h = space_h*getWidth
       var rowspan = (span_h+actual_width).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
+      var actual_width_furigana = 0.0
       if(show_furigana){
         var furisize = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
         paint_furigana.setTextSize(furisize)
         val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
-        val actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
+        actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
         val actual_ratio_furigana = furisize / actual_width_furigana.toFloat
-
-        paint_furigana.setTextSize((rowspan-actual_width)*actual_ratio_furigana*0.9f)
-        startx = Math.min(startx,getWidth-actual_width-actual_width_furigana)
+        paint_furigana.setTextSize(span_h.toFloat*actual_ratio_furigana*FURIGANA_RATIO.toFloat)
       }
       for((t,m) <- text_array_with_margin){
         val starty = (getHeight * m).toInt
-        verticalText(canvas,startx,starty,t,actual_width)
+        verticalText(canvas,startx,starty,t,actual_width,actual_width_furigana.toInt)
         startx -= rowspan
       }
     }

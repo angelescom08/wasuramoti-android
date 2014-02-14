@@ -17,13 +17,11 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val res = context.getResources
     var base = res.getStringArray(R.array.conf_show_yomi_info_entries_abbr)(index)
     if(v != "None"){
-      val vf = Globals.prefs.get.getString("yomi_info_furigana","None")
-      if(vf != "None"){
-        base += "/" + res.getString(R.string.yomi_info_abbrev_furigana)
-      }
-      val va = Globals.prefs.get.getBoolean("yomi_info_author",false)
-      if(va){
+      if(Globals.prefs.get.getBoolean("yomi_info_author",false)){
         base += "/" + res.getString(R.string.yomi_info_abbrev_author)
+      }
+      if(Globals.prefs.get.getString("yomi_info_furigana","None") != "None"){
+        base += "/" + res.getString(R.string.yomi_info_abbrev_furigana)
       }
     }
     base
@@ -153,6 +151,7 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val prefs = Globals.prefs.get
     enable.setChecked(prefs.getBoolean("autoplay_enable",false))
     span.setText(prefs.getLong("autoplay_span",DEFAULT_VALUE).toString)
+    switchVisibilityByCheckBox(root_view,enable,R.id.autoplay_layout)
     return view
   }
   override def getAbbrValue():String = {
@@ -212,6 +211,7 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     enable.setChecked(prefs.getBoolean("karafuda_enable",false))
     num.setText(prefs.getInt("karafuda_append_num",0).toString)
     rand.setProgress((prefs.getFloat("karafuda_urafuda_prob",0.5f)*rand.getMax).toInt)
+    switchVisibilityByCheckBox(root_view,enable,R.id.karafuda_layout)
     return view
   }
 
