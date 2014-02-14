@@ -32,7 +32,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
       val body = if(Romanization.is_japanese(context) && list_item_mode == ListItemMode.FULL){
         val poem = AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
         val author = AllFuda.removeInsideParens(AllFuda.author(fudanum))
-        poem + " (" + author + ")"
+        poem + " (" + author.replace(" ","") + ")"
       }else{
         Romanization.jap_to_local(context,str)
       }

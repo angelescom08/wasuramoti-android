@@ -30,7 +30,8 @@ object AllFuda{
   def removeInsideParens(s:String):String = {
     INSIDE_PARENS.replaceAllIn(s,"")
   }
-  val FURIGANA_PATTERN = """(\p{InCJKUnifiedIdeographs}+)\((.*?)\)""".r
+  // We cannot use \p{IsHan} in Android DalvikVM
+  val FURIGANA_PATTERN = """((\p{InCJKUnifiedIdeographs}|\p{InCJKSymbolsAndPunctuation})+)\((.*?)\)""".r
   def parseFurigana(str:String):Array[(String,String)] = {
     val r = new mutable.ArrayBuffer[(String,String)]()
     var prev = 0
@@ -38,7 +39,7 @@ object AllFuda{
       if(prev != m.start){
         r+=((str.substring(prev,m.start),""))
       }
-      r+=((m.group(1),m.group(2)))
+      r+=((m.group(1),m.group(3)))
       prev = m.end
     }
     if(prev != str.length){
@@ -228,7 +229,7 @@ object AllFuda{
     "前中納言匡房(ごんちゅうなごんまさふさ)",
     "源俊頼朝臣(みなもとのとしよりあそん)",
     "藤原基俊(ふじわらのもととし)",
-    "法性寺入道前関白太政大臣(ほっしょうじにゅうどうさきのかんぱくだいじょうだいじん)",
+    "法性寺入道前(ほっしょうじにゅうどうさきの) 関白太政大臣(かんぱくだいじょうだいじん)",
     "崇徳院(すとくいん)",
     "源兼昌(みなもとのかねまさ)",
     "左京大夫顕輔(さきょうのだいぶあきすけ)",

@@ -49,7 +49,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 }
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
-  val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from left to right
+  val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from right to left
+  val MARGIN_AUTHOR = Array(0.09,0.11)
   val MARGIN_BOTTOM = 0.05
   val MARGIN_LR = 0.08
   val SPACE_H = 0.03
@@ -61,15 +62,17 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   // we save the default text size here.
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
-  var show_furigana = true
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint_furigana.setColor(Color.WHITE)
   val DEFAULT_TEXT_SIZE = paint.getTextSize
+
+  var show_furigana = true
+  var show_author = true
   var cur_num = -1
   var hide = false
 
   // This does not include span height
-  def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
+  def calcVerticalBound(str:String,paint:Paint):(Double,Double) = {
     var w = 0
     var h = 0
     for(s <- str){
@@ -87,12 +90,12 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   // Typeface of paint must be set before calling this function
   // Also text size must be default before calling this function ( I don't know why, maybe it's a bug ? )
-  def calculateTextSize(text_array:Array[String],paint:Paint):Int ={
+  def calculateTextSize(text_array_with_margin:Array[(String,Double)],paint:Paint):Int ={
     val width = getWidth
     val height = getHeight
-    val bounds = (for(t<-text_array)yield(calcVerticalBound(t,paint)))
-    val r1 = (for((((w,h),m),t) <- bounds.zip(MARGIN_TOP).zip(text_array)) yield (((1-m-MARGIN_BOTTOM-SPACE_V*t.length)*height/h))).min
-    val r2 = (1-MARGIN_LR*2-text_array.length*SPACE_H)*width/bounds.map{case(w,h)=>w}.sum
+    val bounds = (for((t,m)<-text_array_with_margin)yield(calcVerticalBound(t,paint)))
+    val r1 = (for(((w,h),(t,m)) <- bounds.zip(text_array_with_margin)) yield (((1-m-MARGIN_BOTTOM-SPACE_V*t.length)*height/h))).min
+    val r2 = (1-MARGIN_LR*2-text_array_with_margin.length*SPACE_H)*width/bounds.map{case(w,h)=>w}.sum
     (Math.min(r1,r2)*paint.getTextSize).toInt
   }
   def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int){
@@ -108,7 +111,9 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val span_v = (getHeight*SPACE_V_FURIGANA).toInt
       val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana) 
       val this_height = this_height_wo + (furigana.length-1)*span_v
-      drawVertical(paint_furigana,canvas,startx+actual_width/2+paint_furigana.getTextSize.toInt/2,starty+height/2-this_height.toInt/2,furigana,span_v)
+      // TODO: adjust sy so that furigana does not overwrap
+      val sy = Math.max(0,starty+height/2-this_height.toInt/2)
+      drawVertical(paint_furigana,canvas,startx+actual_width/2+paint_furigana.getTextSize.toInt/2,sy,furigana,span_v)
     }
     y
   }
@@ -148,6 +153,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       },(_:Int)=> -1)
     cur_num = num
     if(num >= 0){
+      show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
       for(key <- Array("show_yomi_info","yomi_info_furigana")){
         val conf = Globals.prefs.get.getString(key,"None")
         val typeface = if(conf.startsWith("asset:")){
@@ -166,11 +172,13 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
           paint_furigana.setTypeface(typeface)
         }
       }
-      val text_array = AllFuda.list_full(num).split(" ")
-      val no_furigana = text_array.map{AllFuda.removeInsideParens(_)}
+      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++ 
+        AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
+      val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
       paint.setTextSize(DEFAULT_TEXT_SIZE)
       val size_rate = 
       if(show_furigana){
+        // if show_furigana then smaller font
         0.9
       }else{
         1.0
@@ -179,12 +187,18 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       var text_size = (orig_text_size*size_rate).toInt
       
       paint.setTextSize(text_size)
-      val actual_width = measureActualTextWidth(no_furigana,paint)
+      val actual_width = measureActualTextWidth(no_furigana.map{case(t,m)=>t},paint)
+      // if show_furigana then make row span litte bit wider
       val span_h = SPACE_H*getWidth + orig_text_size*(1-size_rate)
-      var startx = (getWidth/2 + ((span_h+text_size)*(text_array.length+1))/2).toInt
+      var startx = (getWidth/2 + ((span_h+text_size)*(text_array_with_margin.length+1))/2).toInt
+      if(show_furigana){
+        // if show_furigana then place left a little bit
+        startx -= (span_h / 2.0).toInt
+      }
       var rowspan = (span_h+text_size).toInt
-      paint_furigana.setTextSize(rowspan-actual_width)
-      for((t,m) <- text_array.zip(MARGIN_TOP)){
+      val actual_ratio = text_size / actual_width
+      paint_furigana.setTextSize((rowspan-actual_width)*actual_ratio)
+      for((t,m) <- text_array_with_margin){
         val starty = (getHeight * m).toInt
         startx -= rowspan
         verticalText(canvas,startx,starty,t,actual_width)
