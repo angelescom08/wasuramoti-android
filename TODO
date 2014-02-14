@@ -8,8 +8,6 @@ Priority High:
   * When scrolled to previous fuda, and play button is tapped, go back one fuda and play.
   * In `Auto Play` option, disable the EditText when CheckBox is not checked.
   * Able to adjust size of furigana
-  * Bug: The size of fuda set has changed does not affect to config's abbrev view
-  * Bug: Open `Move To..` and do nothing and press `OK` causes the poem text will not be shown
   * Show Kimariji on Poem Text
 
 Priority Middle:

@@ -50,12 +50,14 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
   val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from right to left
-  val MARGIN_AUTHOR = Array(0.09,0.11)
+  val MARGIN_AUTHOR = Array(0.09,0.13)
   val MARGIN_BOTTOM = 0.05
   val MARGIN_LR = 0.08
-  val SPACE_H = 0.03
+
   val SPACE_V = 0.02
+  val SPACE_H = 0.05
   val SPACE_V_FURIGANA = 0.01
+  val FURIGANA_TOP_LIMIT = 0.01
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   // However, our calculateTextSize() is quite inaccurate when paint's text size is not a default value,
@@ -64,7 +66,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   paint.setColor(Color.WHITE)
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint_furigana.setColor(Color.WHITE)
-  val DEFAULT_TEXT_SIZE = paint.getTextSize
 
   var show_furigana = true
   var show_author = true
@@ -72,7 +73,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   var hide = false
 
   // This does not include span height
-  def calcVerticalBound(str:String,paint:Paint):(Double,Double) = {
+  def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
     var w = 0
     var h = 0
     for(s <- str){
@@ -90,32 +91,40 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   // Typeface of paint must be set before calling this function
   // Also text size must be default before calling this function ( I don't know why, maybe it's a bug ? )
-  def calculateTextSize(text_array_with_margin:Array[(String,Double)],paint:Paint):Int ={
-    val width = getWidth
-    val height = getHeight
+  def calculateTextSize(text_array_with_margin:Array[(String,Double)],paint:Paint,space_h:Double):Int ={
+    // we estimate the result text size, the closer it is, the result will be more accurate
+    val estimate_size = getWidth / text_array_with_margin.length
+    paint.setTextSize(estimate_size)
+    val width = getWidth.toFloat
+    val height = getHeight.toFloat
     val bounds = (for((t,m)<-text_array_with_margin)yield(calcVerticalBound(t,paint)))
     val r1 = (for(((w,h),(t,m)) <- bounds.zip(text_array_with_margin)) yield (((1-m-MARGIN_BOTTOM-SPACE_V*t.length)*height/h))).min
-    val r2 = (1-MARGIN_LR*2-text_array_with_margin.length*SPACE_H)*width/bounds.map{case(w,h)=>w}.sum
+    val r2 = (1-MARGIN_LR*2-text_array_with_margin.length*space_h)*width/bounds.map{case(w,h)=>w}.sum
     (Math.min(r1,r2)*paint.getTextSize).toInt
   }
   def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int){
     val text_s = AllFuda.parseFurigana(text)
     var y = starty
+    var prev_furigana_bottom = (getHeight*FURIGANA_TOP_LIMIT).toInt
     for((t,furigana) <- text_s){
-      y = verticalWord(canvas,startx,y,t,furigana,actual_width)
+      val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,actual_width,prev_furigana_bottom)
+      // TODO: the following is so ugly
+      y = y_
+      prev_furigana_bottom = prev_furigana_bottom_
     }
   }
-  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int):Int = {
+  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int,prev_furigana_bottom:Int):(Int,Int) = {
     val (y,width,height) = drawVertical(paint,canvas,startx,starty,text,(getHeight*SPACE_V).toInt)
+    var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
       val span_v = (getHeight*SPACE_V_FURIGANA).toInt
       val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana) 
       val this_height = this_height_wo + (furigana.length-1)*span_v
-      // TODO: adjust sy so that furigana does not overwrap
-      val sy = Math.max(0,starty+height/2-this_height.toInt/2)
-      drawVertical(paint_furigana,canvas,startx+actual_width/2+paint_furigana.getTextSize.toInt/2,sy,furigana,span_v)
+      val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
+      val(furigana_y,_,_) = drawVertical(paint_furigana,canvas,startx+actual_width/2+paint_furigana.getTextSize.toInt/2,sy,furigana,span_v)
+      new_furigana_bottom = furigana_y
     }
-    y
+    (y,new_furigana_bottom)
   }
   def drawVertical(paint:Paint,canvas:Canvas,startx:Int,starty:Int,text:String,span:Int) = {
     var y = starty
@@ -172,36 +181,36 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
           paint_furigana.setTypeface(typeface)
         }
       }
+      val space_h = if(show_furigana){
+        // TODO: able to change furigana size
+        SPACE_H
+      }else{
+        SPACE_H
+      }
+
       val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++ 
         AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
       val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
-      paint.setTextSize(DEFAULT_TEXT_SIZE)
-      val size_rate = 
-      if(show_furigana){
-        // if show_furigana then smaller font
-        0.9
-      }else{
-        1.0
-      }
-      var orig_text_size = calculateTextSize(no_furigana,paint)
-      var text_size = (orig_text_size*size_rate).toInt
-      
+      var text_size = calculateTextSize(no_furigana,paint,space_h)
       paint.setTextSize(text_size)
       val actual_width = measureActualTextWidth(no_furigana.map{case(t,m)=>t},paint)
-      // if show_furigana then make row span litte bit wider
-      val span_h = SPACE_H*getWidth + orig_text_size*(1-size_rate)
-      var startx = (getWidth/2 + ((span_h+text_size)*(text_array_with_margin.length+1))/2).toInt
+      val span_h = space_h*getWidth
+      var rowspan = (span_h+actual_width).toInt
+      var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
       if(show_furigana){
-        // if show_furigana then place left a little bit
-        startx -= (span_h / 2.0).toInt
+        var furisize = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
+        paint_furigana.setTextSize(furisize)
+        val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
+        val actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
+        val actual_ratio_furigana = furisize / actual_width_furigana.toFloat
+
+        paint_furigana.setTextSize((rowspan-actual_width)*actual_ratio_furigana*0.9f)
+        startx = Math.min(startx,getWidth-actual_width-actual_width_furigana)
       }
-      var rowspan = (span_h+text_size).toInt
-      val actual_ratio = text_size / actual_width
-      paint_furigana.setTextSize((rowspan-actual_width)*actual_ratio)
       for((t,m) <- text_array_with_margin){
         val starty = (getHeight * m).toInt
-        startx -= rowspan
         verticalText(canvas,startx,starty,t,actual_width)
+        startx -= rowspan
       }
     }
   

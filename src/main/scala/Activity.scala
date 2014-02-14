@@ -59,23 +59,26 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     timer_autoread.foreach(_.cancel())
     timer_autoread = None
     Utils.setButtonTextByState(getApplicationContext())
+    val refresh_task:Unit=>Unit = _=>{
+      //The following is a litte bit dirty way
+      val play_log_bak = Globals.play_log.clone // save backup
+      Globals.play_log.clear()
+      refreshAndSetButton()
+      if(Globals.play_log.isEmpty){
+        // refresh done but KarutaPlayer has not changed
+        Globals.play_log.appendAll(play_log_bak)
+      }
+      invalidateYomiInfo(Some(View.FOCUS_LEFT))
+    }
     item.getItemId match {
       case R.id.menu_shuffle => {
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
-          Globals.play_log.clear()
-          refreshAndSetButton()
-          invalidateYomiInfo(Some(View.FOCUS_LEFT))
+          refresh_task()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,
-        _=>{
-          Globals.play_log.clear()
-          refreshAndSetButton()
-          invalidateYomiInfo(Some(View.FOCUS_LEFT))
-        }
-        ).show
+      case R.id.menu_move => new MovePositionDialog(this,refresh_task).show
       case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {

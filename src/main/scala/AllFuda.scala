@@ -26,9 +26,12 @@ object AllFuda{
     "きり","わがそ","よのなかは","みよ","おおけ",
     "はなさ","こぬ","かぜそ","ひとも","もも")
 
-  val INSIDE_PARENS = """\(.*?\)""".r
+  val INSIDE_PARENS = """\((.*?)\)""".r
   def removeInsideParens(s:String):String = {
     INSIDE_PARENS.replaceAllIn(s,"")
+  }
+  def onlyInsideParens(s:String):String = {
+    INSIDE_PARENS.findAllMatchIn(s).map{_.group(1)}.mkString("")
   }
   // We cannot use \p{IsHan} in Android DalvikVM
   val FURIGANA_PATTERN = """((\p{InCJKUnifiedIdeographs}|\p{InCJKSymbolsAndPunctuation})+)\((.*?)\)""".r
@@ -244,7 +247,7 @@ object AllFuda{
     "皇嘉門院別当(こうかもんいんのべっとう)",
     "式子内親王(しょくしないしんのう)",
     "殷富門院大輔(いんぶもんいんのたいふ)",
-    "後京極摂政前太政大臣(ごきょうごくせっしょうさきのだいじょうだいじん)",
+    "後京極摂政前(ごきょうごくせっしょうさきの) 太政大臣(だいじょうだいじん)",
     "二条院讃岐(にじょういんのさぬき)",
     "鎌倉右大臣(かまくらのうだいじん)",
     "参議雅経(さんぎまさつね)",

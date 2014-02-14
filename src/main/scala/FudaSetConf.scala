@@ -51,6 +51,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       persistString(title)
       FudaListHelper.updateSkipList(title)
     }
+    notifyChangedPublic // in case that number of fudas in current fudaset changed
     super.onDialogClosed(positiveResult)
   }
   override def onCreateDialogView():View = {
