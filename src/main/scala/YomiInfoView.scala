@@ -57,7 +57,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_V = 0.02
   val SPACE_H = 0.05
   val SPACE_V_FURIGANA = 0.01
-  val MARGIN_LEFT_FURIGANA = 0.007
+  val MARGIN_LEFT_FURIGANA_RATIO = 0.4 // must be between 0.0 and 1.0
   val FURIGANA_TOP_LIMIT = 0.01
   val FURIGANA_RATIO = 0.82
 
@@ -105,18 +105,18 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     val r2 = (1-MARGIN_LR*2-text_array_with_margin.length*space_h)*width/bounds.map{case(w,h)=>w}.sum
     (Math.min(r1,r2)*paint.getTextSize).toInt
   }
-  def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int,actual_width_furigana:Int){
+  def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,actual_width:Int,margin_left_furigana:Int){
     val text_s = AllFuda.parseFurigana(text)
     var y = starty
     var prev_furigana_bottom = (getHeight*FURIGANA_TOP_LIMIT).toInt
     for((t,furigana) <- text_s){
-      val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,actual_width,actual_width_furigana,prev_furigana_bottom)
+      val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,actual_width,margin_left_furigana,prev_furigana_bottom)
       // TODO: the following is so ugly
       y = y_
       prev_furigana_bottom = prev_furigana_bottom_
     }
   }
-  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int,actual_width_furigana:Int,prev_furigana_bottom:Int):(Int,Int) = {
+  def verticalWord(canvas:Canvas,startx:Int,starty:Int,text:String,furigana:String,actual_width:Int,margin_left_furigana:Int,prev_furigana_bottom:Int):(Int,Int) = {
     val (y,width,height) = drawVertical(paint,canvas,startx,starty,text,(getHeight*SPACE_V).toInt)
     var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
@@ -124,7 +124,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana) 
       val this_height = this_height_wo + (furigana.length-1)*span_v
       val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
-      val sx = (startx+actual_width/2.0+actual_width_furigana/2.0 + getWidth*MARGIN_LEFT_FURIGANA).toInt
+      val sx = (startx+margin_left_furigana).toInt
       val(furigana_y,_,_) = drawVertical(paint_furigana,canvas,sx,sy,furigana,span_v)
       new_furigana_bottom = furigana_y
     }
@@ -213,18 +213,19 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val span_h = space_h*getWidth
       var rowspan = (span_h+actual_width).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
-      var actual_width_furigana = 0.0
+      var margin_left_furigana = 0.0
       if(show_furigana){
         var furisize = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
         paint_furigana.setTextSize(furisize)
         val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
-        actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
+        val actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
         val actual_ratio_furigana = furisize / actual_width_furigana.toFloat
         paint_furigana.setTextSize(span_h.toFloat*actual_ratio_furigana*FURIGANA_RATIO.toFloat)
+        margin_left_furigana = actual_width/2.0+actual_width_furigana/2.0 + (Math.max(0.0, span_h-actual_width_furigana))*MARGIN_LEFT_FURIGANA_RATIO
       }
       for((t,m) <- text_array_with_margin){
         val starty = (getHeight * m).toInt
-        verticalText(canvas,startx,starty,t,actual_width,actual_width_furigana.toInt)
+        verticalText(canvas,startx,starty,t,actual_width,margin_left_furigana.toInt)
         startx -= rowspan
       }
     }

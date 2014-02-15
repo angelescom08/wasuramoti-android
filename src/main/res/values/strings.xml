@@ -65,7 +65,7 @@
   <string name="audio_stop">Stop</string>
 
   <string name="equalizer_reset">Reset</string>
-  <string name="player_error_noplay">Cannot play current fuga. Please go back to previous fuda.</string>
+  <string name="player_error_noplay">Cannot play current fuda. Please go back to previous fuda.</string>
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
   <!-- CATEGORY_ORDER -->
   <string name="category_order">Order</string>
@@ -203,7 +203,7 @@
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    First chracters of upper phrase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
+    First characters of upper phrase in romanization. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
@@ -291,6 +291,6 @@
   <string name="timers_remaining">Timers</string>
   <string name="timers_minutes_left">min. left</string>
 
-  <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targetted to your CPU.</string>
+  <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targeted to your CPU.</string>
   <string name="alarm_service_not_supported">ALARM_SERVICE is not supported on this device.</string>
 </resources>

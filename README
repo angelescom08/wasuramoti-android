@@ -5,7 +5,7 @@
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
                `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport which uses the set.
-  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targetted to ARM,ARM-v7a,x86 CPU.
+  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targeted to ARM,ARM-v7a,x86 CPU.
         Therefore the wasuramoti-*.apk only works on those CPU's.
 
 [License]
@@ -24,12 +24,7 @@
    - <libogg/libvorbis> Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
 [How to Install]
-  Copy wasuramoti-*.apk to SD Card or run Android machine in USB Storage mode and copy to it.
-  Run 'ES File Explorer' (or some other file explorer) and browse to the copied file.
-  Click wasuramoti-*.apk and the installation will be started.
-  Note that you have to allow installation from `Unknown sources'.
-
-  Additionally, you can install by running a command `adb install wasuramoti-*.apk'.
+  You can install apk file by running a command `adb install wasuramoti-*.apk'.
   Browse following URL for further information:
   http://developer.android.com/guide/developing/device.html#setting-up
 
@@ -39,12 +34,12 @@
   Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
   First %03d indicates fuda number (refer to AllFuda.scala).
   The second %d indicates 1 for Kami-no-Ku(upper phrase), and 2 for Shimo-no-Ku(lower phrase).
-  For example the Simo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
+  For example the Shimo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
     `wasuramoti_reader/inaba/inaba_007_2.ogg'
   The <name>_000_1.ogg is optional. Because sometimes Kami-no-Ku of Joka might be concatenated in <name>_000_2.ogg.
 
 [Where to put .ogg file inside the application]
-  The naming convension of the *.ogg file of the reader is as follows:
+  The naming convention of the *.ogg file of the reader is as follows:
 
     src/main/assets/reader/<name>/<name>_000_1.ogg (optional)
     src/main/assets/reader/<name>/<name>_000_2.ogg (lower phrase of Joka)
@@ -55,7 +50,7 @@
     src/main/assets/reader/<name>/<name>_100_2.ogg (lower phrase of Momoshikiya)
 
   However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
-  and builds *.apk package. Therfore you should use this script to make *.apk file.
+  and builds *.apk package. Therefore you should use this script to make *.apk file.
 
 [How to compile]
   Requirements:
