@@ -58,7 +58,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_H = 0.05
   val SPACE_V_FURIGANA = 0.01
   val MARGIN_LEFT_FURIGANA_RATIO = 0.4 // must be between 0.0 and 1.0
-  val FURIGANA_TOP_LIMIT = 0.01
+  val FURIGANA_TOP_LIMIT = 0.02
   val FURIGANA_RATIO = 0.82
 
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,

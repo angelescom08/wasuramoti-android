@@ -1,6 +1,6 @@
 [About]
   App Name: Wasuramoti
-  App Version: 0.8.4
+  App Version: 0.8.5
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
@@ -23,52 +23,28 @@
   This software uses the following library which is copyrighted as follows:
    - <libogg/libvorbis> Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
 
-[How to Install]
+[Where to put .ogg file inside the application]
+  Read how_to_add_reader_hml in src/main/res/values/strings.xml for name conventions for *.ogg files
+  Place 202 ogg files in ./players/<reader>/ and licence in ./players/<reader>-licence
+
+[How to build apk file]
+  Requirements:
+    # general installment from package manager in linux
+      IcedTea JDK 7 (or some other Java JDK compatible to it)
+      scala 2.10.2
+      sbt 0.12.1 (A Scala-Based Simple Build Tool)
+    # written in project/plugins.sbt and downloaded from github
+      sbt-android-plugin 0.7.1-SNAPSHOT (https://github.com/jberkel/android-plugin)
+    # downloaded from official android sdk site
+      Android SDK v16
+      Android NDK v7
+      Android Support Library & Android Support Repository v19.0.1
+  Where to place keystore:
+    sbt-android-plugin 0.7.1-SNAPSHOT requires keystore files to be placed in ~/.keystore
+  How to build:
+    ./scripts/make_package.sh <reader>
+
+[How to Install apk file]
   You can install apk file by running a command `adb install wasuramoti-*.apk'.
   Browse following URL for further information:
   http://developer.android.com/guide/developing/device.html#setting-up
-
-[Where to put .ogg file in the external storage such as SD Card]
-  Make directory named `wasuramoti_reader' and make subdirectory named `inaba' or whatever.
-  Then put the .ogg files in it.
-  Ogg files must be named in format of <name>_%03d_%d.ogg when the directory name is `<name>'.
-  First %03d indicates fuda number (refer to AllFuda.scala).
-  The second %d indicates 1 for Kami-no-Ku(upper phrase), and 2 for Shimo-no-Ku(lower phrase).
-  For example the Shimo-no-Ku of 7th fuda which is read by `inaba' must be placed in:
-    `wasuramoti_reader/inaba/inaba_007_2.ogg'
-  The <name>_000_1.ogg is optional. Because sometimes Kami-no-Ku of Joka might be concatenated in <name>_000_2.ogg.
-
-[Where to put .ogg file inside the application]
-  The naming convention of the *.ogg file of the reader is as follows:
-
-    src/main/assets/reader/<name>/<name>_000_1.ogg (optional)
-    src/main/assets/reader/<name>/<name>_000_2.ogg (lower phrase of Joka)
-    src/main/assets/reader/<name>/<name>_001_1.ogg (upper phrase of Akinotano)
-    src/main/assets/reader/<name>/<name>_001_2.ogg (lower phrase of Akinotano)
-    src/main/assets/reader/<name>/<name>_002_1.ogg (upper phrase of Harusugite)
-    ...
-    src/main/assets/reader/<name>/<name>_100_2.ogg (lower phrase of Momoshikiya)
-
-  However, scripts/make_package.sh makes symbolic link from `${READER_DIR}/<name>' to `src/main/assets/reader/<name>',
-  and builds *.apk package. Therefore you should use this script to make *.apk file.
-
-[How to compile]
-  Requirements:
-    openjdk6 (or some other Java JDK)
-    scala 2.9.2
-    sbt 0.12.1 (A Scala-Based Simple Build Tool)
-    sbt-android-plugin 0.6.x
-    android-sdk r16
-    android-sdk-platform-tools r10
-    android-platform-15
-    android-ndk r7
-
-  Before executing the following command, you have to execute `cd src/main/jni/libogg-*/ && ./configure && make`
-  Just compile:
-   $ sbt compile
-  Make a *.apk package for debug: 
-   $ sbt android:package-debug
-  Run in device:
-   $ sbt android:start-device
-  Make a *.apk package for release:
-   $ sbt android:package-release
