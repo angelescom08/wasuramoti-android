@@ -83,7 +83,7 @@ object Utils {
     while( cur != null && cur.getId != id ){
       cur = cur.getParent.asInstanceOf[View]
     }
-    if(cur == null){None}else{Some(cur)}
+    Option(cur)
   }
 
   def makeTimerText(context:Context):String = {
@@ -158,7 +158,7 @@ object Utils {
   // (2) Parse /system/etc/vold.fstab -> cannot use since Android 4.3 because it is removed.
   // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> maybe good.
   // We use third method
-  // see follwing for more infos: 
+  // see follwing for more infos:
   //   http://source.android.com/devices/tech/storage/
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0

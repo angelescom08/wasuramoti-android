@@ -22,7 +22,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
     var u = if(uri == null){ Settings.System.DEFAULT_NOTIFICATION_URI }else{uri}
     current_ringtone.foreach{_.stop} // we have to release MediaPlayer inside Ringtone (See source of android.media.Ringtone)
     val rt = RingtoneManager.getRingtone(this,u)
-    current_ringtone = if(rt==null){None}else{Some(rt)}
+    current_ringtone = Option(rt)
     current_ringtone
   }
 
@@ -69,7 +69,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
       setTimerUri(vw,uri)
       val ps = get_boolean_at(play_sounds,index)
       vw.findViewById(R.id.timer_play_sound).asInstanceOf[CheckBox].setChecked(ps)
-      val dv = get_boolean_at(do_vibrates,index) 
+      val dv = get_boolean_at(do_vibrates,index)
       vw.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].setChecked(dv)
       findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
     }
@@ -163,6 +163,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
         val uri_tag = vw_item.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView].getTag.asInstanceOf[Map[String,Uri]]
         val do_vibrate = vw_item.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].isChecked
         val intent = new Intent(this, classOf[NotifyTimerReceiver])
+
         val limit_millis = System.currentTimeMillis() + (limit * 60 * 1000)
         intent.putExtra("timer_id",timer_id)
         intent.putExtra("elapsed",limit)

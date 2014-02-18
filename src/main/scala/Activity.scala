@@ -125,7 +125,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     return true
   }
-  
+
   def switchViewAndReloadHandler(){
     val flipper = findViewById(R.id.main_flip).asInstanceOf[ViewFlipper]
     val (cn,rb) = if(!Utils.showYomiInfo){
@@ -134,7 +134,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         (1,R.id.read_button_small)
     }
     flipper.setDisplayedChild(cn)
-    
+
     val read_button = findViewById(rb).asInstanceOf[Button]
     val handler = new Handler()
     Globals.setButtonText = Some( arg =>
@@ -347,7 +347,7 @@ trait MainButtonTrait{
     val player = Globals.player.get
     val readnum = if(Utils.readCurNext){player.cur_num}else{player.next_num}
     // The scroll is on the rightmost.
-    if(v != null && scroll != null && !Globals.is_playing && 
+    if(v != null && scroll != null && !Globals.is_playing &&
       scroll.getWidth + scroll.getScrollX >= v.getRight*0.9 &&
       is_shuffle &&
       v.cur_num > 0 &&
@@ -396,7 +396,7 @@ trait MainButtonTrait{
                   override def run(){
                     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
                     if(yomi_info!=null){
-                      yomi_info.scrollToNext() 
+                      yomi_info.scrollToNext()
                     }
                   }
                 })

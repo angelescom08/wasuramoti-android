@@ -87,7 +87,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     }
     (w,h)
   }
-  
+
   def measureActualTextWidth(text_array:Array[String],paint:Paint):Int = {
     text_array.map{x=>val (w,h)=calcVerticalBound(x,paint);w}.max.toInt
   }
@@ -121,7 +121,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
       val span_v = (getHeight*SPACE_V_FURIGANA).toInt
-      val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana) 
+      val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana)
       val this_height = this_height_wo + (furigana.length-1)*span_v
       val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
       val sx = (startx+margin_left_furigana).toInt
@@ -140,7 +140,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       width = Math.max(r.right-r.left,width)
       val yy = (y - r.top).toInt
       canvas.drawText(t.toString,startx,yy,paint)
-      y += r.bottom - r.top + span 
+      y += r.bottom - r.top + span
       if(Globals.IS_DEBUG){
         val paint_debug = new Paint()
         paint_debug.setStyle(Paint.Style.STROKE)
@@ -154,7 +154,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
-    
+
     if(android.os.Build.VERSION.SDK_INT >= 11 && canvas.isHardwareAccelerated){
       // The default background has gradation when hardware acceleration is turned on
       // Therefore we have to fill it with black
@@ -204,7 +204,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       }
       val space_h = SPACE_H * space_boost
 
-      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++ 
+      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++
         AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
       val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
       var text_size = calculateTextSize(no_furigana,paint,space_h)
@@ -229,6 +229,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         startx -= rowspan
       }
     }
-  
+
   }
 }

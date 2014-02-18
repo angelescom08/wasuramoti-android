@@ -144,7 +144,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         case _ => ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
       })
       activity.setRequestedOrientation(o)
-      
+
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
       // Since we insert some silence at beginning of audio,
@@ -192,7 +192,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             override def run(){
               hook()
             }
-        },t) 
+        },t)
       }
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{

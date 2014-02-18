@@ -10,7 +10,7 @@
 
 [License]
   Wasuramoti is an open source software, which is licensed under BSD 3-Clause License.
-  You can download the source code from http://sourceforge.net/projects/wasuramoti-andr/
+  You can download the source code from https://github.com/pjmtdw/wasuramoti-android
   The licence is written in COPYING file which is placed on the same directory of this README.
 
   However, note that the audio file enclosed in the *.apk package might have another licence.
@@ -35,7 +35,7 @@
       sbt 0.12.1 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
       sbt-android-plugin 0.7.1-SNAPSHOT (https://github.com/jberkel/android-plugin)
-    # downloaded from official android sdk site
+    # downloaded from official Android SDK site and SDK manager
       Android SDK v16
       Android NDK v7
       Android Support Library & Android Support Repository v19.0.1

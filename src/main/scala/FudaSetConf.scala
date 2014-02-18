@@ -24,7 +24,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  
+
   override def getAbbrValue():String = {
     val title = getPersistedString("")
     if(!TextUtils.isEmpty(title)){

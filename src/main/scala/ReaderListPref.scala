@@ -73,7 +73,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
             }
           })
       }
-    } 
+    }
     override def doInBackground(unused:AnyRef*):Boolean = {
       val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom()
       for(path <- paths){
@@ -109,7 +109,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
           }}
         )
       }
-    
+
       true
     }
   }
