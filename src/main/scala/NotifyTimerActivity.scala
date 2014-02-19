@@ -9,6 +9,67 @@ import _root_.android.content.{Intent,Context,BroadcastReceiver}
 import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
 import _root_.android.provider.Settings
 import _root_.android.text.TextUtils
+import _root_.android.util.Log
+
+import _root_.java.text.SimpleDateFormat
+import _root_.java.util.Date
+
+import scala.collection.mutable
+
+object NotifyTimerUtils {
+  val notify_timers = new mutable.HashMap[Int,Intent]()
+  var alarm_manager = None:Option[AlarmManager]
+  var notify_manager = None:Option[NotificationManager]
+  def loadTimers(){
+    notify_timers.clear
+    val str = Globals.prefs.get.getString("timer_intents","")
+    var have_to_save = false
+    if(!TextUtils.isEmpty(str)){
+      str.split("<:>").foreach{s =>
+        try{
+          val intent = Intent.parseUri(s,0)
+          val timer_id = intent.getExtras.getInt("timer_id")
+          if(intent.getExtras.getLong("limit_millis") > System.currentTimeMillis){
+            notify_timers.put(timer_id,intent)
+          }else{
+            have_to_save = true
+          }
+        }catch{
+          // Intent.parseUri throws URISyntaxException
+          // intent.getExtres throws NumberFormatException
+          case e @ ( _:java.net.URISyntaxException | _:NullPointerException) => {
+            Log.v("wasuramoti",e.toString)
+            have_to_save = true
+          }
+        }
+      }
+    }
+    if(have_to_save){
+      saveTimers
+    }
+  }
+  def saveTimers(){
+    val str = notify_timers.map{_._2.toUri(0).toString}.mkString("<:>")
+    Globals.prefs.get.edit
+    .putString("timer_intents",str)
+    .commit
+  }
+  def makeTimerText(context:Context):String = {
+     var title = context.getResources.getString(R.string.timers_remaining)
+     notify_timers.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v2.getExtras.getLong("limit_millis")}.map{case (k,v) =>
+       val millis = v.getExtras.getLong("limit_millis")
+       val minutes_left = scala.math.ceil((millis - System.currentTimeMillis()) / (1000 * 60.0)).toInt
+       val df = new SimpleDateFormat(
+         if( minutes_left < 60 * 24){
+           "HH:mm"
+         }else{
+           "MM/dd HH:mm"
+         }
+       )
+       df.format(new Date(millis)) + " (" + minutes_left.toString + " " + context.getResources.getString(R.string.timers_minutes_left) + ")"
+     }.foldLeft(title)(_+"\n"+_)
+  }
+}
 
 class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   var current_ringtone = None:Option[Ringtone]
@@ -48,7 +109,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
     setContentView(R.layout.notify_timer)
-    Globals.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
+    NotifyTimerUtils.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)
 
     val pref = Globals.prefs.get
@@ -83,14 +144,6 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
     current_ringtone = None
   }
 
-  def myfinish(){
-    var intent = new Intent(this,classOf[WasuramotiActivity])
-    // TODO: implement Parcelable HashMap and send the following data in one row.
-    intent.putExtra("notify_timers_keys",Globals.notify_timers.keys.toArray[Int])
-    intent.putExtra("notify_timers_values",Globals.notify_timers.values.toArray[Parcelable])
-    setResult(Activity.RESULT_OK,intent)
-    finish
-  }
   def onSoundChange(v:View){
     val intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
     intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
@@ -124,30 +177,31 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
     }
   }
   def onTimerStartClick(v:View){
-    if(Globals.alarm_manager.isEmpty){
+    if(NotifyTimerUtils.alarm_manager.isEmpty){
       Utils.messageDialog(this,Right(R.string.alarm_service_not_supported))
       return
     }
     setAllTimeAlarm
-    myfinish
+    finish
   }
   def cancelAndRemove(){
-    Globals.notify_manager.foreach{_.cancelAll}
-    Globals.notify_timers.foreach{case (k,v) =>
-      val pendingIntent = PendingIntent.getBroadcast(this, k, v,PendingIntent.FLAG_CANCEL_CURRENT)
+    NotifyTimerUtils.notify_manager.foreach{_.cancelAll}
+    NotifyTimerUtils.notify_timers.foreach{case (k,v) =>
+      val pendingIntent = PendingIntent.getBroadcast(this, k, v, PendingIntent.FLAG_CANCEL_CURRENT)
       try{
-        Globals.alarm_manager.foreach{_.cancel(pendingIntent)}
-        Globals.notify_timers.remove(k)
+        NotifyTimerUtils.alarm_manager.foreach{_.cancel(pendingIntent)}
+        NotifyTimerUtils.notify_timers.remove(k)
       }catch{
         case _:Exception => Unit
       }
     }
+    NotifyTimerUtils.saveTimers
   }
   def onTimerCancelClick(v:View){
     Globals.global_lock.synchronized{
       cancelAndRemove
     }
-    myfinish
+    finish
   }
   def setAllTimeAlarm(){
     Globals.global_lock.synchronized{
@@ -163,6 +217,9 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
         val uri_tag = vw_item.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView].getTag.asInstanceOf[Map[String,Uri]]
         val do_vibrate = vw_item.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].isChecked
         val intent = new Intent(this, classOf[NotifyTimerReceiver])
+        //action and data must be identical to cancel even after application restarted
+        intent.setAction(timer_id.toString)
+        intent.setData(Uri.parse("wasuramoti://timer/"+timer_id.toString))
 
         val limit_millis = System.currentTimeMillis() + (limit * 60 * 1000)
         intent.putExtra("timer_id",timer_id)
@@ -179,18 +236,19 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
         intent.putExtra("limit_millis",limit_millis)
         intent.putExtra("timer_icon",timer_icon)
         val pendingIntent = PendingIntent.getBroadcast(this, timer_id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        Globals.alarm_manager.foreach{ x =>
+        NotifyTimerUtils.alarm_manager.foreach{ x =>
           x.set(AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
-          Globals.notify_timers.update(timer_id,intent)
+          NotifyTimerUtils.notify_timers.update(timer_id,intent)
         }
         (limit,uri,play_sound,do_vibrate)
       }}
-      Globals.prefs.get.edit()
+      Globals.prefs.get.edit
       .putString("timer_default_minutes",timer_datas.map{_._1}.mkString(","))
       .putString("timer_default_uris",timer_datas.map{_._2}.mkString("<:>"))
       .putString("timer_default_play_sounds",timer_datas.map{_._3.toString}.mkString(","))
       .putString("timer_default_do_vibrates",timer_datas.map{_._4.toString}.mkString(","))
-      .commit()
+      .commit
+      NotifyTimerUtils.saveTimers
     }
   }
 }
@@ -200,12 +258,12 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
 class NotifyTimerReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
-      Globals.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
+      NotifyTimerUtils.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
       val contentIntent = PendingIntent.getActivity(context, 0,new Intent(), 0)
       val extras = intent.getExtras
       val timer_id = extras.getInt("timer_id")
       val icon = extras.getInt("timer_icon")
-      Globals.notify_timers.remove(timer_id)
+      NotifyTimerUtils.notify_timers.remove(timer_id)
       Utils.setButtonTextByState(context)
       val message = extras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
@@ -226,12 +284,12 @@ class NotifyTimerReceiver extends BroadcastReceiver {
           if(vib != null){
             vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(1500,500).map{_.toLong}}.flatten),-1)
           }else{
-            println("WARNING: VIBRATOR_SERVICE is not supported on this device.")
+            Log.v("wasuramoti","WARNING: VIBRATOR_SERVICE is not supported on this device.")
           }
         }
       }
       notif.setLatestEventInfo(context, from, message, contentIntent)
-      Globals.notify_manager.foreach{_.notify(timer_id, notif)}
+      NotifyTimerUtils.notify_manager.foreach{_.notify(timer_id, notif)}
     }
   }
 }

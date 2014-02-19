@@ -1,7 +1,9 @@
 Priority High:
+  * As for FudaListHelper, use getDefaultSharedPreferences instead of getSharedPreferences
+    ( See that data is moved from wasuramoti.pref.xml to karuta.hpnpwd.wasuramoti_preferences.xml in /data/data/karuta.hpnpwd.wasuramoti/shared_prefs/ )
+  * Show fuda infomation when tapped (kimariji, uta number, author, key point).
   * Do not fade in/out if fade length is too short.
   * Use Fragment.
-  * Show fuda infomation when tapped (kimariji, uta number, author, key point).
   * Volume Boost.
   * Show the log of fuda read.
   * When scrolled to previous fuda, and play button is tapped, go back one fuda and play.
@@ -9,6 +11,7 @@ Priority High:
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
   * Able to scroll not only to previous fuda but also more fudas in poem text.
+  * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

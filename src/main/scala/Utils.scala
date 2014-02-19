@@ -12,8 +12,6 @@ import _root_.android.view.{LayoutInflater,View}
 import _root_.android.widget.{TextView,Button}
 
 import _root_.java.io.File
-import _root_.java.text.SimpleDateFormat
-import _root_.java.util.Date
 
 import scala.collection.mutable
 
@@ -33,14 +31,11 @@ object Globals {
   val HEAD_SILENCE_LENGTH = 200 // in milliseconds
   val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
-  val notify_timers = new mutable.HashMap[Int,Intent]()
   val play_log = new mutable.ListBuffer[Int]()
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
   var setButtonText = None:Option[Either[String,Int]=>Unit]
-  var alarm_manager = None:Option[AlarmManager]
-  var notify_manager = None:Option[NotificationManager]
   var is_playing = false
   var forceRefresh = false
   var forceRestart = false
@@ -66,6 +61,7 @@ object Utils {
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()
       }
+      NotifyTimerUtils.loadTimers()
       ReaderList.setDefaultReader(app_context)
     }
   }
@@ -86,22 +82,6 @@ object Utils {
     Option(cur)
   }
 
-  def makeTimerText(context:Context):String = {
-     val nt = Globals.notify_timers
-     var title = context.getResources.getString(R.string.timers_remaining)
-     nt.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v1.getExtras.getLong("limit_millis")}.map{case (k,v) =>
-       val millis = v.getExtras.getLong("limit_millis")
-       val minutes_left = scala.math.ceil((millis - System.currentTimeMillis()) / (1000 * 60.0)).toInt
-       val df = new SimpleDateFormat(
-         if( minutes_left < 60 * 24){
-           "HH:mm"
-         }else{
-           "MM/dd HH:mm"
-         }
-       )
-       df.format(new Date(millis)) + " (" + minutes_left.toString + " " + context.getResources.getString(R.string.timers_minutes_left) + ")"
-     }.foldLeft(title)(_+"\n"+_)
-  }
   def withTransaction(db:SQLiteDatabase,func:()=>Unit){
     db.beginTransaction()
     func()
@@ -218,8 +198,8 @@ object Utils {
       func(
       if(Globals.is_playing){
         Right(R.string.now_playing)
-      }else if(!Globals.notify_timers.isEmpty){
-        Left(Utils.makeTimerText(context))
+      }else if(!NotifyTimerUtils.notify_timers.isEmpty){
+        Left(NotifyTimerUtils.makeTimerText(context))
       }else{
         Left(FudaListHelper.makeReadIndexMessage(context))
       }))

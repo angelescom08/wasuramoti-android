@@ -15,7 +15,6 @@ import scala.collection.mutable
 
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
-  val ACTIVITY_REQUEST_NOTIFY_TIMER = 1
   var haseo_count = 0
   var release_lock = None:Option[Unit=>Unit]
   var timer_autoread = None:Option[Timer]
@@ -26,11 +25,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     Globals.global_lock.synchronized{
       timer_refresh_text.foreach(_.cancel())
       timer_refresh_text = None
-      if(!Globals.notify_timers.isEmpty){
+      if(!NotifyTimerUtils.notify_timers.isEmpty){
         timer_refresh_text = Some(new Timer())
         timer_refresh_text.get.schedule(new TimerTask(){
           override def run(){
-            if(Globals.notify_timers.isEmpty){
+            if(NotifyTimerUtils.notify_timers.isEmpty){
               timer_refresh_text.foreach(_.cancel())
               timer_refresh_text = None
               return
@@ -79,7 +78,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         })
       }
       case R.id.menu_move => new MovePositionDialog(this,refresh_task).show
-      case R.id.menu_timer => startActivityForResult(new Intent(this,classOf[NotifyTimerActivity]),ACTIVITY_REQUEST_NOTIFY_TIMER)
+      case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {
         // android.R.id.home is returned when the Icon is clicked if we are using android.support.v7.app.ActionBarActivity
@@ -170,39 +169,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     setContentView(R.layout.main)
     switchViewAndReloadHandler()
-    if(savedInstanceState != null && savedInstanceState.containsKey("notify_timers_keys")){
-      var values = savedInstanceState.getParcelableArray("notify_timers_values").map{_.asInstanceOf[Intent]}
-      var keys = savedInstanceState.getIntArray("notify_timers_keys")
-      Globals.notify_timers.clear()
-      Globals.notify_timers ++= keys.zip(values)
-      // Since there is a possibility that Globals.notify_timers are updated during NotifyTimerReceiver.onReceive,
-      // we should remove the timers in the past.
-      // However if we can update the savedInstanceState value which is passed to onCreate
-      // in the NotifyTimerReceiver.onReceive, it is a much more general way.
-      // Therefore the following code is a tentative method.
-      // TODO: Find the way to update the value of savedInstanceState in NotifyTimerReceiver.onReceive and remove the following code.
-      Globals.notify_timers.retain{ (k,v) => v.getExtras.getLong("limit_millis") > System.currentTimeMillis() }
-    }
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
-  }
-  override def onSaveInstanceState(instanceState: Bundle){
-    // Sending HashMap in Bundle across the Activity using Serializable does not work.
-    // This is maybe because launchMode is singleTask or singleInstance.
-    // Thus we send keys and values separately as IntArray and ParcelableArray.
-    // TODO: implement Parcelable HashMap and send the following data in one row.
-    super.onSaveInstanceState(instanceState)
-    instanceState.putIntArray("notify_timers_keys",Globals.notify_timers.keys.toArray[Int])
-    instanceState.putParcelableArray("notify_timers_values",Globals.notify_timers.values.toArray[Parcelable])
-  }
-  override def onActivityResult(requestCode:Int,resultCode:Int,data:Intent){
-    if(requestCode == ACTIVITY_REQUEST_NOTIFY_TIMER && resultCode == Activity.RESULT_OK && data != null){
-      val keys = data.getIntArrayExtra("notify_timers_keys")
-      val values = data.getParcelableArrayExtra("notify_timers_values").map{_.asInstanceOf[Intent]}
-      Globals.notify_timers.clear()
-      Globals.notify_timers ++= keys.zip(values)
-    }else{
-      super.onActivityResult(requestCode,resultCode,data)
-    }
   }
   def invalidateYomiInfo(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean=false){
     if(!Utils.showYomiInfo){
