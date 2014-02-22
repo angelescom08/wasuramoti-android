@@ -6,8 +6,6 @@ import _root_.android.view.{Gravity,View}
 import _root_.android.os.{AsyncTask,Handler}
 import _root_.android.app.ProgressDialog
 import _root_.android.media.audiofx.Equalizer
-import _root_.android.content.pm.ActivityInfo
-import _root_.android.content.res.Configuration
 import _root_.java.util.{Timer,TimerTask}
 
 import scala.collection.mutable
@@ -137,13 +135,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       Globals.is_playing = true
       // prevent screen rotation during play since it restarts activity
-      old_orientation = Some(activity.getRequestedOrientation)
-      val o = (activity.getResources.getConfiguration.orientation match {
-        case Configuration.ORIENTATION_LANDSCAPE => ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        case Configuration.ORIENTATION_PORTRAIT => ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        case _ => ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
-      })
-      activity.setRequestedOrientation(o)
+      activity.lockOrientation(true)
 
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
@@ -177,7 +169,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     equalizer.foreach(_.release())
     equalizer = None
     Globals.is_playing = false
-    old_orientation.foreach(o => activity.setRequestedOrientation(o))
+    activity.lockOrientation(false)
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }

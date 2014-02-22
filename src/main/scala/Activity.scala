@@ -1,10 +1,12 @@
 package karuta.hpnpwd.wasuramoti
 
+import _root_.android.content.pm.ActivityInfo
+import _root_.android.content.res.Configuration
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.os.{Bundle,Handler,Parcelable}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager}
+import _root_.android.os.{Bundle,Handler,Parcelable,Build}
+import _root_.android.view.{View,Menu,MenuItem,WindowManager,Surface}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.ActionBarActivity
 import _root_.java.lang.Runnable
@@ -277,6 +279,47 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       },dimlock_millisec)
     }
   }
+
+  // As for API >= 18, SCREEN_ORIENTATION_LOCKED has been introduced so we use it.
+  // However, as for API <= 17, there seems no simple way to lock the orientation of screen programmatically to `current` orientation.
+  // Moreover, the actual orientation of Surface.ROTATION_* and ActivityInfo.SCREEN_ORIENTATION_* differs in each devices.
+  // The following code is taken from  http://stackoverflow.com/questions/6599770/screen-orientation-lock and seems to work on most devices.
+  def lockOrientation(lock:Boolean){
+    if(!lock){
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+    //}else if(Build.VERSION.SDK_INT >= 18){
+    //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
+    }else{
+      val under_9 = Build.VERSION.SDK_INT < 9
+      val rotation = (if(under_9){Surface.ROTATION_0}else{getWindowManager.getDefaultDisplay.getRotation})
+      val try_lock = { natural:Int =>
+        val flag = (under_9 || Array(Surface.ROTATION_0,natural).contains(rotation))
+        val ori = (getResources.getConfiguration.orientation match{
+          case Configuration.ORIENTATION_PORTRAIT =>
+            if(flag){
+              ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }else{
+              ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+            }
+          case Configuration.ORIENTATION_LANDSCAPE =>
+            if(flag){
+              ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }else{
+              ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+            }
+          case _ =>
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        })
+        setRequestedOrientation(ori)
+      }
+      try_lock(Surface.ROTATION_270)
+      // Ensure that the rotation hasn't changed
+      if(getWindowManager.getDefaultDisplay.getRotation != rotation){
+        try_lock(Surface.ROTATION_90)
+      }
+    }
+  }
+
   def setLongClickButtonOnResume(){
     for(id <- Array(R.id.read_button_small,R.id.read_button_large)){
       val btn = findViewById(id).asInstanceOf[Button]
@@ -307,22 +350,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
-    //TODO: Implement the rest
-    /*val scroll = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-    val v = findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
-    val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
-    val player = Globals.player.get
-    val readnum = if(Utils.readCurNext){player.cur_num}else{player.next_num}
-    // The scroll is on the rightmost.
-    if(v != null && scroll != null && !Globals.is_playing &&
-      scroll.getWidth + scroll.getScrollX >= v.getRight*0.9 &&
-      is_shuffle &&
-      v.cur_num > 0 &&
-      v.cur_num != readnum
-    ){
-      ... Go To Previous Fuda And Play
-    }
-    */
     doPlay(false)
   }
   def moveToNextFuda(){

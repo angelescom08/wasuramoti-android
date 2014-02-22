@@ -9,7 +9,7 @@ object AndroidBuild extends Build{
     version := "0.8.6",
     versionCode := 44,
     scalaVersion := "2.10.2",
-    platformName := "android-16",
+    platformName := "android-18",
     keyalias := "techkey",
     libraryDependencies ++= Seq(
       "com.android.support" % "support-v4" % "19.0.1",
