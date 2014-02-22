@@ -68,7 +68,7 @@ object AudioHelper{
     val buf = new Array[Short](track.getSampleRate()*millisec/1000)
     track.write(buf,0,buf.length)
   }
-  // note: modifying the follwing ShortBuffer is reflected to tho original file because it is casted from MappedByteBuffer
+  // note: modifying the following ShortBuffer is reflected to tho original file because it is casted from MappedByteBuffer
   def withMappedShortsFromFile(f:File,func:ShortBuffer=>Unit){
     val raf = new RandomAccessFile(f,"rw")
     func(raf.getChannel().map(FileChannel.MapMode.READ_WRITE,0,f.length()).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer())
@@ -140,7 +140,7 @@ class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbi
         }
       }
     }catch{
-      // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
+      // These exceptions should not happen since indexInBuffer() sets proper begin, end.
       // Therefore these catches are just for sure.
       case _:IndexOutOfBoundsException => return(bg)
     }
@@ -173,7 +173,7 @@ class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbi
         buffer.put(i,(buffer.get(i)*amp).toShort)
       }
     }catch{
-      // These exceptions shold not happen since indexInBuffer() sets proper begin, end.
+      // These exceptions should not happen since indexInBuffer() sets proper begin, end.
       // Therefore these catches are just for sure.
       case _:IndexOutOfBoundsException => None
     }

@@ -8,7 +8,7 @@ import _root_.android.util.AttributeSet
 //   Calling TextView.setText(Html.fromHtml(...)) for some specific text raises IndexOutOfBoundsException
 //   which is cased by android.text.MeasuredText or android.text.StaticLayout
 // This bug was fixed in 4.1.2. However we have to cope with this bug for Android 4.1/4.1.1 users.
-// The follwing way to patch TextView seems the easiest way to avoid exception.
+// The following way to patch TextView seems the easiest way to avoid exception.
 // See following URL for more information:
 //   http://code.google.com/p/android/issues/detail?id=35466
 //   http://code.google.com/p/android/issues/detail?id=35412
@@ -47,7 +47,7 @@ class PatchedTextView(context:Context, attrs:AttributeSet) extends TextView(cont
 // When we use android.widget.ViewFlipper, changing the orientation a lot of times in a short time raises following exception:
 //   java.lang.IllegalArgumentException: Receiver not registered: android.widget.ViewFlipper
 // This bug mainly occurs in Android 2.1, but also seems to occur occasionally in Android >= 2.2
-// This bug is repoted in follwing URL:
+// This bug is reported in following URL:
 //   https://code.google.com/p/android/issues/detail?id=6191
 
 class SafeViewFlipper(context:Context, attrs:AttributeSet) extends ViewFlipper(context,attrs){

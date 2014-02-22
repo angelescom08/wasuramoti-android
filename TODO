@@ -1,7 +1,7 @@
 Priority High:
   * As for FudaListHelper, use getDefaultSharedPreferences instead of getSharedPreferences
     ( See that data is moved from wasuramoti.pref.xml to karuta.hpnpwd.wasuramoti_preferences.xml in /data/data/karuta.hpnpwd.wasuramoti/shared_prefs/ )
-  * Show fuda infomation when tapped (kimariji, uta number, author, key point).
+  * Show fuda information when tapped (kimariji, uta number, author, key point).
   * Do not fade in/out if fade length is too short.
   * Use Fragment.
   * Volume Boost.
@@ -10,7 +10,7 @@ Priority High:
   * Show Kimariji on poem text.
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Able to scroll not only to previous fuda but also more fudas in poem text.
+  * Able to scroll not only to previous fuda but also more fudas in poem text. (Consider using gesture)
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
 
 Priority Middle:
@@ -37,4 +37,4 @@ Priority Low:
   * Score the recoded voice (whether it is as good as the official karuta reader). 
   * Able to switch how to play silence (play silence or sleep thread)
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
-  * Fix problem that when application is in background, the audio skipping occurs. (mabe by changing streamType of AudioTrack, or thread priority of audio_thread ?)
+  * Fix problem that when application is in background, the audio skipping occurs. (maybe by changing streamType of AudioTrack, or thread priority of audio_thread ?)

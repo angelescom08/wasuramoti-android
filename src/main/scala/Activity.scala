@@ -59,7 +59,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     timer_autoread = None
     Utils.setButtonTextByState(getApplicationContext())
     val refresh_task:Unit=>Unit = _=>{
-      //The following is a litte bit dirty way
+      //The following is a little bit dirty way
       val play_log_bak = Globals.play_log.clone // save backup
       Globals.play_log.clear()
       refreshAndSetButton()
@@ -141,7 +141,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         override def run(){
           arg match {
             // TODO: The following way to call setText is not smart.
-            //       Is there any way to do the follwing two lines in one row ?
+            //       Is there any way to do the following two lines in one row ?
             case Left(text) => read_button.setText(text)
             case Right(id) => read_button.setText(id)
           }

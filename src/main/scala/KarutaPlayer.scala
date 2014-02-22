@@ -46,7 +46,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
-  // Therfore, we execute it here
+  // Therefore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
@@ -136,7 +136,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         Utils.saveAndSetAudioVolume(activity.getApplicationContext())
       }
       Globals.is_playing = true
-      // prvent screen rotation during play
+      // prevent screen rotation during play since it restarts activity
       old_orientation = Some(activity.getRequestedOrientation)
       val o = (activity.getResources.getConfiguration.orientation match {
         case Configuration.ORIENTATION_LANDSCAPE => ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -216,8 +216,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       if(isStreamMode()){
         // Play with AudioTrack.MODE_STREAM
-        // This method requires small memory, but there is possibility of noize at few seconds after writeToAudioTrack.
-        // I could not confirm such noice in my device, but some users claim that they have a noize in the beggining of upper poem.
+        // This method requires small memory, but there is possibility of noise at few seconds after writeToAudioTrack.
+        // I could not confirm such noise in my device, but some users claim that they have a noise in the beginning of upper poem.
 
         audio_track.get.play()
         audio_thread = Some(new Thread(new Runnable(){
@@ -239,7 +239,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         audio_thread.get.start()
       }else{
         // Play with AudioTrack.MODE_STATIC
-        // This method requires some memory overhead, but able to reduce possibility of noize since it only writes to AudioTrack once.
+        // This method requires some memory overhead, but able to reduce possibility of noise since it only writes to AudioTrack once.
 
         val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
         val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
@@ -277,7 +277,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
           // Now since audio_thread.isInterrupted is true and AudioTrack.write() is terminated,
           // the audio_thread have to end immediately.
-          // Before calling AudioTrack.relase(), we have to wait for audio_thread to end.
+          // Before calling AudioTrack.release(), we have to wait for audio_thread to end.
           // The reason why I have to do this is assumed that
           // calling AudioTrack.stop() does not immediately terminate AudioTrack.write(), and
           // calling AudioTrack.release() before the termination is illegal.

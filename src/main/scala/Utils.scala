@@ -132,13 +132,13 @@ object Utils {
     builder.create.show()
   }
   // Android's Environment.getExternalStorageDirectory does not actually return external SD card's path.
-  // Thus we have to explore where the mount point of SD card is by owr own.
+  // Thus we have to explore where the mount point of SD card is by our own.
   // There are several ways to do this , and there seems no best way
-  // (1) Read environment variables such SECONDARY_STORAGE -> not useful since the name of varibale varies between devices.
+  // (1) Read environment variables such SECONDARY_STORAGE -> not useful since the name of variable varies between devices.
   // (2) Parse /system/etc/vold.fstab -> cannot use since Android 4.3 because it is removed.
   // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> maybe good.
   // We use third method
-  // see follwing for more infos:
+  // see following for more infos:
   //   http://source.android.com/devices/tech/storage/
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0
