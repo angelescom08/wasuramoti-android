@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.view.{Gravity,View}
+import _root_.android.view.{Gravity,View,WindowManager}
 import _root_.android.os.{AsyncTask,Handler}
 import _root_.android.app.ProgressDialog
 import _root_.android.media.audiofx.Equalizer
@@ -145,11 +145,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(Utils.showYomiInfo){
         (new Handler()).post(new Runnable(){
             override def run(){
-              val double_mode = Utils.readCurNext
-              val scroll = if(double_mode){Some(View.FOCUS_RIGHT)}else{None}
-              activity.invalidateYomiInfo(scroll,double_mode)
+              if(Utils.readCurNext){
+                activity.invalidateYomiInfo()
+              }else{
+                activity.scrollYomiInfo(R.id.yomi_info_view_next,false)
+              }
             }
-          })
+        })
       }
       timer_start.get.schedule(new TimerTask(){
         override def run(){
@@ -302,7 +304,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           if(!activity.isFinishing){
             val dlg = new ProgressDialog(activity)
             dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_decoding))
-            dlg.getWindow.setGravity(Gravity.BOTTOM)
+            val w = dlg.getWindow
+            w.setGravity(Gravity.BOTTOM)
+            w.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             dlg.show
             progress = Some(dlg)
           }

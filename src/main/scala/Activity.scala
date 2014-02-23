@@ -43,6 +43,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
+  def cancelAllPlay(){
+    Globals.player.foreach(_.stop())
+    timer_autoread.foreach(_.cancel())
+    timer_autoread = None
+  }
+
   def refreshAndSetButton(force:Boolean = false){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
@@ -56,20 +62,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onCreateOptionsMenu(menu)
   }
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
-    Globals.player.foreach(_.stop())
-    timer_autoread.foreach(_.cancel())
-    timer_autoread = None
+    cancelAllPlay()
     Utils.setButtonTextByState(getApplicationContext())
     val refresh_task:Unit=>Unit = _=>{
-      //The following is a little bit dirty way
-      val play_log_bak = Globals.play_log.clone // save backup
-      Globals.play_log.clear()
       refreshAndSetButton()
-      if(Globals.play_log.isEmpty){
-        // refresh done but KarutaPlayer has not changed
-        Globals.play_log.appendAll(play_log_bak)
-      }
-      invalidateYomiInfo(Some(View.FOCUS_LEFT))
+      invalidateYomiInfo()
     }
     item.getItemId match {
       case R.id.menu_shuffle => {
@@ -173,14 +170,24 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     switchViewAndReloadHandler()
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
   }
-  def invalidateYomiInfo(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean=false){
+  def invalidateYomiInfo(){
     if(!Utils.showYomiInfo){
       return
     }
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
-      yomi_info.invalidateAndScroll(scroll,have_to_hide)
+      yomi_info.invalidateAndScroll()
     }
+  }
+  def scrollYomiInfo(id:Int,smooth:Boolean){
+    if(!Utils.showYomiInfo){
+      return
+    }
+    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(yomi_info != null){
+      yomi_info.scrollToView(id,smooth)
+    }
+
   }
   override def onStart(){
     super.onStart()
@@ -208,15 +215,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       startActivity(getIntent)
     }
     restartRefreshTimer()
+    cancelAllPlay()
     Globals.player.foreach{ p =>
-      p.stop()
       // When screen is rotated, the activity is destroyed and new one is created.
       // Therefore, we have to reset the KarutaPlayer's activity
       p.activity = this
     }
-    timer_autoread.foreach(_.cancel())
-    timer_autoread = None
     refreshAndSetButton()
+    invalidateYomiInfo()
     startDimLockTimer()
     setLongClickButtonOnResume()
   }
@@ -384,14 +390,11 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
-        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo){
+        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext){
           Some(Unit => {
               runOnUiThread(new Runnable(){
                   override def run(){
-                    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-                    if(yomi_info!=null){
-                      yomi_info.scrollToNext()
-                    }
+                    scrollYomiInfo(R.id.yomi_info_view_next,true)
                   }
                 })
             })
@@ -402,6 +405,11 @@ trait MainButtonTrait{
         player.play(
           _ => {
             moveToNextFuda()
+            runOnUiThread(new Runnable(){
+              override def run(){
+                invalidateYomiInfo()
+              }
+            })
             if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_enable",false)){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){

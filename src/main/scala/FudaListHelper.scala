@@ -29,11 +29,17 @@ object FudaListHelper{
       {case (_,_,first_index,_) => putCurrentIndex(context,first_index)}
     )
   }
-  def moveNext(context:Context){
+  def movePrevOrNext(context:Context,is_next:Boolean){
     val current_index = getCurrentIndex(context)
-    queryNext(context, current_index).foreach(
-      {case (_,_,_,next_index) => putCurrentIndex(context,next_index)}
-    )
+    queryPrevOrNext(context, current_index,is_next).foreach{
+      x => putCurrentIndex(context,x._4)
+    }
+  }
+  def moveNext(context:Context){
+    movePrevOrNext(context,true)
+  }
+  def movePrev(context:Context){
+    movePrevOrNext(context,false)
   }
 
   def makeReadIndexMessage(context:Context):String = {
@@ -93,13 +99,17 @@ object FudaListHelper{
     db.close()
     return(index)
   }
-  def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
+  def queryPrevOrNext(context:Context,index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order >= ?",Array(index.toString),null,null,"read_order ASC","2")
+    val (op,order) = if(is_next){ (">=","ASC") }else{ ("<=","DESC") }
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
     try{
       cursor.moveToFirst()
       val simo_num = cursor.getInt(0)
       val simo_order = cursor.getInt(1)
+      if(current_only){
+        return Some((simo_num,-1,simo_order,-1))
+      }
       cursor.moveToNext()
       val kami_num = cursor.getInt(0)
       val kami_order = cursor.getInt(1)
@@ -111,6 +121,12 @@ object FudaListHelper{
       cursor.close()
       db.close()
     }
+  }
+  def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
+    queryPrevOrNext(context,index,true)
+  }
+  def queryPrev(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
+    queryPrevOrNext(context,index,false)
   }
   def queryIndexWithSkip(context:Context,fake_index:Int):Int = {
     val db = Globals.database.get.getReadableDatabase
@@ -236,6 +252,29 @@ object FudaListHelper{
       val r = queryNumbersToRead(context,"= -1")
       numbers_of_karafuda = Some(r)
       r
+    }
+  }
+  def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[Int] = {
+    offset match{
+      case 0 =>
+        if(!Globals.player.isEmpty){
+          Some(Globals.player.get.cur_num)
+        }else{
+          val current_index = getCurrentIndex(context)
+          queryPrevOrNext(context, current_index, true, true).map{_._1}
+        }
+      case 1 =>
+        if(!Globals.player.isEmpty){
+          Some(Globals.player.get.next_num)
+        }else{
+          val current_index = getCurrentIndex(context)
+          queryNext(context, current_index).map{_._2}
+        }
+      case -1 =>
+        val current_index = getCurrentIndex(context)
+        queryPrev(context, current_index).map{_._2}
+      case _ =>
+        throw new Exception("offset must be between -1 and 1: " + offset)
     }
   }
 }

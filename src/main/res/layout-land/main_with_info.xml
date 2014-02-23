@@ -10,7 +10,7 @@
           android:layout_height="fill_parent"
           android:layout_weight="0.5"
           >
-      <include layout="@layout/yomi_info_double" />
+      <include layout="@layout/yomi_info_triple" />
     </LinearLayout>
     <Button android:id="@+id/read_button_small"
             android:layout_width="0dp"

@@ -1,17 +1,73 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
-import _root_.android.view.View
+import _root_.android.view.{View,MotionEvent,GestureDetector}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
+import _root_.android.support.v4.view.GestureDetectorCompat
+import _root_.android.os.CountDownTimer
+
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
+  val SCROLL_THREASHOLD = 0.3
+  val SCROLL_SPEED = 200 // in millisec
+  var cur_view = None:Option[Int]
+  def scrollAnimation(endx:Int,on_finish:Unit=>Unit=Unit=>Unit){
+    val startx = getScrollX
+    new CountDownTimer(SCROLL_SPEED,10){
+      override def onTick(millisUntilFinished:Long){
+        val r = millisUntilFinished / SCROLL_SPEED.toFloat
+        val pos = (startx * r + endx * (1-r)).toInt
+        smoothScrollTo(pos,0)
+      }
+      override def onFinish(){
+        smoothScrollTo(endx,0)
+        // There seems no simple way to run a hook after smoothScrollTo() is ended.
+        // Therefore we run on_finish() after specific time.
+        postDelayed(new Runnable(){
+            override def run(){
+              on_finish()
+            }},30)
+      }
+    }.start
+  }
+  override def onTouchEvent(ev:MotionEvent):Boolean = {
+    super.onTouchEvent(ev)
+    ev.getAction match{
+      case MotionEvent.ACTION_UP =>
+        cur_view.foreach{ vid=>
+          val v = findViewById(vid)
+          if(v != null){
+            val dx = getScrollX-v.getLeft
+            println("wasuramoti: " + dx)
+            val nvid = if(Math.abs(dx) > v.getWidth * SCROLL_THREASHOLD){
+              if(dx > 0){
+                vid match{
+                  case R.id.yomi_info_view_next => R.id.yomi_info_view_cur
+                  case _ => R.id.yomi_info_view_prev
+                }
+              }else{
+                vid match{
+                  case R.id.yomi_info_view_prev => R.id.yomi_info_view_cur
+                  case _ => R.id.yomi_info_view_next
+                }
+              }
+            }else{
+              vid
+            }
+            scrollToView(nvid,true)
+          }
+        }
+      case _ => Unit
+    }
+    true
+  }
   override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
     super.onSizeChanged(w,h,oldw,oldh)
     post(new Runnable(){
       override def run(){
-        for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
+        for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
           val v = findViewById(i)
           if(v!=null){
             val prop = v.getLayoutParams
@@ -23,29 +79,42 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
       requestLayout()
     })
   }
-  def invalidateAndScroll(scroll:Option[Int]=Some(View.FOCUS_RIGHT),have_to_hide:Boolean){
-    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur)){
+  def invalidateAndScroll(){
+    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
       val v = findViewById(i).asInstanceOf[YomiInfoView]
       if(v!=null){
-        v.hide = (have_to_hide && i == R.id.yomi_info_view_next)
+        v.updateCurNum
         v.invalidate
       }
     }
-    scroll.foreach{ x =>
-      setSmoothScrollingEnabled(false)
-      fullScroll(x)
+    scrollToView(R.id.yomi_info_view_cur,false)
+  }
+
+  def scrollToView(id:Int,smooth:Boolean){
+    val v = findViewById(id).asInstanceOf[YomiInfoView]
+    if(v!=null){
+      val x = v.getLeft
+      val have_to_move = id == R.id.yomi_info_view_prev
+      if(have_to_move){
+      }
+      if(smooth){
+        scrollAnimation(x,
+          _=>
+            if(have_to_move){
+              val wa = context.asInstanceOf[WasuramotiActivity]
+              wa.cancelAllPlay()
+              FudaListHelper.movePrev(context)
+              wa.refreshAndSetButton()
+              wa.invalidateYomiInfo()
+            }
+        )
+      }else{
+        scrollTo(x,0)
+      }
+      cur_view = Some(id)
     }
   }
 
-  def scrollToNext(){
-    val v = findViewById(R.id.yomi_info_view_next).asInstanceOf[YomiInfoView]
-    if(v != null && v.hide){
-      v.hide = false
-      v.invalidate
-    }
-    setSmoothScrollingEnabled(Utils.readCurNext)
-    fullScroll(View.FOCUS_LEFT)
-  }
 }
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
@@ -72,8 +141,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   var show_furigana = true
   var show_author = true
-  var cur_num = -1
-  var hide = false
+  var cur_num = None:Option[Int]
 
   // This does not include span height
   def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
@@ -152,6 +220,15 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     (y,width,y-starty-span)
   }
 
+  def updateCurNum(){
+    val fn = getId match {
+      case R.id.yomi_info_view_prev => -1
+      case R.id.yomi_info_view_next => 1
+      case _ => 0
+    }
+    cur_num = FudaListHelper.getOrQueryFudaNumToRead(context,fn)
+  }
+
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
 
@@ -160,19 +237,8 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       // Therefore we have to fill it with black
       canvas.drawColor(Color.BLACK)
     }
-    if(hide){
-      return
-    }
 
-    val num = Globals.play_log.applyOrElse(
-      (Globals.is_playing,getId==R.id.yomi_info_view_cur) match{
-        case (true,true) => 1
-        case (true,false) => 0
-        case (false,true) => 2
-        case (false,false) => 1
-      },(_:Int)=> -1)
-    cur_num = num
-    if(num >= 0){
+    cur_num.foreach{num =>
       show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
       for(key <- Array("show_yomi_info","yomi_info_furigana")){
         val conf = Globals.prefs.get.getString(key,"None")

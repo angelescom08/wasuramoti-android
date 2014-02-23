@@ -44,15 +44,6 @@ object AudioHelper{
     }
     num.flatMap{case(cur_num,next_num) =>{
         val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != (cur_num, next_num) }
-        if(num_changed){
-          if(Globals.play_log.applyOrElse(0,(_:Int)=> -1) != cur_num){
-            Globals.play_log.+=:(cur_num)
-          }
-          Globals.play_log.+=:(next_num)
-          if(Globals.play_log.length > 16){
-            Globals.play_log.trimEnd(Globals.play_log.length-16)
-          }
-        }
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
         }else if(force || Globals.forceRefresh || num_changed){
