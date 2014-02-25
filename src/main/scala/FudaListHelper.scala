@@ -4,6 +4,17 @@ import _root_.android.content.{Context,ContentValues}
 import _root_.android.database.CursorIndexOutOfBoundsException
 import scala.util.Random
 
+// According to one of the Android framework engineer, there is no need to close the database in content provider.
+// In fact, if we close it manually with SQLiteDatabase.close() method, there seems to occur exception such as
+// `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed.`
+// Therefore we comment out all the SQLiteDatabase.close() method for instance acquired by getReadableDatabase().
+// However, as for instance acquired by getWritableDatabase(), we explicitly call SQLiteDatabase.close() since document of SQLiteOpenHelper says so.
+// Additionally, we use Globals.db_lock.synchronized{ ... } to make all the function thread safe for sure.
+// See the following URL for more details:
+//   https://groups.google.com/forum/#!msg/android-developers/NwDRpHUXt0U/jIam4Q8-cqQJ
+//   http://stackoverflow.com/questions/4547461/closing-the-database-in-a-contentprovider
+//   http://d.hatena.ne.jp/ukiki999/20100524/p1 [Japanese]
+
 object FudaListHelper{
   val PREFS_NAME="wasuramoti.pref"
   val KEY_CURRENT_INDEX="fuda_current_index"
@@ -79,27 +90,27 @@ object FudaListHelper{
     }
   }
 
-  def queryNumbersToRead(context:Context,cond:String):Int = {
+  def queryNumbersToRead(context:Context,cond:String):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip "+cond+" AND num > 0",null,null,null,null,null)
     cursor.moveToFirst()
     val count = cursor.getInt(0)
     cursor.close()
-    db.close()
+    //db.close()
     return count
   }
 
-  def queryCurrentIndexWithSkip(context:Context):Int = {
+  def queryCurrentIndexWithSkip(context:Context):Int = Globals.db_lock.synchronized{
     val current_index = getCurrentIndex(context)
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip <= 0 AND read_order <= ?",Array(current_index.toString),null,null,null,null)
     cursor.moveToFirst()
     val index = cursor.getInt(0)
     cursor.close()
-    db.close()
+    //db.close()
     return(index)
   }
-  def queryPrevOrNext(context:Context,index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = {
+  def queryPrevOrNext(context:Context,index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val (op,order) = if(is_next){ (">=","ASC") }else{ ("<=","DESC") }
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
@@ -119,7 +130,7 @@ object FudaListHelper{
        return None
     }finally{
       cursor.close()
-      db.close()
+      //db.close()
     }
   }
   def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
@@ -128,17 +139,17 @@ object FudaListHelper{
   def queryPrev(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(context,index,false)
   }
-  def queryIndexWithSkip(context:Context,fake_index:Int):Int = {
+  def queryIndexWithSkip(context:Context,fake_index:Int):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip <= 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip <= 0 AND rnk = "+fake_index,null)
     cursor.moveToFirst()
     val ret = cursor.getInt(1)
     cursor.close()
-    db.close()
+    //db.close()
     return(ret)
   }
 
-  def getHaveToReadFromDB(cond:String):Set[String]={
+  def getHaveToReadFromDB(cond:String):Set[String] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"skip "+cond+" AND num > 0",null,null,null,null,null)
     cursor.moveToFirst
@@ -148,7 +159,7 @@ object FudaListHelper{
       r
     }.toSet
     cursor.close
-    db.close
+    //db.close
     have_to_read
   }
   def chooseKarafuda():Int={
@@ -158,7 +169,7 @@ object FudaListHelper{
     AllFuda.getFudaNum(kara.head)
   }
 
-  def queryRandom(context:Context):Int = {
+  def queryRandom(context:Context):Int = Globals.db_lock.synchronized{
     val num_read = getOrQueryNumbersToRead(context)
     val num_kara = getOrQueryNumbersOfKarafuda(context)
     if(num_kara > 0){
@@ -173,7 +184,7 @@ object FudaListHelper{
     cursor.moveToFirst()
     val num = cursor.getInt(0)
     cursor.close()
-    db.close()
+    //db.close()
     return num
   }
   def shuffle(context:Context){
@@ -191,7 +202,7 @@ object FudaListHelper{
       })
     db.close()
   }
-  def updateSkipList(title:String=null){
+  def updateSkipList(title:String=null){ Globals.db_lock.synchronized{
     val fudaset_title = if(title == null){
       Globals.prefs.get.getString("fudaset","")
     }else{
@@ -207,7 +218,7 @@ object FudaListHelper{
       AllFuda.list.toSet
     }
     cursor.close()
-    dbr.close()
+    //dbr.close()
 
     var skip_temp = AllFuda.list.toSet -- have_to_read
     val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
@@ -231,7 +242,7 @@ object FudaListHelper{
     numbers_to_read = None
     numbers_of_karafuda = None
     current_index_with_skip = None
-  }
+  }}
 
   def getOrQueryCurrentIndexWithSkip(context:Context):Int = {
     current_index_with_skip.getOrElse{

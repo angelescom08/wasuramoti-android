@@ -123,14 +123,16 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   def getWidgets(view:View) = {
     val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
     val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
-    (enable,span)
+    val repeat = view.findViewById(R.id.autoplay_repeat).asInstanceOf[CheckBox]
+    (enable,span,repeat)
   }
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (enable,span) = getWidgets(view)
+        val (enable,span,repeat) = getWidgets(view)
         edit.putBoolean("autoplay_enable",enable.isChecked)
+        edit.putBoolean("autoplay_repeat",repeat.isChecked)
         edit.putLong("autoplay_span",Math.max(1,try{
             span.getText.toString.toInt
           }catch{
@@ -147,16 +149,23 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val view = LayoutInflater.from(context).inflate(R.layout.autoplay,null)
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
-    val (enable,span) = getWidgets(view)
+    val (enable,span,repeat) = getWidgets(view)
     val prefs = Globals.prefs.get
     enable.setChecked(prefs.getBoolean("autoplay_enable",false))
+    repeat.setChecked(prefs.getBoolean("autoplay_repeat",false))
     span.setText(prefs.getLong("autoplay_span",DEFAULT_VALUE).toString)
     switchVisibilityByCheckBox(root_view,enable,R.id.autoplay_layout)
     return view
   }
   override def getAbbrValue():String = {
-    if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
-      Globals.prefs.get.getLong("autoplay_span",DEFAULT_VALUE) + context.getResources.getString(R.string.conf_unit_second)
+    val p = Globals.prefs.get
+    val r = context.getResources
+    if(p.getBoolean("autoplay_enable",false)){
+      p.getLong("autoplay_span",DEFAULT_VALUE) + r.getString(R.string.conf_unit_second) +
+      (if(p.getBoolean("autoplay_repeat",false)){
+        "/" + r.getString(R.string.autoplay_repeat_abbrev)
+      }else{""})
+      
     }else{
       context.getResources.getString(R.string.message_disabled)
     }

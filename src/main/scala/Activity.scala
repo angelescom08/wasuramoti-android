@@ -408,12 +408,20 @@ trait MainButtonTrait{
         player.play(
           _ => {
             moveToNextFuda()
+            val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
+            if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
+              FudaListHelper.allReadDone(self.getApplicationContext())
+            ){
+              FudaListHelper.shuffle(getApplicationContext())
+              FudaListHelper.moveToFirst(getApplicationContext())
+              refreshAndSetButton()
+            }
             runOnUiThread(new Runnable(){
               override def run(){
                 invalidateYomiInfo()
               }
             })
-            if(!Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_enable",false)){
+            if(auto && !Globals.player.isEmpty){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){
                 override def run(){

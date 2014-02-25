@@ -68,6 +68,8 @@
   <string name="conf_autoplay_summary">詠み終えた後しばらく停止し，その後次の札を詠む</string>
   <string name="autoplay_enable">有効</string>
   <string name="autoplay_span">間隔:</string>
+  <string name="autoplay_repeat">終了後に最初に戻り詠み続ける</string>
+  <string name="autoplay_repeat_abbrev">繰返し</string>
 
   <!-- CATEGORY_ORDER -->
   <string name="category_order">順番</string>

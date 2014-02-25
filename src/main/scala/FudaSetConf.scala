@@ -25,7 +25,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 
-  override def getAbbrValue():String = {
+  override def getAbbrValue():String = Globals.db_lock.synchronized{
     val title = getPersistedString("")
     if(!TextUtils.isEmpty(title)){
       val db = Globals.database.get.getReadableDatabase
@@ -33,7 +33,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       cursor.moveToFirst
       val set_size = if(cursor.getCount > 0){ cursor.getInt(0) }else{0}
       cursor.close
-      db.close
+      //db.close
       title + " ("+set_size+")"
     }else{
       ""
@@ -54,7 +54,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     notifyChangedPublic // in case that number of fudas in current fudaset changed
     super.onDialogClosed(positiveResult)
   }
-  override def onCreateDialogView():View = {
+  override def onCreateDialogView():View = { Globals.db_lock.synchronized{
     super.onCreateDialogView()
     // Using XML Attribute ``android:dialogLayout="@layout/fudaset"'' with ``android:onClick="..."'' does not work in Android 3.x.
     // That is because it creates each button with context instanciated from ContextThemeWrapper, and causes
@@ -82,10 +82,10 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       cursor.moveToNext()
     }
     cursor.close()
-    db.close()
+    // db.close()
     adapter.get.notifyDataSetChanged()
     return view
-  }
+  }}
 }
 
 trait FudaSetTrait{
@@ -102,7 +102,7 @@ trait FudaSetTrait{
     text = AllFuda.replaceFudaNumPattern(text)
     TrieUtils.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
   }
-  def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){
+  def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){ Globals.db_lock.synchronized{
     val context = this
     val orig_title = if( orig_fs == null ){ "" }else{orig_fs.title}
     val (adapter,pos) = getSpinnerSelected(view)
@@ -120,7 +120,7 @@ trait FudaSetTrait{
       data_id = cursor.getLong(0)
       val body = cursor.getString(2)
       cursor.close()
-      db.close()
+      //db.close()
       body_view.setLocalizationText(body)
     }
     val help_view = dialog.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
@@ -148,7 +148,7 @@ trait FudaSetTrait{
             is_add && count > 0
           }
         cursor.close()
-        db.close()
+        //db.close()
         if(is_duplicate){
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
@@ -198,7 +198,7 @@ trait FudaSetTrait{
       }
     })
     dialog.show()
-  }
+  }}
   def newFudaSet(view:View){
     editFudaSetBase(view, true)
   }
@@ -211,7 +211,7 @@ trait FudaSetTrait{
     val fs = adapter.getItem(pos)
     editFudaSetBase(view, false, fs)
   }
-  def deleteFudaSet(view: View){
+  def deleteFudaSet(view: View){ Globals.db_lock.synchronized{
     val (adapter,pos) = getSpinnerSelected(view)
     if(pos == AdapterView.INVALID_POSITION){
       return
@@ -224,5 +224,5 @@ trait FudaSetTrait{
       db.close()
       adapter.remove(fs)
     })
-  }
+  }}
 }
