@@ -46,7 +46,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therefore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
-  val decode_task = new OggDecodeTask().execute(new AnyRef()) // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
+  val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask] // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
+
+  def dismissProgressDialogOfDecodeTask(){
+    decode_task.progress.foreach{_.dismiss}
+    decode_task.progress = None
+  }
 
   def isStreamMode():Boolean={
     return (Globals.prefs.get.getString("audio_track_mode","STATIC") == "STREAM")
@@ -316,7 +321,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     override def onPostExecute(rval:Either[AudioQueue,Exception]){
       activity.runOnUiThread(new Runnable{
         override def run(){
-          progress.foreach(_.dismiss())
+          progress.foreach{d=>
+            // Since KarutaPlayer.dismissProgressDialogOfDecodeTask() is called at WasuramotiActivity.onPause(),
+            // the IllegalArgumentException should not raise here.
+            // However we catch it just for sure because catching it is safe and does not affect the behavior of application.
+            try{
+              d.dismiss
+            }catch{
+              case _:IllegalArgumentException => None
+            }
+          }
           if(Globals.IS_DEBUG){
             if(rval.isLeft){
               activity.showAudioLength(AudioHelper.calcTotalMillisec(rval.left.get))

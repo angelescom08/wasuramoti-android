@@ -232,6 +232,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     release_lock = None
     timer_refresh_text.foreach(_.cancel())
     timer_refresh_text = None
+    // To Avoid `java.lang.IllegalArgumentException: View not attached to window manager`
+    // when closing ProgressDialog, we have to close dialog here.
+    Globals.player.foreach{ _.dismissProgressDialogOfDecodeTask }
   }
   override def onStop(){
     super.onStop()

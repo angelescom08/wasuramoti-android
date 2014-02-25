@@ -40,7 +40,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
           val v = findViewById(vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
-            println("wasuramoti: " + dx)
             val nvid = if(Math.abs(dx) > v.getWidth * SCROLL_THREASHOLD){
               if(dx > 0){
                 vid match{
@@ -56,7 +55,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
             }else{
               vid
             }
-            scrollToView(nvid,true)
+            scrollToView(nvid,true,true)
           }
         }
       case _ => Unit
@@ -90,20 +89,22 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     scrollToView(R.id.yomi_info_view_cur,false)
   }
 
-  def scrollToView(id:Int,smooth:Boolean){
+  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false){
     val v = findViewById(id).asInstanceOf[YomiInfoView]
     if(v!=null){
       val x = v.getLeft
-      val have_to_move = id == R.id.yomi_info_view_prev
-      if(have_to_move){
-      }
+      val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
       if(smooth){
         scrollAnimation(x,
           _=>
             if(have_to_move){
               val wa = context.asInstanceOf[WasuramotiActivity]
               wa.cancelAllPlay()
-              FudaListHelper.movePrev(context)
+              if(id == R.id.yomi_info_view_prev){
+                FudaListHelper.movePrev(context)
+              }else{
+                FudaListHelper.moveNext(context)
+              }
               wa.refreshAndSetButton()
               wa.invalidateYomiInfo()
             }

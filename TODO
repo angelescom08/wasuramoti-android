@@ -10,8 +10,10 @@ Priority High:
   * Show Kimariji on poem text.
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Able to scroll not only to previous fuda but also more fudas in poem text. (Consider using gesture)
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
+  * Dont show progress dialog if previous average encode length is shorter than 500ms
+  * Play current (not next) displayed poem text when `Upper -> Lower` mode
+  * In random mode, the displayed previous fuda is not correct
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
