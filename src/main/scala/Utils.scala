@@ -70,8 +70,14 @@ object Utils {
     Globals.prefs.exists{_.getString("show_yomi_info","None") != "None"}
   }
 
-  def readCurNext():Boolean = {
-    Globals.player.exists{_.read_both}
+  def readCurNext(context:Context):Boolean = {
+    val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+
+    roe.startsWith("CUR") || 
+    (
+      FudaListHelper.getCurrentIndex(context)  == 0 && roj != "upper_0,lower_0"
+    )
   }
 
   def findAncestorViewById(v:View,id:Int):Option[View] = {

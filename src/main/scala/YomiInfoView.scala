@@ -119,10 +119,16 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
             if(have_to_move){
               val wa = context.asInstanceOf[WasuramotiActivity]
               wa.cancelAllPlay()
-              if(id == R.id.yomi_info_view_prev){
-                FudaListHelper.movePrev(context)
-              }else{
-                FudaListHelper.moveNext(context)
+              v.cur_num.foreach{ cn =>
+                FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
+                  if(Utils.readCurNext(context)){
+                    FudaListHelper.putCurrentIndex(context,index)
+                  }else{
+                    FudaListHelper.queryPrevOrNext(context,index,false).foreach{ x=>
+                      FudaListHelper.putCurrentIndex(context,x._4)
+                    }
+                  }
+                }
               }
               wa.refreshAndSetButton()
               wa.invalidateYomiInfo()
@@ -241,10 +247,13 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   }
 
   def updateCurNum(){
-    val fn = getId match {
+    var fn = getId match {
       case R.id.yomi_info_view_prev => -1
       case R.id.yomi_info_view_next => 1
       case _ => 0
+    }
+    if(!Utils.readCurNext(context)){
+      fn += 1
     }
     cur_num = FudaListHelper.getOrQueryFudaNumToRead(context,fn)
   }

@@ -7,7 +7,7 @@ import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,Parcelable,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,Surface}
-import _root_.android.view.animation.AnimationUtils
+import _root_.android.view.animation.{AnimationUtils,Interpolator}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.java.lang.Runnable
@@ -183,6 +183,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       val ring = v.findViewById(R.id.actionbar_blue_ring)
       if(ring!=null){
         val rotation = AnimationUtils.loadAnimation(getApplicationContext,R.anim.rotator)
+        rotation.setInterpolator(new Interpolator(){
+            override def getInterpolation(input:Float):Float={
+              return (input*8.0f).toInt/8.0f
+            }
+          })
         ring.setVisibility(View.VISIBLE)
         ring.startAnimation(rotation)
       }
@@ -395,11 +400,13 @@ trait MainButtonTrait{
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
     self.refreshAndSetButton(!is_shuffle)
-    runOnUiThread(new Runnable(){
-      override def run(){
-        invalidateYomiInfo()
-      }
-    })
+    if(Utils.readCurNext(self.getApplicationContext)){
+      runOnUiThread(new Runnable(){
+        override def run(){
+          invalidateYomiInfo()
+        }
+      })
+    }
   }
   def doPlay(auto_play:Boolean){
     Globals.global_lock.synchronized{
@@ -423,7 +430,7 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
-        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext){
+        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext)){
           Some(Unit => {
               runOnUiThread(new Runnable(){
                   override def run(){
@@ -449,7 +456,7 @@ trait MainButtonTrait{
                 override def run(){
                   invalidateYomiInfo()
                 }
-    })
+              })
             }
             if(auto && !Globals.player.isEmpty){
               timer_autoread = Some(new Timer())

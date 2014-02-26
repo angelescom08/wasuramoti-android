@@ -30,7 +30,6 @@ object KarutaPlayerDebug{
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
-  var read_both = false
   var audio_thread = None:Option[Thread]
   var timer_start = None:Option[Timer]
   var timer_onend = None:Option[Timer]
@@ -144,12 +143,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(Utils.showYomiInfo){
         (new Handler()).post(new Runnable(){
             override def run(){
-              activity.scrollYomiInfo(
-              (if(Utils.readCurNext){
-                R.id.yomi_info_view_cur
+              if(Utils.readCurNext(activity.getApplicationContext)){
+                activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
               }else{
-                R.id.yomi_info_view_next
-              }),false)
+                activity.invalidateYomiInfo()
+              }
             }
         })
       }
@@ -322,7 +320,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         val res_queue = new AudioQueue()
         val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
         cur_millisec = 0
-        read_both = false
         def add_to_audio_queue(w:Either[WavBuffer,Int],is_cur:Boolean){
           res_queue.enqueue(w)
           val alen = w match{
@@ -331,9 +328,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }
           if(is_cur){
             cur_millisec += alen
-          }
-          if(w.isLeft && is_cur){
-            read_both = true
           }
         }
         // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,

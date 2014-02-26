@@ -133,8 +133,31 @@ object FudaListHelper{
       //db.close()
     }
   }
+
+  def queryIndexFromFudaNum(context:Context,fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"skip <= 0 AND num = ?",Array(fudanum.toString),null,null,null,"1")
+    try{
+      cursor.moveToFirst()
+      val index = cursor.getInt(0)
+      return Some(index)
+    }catch{
+      case _:CursorIndexOutOfBoundsException =>
+       return None
+    }finally{
+      cursor.close()
+      //db.close()
+    }
+  }
+
   def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(context,index,true)
+  }
+  def queryNext2(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
+    // TODO: do it in one query
+    queryNext(context,index).flatMap{case(_,_,_,x)=>
+      queryNext(context,x)
+    }
   }
   def queryPrev(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(context,index,false)
@@ -281,11 +304,14 @@ object FudaListHelper{
           val current_index = getCurrentIndex(context)
           queryNext(context, current_index).map{_._2}
         }
+      case 2 =>
+        val current_index = getCurrentIndex(context)
+        queryNext2(context, current_index).map{_._2}
       case -1 =>
         val current_index = getCurrentIndex(context)
         queryPrev(context, current_index).map{_._2}
       case _ =>
-        throw new Exception("offset must be between -1 and 1: " + offset)
+        throw new Exception("offset must be between -1 and 2: " + offset)
     }
   }
 }
