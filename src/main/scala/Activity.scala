@@ -7,8 +7,9 @@ import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.os.{Bundle,Handler,Parcelable,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,Surface}
+import _root_.android.view.animation.AnimationUtils
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
-import _root_.android.support.v7.app.ActionBarActivity
+import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.java.lang.Runnable
 import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
@@ -169,6 +170,33 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     setContentView(R.layout.main)
     switchViewAndReloadHandler()
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
+
+    val actionbar = getSupportActionBar
+    val actionview = getLayoutInflater.inflate(R.layout.actionbar_custom,null)
+    actionbar.setCustomView(actionview)
+    actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
+    actionview.findViewById(R.id.actionbar_blue_ring).setVisibility(View.INVISIBLE)
+  }
+  def showProgress(){
+    val v = getSupportActionBar.getCustomView
+    if(v!=null){
+      val ring = v.findViewById(R.id.actionbar_blue_ring)
+      if(ring!=null){
+        val rotation = AnimationUtils.loadAnimation(getApplicationContext,R.anim.rotator)
+        ring.setVisibility(View.VISIBLE)
+        ring.startAnimation(rotation)
+      }
+    }
+  }
+  def hideProgress(){
+    val v = getSupportActionBar.getCustomView
+    if(v!=null){
+      val ring = v.findViewById(R.id.actionbar_blue_ring)
+      if(ring!=null){
+        ring.clearAnimation()
+        ring.setVisibility(View.INVISIBLE)
+      }
+    }
   }
   def invalidateYomiInfo(){
     if(!Utils.showYomiInfo){
@@ -232,9 +260,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     release_lock = None
     timer_refresh_text.foreach(_.cancel())
     timer_refresh_text = None
-    // To Avoid `java.lang.IllegalArgumentException: View not attached to window manager`
-    // when closing ProgressDialog, we have to close dialog here.
-    Globals.player.foreach{ _.dismissProgressDialogOfDecodeTask }
   }
   override def onStop(){
     super.onStop()

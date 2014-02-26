@@ -4,7 +4,6 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.view.{Gravity,View,WindowManager}
 import _root_.android.os.{AsyncTask,Handler}
-import _root_.android.app.ProgressDialog
 import _root_.android.media.audiofx.Equalizer
 import _root_.java.util.{Timer,TimerTask}
 
@@ -47,11 +46,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // Therefore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask] // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
-
-  def dismissProgressDialogOfDecodeTask(){
-    decode_task.progress.foreach{_.dismiss}
-    decode_task.progress = None
-  }
 
   def isStreamMode():Boolean={
     return (Globals.prefs.get.getString("audio_track_mode","STATIC") == "STREAM")
@@ -300,21 +294,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
   class OggDecodeTask extends AsyncTask[AnyRef,Void,Either[AudioQueue,Exception]] {
-    var progress = None:Option[ProgressDialog]
     override def onPreExecute(){
       activity.runOnUiThread(new Runnable{
         override def run(){
-
-          //We have to check whether activity is in finishing phase or not to avoid the following error:
-          //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@XXXXXXXX is not valid; is your activity running?
           if(!activity.isFinishing){
-            val dlg = new ProgressDialog(activity)
-            dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_decoding))
-            val w = dlg.getWindow
-            w.setGravity(Gravity.BOTTOM)
-            w.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dlg.show
-            progress = Some(dlg)
+            activity.showProgress
           }
         }
       })
@@ -322,16 +306,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     override def onPostExecute(rval:Either[AudioQueue,Exception]){
       activity.runOnUiThread(new Runnable{
         override def run(){
-          progress.foreach{d=>
-            // Since KarutaPlayer.dismissProgressDialogOfDecodeTask() is called at WasuramotiActivity.onPause(),
-            // the IllegalArgumentException should not raise here.
-            // However we catch it just for sure because catching it is safe and does not affect the behavior of application.
-            try{
-              d.dismiss
-            }catch{
-              case _:IllegalArgumentException => None
-            }
-          }
+          activity.hideProgress
           if(Globals.IS_DEBUG){
             if(rval.isLeft){
               activity.showAudioLength(AudioHelper.calcTotalMillisec(rval.left.get))
