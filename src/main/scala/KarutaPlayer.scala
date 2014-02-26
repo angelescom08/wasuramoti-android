@@ -150,11 +150,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(Utils.showYomiInfo){
         (new Handler()).post(new Runnable(){
             override def run(){
-              if(Utils.readCurNext){
-                activity.invalidateYomiInfo()
+              activity.scrollYomiInfo(
+              (if(Utils.readCurNext){
+                R.id.yomi_info_view_cur
               }else{
-                activity.scrollYomiInfo(R.id.yomi_info_view_next,false)
-              }
+                R.id.yomi_info_view_next
+              }),false)
             }
         })
       }

@@ -8,6 +8,25 @@ import _root_.android.util.AttributeSet
 import _root_.android.support.v4.view.GestureDetectorCompat
 import _root_.android.os.CountDownTimer
 
+import scala.collection.mutable
+
+object TypefaceManager{
+  val cache = new mutable.HashMap[String,Typeface]()
+  def get(context:Context,conf:String):Typeface = {
+    if(conf.startsWith("asset:")){
+      cache.getOrElse(conf,
+        try{
+          val t = Typeface.createFromAsset(context.getAssets,"font/"+conf.substring(6))
+          cache.put(conf,t)
+          t
+        }catch{
+          case _:Throwable => Typeface.DEFAULT
+        })
+    }else{
+      Typeface.DEFAULT
+    }
+  }
+}
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
   val SCROLL_THREASHOLD = 0.3
@@ -145,7 +164,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   var cur_num = None:Option[Int]
 
   // This does not include span height
-  def calcVerticalBound(str:String,paint:Paint):(Float,Float) = {
+  def calcVerticalBound(str:String,paint:Paint):(Int,Int) = {
     var w = 0
     var h = 0
     for(s <- str){
@@ -238,27 +257,11 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       // Therefore we have to fill it with black
       canvas.drawColor(Color.BLACK)
     }
-
     cur_num.foreach{num =>
       show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
-      for(key <- Array("show_yomi_info","yomi_info_furigana")){
-        val conf = Globals.prefs.get.getString(key,"None")
-        val typeface = if(conf.startsWith("asset:")){
-          try{
-            Typeface.createFromAsset(context.getAssets,"font/"+conf.substring(6))
-          }catch{
-            case _:Throwable => Typeface.DEFAULT
-          }
-        }else{
-          Typeface.DEFAULT
-        }
-        if(key == "show_yomi_info"){
-          paint.setTypeface(typeface)
-        }else{
-          show_furigana = (conf != "None")
-          paint_furigana.setTypeface(typeface)
-        }
-      }
+      show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
+      paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
+      paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
       val space_boost = if(show_furigana){
         Globals.prefs.get.getString("yomi_info_furigana_size","SMALL") match {
           case "SMALL" => 1.0
@@ -296,6 +299,5 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         startx -= rowspan
       }
     }
-
   }
 }

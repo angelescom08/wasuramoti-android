@@ -370,6 +370,11 @@ trait MainButtonTrait{
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
     self.refreshAndSetButton(!is_shuffle)
+    runOnUiThread(new Runnable(){
+      override def run(){
+        invalidateYomiInfo()
+      }
+    })
   }
   def doPlay(auto_play:Boolean){
     Globals.global_lock.synchronized{
@@ -415,12 +420,12 @@ trait MainButtonTrait{
               FudaListHelper.shuffle(getApplicationContext())
               FudaListHelper.moveToFirst(getApplicationContext())
               refreshAndSetButton()
+              runOnUiThread(new Runnable(){
+                override def run(){
+                  invalidateYomiInfo()
+                }
+    })
             }
-            runOnUiThread(new Runnable(){
-              override def run(){
-                invalidateYomiInfo()
-              }
-            })
             if(auto && !Globals.player.isEmpty){
               timer_autoread = Some(new Timer())
               timer_autoread.get.schedule(new TimerTask(){
