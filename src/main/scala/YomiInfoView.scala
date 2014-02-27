@@ -255,7 +255,11 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     if(!Utils.readCurNext(context)){
       fn += 1
     }
-    cur_num = FudaListHelper.getOrQueryFudaNumToRead(context,fn)
+    cur_num = if(Utils.isRandom && (Array(2,-1).contains(fn) || !Utils.readCurNext(context) && fn == 0)){
+      None
+    }else{
+      FudaListHelper.getOrQueryFudaNumToRead(context,fn)
+    }
   }
 
   override def onDraw(canvas:Canvas){

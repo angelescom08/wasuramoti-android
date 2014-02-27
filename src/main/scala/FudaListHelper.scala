@@ -9,7 +9,7 @@ import scala.util.Random
 // `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed.`
 // Therefore we comment out all the SQLiteDatabase.close() method for instance acquired by getReadableDatabase().
 // However, as for instance acquired by getWritableDatabase(), we explicitly call SQLiteDatabase.close() since document of SQLiteOpenHelper says so.
-// Additionally, we use Globals.db_lock.synchronized{ ... } to make all the function thread safe for sure.
+// Additionally, we use Globals.db_lock.synchronized{ ... } to make all the function thread safe to avoid SQLiteDatabase.close() called during query.
 // See the following URL for more details:
 //   https://groups.google.com/forum/#!msg/android-developers/NwDRpHUXt0U/jIam4Q8-cqQJ
 //   http://stackoverflow.com/questions/4547461/closing-the-database-in-a-contentprovider
@@ -56,7 +56,7 @@ object FudaListHelper{
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = new java.lang.Integer(getOrQueryNumbersToRead(context))
     val num_of_kara = getOrQueryNumbersOfKarafuda(context)
-    val body = if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+    val body = if(Utils.isRandom){
       context.getResources.getString(R.string.message_readindex_random,num_to_read)
     }else{
       val current_index = new java.lang.Integer(getOrQueryCurrentIndexWithSkip(context))
@@ -75,7 +75,7 @@ object FudaListHelper{
   }
 
   def allReadDone(context:Context):Boolean = {
-    if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+    if(Utils.isRandom){
       false
     }else{
       getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToRead(context)
@@ -83,7 +83,7 @@ object FudaListHelper{
   }
 
   def isLastFuda(context:Context):Boolean = {
-    if("RANDOM"==Globals.prefs.get.getString("read_order",null)){
+    if(Utils.isRandom){
       false
     }else{
       getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToRead(context)
@@ -210,7 +210,7 @@ object FudaListHelper{
     //db.close()
     return num
   }
-  def shuffle(context:Context){
+  def shuffle(context:Context){ Globals.db_lock.synchronized{
     if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       updateSkipList()
     }
@@ -224,7 +224,7 @@ object FudaListHelper{
         db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array((i+1).toString))
       })
     db.close()
-  }
+  }}
   def updateSkipList(title:String=null){ Globals.db_lock.synchronized{
     val fudaset_title = if(title == null){
       Globals.prefs.get.getString("fudaset","")

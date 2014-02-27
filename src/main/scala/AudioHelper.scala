@@ -30,7 +30,7 @@ object AudioHelper{
       return None
     }
     val current_index = FudaListHelper.getCurrentIndex(app_context)
-    val num = if("RANDOM" == Globals.prefs.get.getString("read_order",null)){
+    val num = if(Utils.isRandom){
       val cur_num = Globals.player match {
         case Some(player) => player.next_num
         case None => 0
@@ -48,6 +48,10 @@ object AudioHelper{
           None
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false
+
+          // TODO: instead of waiting previous decode task to finish, cancel it.
+          old_player.foreach{_.waitDecode}
+
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{
           old_player

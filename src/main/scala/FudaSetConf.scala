@@ -54,7 +54,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     notifyChangedPublic // in case that number of fudas in current fudaset changed
     super.onDialogClosed(positiveResult)
   }
-  override def onCreateDialogView():View = { Globals.db_lock.synchronized{
+  override def onCreateDialogView():View = Globals.db_lock.synchronized{
     super.onCreateDialogView()
     // Using XML Attribute ``android:dialogLayout="@layout/fudaset"'' with ``android:onClick="..."'' does not work in Android 3.x.
     // That is because it creates each button with context instanciated from ContextThemeWrapper, and causes
@@ -85,7 +85,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     // db.close()
     adapter.get.notifyDataSetChanged()
     return view
-  }}
+  }
 }
 
 trait FudaSetTrait{
@@ -131,7 +131,7 @@ trait FudaSetTrait{
       }
     })
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
-      override def onClick(v:View){
+      override def onClick(v:View){ Globals.db_lock.synchronized{
         val title = title_view.getText().toString()
         if(TextUtils.isEmpty(title)){
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
@@ -159,7 +159,7 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
           val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
-          Utils.confirmDialog(context,Left(message),_ => {
+          Utils.confirmDialog(context,Left(message),_ => Globals.db_lock.synchronized{
             val cv = new ContentValues()
             val db = Globals.database.get.getWritableDatabase
             cv.put("title",title)
@@ -180,7 +180,7 @@ trait FudaSetTrait{
             dialog.dismiss()
           })
         }
-      }
+      }}
     })
     dialog.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
@@ -218,7 +218,7 @@ trait FudaSetTrait{
     }
     val fs = adapter.getItem(pos)
     val message = getResources().getString(R.string.fudaset_confirmdelete,fs.title)
-    Utils.confirmDialog(this,Left(message), _ => {
+    Utils.confirmDialog(this,Left(message), _ => Globals.db_lock.synchronized{
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
       db.close()

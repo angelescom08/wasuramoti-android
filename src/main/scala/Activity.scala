@@ -353,7 +353,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
       try_lock(Surface.ROTATION_270)
       // Ensure that the rotation hasn't changed
-      if(getWindowManager.getDefaultDisplay.getRotation != rotation){
+      if(!under_9 && getWindowManager.getDefaultDisplay.getRotation != rotation){
         try_lock(Surface.ROTATION_90)
       }
     }
@@ -392,7 +392,7 @@ trait MainButtonTrait{
     doPlay(false)
   }
   def moveToNextFuda(){
-    val is_shuffle = ("SHUFFLE" == Globals.prefs.get.getString("read_order",null))
+    val is_shuffle = ! Utils.isRandom 
     if(is_shuffle){
       FudaListHelper.moveNext(self.getApplicationContext())
     }

@@ -70,6 +70,10 @@ object Utils {
     Globals.prefs.exists{_.getString("show_yomi_info","None") != "None"}
   }
 
+  def isRandom():Boolean = {
+    "RANDOM" == Globals.prefs.get.getString("read_order",null)
+  }
+
   def readCurNext(context:Context):Boolean = {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
     val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")

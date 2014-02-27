@@ -32,3 +32,4 @@ src/main/jni/libogg-*/src/.libs/*
 src/main/jni/libogg-*/src/test_*
 
 wasuramoti-android-*/
+wasuramoti-android-*.zip
