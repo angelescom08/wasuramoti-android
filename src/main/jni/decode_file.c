@@ -213,8 +213,8 @@ int decode_file(const char* fin_path, const char * fout_path, struct wav_ogg_fil
         ++ptr;
       }
       */
-      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Bitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
       /*
+      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Bitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
       __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Encoded by: %s\n",vc.vendor);
       */
     }

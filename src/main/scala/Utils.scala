@@ -40,6 +40,8 @@ object Globals {
   var forceRefresh = false
   var forceRestart = false
   var audio_volume_bkup = None:Option[Int]
+  // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
+  var alert_dialog = None:Option[AlertDialog]
 }
 
 object Utils {
@@ -98,22 +100,35 @@ object Utils {
     db.setTransactionSuccessful()
     db.endTransaction
   }
+  def showDialogAndSetGlobalRef(dialog:AlertDialog){
+    // AlaertDialog.Builder.setOnDismissListener() was added on API >= 17 so we use Dialog.setOnDismissListener() instead
+    dialog.setOnDismissListener(new DialogInterface.OnDismissListener(){
+        override def onDismiss(interface:DialogInterface){
+          Globals.alert_dialog = None
+        }
+      })
+    dialog.show()
+    Globals.alert_dialog = Some(dialog)
+  }
   def confirmDialog(context:Context,arg:Either[String,Int],func_yes:Unit=>Unit,func_no:Unit=>Unit=identity[Unit]){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    builder.setMessage(str).setPositiveButton(context.getResources.getString(android.R.string.yes),new DialogInterface.OnClickListener(){
+    val dialog = builder.setMessage(str)
+    .setPositiveButton(context.getResources.getString(android.R.string.yes),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
         }
-      }).setNegativeButton(context.getResources.getString(android.R.string.no),new DialogInterface.OnClickListener(){
+      })
+    .setNegativeButton(context.getResources.getString(android.R.string.no),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_no()
         }
-      }).create.show()
-
+      })
+    .create
+    showDialogAndSetGlobalRef(dialog)
   }
   def messageDialog(context:Context,arg:Either[String,Int],func_done:Unit=>Unit=identity[Unit]){
     val builder = new AlertDialog.Builder(context)
@@ -121,11 +136,18 @@ object Utils {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    builder.setMessage(str).setPositiveButton(context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
+    val dialog = builder.setMessage(str)
+    .setPositiveButton(context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_done()
         }
-      }).create.show()
+      }).create
+    showDialogAndSetGlobalRef(dialog)
+  }
+
+  def dismissAlertDialog(){
+    Globals.alert_dialog.foreach{_.dismiss}
+    Globals.alert_dialog = None
   }
 
   def generalHtmlDialog(context:Context,html_id:Int,func_done:Unit=>Unit=identity[Unit]){

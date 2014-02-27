@@ -57,6 +57,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
+  def refreshAndInvalidate(){
+    refreshAndSetButton()
+    invalidateYomiInfo()
+  }
+
   override def onCreateOptionsMenu(menu: Menu):Boolean = {
     val inflater = getMenuInflater
     inflater.inflate(R.menu.main, menu)
@@ -65,19 +70,18 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
     cancelAllPlay()
     Utils.setButtonTextByState(getApplicationContext())
-    val refresh_task:Unit=>Unit = _=>{
-      refreshAndSetButton()
-      invalidateYomiInfo()
-    }
     item.getItemId match {
       case R.id.menu_shuffle => {
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
           FudaListHelper.shuffle(getApplicationContext())
           FudaListHelper.moveToFirst(getApplicationContext())
-          refresh_task()
+          refreshAndInvalidate()
         })
       }
-      case R.id.menu_move => new MovePositionDialog(this,refresh_task).show
+      case R.id.menu_move => {
+        val dlg = new MovePositionDialog()
+        dlg.show(getSupportFragmentManager,"move_position")
+      }
       case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {
@@ -254,8 +258,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       // Therefore, we have to reset the KarutaPlayer's activity
       p.activity = this
     }
-    refreshAndSetButton()
-    invalidateYomiInfo()
+    refreshAndInvalidate()
     startDimLockTimer()
     setLongClickButtonOnResume()
   }
@@ -265,6 +268,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     release_lock = None
     timer_refresh_text.foreach(_.cancel())
     timer_refresh_text = None
+    // Since android:configChanges="orientation" is not set to WasuramotiActivity,
+    // we have to close the dialog at onPause()
+    Utils.dismissAlertDialog()
   }
   override def onStop(){
     super.onStop()

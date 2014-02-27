@@ -29,7 +29,7 @@ object TypefaceManager{
 }
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-  val SCROLL_THREASHOLD = 0.3
+  val SCROLL_THREASHOLD = 0.25
   val SCROLL_SPEED = 200 // in millisec
   var cur_view = None:Option[Int]
   def scrollAnimation(endx:Int,on_finish:Unit=>Unit=Unit=>Unit){
