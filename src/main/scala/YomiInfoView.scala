@@ -82,15 +82,20 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
   override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
     super.onSizeChanged(w,h,oldw,oldh)
-    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-      val v = findViewById(i)
-      if(v!=null){
-        val prop = v.getLayoutParams
-        prop.width = w
-        v.setLayoutParams(prop)
+    // as for android 2.1, we have to execute the following in post(...) method
+    post(new Runnable(){
+        override def run(){
+          for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
+            val v = findViewById(i)
+            if(v!=null){
+              val prop = v.getLayoutParams
+              prop.width = w
+              v.setLayoutParams(prop)
+            }
+          }
+          requestLayout()
       }
-    }
-    requestLayout()
+    })
   }
   override def onLayout(c:Boolean,l:Int,t:Int,r:Int,b:Int){
     super.onLayout(c,l,t,r,b)

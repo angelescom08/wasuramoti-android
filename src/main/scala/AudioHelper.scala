@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.AudioTrack
+import _root_.android.content.{BroadcastReceiver,Context,Intent}
 import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.{ByteOrder,ShortBuffer}
 import _root_.java.nio.channels.FileChannel
@@ -217,5 +218,11 @@ trait WavBufferDebugTrait{
     }else{
       ""
     }
+  }
+}
+
+class AutoPlayReceiver extends BroadcastReceiver {
+  override def onReceive(context:Context, intent:Intent){
+    Globals.player.foreach{_.activity.doPlay(true)}
   }
 }

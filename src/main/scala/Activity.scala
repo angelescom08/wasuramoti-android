@@ -18,7 +18,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[Unit=>Unit]
-  var timer_autoread = None:Option[Timer]
   var timer_dimlock = None:Option[Timer]
   var timer_refresh_text = None:Option[Timer]
   var ringer_mode_bkup = None:Option[Int]
@@ -44,8 +43,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
   def cancelAllPlay(){
     Globals.player.foreach(_.stop())
-    timer_autoread.foreach(_.cancel())
-    timer_autoread = None
+    Utils.cancelAutoPlayTimer(getApplicationContext)
   }
 
   def refreshAndSetButton(force:Boolean = false){
@@ -363,7 +361,7 @@ trait MainButtonTrait{
     doPlay(false)
   }
   def moveToNextFuda(){
-    val is_shuffle = ! Utils.isRandom 
+    val is_shuffle = ! Utils.isRandom
     if(is_shuffle){
       FudaListHelper.moveNext(self.getApplicationContext())
     }
@@ -390,8 +388,7 @@ trait MainButtonTrait{
         return
       }
       val player = Globals.player.get
-      timer_autoread.foreach(_.cancel())
-      timer_autoread = None
+      Utils.cancelAutoPlayTimer(getApplicationContext)
 
       if(Globals.is_playing){
         player.stop()
@@ -430,18 +427,7 @@ trait MainButtonTrait{
               })
             }
             if(auto && !Globals.player.isEmpty){
-              activity.timer_autoread = Some(new Timer())
-              activity.timer_autoread.get.schedule(new TimerTask(){
-                override def run(){
-                  activity.runOnUiThread(new Runnable(){
-                    override def run(){
-                      activity.doPlay(true)
-                    }
-                  })
-                  activity.timer_autoread.foreach(_.cancel())
-                  activity.timer_autoread = None
-                }},(Globals.prefs.get.getLong("autoplay_span", 5)*1000.0).toLong
-              )
+              Utils.startAutoPlayTimer(getApplicationContext)
             }
         },after)
       }

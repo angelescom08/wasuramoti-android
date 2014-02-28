@@ -165,7 +165,6 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
       (if(p.getBoolean("autoplay_repeat",false)){
         "/" + r.getString(R.string.autoplay_repeat_abbrev)
       }else{""})
-      
     }else{
       context.getResources.getString(R.string.message_disabled)
     }

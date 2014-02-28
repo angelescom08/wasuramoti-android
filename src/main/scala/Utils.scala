@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
-import _root_.android.app.AlertDialog
-import _root_.android.content.{DialogInterface,Context,SharedPreferences}
+import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
+import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
 import _root_.android.text.{TextUtils,Html}
@@ -10,6 +10,8 @@ import _root_.android.os.{Environment,Handler}
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View}
 import _root_.android.widget.{TextView,Button}
+import _root_.android.net.Uri
+import _root_.android.util.Log
 
 import _root_.java.io.File
 
@@ -80,7 +82,7 @@ object Utils {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
     val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
 
-    roe.startsWith("CUR") || 
+    roe.startsWith("CUR") ||
     (
       FudaListHelper.getCurrentIndex(context)  == 0 && roj != "upper_0,lower_0"
     )
@@ -362,6 +364,35 @@ object Utils {
         case None => "None"
         case Some(x) => "%.3f" format x
       }).mkString(",")
+  }
+  val auto_play_id = 1
+  val auto_play_schema = "wasuramoti://auto_play/"
+  def autoPlayPendingIntent(context:Context):PendingIntent = {
+    val intent = new Intent(context, classOf[AutoPlayReceiver])
+    intent.setAction(auto_play_id.toString)
+    intent.setData(Uri.parse(auto_play_schema+auto_play_id.toString))
+    PendingIntent.getBroadcast(context,auto_play_id,intent,PendingIntent.FLAG_CANCEL_CURRENT)
+  }
+
+  def cancelAutoPlayTimer(context:Context){
+    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+    if(alarm_manager == null){
+      return
+    }
+    val pendingIntent = autoPlayPendingIntent(context)
+    alarm_manager.cancel(pendingIntent)
+  }
+
+  def startAutoPlayTimer(context:Context){
+    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+    if(alarm_manager == null){
+      Log.v("wasuramoti","WARNING: ALARM_SERVICE is not supported on this device.")
+      return
+    }
+    val pendingIntent = autoPlayPendingIntent(context)
+    val autoplay_span = Globals.prefs.get.getLong("autoplay_span", 5)
+    val limit_millis = System.currentTimeMillis + (autoplay_span * 1000)
+    alarm_manager.set(AlarmManager.RTC_WAKEUP, limit_millis,pendingIntent)
   }
 }
 

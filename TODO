@@ -13,11 +13,11 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
   * Able to show previous/next poem text on random mode.
+  * Show animation (maybe green conunt down?) on custom view of ActionBar when auto play.
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
   * Add Option: play in arbitrary order
-  * In battery mode, the auto play stops when screen is locked
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
   * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
