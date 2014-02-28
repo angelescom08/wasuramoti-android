@@ -49,8 +49,11 @@ object AudioHelper{
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false
 
-          // TODO: instead of waiting previous decode task to finish, cancel it.
-          old_player.foreach{_.waitDecode}
+          old_player.foreach{ p=>
+            // TODO: instead of waiting previous decode task to finish, cancel the task.
+            p.waitDecode
+            p.stop
+          }
 
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{

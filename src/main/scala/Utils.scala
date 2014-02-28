@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
-import _root_.android.app.{AlertDialog,AlarmManager,NotificationManager}
-import _root_.android.content.{DialogInterface,Context,Intent,SharedPreferences}
+import _root_.android.app.AlertDialog
+import _root_.android.content.{DialogInterface,Context,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.PreferenceManager
 import _root_.android.text.{TextUtils,Html}

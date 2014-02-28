@@ -2,7 +2,6 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.view.{Gravity,View,WindowManager}
 import _root_.android.os.{AsyncTask,Handler}
 import _root_.android.media.audiofx.Equalizer
 import _root_.java.util.{Timer,TimerTask}
@@ -123,7 +122,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       case e:NoClassDefFoundError => None
     }
   }
-  def play(onPlayEnd:Unit=>Unit=identity[Unit],onCurEnd:Option[Unit=>Unit]=None){
+  def play(onPlayEnd:WasuramotiActivity=>Unit,onCurEnd:Option[WasuramotiActivity=>Unit]=None){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -132,8 +131,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         Utils.saveAndSetAudioVolume(activity.getApplicationContext())
       }
       Globals.is_playing = true
-      // prevent screen rotation during play since it restarts activity
-      activity.lockOrientation(true)
 
       Utils.setButtonTextByState(activity.getApplicationContext())
       timer_start = Some(new Timer())
@@ -169,20 +166,19 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     equalizer.foreach(_.release())
     equalizer = None
     Globals.is_playing = false
-    activity.lockOrientation(false)
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
   }
 
-  def onReallyStart(onPlayEnd:Unit=>Unit,onCurEnd:Option[Unit=>Unit]){
+  def onReallyStart(onPlayEnd:WasuramotiActivity=>Unit,onCurEnd:Option[WasuramotiActivity=>Unit]){
     Globals.global_lock.synchronized{
       onCurEnd.foreach{hook =>
         timer_curend = Some(new Timer())
         val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
         timer_curend.get.schedule(new TimerTask(){
             override def run(){
-              hook()
+              hook(activity)
             }
         },t)
       }
@@ -191,7 +187,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           audio_track.foreach(x => {x.stop();x.release()})
           audio_track = None
           doWhenStop()
-          onPlayEnd()
+          onPlayEnd(activity)
         }
       }}
       try{

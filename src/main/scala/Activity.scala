@@ -1,12 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.pm.ActivityInfo
-import _root_.android.content.res.Configuration
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.os.{Bundle,Handler,Parcelable,Build}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager,Surface}
+import _root_.android.os.{Bundle,Handler,Build}
+import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
@@ -252,13 +250,18 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       startActivity(getIntent)
     }
     restartRefreshTimer()
-    cancelAllPlay()
-    Globals.player.foreach{ p =>
-      // When screen is rotated, the activity is destroyed and new one is created.
-      // Therefore, we have to reset the KarutaPlayer's activity
-      p.activity = this
+    Globals.global_lock.synchronized{
+      Globals.player.foreach{ p =>
+        // When screen is rotated, the activity is destroyed and new one is created.
+        // Therefore, we have to reset the KarutaPlayer's activity
+        p.activity = this
+      }
+      if(Globals.player.isEmpty){
+        Globals.player = AudioHelper.refreshKarutaPlayer(this,None,false)
+      }
+      Utils.setButtonTextByState(getApplicationContext())
     }
-    refreshAndInvalidate()
+    invalidateYomiInfo()
     startDimLockTimer()
     setLongClickButtonOnResume()
   }
@@ -266,10 +269,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onPause()
     release_lock.foreach(_())
     release_lock = None
+    timer_dimlock.foreach(_.cancel())
+    timer_dimlock = None
     timer_refresh_text.foreach(_.cancel())
     timer_refresh_text = None
     // Since android:configChanges="orientation" is not set to WasuramotiActivity,
-    // we have to close the dialog at onPause()
+    // we have to close the dialog at onPause() to avoid window leak.
     Utils.dismissAlertDialog()
   }
   override def onStop(){
@@ -322,46 +327,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           release_lock = None
         }
       },dimlock_millisec)
-    }
-  }
-
-  // As for API >= 18, SCREEN_ORIENTATION_LOCKED has been introduced so we use it.
-  // However, as for API <= 17, there seems no simple way to lock the orientation of screen programmatically to `current` orientation.
-  // Moreover, the actual orientation of Surface.ROTATION_* and ActivityInfo.SCREEN_ORIENTATION_* differs in each devices.
-  // The following code is taken from  http://stackoverflow.com/questions/6599770/screen-orientation-lock and seems to work on most devices.
-  def lockOrientation(lock:Boolean){
-    if(!lock){
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-    //}else if(Build.VERSION.SDK_INT >= 18){
-    //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
-    }else{
-      val under_9 = Build.VERSION.SDK_INT < 9
-      val rotation = (if(under_9){Surface.ROTATION_0}else{getWindowManager.getDefaultDisplay.getRotation})
-      val try_lock = { natural:Int =>
-        val flag = (under_9 || Array(Surface.ROTATION_0,natural).contains(rotation))
-        val ori = (getResources.getConfiguration.orientation match{
-          case Configuration.ORIENTATION_PORTRAIT =>
-            if(flag){
-              ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }else{
-              ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
-            }
-          case Configuration.ORIENTATION_LANDSCAPE =>
-            if(flag){
-              ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            }else{
-              ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
-            }
-          case _ =>
-            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        })
-        setRequestedOrientation(ori)
-      }
-      try_lock(Surface.ROTATION_270)
-      // Ensure that the rotation hasn't changed
-      if(!under_9 && getWindowManager.getDefaultDisplay.getRotation != rotation){
-        try_lock(Surface.ROTATION_90)
-      }
     }
   }
 
@@ -436,43 +401,45 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
-        val after:Option[Unit=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext)){
-          Some(Unit => {
-              runOnUiThread(new Runnable(){
+        val after:Option[WasuramotiActivity=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext)){
+          Some(activity => {
+              activity.runOnUiThread(new Runnable(){
                   override def run(){
-                    scrollYomiInfo(R.id.yomi_info_view_next,true)
+                    activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
                   }
                 })
             })
         }else{
           None
         }
-
+        // Activity is recreated when orientation changes, we have to explicitly set activity as argument
         player.play(
-          _ => {
-            moveToNextFuda()
+          activity => {
+            activity.moveToNextFuda()
             val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
             if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
-              FudaListHelper.allReadDone(self.getApplicationContext())
+              FudaListHelper.allReadDone(activity.getApplicationContext())
             ){
-              FudaListHelper.shuffle(getApplicationContext())
-              FudaListHelper.moveToFirst(getApplicationContext())
-              refreshAndSetButton()
-              runOnUiThread(new Runnable(){
+              FudaListHelper.shuffle(activity.getApplicationContext())
+              FudaListHelper.moveToFirst(activity.getApplicationContext())
+              activity.refreshAndSetButton()
+              activity.runOnUiThread(new Runnable(){
                 override def run(){
-                  invalidateYomiInfo()
+                  activity.invalidateYomiInfo()
                 }
               })
             }
             if(auto && !Globals.player.isEmpty){
-              timer_autoread = Some(new Timer())
-              timer_autoread.get.schedule(new TimerTask(){
+              activity.timer_autoread = Some(new Timer())
+              activity.timer_autoread.get.schedule(new TimerTask(){
                 override def run(){
-                  runOnUiThread(new Runnable(){
-                    override def run(){doPlay(true)}
+                  activity.runOnUiThread(new Runnable(){
+                    override def run(){
+                      activity.doPlay(true)
+                    }
                   })
-                  timer_autoread.foreach(_.cancel())
-                  timer_autoread = None
+                  activity.timer_autoread.foreach(_.cancel())
+                  activity.timer_autoread = None
                 }},(Globals.prefs.get.getLong("autoplay_span", 5)*1000.0).toLong
               )
             }

@@ -1,11 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
-import _root_.android.view.{View,MotionEvent,GestureDetector}
+import _root_.android.view.{View,MotionEvent}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
-import _root_.android.support.v4.view.GestureDetectorCompat
 import _root_.android.os.CountDownTimer
 
 import scala.collection.mutable
@@ -83,19 +82,20 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
   override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
     super.onSizeChanged(w,h,oldw,oldh)
-    post(new Runnable(){
-      override def run(){
-        for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-          val v = findViewById(i)
-          if(v!=null){
-            val prop = v.getLayoutParams
-            prop.width = w
-            v.setLayoutParams(prop)
-          }
-        }
+    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
+      val v = findViewById(i)
+      if(v!=null){
+        val prop = v.getLayoutParams
+        prop.width = w
+        v.setLayoutParams(prop)
       }
-      requestLayout()
-    })
+    }
+    requestLayout()
+  }
+  override def onLayout(c:Boolean,l:Int,t:Int,r:Int,b:Int){
+    super.onLayout(c,l,t,r,b)
+    // calling scrollTo() inside ViewTreeObserver.OnGlobalLayoutListener does not work (why?)
+    scrollToView(R.id.yomi_info_view_cur,false)
   }
   def invalidateAndScroll(){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){

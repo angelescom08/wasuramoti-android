@@ -1,12 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.Dialog
-import _root_.android.content.Context
 import _root_.android.os.Bundle
 import _root_.android.view.{View,ViewGroup,LayoutInflater}
 import _root_.android.widget.Button
 import _root_.android.support.v4.app.DialogFragment
-
 
 class MovePositionDialog extends DialogFragment{
   val numbers_to_read = FudaListHelper.getOrQueryNumbersToRead(getActivity)
