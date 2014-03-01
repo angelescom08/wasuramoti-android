@@ -1,17 +1,15 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
-import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
-import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent}
+import _root_.android.app.AlertDialog
+import _root_.android.content.{DialogInterface,Context,SharedPreferences}
 import _root_.android.database.sqlite.SQLiteDatabase
-import _root_.android.preference.PreferenceManager
+import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
-import _root_.android.os.{Environment,Handler}
+import _root_.android.os.Environment
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View}
 import _root_.android.widget.{TextView,Button}
-import _root_.android.net.Uri
-import _root_.android.util.Log
 
 import _root_.java.io.File
 
@@ -44,6 +42,8 @@ object Globals {
   var audio_volume_bkup = None:Option[Int]
   // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
   var alert_dialog = None:Option[AlertDialog]
+
+  var current_config_dialog = None:Option[DialogPreference]
 }
 
 object Utils {
@@ -308,40 +308,6 @@ object Utils {
     Globals.audio_volume_bkup = None
   }
 
-  def setAudioPlayButton(view:View,context:Context,before_play:Option[KarutaPlayer=>Unit]=None){
-    val btn = view.findViewById(R.id.audio_play).asInstanceOf[Button]
-    val handler = new Handler()
-    btn.setOnClickListener(new View.OnClickListener(){
-      override def onClick(v:View){
-        Globals.global_lock.synchronized{
-          Globals.player match{
-            case Some(pl) => {
-              if(Globals.is_playing){
-                pl.stop()
-                btn.setText(context.getResources().getString(R.string.audio_play))
-              }else{
-                before_play.foreach(_(pl))
-                pl.play( _ => {
-                  handler.post(new Runnable(){
-                    override def run(){
-                      btn.setText(context.getResources().getString(R.string.audio_play))
-                    }
-                  })
-                })
-                btn.setText(context.getResources().getString(R.string.audio_stop))
-              }
-            }
-            case None =>
-              handler.post(new Runnable(){
-                override def run(){
-                  Utils.messageDialog(context,Right(R.string.player_error_noplay))
-                }
-              })
-          }
-        }
-      }
-    })
-  }
   def getPrefsEqualizer():EqualizerSeq = {
     val str = Globals.prefs.get.getString("effect_equalizer_seq","")
     if(TextUtils.isEmpty(str)){
@@ -364,35 +330,6 @@ object Utils {
         case None => "None"
         case Some(x) => "%.3f" format x
       }).mkString(",")
-  }
-  val auto_play_id = 1
-  val auto_play_schema = "wasuramoti://auto_play/"
-  def autoPlayPendingIntent(context:Context):PendingIntent = {
-    val intent = new Intent(context, classOf[AutoPlayReceiver])
-    intent.setAction(auto_play_id.toString)
-    intent.setData(Uri.parse(auto_play_schema+auto_play_id.toString))
-    PendingIntent.getBroadcast(context,auto_play_id,intent,PendingIntent.FLAG_CANCEL_CURRENT)
-  }
-
-  def cancelAutoPlayTimer(context:Context){
-    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-    if(alarm_manager == null){
-      return
-    }
-    val pendingIntent = autoPlayPendingIntent(context)
-    alarm_manager.cancel(pendingIntent)
-  }
-
-  def startAutoPlayTimer(context:Context){
-    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-    if(alarm_manager == null){
-      Log.v("wasuramoti","WARNING: ALARM_SERVICE is not supported on this device.")
-      return
-    }
-    val pendingIntent = autoPlayPendingIntent(context)
-    val autoplay_span = Globals.prefs.get.getLong("autoplay_span", 5)
-    val limit_millis = System.currentTimeMillis + (autoplay_span * 1000)
-    alarm_manager.set(AlarmManager.RTC_WAKEUP, limit_millis,pendingIntent)
   }
 }
 

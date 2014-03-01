@@ -3,6 +3,13 @@ package karuta.hpnpwd.wasuramoti
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.AudioTrack
 import _root_.android.content.{BroadcastReceiver,Context,Intent}
+import _root_.android.app.{PendingIntent,AlarmManager}
+import _root_.android.widget.Button
+import _root_.android.os.{Bundle,Handler}
+import _root_.android.net.Uri
+import _root_.android.util.Log
+import _root_.android.view.View
+
 import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.{ByteOrder,ShortBuffer}
 import _root_.java.nio.channels.FileChannel
@@ -221,8 +228,132 @@ trait WavBufferDebugTrait{
   }
 }
 
-class AutoPlayReceiver extends BroadcastReceiver {
+object KarutaPlayUtils{
+  object Action extends Enumeration{
+    type Action = Value
+    val Auto,Start,Border,End = Value
+  }
+  object Sender extends Enumeration{
+    type Sender = Value
+    val Main,Conf = Value
+  }
+  val karuta_play_schema = "wasuramoti://karuta_play/"
+  def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
+    val intent = new Intent(context, classOf[KarutaPlayReceiver])
+    val id = action.id + 1
+    intent.setAction(action.toString)
+    intent.setData(Uri.parse(karuta_play_schema+action.toString))
+    task(intent)
+    PendingIntent.getBroadcast(context,id,intent,PendingIntent.FLAG_CANCEL_CURRENT)
+  }
+
+  def cancelKarutaPlayTimer(context:Context,action:Action.Action){
+    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+    if(alarm_manager == null){
+      return
+    }
+    val pendingIntent = getPendingIntent(context,action)
+    alarm_manager.cancel(pendingIntent)
+  }
+
+  def startKarutaPlayTimer(context:Context,action:Action.Action,millisec:Long,task:Intent=>Unit={_=>Unit}){
+    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+    if(alarm_manager == null){
+      Log.v("wasuramoti","WARNING: ALARM_SERVICE is not supported on this device.")
+      return
+    }
+    val pendingIntent = getPendingIntent(context,action,task)
+    val limit_millis = System.currentTimeMillis + millisec
+    alarm_manager.set(AlarmManager.RTC_WAKEUP, limit_millis,pendingIntent)
+  }
+  def setAudioPlayButton(view:View,context:Context,before_play:Option[KarutaPlayer=>Unit]=None){
+    val btn = view.findViewById(R.id.audio_play).asInstanceOf[Button]
+    val handler = new Handler()
+    btn.setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        Globals.global_lock.synchronized{
+          Globals.player match{
+            case Some(pl) => {
+              if(Globals.is_playing){
+                pl.stop()
+                btn.setText(context.getResources().getString(R.string.audio_play))
+              }else{
+                before_play.foreach(_(pl))
+                val bundle = new Bundle()
+                bundle.putSerializable("from",KarutaPlayUtils.Sender.Conf)
+                pl.play(bundle)
+                btn.setText(context.getResources().getString(R.string.audio_stop))
+              }
+            }
+            case None =>
+              handler.post(new Runnable(){
+                override def run(){
+                  Utils.messageDialog(context,Right(R.string.player_error_noplay))
+                }
+              })
+          }
+        }
+      }
+    })
+  }
+  def doAfterDone(bundle:Bundle){
+    bundle.getSerializable("from").asInstanceOf[Sender.Sender] match{
+      case Sender.Main =>
+        doAfterActivity(bundle)
+      case Sender.Conf =>
+        doAfterConfiguration(bundle)
+    }
+  }
+  def doAfterActivity(bundle:Bundle){
+    Globals.global_lock.synchronized{
+      if(Globals.player.isEmpty){
+        return
+      }
+      val activity = Globals.player.get.activity
+      activity.moveToNextFuda()
+      val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
+      if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
+        FudaListHelper.allReadDone(activity.getApplicationContext())
+      ){
+        FudaListHelper.shuffle(activity.getApplicationContext())
+        FudaListHelper.moveToFirst(activity.getApplicationContext())
+        activity.refreshAndInvalidate()
+      }
+      if(auto && !Globals.player.isEmpty){
+        KarutaPlayUtils.startKarutaPlayTimer(
+          activity.getApplicationContext,
+          KarutaPlayUtils.Action.Auto,
+          Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        )
+      }
+    }
+  }
+  def doAfterConfiguration(bundle:Bundle){
+    Globals.current_config_dialog.foreach{dp=>
+      val btn = dp.getDialog.findViewById(R.id.audio_play).asInstanceOf[Button]
+      if(btn != null){
+        Globals.player.foreach{p=>
+          val context = p.activity.getApplicationContext
+          btn.setText(context.getResources.getString(R.string.audio_play))
+        }
+      }
+    }
+  }
+}
+
+class KarutaPlayReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent){
-    Globals.player.foreach{_.activity.doPlay(true)}
+    KarutaPlayUtils.Action.withName(intent.getAction) match{
+      case KarutaPlayUtils.Action.Auto =>
+        Globals.player.foreach{_.activity.doPlay(true)}
+      case KarutaPlayUtils.Action.Start =>
+        val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
+        Globals.player.foreach{_.onReallyStart(bundle)}
+      case KarutaPlayUtils.Action.Border =>
+        Globals.player.foreach{_.doWhenBorder()}
+      case KarutaPlayUtils.Action.End =>
+        val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
+        Globals.player.foreach{_.doWhenDone(bundle)}
+    }
   }
 }

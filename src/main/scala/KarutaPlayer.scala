@@ -2,9 +2,8 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.os.{AsyncTask,Handler}
+import _root_.android.os.{AsyncTask,Handler,Bundle}
 import _root_.android.media.audiofx.Equalizer
-import _root_.java.util.{Timer,TimerTask}
 
 import scala.collection.mutable
 
@@ -30,9 +29,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   val handler = new Handler()
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
-  var run_start = None:Option[Runnable]
-  var run_onend = None:Option[Runnable]
-  var run_curend = None:Option[Runnable]
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
@@ -110,7 +106,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       case e:NoClassDefFoundError => None
     }
   }
-  def play(onPlayEnd:WasuramotiActivity=>Unit,onCurEnd:Option[WasuramotiActivity=>Unit]=None){
+  def play(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -135,16 +131,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         })
       }
-
-      run_start = Some(new Runnable(){
-        override def run(){
-          onReallyStart(onPlayEnd,onCurEnd)
-          run_start.foreach(handler.removeCallbacks(_))
-          run_start = None
-        }})
-      run_start.foreach{
-        handler.postDelayed(_,wait_time.toLong)
-      }
+      KarutaPlayUtils.startKarutaPlayTimer(
+        activity.getApplicationContext,
+        KarutaPlayUtils.Action.Start,
+        wait_time.toLong,
+        {_.putExtra("bundle",bundle)}
+      )
     }
   }
 
@@ -162,32 +154,37 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def onReallyStart(onPlayEnd:WasuramotiActivity=>Unit,onCurEnd:Option[WasuramotiActivity=>Unit]){
+  def doWhenBorder(){
+    activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
+  }
+
+  def doWhenDone(bundle:Bundle){
     Globals.global_lock.synchronized{
-      onCurEnd.foreach{hook =>
+      audio_track.foreach(x => {x.stop();x.release()})
+      audio_track = None
+      doWhenStop()
+      KarutaPlayUtils.doAfterDone(bundle:Bundle)
+    }
+  }
+
+  def onReallyStart(bundle:Bundle){
+    Globals.global_lock.synchronized{
+      if(bundle.getBoolean("have_to_run_border",false)){
         val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
-        run_curend = Some(new Runnable(){
-            override def run(){
-              hook(activity)
-            }
-        })
-        run_curend.foreach{handler.postDelayed(_,t)}
+        KarutaPlayUtils.startKarutaPlayTimer(
+          activity.getApplicationContext,
+          KarutaPlayUtils.Action.Border,
+          t,
+          {_.putExtra("bundle",bundle)}
+        )
       }
-      val do_when_done = { _:Unit => {
-        Globals.global_lock.synchronized{
-          audio_track.foreach(x => {x.stop();x.release()})
-          audio_track = None
-          doWhenStop()
-          onPlayEnd(activity)
-        }
-      }}
       try{
         makeAudioTrack()
       }catch{
         case e:OggDecodeFailException => {
             activity.runOnUiThread(new Runnable{
                 override def run(){
-                  Utils.messageDialog(activity,Left(e.getMessage),{_=>do_when_done()})
+                  Utils.messageDialog(activity,Left(e.getMessage),{_=>activity.finish()})
                 }
             })
             return
@@ -213,27 +210,28 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=2563
 
-      run_onend = Some(new Runnable(){
-        override def run(){
-          do_when_done()
-        }}) 
-      run_onend.foreach{
-        // +200 is just for sure that audio is finished playing
-        handler.postDelayed(_,buffer_length_millisec+200)
-      }
+      // +200 is just for sure that audio is finished playing
+      KarutaPlayUtils.startKarutaPlayTimer(
+        activity.getApplicationContext,
+        KarutaPlayUtils.Action.End,
+        buffer_length_millisec+200,
+        {_.putExtra("bundle",bundle)}
+      )
       audio_track.get.play()
-    
     }
   }
 
   def stop(){
     Globals.global_lock.synchronized{
-      run_curend.foreach(handler.removeCallbacks(_))
-      run_curend = None
-      run_start.foreach(handler.removeCallbacks(_))
-      run_start = None
-      run_onend.foreach(handler.removeCallbacks(_))
-      run_onend = None
+      for(action <- Array(
+        KarutaPlayUtils.Action.Start,
+        KarutaPlayUtils.Action.Border,
+        KarutaPlayUtils.Action.End)
+      ){
+        KarutaPlayUtils.cancelKarutaPlayTimer(
+          activity.getApplicationContext,action
+        )
+      }
       audio_track.foreach(track => {
           track.flush()
           track.stop()

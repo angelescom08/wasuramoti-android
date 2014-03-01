@@ -254,6 +254,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
 
 
   override def onDialogClosed(positiveResult:Boolean){
+    Globals.current_config_dialog = None
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{
         if(Globals.is_playing){
@@ -283,6 +284,9 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
   }
   override def onCreateDialogView():View = {
     super.onCreateDialogView()
+    // we have to access to the current dialog inside KarutaPlayUtils.doAfterConfiguration()
+    Globals.current_config_dialog = Some(this)
+
     Globals.player.foreach{ pl =>
       pl.set_audio_volume = false
     }
@@ -290,7 +294,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
 
-    Utils.setAudioPlayButton(view,context)
+    KarutaPlayUtils.setAudioPlayButton(view,context)
 
     val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
     check.setChecked(!TextUtils.isEmpty(getPersistedString("")))

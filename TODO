@@ -14,6 +14,7 @@ Priority High:
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
   * Able to show previous/next poem text on random mode.
   * Show animation (maybe green conunt down?) on custom view of ActionBar when auto play.
+  * When upper phrase of next fuda is played, changing the orientation causes inconsistency of poem displayed and poem playing.
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

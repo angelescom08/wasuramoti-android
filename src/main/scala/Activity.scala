@@ -43,7 +43,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
   def cancelAllPlay(){
     Globals.player.foreach(_.stop())
-    Utils.cancelAutoPlayTimer(getApplicationContext)
+    KarutaPlayUtils.cancelKarutaPlayTimer(
+      getApplicationContext,
+      KarutaPlayUtils.Action.Auto
+    )
   }
 
   def refreshAndSetButton(force:Boolean = false){
@@ -365,11 +368,7 @@ trait MainButtonTrait{
     // Therefore we give force flag to true for refreshAndSetButton.
     self.refreshAndSetButton(!is_shuffle)
     if(Utils.readCurNext(self.getApplicationContext)){
-      runOnUiThread(new Runnable(){
-        override def run(){
-          invalidateYomiInfo()
-        }
-      })
+      invalidateYomiInfo()
     }
   }
   def doPlay(auto_play:Boolean){
@@ -383,8 +382,10 @@ trait MainButtonTrait{
         return
       }
       val player = Globals.player.get
-      Utils.cancelAutoPlayTimer(getApplicationContext)
-
+      KarutaPlayUtils.cancelKarutaPlayTimer(
+        getApplicationContext,
+        KarutaPlayUtils.Action.Auto
+      )
       if(Globals.is_playing){
         player.stop()
         Utils.setButtonTextByState(self.getApplicationContext())
@@ -393,38 +394,10 @@ trait MainButtonTrait{
         if(!auto_play){
           startDimLockTimer()
         }
-        val after:Option[WasuramotiActivity=>Unit] = if(Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext)){
-          Some(activity => {
-              activity.runOnUiThread(new Runnable(){
-                  override def run(){
-                    activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
-                  }
-                })
-            })
-        }else{
-          None
-        }
-        // Activity is recreated when orientation changes, we have to explicitly set activity as argument
-        player.play(
-          activity => {
-            activity.moveToNextFuda()
-            val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
-            if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
-              FudaListHelper.allReadDone(activity.getApplicationContext())
-            ){
-              FudaListHelper.shuffle(activity.getApplicationContext())
-              FudaListHelper.moveToFirst(activity.getApplicationContext())
-              activity.refreshAndSetButton()
-              activity.runOnUiThread(new Runnable(){
-                override def run(){
-                  activity.invalidateYomiInfo()
-                }
-              })
-            }
-            if(auto && !Globals.player.isEmpty){
-              Utils.startAutoPlayTimer(getApplicationContext)
-            }
-        },after)
+        val bundle = new Bundle()
+        bundle.putBoolean("have_to_run_border",Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext))
+        bundle.putSerializable("from",KarutaPlayUtils.Sender.Main)
+        player.play(bundle)
       }
     }
   }
