@@ -9,7 +9,6 @@ import _root_.android.view.animation.{AnimationUtils,Interpolator}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.java.lang.Runnable
-import _root_.java.util.{Timer,TimerTask}
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
@@ -18,25 +17,26 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[Unit=>Unit]
-  var timer_dimlock = None:Option[Timer]
-  var timer_refresh_text = None:Option[Timer]
+  var run_dimlock = None:Option[Runnable]
+  var run_refresh_text = None:Option[Runnable]
   var ringer_mode_bkup = None:Option[Int]
+  val handler = new Handler()
   def restartRefreshTimer(){
     Globals.global_lock.synchronized{
-      timer_refresh_text.foreach(_.cancel())
-      timer_refresh_text = None
+      run_refresh_text.foreach(handler.removeCallbacks(_))
+      run_refresh_text = None
       if(!NotifyTimerUtils.notify_timers.isEmpty){
-        timer_refresh_text = Some(new Timer())
-        timer_refresh_text.get.schedule(new TimerTask(){
+        run_refresh_text = Some(new Runnable(){
           override def run(){
             if(NotifyTimerUtils.notify_timers.isEmpty){
-              timer_refresh_text.foreach(_.cancel())
-              timer_refresh_text = None
+              run_refresh_text.foreach(handler.removeCallbacks(_))
+              run_refresh_text = None
               return
             }
             Utils.setButtonTextByState(getApplicationContext())
           }
-        },0,MINUTE_MILLISEC)
+        })
+        run_refresh_text.foreach{handler.postDelayed(_,MINUTE_MILLISEC)}
       }
     }
   }
@@ -135,7 +135,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     flipper.setDisplayedChild(cn)
 
     val read_button = findViewById(rb).asInstanceOf[Button]
-    val handler = new Handler()
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
@@ -267,10 +266,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onPause()
     release_lock.foreach(_())
     release_lock = None
-    timer_dimlock.foreach(_.cancel())
-    timer_dimlock = None
-    timer_refresh_text.foreach(_.cancel())
-    timer_refresh_text = None
+    run_dimlock.foreach(handler.removeCallbacks(_))
+    run_dimlock = None
+    run_refresh_text.foreach(handler.removeCallbacks(_))
+    run_refresh_text = None
     // Since android:configChanges="orientation" is not set to WasuramotiActivity,
     // we have to close the dialog at onPause() to avoid window leak.
     Utils.dismissAlertDialog()
@@ -295,11 +294,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       getWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
       release_lock = {
           Some( _ => {
-            runOnUiThread(new Runnable{
-                override def run(){
-                  getWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                }
-            })
+            getWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
           })
       }
       rescheduleDimLockTimer()
@@ -309,8 +304,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   def rescheduleDimLockTimer(millisec:Option[Long]=None){
     val DEFAULT_DIMLOCK_MINUTES = 5
     Globals.global_lock.synchronized{
-      timer_dimlock.foreach(_.cancel())
-      timer_dimlock = None
+      run_dimlock.foreach(handler.removeCallbacks(_))
+      run_dimlock = None
       var dimlock_millisec = millisec.getOrElse({
         MINUTE_MILLISEC * Utils.getPrefAs[Long]("dimlock_minutes", DEFAULT_DIMLOCK_MINUTES, 9999)
       })
@@ -318,13 +313,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       if(dimlock_millisec < 0){
         dimlock_millisec = DEFAULT_DIMLOCK_MINUTES * MINUTE_MILLISEC
       }
-      timer_dimlock = Some(new Timer())
-      timer_dimlock.get.schedule(new TimerTask(){
+      run_dimlock = Some(new Runnable(){
         override def run(){
           release_lock.foreach(_())
           release_lock = None
         }
-      },dimlock_millisec)
+      })
+      run_dimlock.foreach{handler.postDelayed(_,dimlock_millisec)}
     }
   }
 

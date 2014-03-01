@@ -27,12 +27,13 @@ object KarutaPlayerDebug{
 }
 
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
+  val handler = new Handler()
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
   var audio_thread = None:Option[Thread]
-  var timer_start = None:Option[Timer]
-  var timer_onend = None:Option[Timer]
-  var timer_curend = None:Option[Timer]
+  var run_start = None:Option[Runnable]
+  var run_onend = None:Option[Runnable]
+  var run_curend = None:Option[Runnable]
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
@@ -133,7 +134,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
-      timer_start = Some(new Timer())
       // Since we insert some silence at beginning of audio,
       // the actual wait_time should be shorter.
       val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
@@ -148,12 +148,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         })
       }
-      timer_start.get.schedule(new TimerTask(){
+
+      run_start = Some(new Runnable(){
         override def run(){
           onReallyStart(onPlayEnd,onCurEnd)
-          timer_start.foreach(_.cancel())
-          timer_start = None
-        }},wait_time.toLong)
+          run_start.foreach(handler.removeCallbacks(_))
+          run_start = None
+        }})
+      run_start.foreach{
+        handler.postDelayed(_,wait_time.toLong)
+      }
     }
   }
 
@@ -174,13 +178,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   def onReallyStart(onPlayEnd:WasuramotiActivity=>Unit,onCurEnd:Option[WasuramotiActivity=>Unit]){
     Globals.global_lock.synchronized{
       onCurEnd.foreach{hook =>
-        timer_curend = Some(new Timer())
         val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
-        timer_curend.get.schedule(new TimerTask(){
+        run_curend = Some(new Runnable(){
             override def run(){
               hook(activity)
             }
-        },t)
+        })
+        run_curend.foreach{handler.postDelayed(_,t)}
       }
       val do_when_done = { _:Unit => {
         Globals.global_lock.synchronized{
@@ -240,11 +244,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }
         }
         audio_track.get.write(buf,0,buf.length)
-        timer_onend = Some(new Timer())
-        timer_onend.get.schedule(new TimerTask(){
+        run_onend = Some(new Runnable(){
           override def run(){
             do_when_done()
-          }},buffer_length_millisec+200) // +200 is just for sure that audio is finished playing
+          }}) 
+        run_onend.foreach{
+          // +200 is just for sure that audio is finished playing
+          handler.postDelayed(_,buffer_length_millisec+200)
+        }
         audio_track.get.play()
       }
     }
@@ -252,12 +259,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def stop(){
     Globals.global_lock.synchronized{
-      timer_curend.foreach(_.cancel())
-      timer_curend = None
-      timer_start.foreach(_.cancel())
-      timer_start = None
-      timer_onend.foreach(_.cancel())
-      timer_onend = None
+      run_curend.foreach(handler.removeCallbacks(_))
+      run_curend = None
+      run_start.foreach(handler.removeCallbacks(_))
+      run_start = None
+      run_onend.foreach(handler.removeCallbacks(_))
+      run_onend = None
       audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
       audio_track.foreach(track => {
           track.flush()
@@ -374,6 +381,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                 activity.runOnUiThread(new Runnable{
                     override def run(){
                       val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
+                      println("wasuramoti IOException: " + msg)
                       Utils.messageDialog(activity,Left(msg),{_=>throw new AlreadyReportedException(e.getMessage)})
                     }
                 })
