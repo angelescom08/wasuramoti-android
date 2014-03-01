@@ -68,7 +68,6 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
     key match{
       case "read_order" => get_entry_from_value(R.array.conf_read_order_entryValues,R.array.conf_read_order_entries)
       case "read_order_each" => get_entry_from_value(R.array.conf_read_order_each_entryValues,R.array.conf_read_order_each_entries_abbr)
-      case "audio_track_mode" => get_entry_from_value(R.array.conf_audio_track_entryValues,R.array.conf_audio_track_entries)
       case _ => value
     }
   }

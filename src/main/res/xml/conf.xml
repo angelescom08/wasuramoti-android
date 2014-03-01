@@ -151,15 +151,6 @@
         android:summary="@string/conf_hardware_accelerate_summary"
         android:defaultValue="true"
         />
-      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
-        android:key="audio_track_mode"
-        android:title="@string/conf_audio_track_mode"
-        android:summary="@string/conf_audio_track_mode_summary"
-        android:entries="@array/conf_audio_track_entries"
-        android:entryValues="@array/conf_audio_track_entryValues"
-        android:defaultValue="STATIC"
-        android:widgetLayout="@layout/conf_current_value"
-        />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_init">
       <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>

@@ -30,7 +30,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   val handler = new Handler()
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
-  var audio_thread = None:Option[Thread]
   var run_start = None:Option[Runnable]
   var run_onend = None:Option[Runnable]
   var run_curend = None:Option[Runnable]
@@ -46,9 +45,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask] // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
 
-  def isStreamMode():Boolean={
-    return (Globals.prefs.get.getString("audio_track_mode","STATIC") == "STREAM")
-  }
   def calcBufferSize():Int = {
       audio_queue.map{ arg =>{
           arg match {
@@ -60,14 +56,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def makeAudioTrack(){
-    if(isStreamMode()){
-      makeAudioTrackAux(getFirstDecoder(),true)
-    }else{
-      makeAudioTrackAux(getFirstDecoder(),false,calcBufferSize())
-    }
+    makeAudioTrackAux(getFirstDecoder(),calcBufferSize())
   }
 
-  def makeAudioTrackAux(decoder:OggVorbisDecoder,is_stream:Boolean,buffer_size_bytes:Int=0){
+  def makeAudioTrackAux(decoder:OggVorbisDecoder,buffer_size_bytes:Int=0){
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
@@ -80,12 +72,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       (AudioFormat.CHANNEL_CONFIGURATION_STEREO,2)
     }
 
-    var (buffer_size,mode) = if(is_stream){
-        (AudioTrack.getMinBufferSize(
-          decoder.rate.toInt, channels, audio_format), AudioTrack.MODE_STREAM)
-      }else{
-        (buffer_size_bytes, AudioTrack.MODE_STATIC)
-      }
+    var (buffer_size,mode) = (buffer_size_bytes, AudioTrack.MODE_STATIC)
     // In order to avoid 'Invalid audio buffer size' from AudioTrack.audioBuffSizeCheck()
     val rate_3 = rate_1 * rate_2
     buffer_size = (buffer_size / rate_3) * rate_3
@@ -206,54 +193,36 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             return
           }
       }
-      if(isStreamMode()){
-        // Play with AudioTrack.MODE_STREAM
-        // This method requires small memory, but there is possibility of noise at few seconds after writeToAudioTrack.
-        // I could not confirm such noise in my device, but some users claim that they have a noise in the beginning of upper poem.
+    
+      // Play with AudioTrack.MODE_STATIC
+      // This method requires some memory overhead, but able to reduce possibility of noise since it only writes to AudioTrack once.
 
-        audio_track.get.play()
-        audio_thread = Some(new Thread(new Runnable(){
-          override def run(){
-            audio_queue.foreach{ arg =>{
-              audio_track.foreach{ track =>
-                arg match {
-                  case Left(w) => w.writeToAudioTrack(track)
-                  case Right(millisec) => AudioHelper.writeSilence(track,millisec)
-                }
-              }
-              if(Thread.interrupted()){
-                return
-              }
-            }}
-            do_when_done()
-          }
-        }))
-        audio_thread.get.start()
-      }else{
-        // Play with AudioTrack.MODE_STATIC
-        // This method requires some memory overhead, but able to reduce possibility of noise since it only writes to AudioTrack once.
-
-        val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
-        val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
-        var offset = 0
-        audio_queue.foreach{ arg => {
-            arg match {
-              case Left(w) => offset += w.writeToShortBuffer(buf,offset)
-              case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
-              }
-          }
+      val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
+      val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
+      var offset = 0
+      audio_queue.foreach{ arg => {
+          arg match {
+            case Left(w) => offset += w.writeToShortBuffer(buf,offset)
+            case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
+            }
         }
-        audio_track.get.write(buf,0,buf.length)
-        run_onend = Some(new Runnable(){
-          override def run(){
-            do_when_done()
-          }}) 
-        run_onend.foreach{
-          // +200 is just for sure that audio is finished playing
-          handler.postDelayed(_,buffer_length_millisec+200)
-        }
-        audio_track.get.play()
       }
+      audio_track.get.write(buf,0,buf.length)
+      // AudioTrack has a bug that onMarkerReached() is never invoked.
+      // Therefore I will start timer that ends when audio length elapsed.
+      // See the following for the bug info:
+      //   https://code.google.com/p/android/issues/detail?id=2563
+
+      run_onend = Some(new Runnable(){
+        override def run(){
+          do_when_done()
+        }}) 
+      run_onend.foreach{
+        // +200 is just for sure that audio is finished playing
+        handler.postDelayed(_,buffer_length_millisec+200)
+      }
+      audio_track.get.play()
+    
     }
   }
 
@@ -265,21 +234,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       run_start = None
       run_onend.foreach(handler.removeCallbacks(_))
       run_onend = None
-      audio_thread.foreach(_.interrupt()) // Thread.inturrupt() just sets the audio_thread.isInterrupted flag to true. the actual interrupt is done in following.
       audio_track.foreach(track => {
           track.flush()
-          track.stop() // calling this methods terminates AudioTrack.write() called in audio_thread.
-
-          // Now since audio_thread.isInterrupted is true and AudioTrack.write() is terminated,
-          // the audio_thread have to end immediately.
-          // Before calling AudioTrack.release(), we have to wait for audio_thread to end.
-          // The reason why I have to do this is assumed that
-          // calling AudioTrack.stop() does not immediately terminate AudioTrack.write(), and
-          // calling AudioTrack.release() before the termination is illegal.
-          audio_thread.foreach{_.join()}
+          track.stop()
           track.release()
         })
-      audio_thread = None
       audio_track = None
       doWhenStop()
     }

@@ -145,10 +145,8 @@
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_hardware_accelerate">GPUレンダリング</string>
-  <string name="conf_hardware_accelerate_summary">読み句の描画が滑らかになるが，メモリ使用量が少し増える</string>
+  <string name="conf_hardware_accelerate_summary">読み句の描画が滑らかになるが，メモリ使用量が微増する</string>
   <string name="conf_hardware_accelerate_restart_confirm">GPUレンダリングの設定変更を反映するにはアプリを再起動する必要があります．いますぐ再起動しますか？</string>
-  <string name="conf_audio_track_mode">AudioTrackの再生方法</string>
-  <string name="conf_audio_track_mode_summary">Streamにするとメモリ節約できるが，詠みの区切りに雑音が入る可能性有り</string>
   <!-- CATEGORY_PROCESSINNG -->
   <string name="category_processing">音声処理</string>
   <string name="conf_wav_threshold">閾値</string>
