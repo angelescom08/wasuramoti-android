@@ -10,6 +10,7 @@ import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
 import _root_.android.provider.Settings
 import _root_.android.text.TextUtils
 import _root_.android.util.Log
+import _root_.android.support.v4.app.{NotificationCompat,TaskStackBuilder}
 
 import _root_.java.text.SimpleDateFormat
 import _root_.java.util.Date
@@ -135,7 +136,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
       findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
     }
 
-    this.setVolumeControlStream(AudioManager.STREAM_ALARM)
+    this.setVolumeControlStream(AudioManager.STREAM_NOTIFICATION)
   }
 
   override def onPause(){
@@ -172,7 +173,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
     val tag = tv.getTag
     val uri = if(tag == null){null}else{tag.asInstanceOf[Map[String,Uri]].getOrElse("timer_uri",null)}
     getRingtoneFromUri(uri).foreach{r=>
-      r.setStreamType(AudioManager.STREAM_ALARM) // able to play sound even when it is silent mode.
+      r.setStreamType(AudioManager.STREAM_NOTIFICATION)
       r.play
     }
   }
@@ -259,7 +260,13 @@ class NotifyTimerReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
       NotifyTimerUtils.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
-      val contentIntent = PendingIntent.getActivity(context, 0,new Intent(), 0)
+
+      val result_intent = new Intent(context, classOf[WasuramotiActivity])
+      val pending_intent = TaskStackBuilder.create(context)
+        .addParentStack(classOf[WasuramotiActivity])
+        .addNextIntent(result_intent)
+        .getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT)
+
       val extras = intent.getExtras
       val timer_id = extras.getInt("timer_id")
       val icon = extras.getInt("timer_icon")
@@ -267,16 +274,20 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       Utils.setButtonTextByState(context)
       val message = extras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
-      val notif = new Notification(icon,message, System.currentTimeMillis())
+      val notif = new NotificationCompat.Builder(context)
+        .setContentTitle(from)
+        .setContentText(message)
+        .setTicker(message)
+        .setSmallIcon(icon)
+        .setContentIntent(pending_intent)
       if(!Globals.is_playing){
         if(extras.getBoolean("play_sound")){
-          notif.audioStreamType = AudioManager.STREAM_ALARM // able to play sound even when it is silent mode.
+          val stream_type = AudioManager.STREAM_NOTIFICATION
           val sound = extras.get("sound_uri").asInstanceOf[Uri]
           if(sound == null){
-            notif.defaults |= Notification.DEFAULT_SOUND
-          }else{
-            notif.sound = sound
+            notif.setDefaults(Notification.DEFAULT_SOUND)
           }
+          notif.setSound(sound,stream_type)
         }
         if(extras.getBoolean("do_vibrate")){
           // using `notif.defaults |= Notification.DEFAULT_VIBRATE' does not work when RINGER_MODE_SILENT
@@ -288,8 +299,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
           }
         }
       }
-      notif.setLatestEventInfo(context, from, message, contentIntent)
-      NotifyTimerUtils.notify_manager.foreach{_.notify(timer_id, notif)}
+      NotifyTimerUtils.notify_manager.foreach{_.notify(timer_id, notif.build)}
     }
   }
 }

@@ -34,9 +34,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
               return
             }
             Utils.setButtonTextByState(getApplicationContext())
+            run_refresh_text.foreach{handler.postDelayed(_,MINUTE_MILLISEC)}
           }
         })
-        run_refresh_text.foreach{handler.postDelayed(_,MINUTE_MILLISEC)}
+        run_refresh_text.foreach{_.run()}
       }
     }
   }
@@ -256,8 +257,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         // Therefore, we have to reset the KarutaPlayer's activity
         p.activity = this
       }
-      if(Globals.player.isEmpty){
-        Globals.player = AudioHelper.refreshKarutaPlayer(this,None,false)
+      if(Globals.player.isEmpty || Globals.forceRefresh){
+        Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
       }
       Utils.setButtonTextByState(getApplicationContext())
     }

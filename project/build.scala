@@ -15,6 +15,7 @@ object AndroidBuild extends Build{
       "com.android.support" % "support-v4" % "19.0.1",
       aarlib("com.android.support" % "appcompat-v7" % "19.0.1")
     ),
+    scalacOptions ++= Seq("-unchecked","-deprecation"),
     proguardOptions := Seq(
     "-keep class karuta.hpnpwd.audio.OggVorbisDecoder",
     "-keep class scala.Either",

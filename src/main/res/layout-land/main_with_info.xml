@@ -8,14 +8,14 @@
     <LinearLayout
           android:layout_width="0dp"
           android:layout_height="fill_parent"
-          android:layout_weight="0.5"
+          android:layout_weight="0.6"
           >
       <include layout="@layout/yomi_info_triple" />
     </LinearLayout>
     <Button android:id="@+id/read_button_small"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:text="Press Here"
             android:textSize="24dp"
             android:onClick="onMainButtonClick"

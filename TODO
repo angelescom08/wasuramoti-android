@@ -3,7 +3,7 @@ Priority High:
     ( See that data is moved from wasuramoti.pref.xml to karuta.hpnpwd.wasuramoti_preferences.xml in /data/data/karuta.hpnpwd.wasuramoti/shared_prefs/ )
   * Show fuda information when tapped (kimariji, uta number, author, key point).
   * Do not fade in/out if fade length is too short.
-  * Use Fragment instead of ViewFlipper. and use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
+  * Use Fragment instead of ViewFlipper. Also use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
   * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog (Need to use fragment first since we have to call setTargetFragment to get the result).
 
   * Volume Boost.
@@ -13,8 +13,9 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
   * Able to show previous/next poem text on random mode.
-  * Show animation (maybe green conunt down?) on custom view of ActionBar when auto play.
-  * When upper phrase of next fuda is played, changing the orientation causes inconsistency of poem displayed and poem playing.
+  * Show animation (maybe green count down?) on custom view of ActionBar when auto play.
+  * Initialzing config not working for some options.
+  * If firigana's size exceeds the window height, shrink it.
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

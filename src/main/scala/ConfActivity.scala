@@ -86,7 +86,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
       override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
         if(Array("read_order_each","reader_path","read_order_joka","wav_span_simokami",
-                 "wav_threashold","wav_fadeout_simo","wav_fadein_kami").contains(key)){
+                 "wav_threashold","wav_fadeout_simo","wav_fadein_kami","fudaset").contains(key)){
           Globals.forceRefresh = true
         }
         if(key == "hardware_accelerate"){

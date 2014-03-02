@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
-import _root_.android.view.{View,MotionEvent}
+import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
@@ -82,6 +82,10 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
   override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
     super.onSizeChanged(w,h,oldw,oldh)
+    if(w == 0){
+      return
+    }
+    val that = this
     // as for android 2.1, we have to execute the following in post(...) method
     post(new Runnable(){
         override def run(){
@@ -93,14 +97,19 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
               v.setLayoutParams(prop)
             }
           }
+
+          val vto = that.getViewTreeObserver
+          vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+              override def onGlobalLayout(){
+                that.getViewTreeObserver.removeGlobalOnLayoutListener(this)
+                val vid = Globals.player.flatMap{_.current_yomi_info}.getOrElse(R.id.yomi_info_view_cur)
+                that.scrollToView(vid,false)
+              }
+          })
+
           requestLayout()
       }
     })
-  }
-  override def onLayout(c:Boolean,l:Int,t:Int,r:Int,b:Int){
-    super.onLayout(c,l,t,r,b)
-    // calling scrollTo() inside ViewTreeObserver.OnGlobalLayoutListener does not work (why?)
-    scrollToView(R.id.yomi_info_view_cur,false)
   }
   def invalidateAndScroll(){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
@@ -163,8 +172,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
-  // However, our calculateTextSize() is quite inaccurate when paint's text size is not a default value,
-  // we save the default text size here.
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)

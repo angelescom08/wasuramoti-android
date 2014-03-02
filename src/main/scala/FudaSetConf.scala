@@ -177,6 +177,7 @@ trait FudaSetTrait{
               adapter.remove(orig_fs)
               adapter.insert(new FudaSetWithSize(title,st_size),pos)
             }
+            Globals.forceRefresh = true
             dialog.dismiss()
           })
         }

@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.os.{AsyncTask,Handler,Bundle}
+import _root_.android.os.{AsyncTask,Bundle}
 import _root_.android.media.audiofx.Equalizer
 
 import scala.collection.mutable
@@ -26,13 +26,12 @@ object KarutaPlayerDebug{
 }
 
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
-  val handler = new Handler()
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
-  var old_orientation = None:Option[Int]
+  var current_yomi_info = None:Option[Int]
   var set_audio_volume = true
 
   val audio_queue = new AudioQueue() // file or silence in millisec
@@ -63,9 +62,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       (AudioFormat.ENCODING_PCM_8BIT,1)
     }
     val (channels,rate_2) = if(decoder.channels == 1){
-      (AudioFormat.CHANNEL_CONFIGURATION_MONO,1)
+      (AudioFormat.CHANNEL_OUT_MONO,1)
     }else{
-      (AudioFormat.CHANNEL_CONFIGURATION_STEREO,2)
+      (AudioFormat.CHANNEL_OUT_STEREO,2)
     }
 
     var (buffer_size,mode) = (buffer_size_bytes, AudioTrack.MODE_STATIC)
@@ -121,15 +120,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // the actual wait_time should be shorter.
       val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
       if(Utils.showYomiInfo){
-        (new Handler()).post(new Runnable(){
-            override def run(){
-              if(Utils.readCurNext(activity.getApplicationContext)){
-                activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-              }else{
-                activity.invalidateYomiInfo()
-              }
-            }
-        })
+        if(Utils.readCurNext(activity.getApplicationContext)){
+          activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
+        }else{
+          activity.invalidateYomiInfo()
+        }
       }
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
@@ -149,12 +144,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     equalizer.foreach(_.release())
     equalizer = None
     Globals.is_playing = false
+    current_yomi_info = None
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
   }
 
   def doWhenBorder(){
+    current_yomi_info = Some(R.id.yomi_info_view_next)
     activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
   }
 
@@ -191,9 +188,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }
       }
     
-      // Play with AudioTrack.MODE_STATIC
-      // This method requires some memory overhead, but able to reduce possibility of noise since it only writes to AudioTrack once.
-
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
       val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
       var offset = 0
@@ -206,15 +200,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       audio_track.get.write(buf,0,buf.length)
       // AudioTrack has a bug that onMarkerReached() is never invoked.
-      // Therefore I will start timer that ends when audio length elapsed.
+      // Therefore there seems no easy way to do a task when AudioTrack has finished plaing.
+      // As a workaround, I will start timer that ends when audio length elapsed.
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=2563
 
-      // +200 is just for sure that audio is finished playing
+      // +100 is just for sure that audio is finished playing
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
         KarutaPlayUtils.Action.End,
-        buffer_length_millisec+200,
+        buffer_length_millisec+100,
         {_.putExtra("bundle",bundle)}
       )
       audio_track.get.play()

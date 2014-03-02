@@ -20,7 +20,7 @@ class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(
 
 object Romanization{
   lazy val PAT_ROMA = "([kstnhmyrwgzdbp]?[aiueo]| +)".r
-  lazy val ROMA_TO_JAP = Array(
+  lazy val MAP_ROMA_TO_JAP = Array(
     ("a", "あ"), ("i", "い"), ("u", "う"), ("e", "え"),  ("o","お"),
     ("ka","か"), ("ki","き"), ("ku","く"), ("ke","け"), ("ko","こ"),
     ("sa","さ"), ("si","し"), ("su","す"), ("se","せ"), ("so","そ"),
@@ -37,27 +37,27 @@ object Romanization{
     ("ba","ば"), ("bi","び"), ("bu","ぶ"), ("be","べ"), ("bo","ぼ"),
     ("pa","ぱ"), ("pi","ぴ"), ("pu","ぷ"), ("pe","ぺ"), ("po","ぽ")).toMap
 
-  lazy val JAP_TO_ROMA = ROMA_TO_JAP.collect({case x=>x.swap})
+  lazy val MAP_JAP_TO_ROMA = MAP_ROMA_TO_JAP.collect({case x=>x.swap})
 
-  lazy val ZENKAKU_TO_HANKAKU = Array(
+  lazy val MAP_ZENKAKU_TO_HANKAKU = Array(
     ("＊","*"), ("？","?"), ("［","["), ("］","]"),
     ("０","0"), ("１","1"), ("２","2"), ("３","3"), ("４","4"),
     ("５","5"), ("６","6"), ("７","7"), ("８","8"), ("９","9")).toMap
 
   def jap_to_roma(str:String):String = {
     str.toCharArray.map(_.toString).map(
-      x => JAP_TO_ROMA.getOrElse(x,x)
+      x => MAP_JAP_TO_ROMA.getOrElse(x,x)
     ).mkString
   }
   def roma_to_jap(str:String):String = {
     PAT_ROMA.findAllIn(str.toLowerCase).map(_.toString).map(
-      x => ROMA_TO_JAP.getOrElse(x,x)
+      x => MAP_ROMA_TO_JAP.getOrElse(x,x)
     ).mkString + PAT_ROMA.replaceAllIn(str,"")
   }
 
   def zenkaku_to_hankaku(str:String) = {
     str.toCharArray.map(_.toString).map(
-      x => ZENKAKU_TO_HANKAKU.getOrElse(x,x)
+      x => MAP_ZENKAKU_TO_HANKAKU.getOrElse(x,x)
     ).mkString
   }
 
