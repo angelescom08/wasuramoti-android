@@ -165,16 +165,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def onReallyStart(bundle:Bundle){
+    // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread.
+    new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
-      if(bundle.getBoolean("have_to_run_border",false)){
-        val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
-        KarutaPlayUtils.startKarutaPlayTimer(
-          activity.getApplicationContext,
-          KarutaPlayUtils.Action.Border,
-          t,
-          {_.putExtra("bundle",bundle)}
-        )
-      }
       try{
         makeAudioTrack()
       }catch{
@@ -199,6 +192,18 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
       }
       audio_track.get.write(buf,0,buf.length)
+
+      if(bundle.getBoolean("have_to_run_border",false)){
+        val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
+        // This timer must be started after makeAudioTrack() since it would take some time to finish
+        KarutaPlayUtils.startKarutaPlayTimer(
+          activity.getApplicationContext,
+          KarutaPlayUtils.Action.Border,
+          t,
+          {_.putExtra("bundle",bundle)}
+        )
+      }
+
       // AudioTrack has a bug that onMarkerReached() is never invoked.
       // Therefore there seems no easy way to do a task when AudioTrack has finished plaing.
       // As a workaround, I will start timer that ends when audio length elapsed.
@@ -213,7 +218,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         {_.putExtra("bundle",bundle)}
       )
       audio_track.get.play()
-    }
+    }}}).start()
   }
 
   def stop(){
@@ -306,6 +311,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           ss ++= Array("NEXT2")
         }
         for (i <- 0 until ss.length ){
+          if(isCancelled){
+            // TODO: what shold we return ?
+            return Left(new AudioQueue())
+          }
           val s = ss(i)
           val read_num = if(s.startsWith("CUR")){
             cur_num
@@ -330,14 +339,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }catch{
               // Some device throws 'No space left on device' here
               case e:java.io.IOException => {
-                activity.runOnUiThread(new Runnable{
-                    override def run(){
-                      val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
-                      println("wasuramoti IOException: " + msg)
-                      Utils.messageDialog(activity,Left(msg),{_=>throw new AlreadyReportedException(e.getMessage)})
-                    }
-                })
-                return Right(new OggDecodeFailException("ogg decode failed with IOException:"+e.getMessage))
+                if(e.getMessage == "No space left on device"){
+                  activity.runOnUiThread(new Runnable{
+                      override def run(){
+                        val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
+                        Utils.messageDialog(activity,Left(msg),{_=>throw new AlreadyReportedException(e.getMessage)})
+                      }
+                  })
+                  return Right(new OggDecodeFailException("ogg decode failed with IOException:"+e.getMessage))
+                }else{
+                  throw e
+                }
               }
             }
             if( i != ss.length - 1 ){

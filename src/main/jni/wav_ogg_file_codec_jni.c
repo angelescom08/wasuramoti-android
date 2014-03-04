@@ -11,7 +11,7 @@ Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile( JNIEnv* env,
   const char *native_fin_path = (*env)->GetStringUTFChars(env, fin_path, 0);
   const char *native_fout_path = (*env)->GetStringUTFChars(env, fout_path, 0);
   struct wav_ogg_file_codec_info wi;
-  if(!decode_file(native_fin_path, native_fout_path, &wi)){
+  if(!decode_file(env, native_fin_path, native_fout_path, &wi)){
     return 0;
   }
   jclass cls = (*env)->GetObjectClass(env, thiz);
@@ -22,7 +22,9 @@ Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile( JNIEnv* env,
   fid = (*env)->GetFieldID(env, cls, "bit_depth","I");
   (*env)->SetIntField(env, thiz, fid, wi.bit_depth);
 
-  //DON'T FORGET THIS LINE!!!
+  //DON'T FORGET TO RELEASE STRINGS !!
   (*env)->ReleaseStringUTFChars(env, fin_path, native_fin_path);
-  (*env)->ReleaseStringUTFChars(env, fout_path, native_fout_path);	 return 1;
+  (*env)->ReleaseStringUTFChars(env, fout_path, native_fout_path);
+  
+  return 1;
 } 

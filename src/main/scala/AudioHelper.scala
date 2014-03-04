@@ -57,9 +57,10 @@ object AudioHelper{
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false
 
-          old_player.foreach{ p=>
-            // TODO: instead of waiting previous decode task to finish, cancel the task.
-            p.waitDecode
+          old_player.foreach{ p=> 
+            // mayInterruptIfRunning must be true to set Thread.currentThread.isInterrupted() == true for AsyncTask's thread
+            p.decode_task.cancel(true)
+            // TODO: do we have to wait for decode to finish since it is jni ?
             p.stop
           }
 
