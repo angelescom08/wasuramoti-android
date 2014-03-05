@@ -51,6 +51,9 @@
   \
 }
 
+// ensure that all the pointer inside structs are NULL (to avoid error when calling *_clear)
+
+#define fill_zero(x) memset(&x,0,sizeof(x))
 
 // Returns zero for success, non-zero for failure
 int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struct wav_ogg_file_codec_info * return_info){
@@ -67,6 +70,15 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
   vorbis_dsp_state vd; /* central working state for the packet->PCM decoder */
   vorbis_block     vb; /* local working space for packet->PCM decode */
 
+  fill_zero(oy);
+  fill_zero(os);
+  fill_zero(og);
+  fill_zero(op);
+  fill_zero(vi);
+  fill_zero(vc);
+  fill_zero(vd);
+  fill_zero(vb);
+
   ogg_int16_t * convbuffer = NULL;
 
   char *buffer;
@@ -77,7 +89,8 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
   jmethodID mIsInterrupted = NULL;
   jobject curThread = NULL;
 
-  FILE *fin, *fout;
+  FILE *fin = NULL;
+  FILE *fout = NULL;
   if (!(fin = fopen(fin_path, "rb"))){
     abort_task("cannot read file: %s\n",fin_path);
   }

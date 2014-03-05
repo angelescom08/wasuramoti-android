@@ -1,12 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.preference.{PreferenceActivity}
+import _root_.android.preference.PreferenceActivity
 import _root_.android.os.Bundle
-import _root_.android.app.{PendingIntent,AlarmManager}
 import _root_.android.view.View
 import _root_.android.widget.{TextView,CheckBox,CompoundButton}
 import _root_.android.util.AttributeSet
-import _root_.android.content.{Context,SharedPreferences,Intent}
+import _root_.android.content.{Context,SharedPreferences}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
 
 trait PreferenceCustom extends Preference{
@@ -91,18 +90,8 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
         }
         if(key == "hardware_accelerate"){
           // Since there is no way to disable hardware acceleration,
-          // we have to restart application. This way totally exits application using System.exit()
-          val start_activity = new Intent(context,classOf[WasuramotiActivity])
-          val pending_id = 271828
-          val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
-          val mgr = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-          if(mgr != null){
-            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),
-              { Unit =>
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
-                System.exit(0)
-              })
-          }
+          // we have to restart application.
+          Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ Unit => Utils.restartApplication(context) })
         }
         val pref = findPreference(key)
         if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){

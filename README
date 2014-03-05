@@ -47,4 +47,4 @@
 [How to Install apk file]
   You can install apk file by running a command `adb install wasuramoti-*.apk'.
   Browse following URL for further information:
-  http://developer.android.com/guide/developing/device.html#setting-up
+  http://developer.android.com/tools/device.html#setting-up

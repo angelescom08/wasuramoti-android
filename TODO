@@ -17,6 +17,8 @@ Priority High:
   * Initialzing config not working for some options.
   * If firigana's size exceeds the window height, shrink it.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
+  * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
+
 
 Priority Middle:
   * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.

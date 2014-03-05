@@ -174,7 +174,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         case e:OggDecodeFailException => {
             activity.runOnUiThread(new Runnable{
                 override def run(){
-                  Utils.messageDialog(activity,Left(e.getMessage),{_=>activity.finish()})
+                  Utils.messageDialog(activity,Left(Option(e.getMessage).getOrElse("<null>") + "... will restart app."),{
+                      _=>Utils.restartApplication(activity.getApplicationContext)
+                    })
                 }
             })
             return
@@ -355,7 +357,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                         Utils.messageDialog(activity,Left(msg),{_=>throw new AlreadyReportedException(e.getMessage)})
                       }
                   })
-                  return Right(new OggDecodeFailException("ogg decode failed with IOException:"+e.getMessage))
+                  return Right(new OggDecodeFailException("ogg decode failed with IOException: "+e.getMessage))
                 }else{
                   throw e
                 }

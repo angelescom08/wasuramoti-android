@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
-import _root_.android.app.AlertDialog
-import _root_.android.content.{DialogInterface,Context,SharedPreferences}
+import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
+import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
@@ -330,6 +330,17 @@ object Utils {
         case None => "None"
         case Some(x) => "%.3f" format x
       }).mkString(",")
+  }
+  def restartApplication(context:Context){
+    // This way totally exits application using System.exit()
+    val start_activity = new Intent(context,classOf[WasuramotiActivity])
+    val pending_id = 271828
+    val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
+    val mgr = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+    if(mgr != null){
+      mgr.set(AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
+      System.exit(0)
+    }
   }
 }
 
