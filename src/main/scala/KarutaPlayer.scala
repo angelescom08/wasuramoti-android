@@ -204,17 +204,26 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         )
       }
 
-      // AudioTrack has a bug that onMarkerReached() is never invoked.
+      // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
       // Therefore there seems no easy way to do a task when AudioTrack has finished plaing.
       // As a workaround, I will start timer that ends when audio length elapsed.
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=2563
 
-      // +100 is just for sure that audio is finished playing
+      // Also, using AudioTrack in static mode seems to have another bug that
+      // leaks shared memory even after stopped, released, and set to null.
+      // You can confirm it by either executing `adb shell dumpsys meminfo karuta.hpnpwd.wasuramoti` and see Ashmem of PSS increases continuously in Android 4.x,
+      // or `adb shell su -c "ls -l /proc/<pid>/fd | grep ashmem"` and see that a lot of symbolic link to /dev/ashmem is created.
+      // The application will raise exception and terminates when this number of fd exceeds Max open files in /proc/<pid>/limits.
+      // However, if we run garbage collection frequently, we can prevent the increase of fd's. 
+      // Thus this +200ms gives CPU free time and make DalvikVM to run GC and call the native destructor of AudioTrack.
+      // Note that calling System.gc() seems to have no effect.
+      // See the following for the bug info:
+      //   https://code.google.com/p/android/issues/detail?id=17995
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
         KarutaPlayUtils.Action.End,
-        buffer_length_millisec+100,
+        buffer_length_millisec+200,
         {_.putExtra("bundle",bundle)}
       )
       audio_track.get.play()

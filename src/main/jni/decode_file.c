@@ -32,17 +32,27 @@
 
 #define BIT_DEPTH 16
 #define MAX_AMPLITUDE ((1 << (BIT_DEPTH-1)) - 1)
-
+#define APP_NAME "wasuramoti"
 
 #define abort_task(...) { \
-    __android_log_print(ANDROID_LOG_INFO,"wasuramoti", __VA_ARGS__); \
-    fclose(fin); \
-    fclose(fout); \
+    __android_log_print(ANDROID_LOG_INFO,APP_NAME, __VA_ARGS__); \
+    if(fin != NULL){ fclose(fin);}; \
+    if(fout != NULL){ fclose(fout);}; \
     if(convbuffer != NULL){free(convbuffer);}; \
-    return(0); \
+    if(curThread != NULL){(*env)->DeleteLocalRef(env,curThread);}; \
+    if(thread != NULL){(*env)->DeleteLocalRef(env,thread);}; \
+    vorbis_block_clear(&vb); \
+    vorbis_dsp_clear(&vd); \
+    ogg_stream_clear(&os); \
+    vorbis_comment_clear(&vc); \
+    vorbis_info_clear(&vi); \
+    ogg_sync_clear(&oy); \
+    return(1); \
   \
 }
 
+
+// Returns zero for success, non-zero for failure
 int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struct wav_ogg_file_codec_info * return_info){
 
   ogg_sync_state   oy; /* sync and verify incoming physical bitstream */
@@ -62,16 +72,29 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
   char *buffer;
   int  bytes;
 
+  jclass thread = NULL;
+  jmethodID mCurThread = NULL;
+  jmethodID mIsInterrupted = NULL;
+  jobject curThread = NULL;
+
   FILE *fin, *fout;
   if (!(fin = fopen(fin_path, "rb"))){
-    __android_log_print(ANDROID_LOG_INFO,"wasuramoti","cannot read file: %s\n",fin_path);
-    return(0);
+    abort_task("cannot read file: %s\n",fin_path);
   }
 
   if (!(fout = fopen(fout_path,"wb"))){
-    __android_log_print(ANDROID_LOG_INFO,"wasuramoti","cannot write file: %s\n",fout_path);
-    fclose(fin);
-    return(0);
+    abort_task("cannot write file: %s\n",fout_path);
+  }
+
+  /* calling AsyncTask.cancel(true) in java code will set isInterrupted() == true */
+
+  thread = (*env)->FindClass(env, "java/lang/Thread");
+  if(thread != NULL){
+    mCurThread = (*env)->GetStaticMethodID(env, thread, "currentThread", "()Ljava/lang/Thread;");
+    mIsInterrupted = (*env)->GetMethodID(env, thread, "isInterrupted", "()Z");
+    if(mCurThread != NULL){
+      curThread = (jobject)(*env)->CallStaticObjectMethod(env, thread, mCurThread);
+    }
   }
 
   convbuffer = (ogg_int16_t *)malloc(sizeof(ogg_int16_t)*4096);
@@ -79,12 +102,6 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
     abort_task("malloc failed.\n")
   }
   memset(convbuffer,sizeof(ogg_int16_t),4096);
-
-  /* calling AsyncTask.cancel(true) in java code will set isInterrupted() == true */
-  jclass thread = (*env)->FindClass(env, "java/lang/Thread");
-  jmethodID mCurThread = (*env)->GetStaticMethodID(env, thread, "currentThread", "()Ljava/lang/Thread;");
-  jmethodID mIsInterrupted = (*env)->GetMethodID(env, thread, "isInterrupted", "()Z");
-  jobject curThread = (jobject)(*env)->CallStaticObjectMethod(env, thread, mCurThread);
 
   ogg_sync_init(&oy); /* Now we can read pages */
   
@@ -194,12 +211,12 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
        decoding */ /*
       char **ptr=vc.user_comments;
       while(*ptr){
-        __android_log_print(ANDROID_LOG_INFO,"wasuramoti","%s\n",*ptr);
+        __android_log_print(ANDROID_LOG_INFO,APP_NAME,"%s\n",*ptr);
         ++ptr;
       }
       */ /*
-      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Bitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
-      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Encoded by: %s\n",vc.vendor);
+      __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Bitstream is %d channel, %ldHz\n",vi.channels,vi.rate);
+      __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Encoded by: %s\n",vc.vendor);
       */
 
     int convsize=4096/vi.channels;
@@ -220,14 +237,16 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
           int result=ogg_sync_pageout(&oy,&og);
           if(result==0)break; /* need more data */
           if(result<0){ /* missing or corrupt data at this page position */
-            __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Corrupt or missing data in bitstream; continuing...\n");
+            __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Corrupt or missing data in bitstream; continuing...\n");
           }else{
             ogg_stream_pagein(&os,&og); /* can safely ignore errors at
                                            this point */
             while(1){
-              jboolean res = (jboolean)(*env)->CallBooleanMethod(env, curThread, mIsInterrupted);
-              if(res == JNI_TRUE){
-                abort_task("Vorbis decoding interrupted.\n");
+              if(curThread != NULL && mIsInterrupted != NULL){
+                jboolean res = (jboolean)(*env)->CallBooleanMethod(env, curThread, mIsInterrupted);
+                if(res == JNI_TRUE){
+                  abort_task("Vorbis decoding interrupted.\n");
+                }
               }
               result=ogg_stream_packetout(&os,&op);
               
@@ -280,7 +299,7 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
                   
                   /*
                    if(clipflag){
-                     __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Clipping in frame %ld\n",(long)(vd.sequence));
+                     __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Clipping in frame %ld\n",(long)(vd.sequence));
                      }
                     */
                   
@@ -309,7 +328,7 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
       vorbis_block_clear(&vb);
       vorbis_dsp_clear(&vd);
     }else{
-      __android_log_print(ANDROID_LOG_INFO,"wasuramoti","Error: Corrupt header during playback initialization.\n");
+      __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Error: Corrupt header during playback initialization.\n");
     }
 
     /* clean up this logical bitstream; before exit we see if we're
@@ -326,6 +345,8 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, struc
   fclose(fin);
   fclose(fout);
   free(convbuffer);
-  /*__android_log_print(ANDROID_LOG_INFO,"wasuramoti","Ogg Decode Done.\n"); */
-  return(1);
+  if(curThread != NULL){(*env)->DeleteLocalRef(env,curThread);};
+  if(thread != NULL){(*env)->DeleteLocalRef(env,thread);};
+  /*__android_log_print(ANDROID_LOG_INFO,APP_NAME,"Ogg Decode Done.\n"); */
+  return(0);
 }
