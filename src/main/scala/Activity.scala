@@ -265,6 +265,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     invalidateYomiInfo()
     startDimLockTimer()
     setLongClickButtonOnResume()
+    setLongClickYomiInfoOnResume()
   }
   override def onPause(){
     super.onPause()
@@ -327,6 +328,22 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
+  def setLongClickYomiInfoOnResume(){
+    for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
+      val view = findViewById(id).asInstanceOf[YomiInfoView]
+      view.setOnLongClickListener(
+        new View.OnLongClickListener(){
+          override def onLongClick(v:View):Boolean = {
+            view.cur_num.foreach{num=>
+              val dlg = YomiInfoSearchDialogBuilder.newInstance(view.cur_num.getOrElse(num))
+              dlg.show(getSupportFragmentManager,"yomi_info_search")
+            }
+            return true
+          }
+        }
+      )
+    }
+  }
   def setLongClickButtonOnResume(){
     for(id <- Array(R.id.read_button_small,R.id.read_button_large)){
       val btn = findViewById(id).asInstanceOf[Button]

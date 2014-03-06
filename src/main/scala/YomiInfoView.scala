@@ -1,11 +1,14 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.content.Context
+import _root_.android.content.{Context,DialogInterface,Intent}
 import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.AttributeSet
-import _root_.android.os.CountDownTimer
+import _root_.android.os.{CountDownTimer,Bundle}
+import _root_.android.net.Uri
+import _root_.android.app.{AlertDialog,SearchManager,Dialog}
+import _root_.android.support.v4.app.DialogFragment
 
 import scala.collection.mutable
 
@@ -326,3 +329,65 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     }
   }
 }
+
+// The constructor of Fragment must be empty since when fragment is recreated,
+// The empty constructor is called.
+// Therefore we have to create instance through this function.
+object YomiInfoSearchDialogBuilder{
+  def newInstance(fudanum:Int):YomiInfoSearchDialog = {
+    val fragment = new YomiInfoSearchDialog()
+    val args = new Bundle()
+    args.putInt("fudanum",fudanum)
+    fragment.setArguments(args)
+    return fragment
+  }
+}
+
+class YomiInfoSearchDialog extends DialogFragment{
+  override def onCreateDialog(saved:Bundle):Dialog = {
+    val fudanum = getArguments.getInt("fudanum",0)
+    val builder = new AlertDialog.Builder(getActivity)
+    builder.setTitle(R.string.yomi_info_search_title)
+    .setItems(R.array.yomi_info_search_array, new DialogInterface.OnClickListener(){
+        override def onClick(dialog:DialogInterface,which:Int){
+          val query = if(which == 0){
+            AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
+          }else{
+            AllFuda.removeInsideParens(AllFuda.author(fudanum)).replace(" ","") + " 歌人"
+          }
+          val f1 = {_:Unit =>
+            val intent = new Intent(Intent.ACTION_WEB_SEARCH)
+            intent.putExtra(SearchManager.QUERY,query)
+            Left(intent)
+          }
+          val f2 = {_:Unit => 
+            val intent = new Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
+            Left(intent)
+          }
+          val f3 = {_:Unit => 
+            Right({ _:Unit =>
+              Utils.messageDialog(getActivity,Left("Application for Web search not found on this device."))
+            })
+          }
+          // scala.util.control.Breaks.break does not work (why?)
+          // Therefore we use `exists` in Traversable trait instead
+          Seq(f1,f2,f3) exists {f=>
+              f() match {
+                case Left(intent) =>
+                  try{
+                    startActivity(intent)
+                    true
+                  }catch{
+                    case _:android.content.ActivityNotFoundException => false
+                  }
+                case Right(g) => {g();true}
+              }
+            }
+        }
+      }
+    )
+    .create()
+  }
+}
+// このファイルはutf-8で日本語を含んでいます

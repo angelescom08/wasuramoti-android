@@ -98,6 +98,15 @@
     <item>中</item>
     <item>大</item>
   </string-array>
+
+  <string name="yomi_info_usage">[使い方]\n左右にスワイプ: 次/前の札に移動\n長押し: 読み句/歌人でWeb検索</string>
+
+  <string name="yomi_info_search_title">Web検索</string>
+  <string-array name="yomi_info_search_array">
+    <item>読み句で検索</item>
+    <item>歌人で検索</item>
+  </string-array>
+
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
   <string-array name="conf_read_order_each_entries">
@@ -198,6 +207,7 @@
     <item>SHOW_FULL</item>
     <item>SORT_ORDER</item>
   </string-array>
+
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
   <string name="fudasetedit_titleempty">名前が空です</string>
   <string name="fudasetedit_titleduplicated">すでに同じ名前の札セットが存在します</string>

@@ -1,13 +1,10 @@
 Priority High:
-  * As for FudaListHelper, use getDefaultSharedPreferences instead of getSharedPreferences
-    ( See that data is moved from wasuramoti.pref.xml to karuta.hpnpwd.wasuramoti_preferences.xml in /data/data/karuta.hpnpwd.wasuramoti/shared_prefs/ )
-  * Show fuda information when tapped (kimariji, uta number, author, key point).
   * Do not fade in/out if fade length is too short.
-  * Use Fragment instead of ViewFlipper. Also use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
-  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog (Need to use fragment first since we have to call setTargetFragment to get the result).
+  * Use Fragment instead of ViewFlipper.
+    - Also use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
+    - As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
+      (Need to use fragment first since we have to call setTargetFragment to get the result).
 
-  * Volume Boost.
-  * Show the log of fuda read.
   * Show Kimariji on poem text.
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
@@ -17,6 +14,7 @@ Priority High:
   * Initialzing config not working for some options.
   * If firigana's size exceeds the window height, shrink it.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
+    - Add Volume Boost.
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
 
 

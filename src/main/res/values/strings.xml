@@ -106,6 +106,14 @@
     <item>LARGE</item>
   </string-array>
 
+  <string name="yomi_info_usage">[Usage]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Web Search by Poem Text or Author.</string>
+
+  <string name="yomi_info_search_title">Web Search</string>
+  <string-array name="yomi_info_search_array">
+    <item>Search by Poem Text</item>
+    <item>Search by Author</item>
+  </string-array>
+
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">`Upper` means the first half of the poem, and `Lower` means the rest of it.</string>
   <string-array name="conf_read_order_each_entries">
@@ -212,10 +220,12 @@
   <string name="button_fudasetedit_list">List</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>
+    <item>Switch Text ( Kimariji / Full )</item>
     <item>Change Order ( AIUEO / Poem No. )</item>
   </string-array>
   <string-array name="fudaseteditlist_menuitems_values">
     <item>INVERT_SELECT</item>
+    <item>SHOW_FULL</item>
     <item>SORT_ORDER</item>
   </string-array>
   <string name="fudasetedit_confirm">The set will contain %d poems. Is it ok?</string>
