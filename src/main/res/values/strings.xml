@@ -25,8 +25,8 @@
   <!-- CATEGORY_GLOBAL -->
   <string name="message_disabled">Disabled</string>
   <string name="category_global">Global</string>
-  <string name="conf_fudaset_title">Sets of Fuda</string>
-  <string name="conf_fudaset_summary">Which subset of fuda to play.</string>
+  <string name="conf_fudaset_title">Set of Poem</string>
+  <string name="conf_fudaset_summary">Which subset of poems to play.</string>
 
   <string name="karafuda_enable">Enable</string>
   <string name="karafuda_unit"></string>
@@ -34,7 +34,7 @@
   <string name="karafuda_urafuda_prob_left">&lt;= Random</string>
   <string name="karafuda_urafuda_prob_right">Prefer Urafuda =&gt;</string>
   <string name="conf_karafuda">Add Karafuda</string>
-  <string name="conf_karafuda_summary">In addition to fuda set, play some fuda randomly.</string>
+  <string name="conf_karafuda_summary">In addition to poem set, play some poems randomly.</string>
 
   <string name="conf_read_order_title">Play Order</string>
   <string name="conf_read_order_summary">Random or shuffle.</string>
@@ -65,7 +65,7 @@
   <string name="audio_stop">Stop</string>
 
   <string name="equalizer_reset">Reset</string>
-  <string name="player_error_noplay">Cannot play current fuda. Please go back to previous fuda.</string>
+  <string name="player_error_noplay">Cannot play current poem. Please go back to previous poem.</string>
   <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
   <!-- CATEGORY_ORDER -->
   <string name="category_order">Order</string>
@@ -106,7 +106,7 @@
     <item>LARGE</item>
   </string-array>
 
-  <string name="conf_read_order_each_title">Play Order of Each Fuda</string>
+  <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">`Upper` means the first half of the poem, and `Lower` means the rest of it.</string>
   <string-array name="conf_read_order_each_entries">
     <item>Lower - Upper</item>
@@ -131,7 +131,7 @@
   </string-array>
 
   <string name="conf_read_order_joka">How to Play Joka</string>
-  <string name="conf_read_order_joka_summary">How many times to play upper/lower phrase of Joka.</string>
+  <string name="conf_read_order_joka_summary">`Joka` is an introduction poem which is played before all poems.</string>
   <string name="conf_joka_upper_phrase">Upper Phrase (000_1.ogg)</string>
   <string name="conf_joka_lower_phrase">Lower Phrase (000_2.ogg)</string>
 
@@ -145,10 +145,10 @@
   <string name="conf_joka_caveat">Note: Actually, there might be a case that both upper phrase and lower phrase is included in 000_1.ogg.</string>
 
   <string name="conf_autoplay">Auto Play</string>
-  <string name="conf_autoplay_summary">After playing is finished, stop a while, and start playing next fuda.</string>
+  <string name="conf_autoplay_summary">After playing is finished, stop a while, and start playing next poem.</string>
   <string name="autoplay_enable">Enable</string>
   <string name="autoplay_span">Span:</string>
-  <string name="autoplay_repeat">After finishing all, go to beginning and contitue.</string>
+  <string name="autoplay_repeat">After finishing all, go to beginning and continue.</string>
   <string name="autoplay_repeat_abbrev">Repeat</string>
 
   <!-- CATEGORY_ELSE -->
@@ -156,7 +156,7 @@
   <string name="category_misc">Misc</string>
   <string name="category_time">Time</string>
   <string name="conf_skip_on_longclick">Skip On Long Click</string>
-  <string name="conf_skip_on_longclick_summary">Play next fuda when long pressed during play.</string>
+  <string name="conf_skip_on_longclick_summary">Play next poem when long pressed during play.</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
@@ -178,12 +178,12 @@
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
   <!-- CATEGORY_CLEAR -->
   <string name="category_init">Initialize</string>
-  <string name="conf_init_fudaset">Initialize Fuda Sets</string>
-  <string name="conf_init_fudaset_summary">Initialize all the fuda sets.</string>
-  <string name="confirm_init_fudaset">Really Initialize all the fuda sets?</string>
+  <string name="conf_init_fudaset">Initialize Poem Sets</string>
+  <string name="conf_init_fudaset_summary">Initialize all the poem sets.</string>
+  <string name="confirm_init_fudaset">Really Initialize all the poem sets?</string>
   <string name="conf_init_preference">Initialize Config</string>
-  <string name="conf_init_preference_summary">Initialize all the config except fuda sets.</string>
-  <string name="confirm_init_preference">Really Initialize all the config except fuda sets?</string>
+  <string name="conf_init_preference_summary">Initialize all the config except poem sets.</string>
+  <string name="confirm_init_preference">Really Initialize all the config except poem sets?</string>
 
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">New</string>
@@ -191,7 +191,7 @@
   <string name="fudaset_edit">Edit</string>
 
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
-  <string name="fudasetedit_title">New/Edit Fuda sets</string>
+  <string name="fudasetedit_title">New/Edit Poem Set</string>
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
@@ -218,10 +218,10 @@
     <item>INVERT_SELECT</item>
     <item>SORT_ORDER</item>
   </string-array>
-  <string name="fudasetedit_confirm">The number of fuda sets will be %d. Is it ok ?</string>
+  <string name="fudasetedit_confirm">The set will contain %d poems. Is it ok?</string>
   <string name="fudasetedit_titleempty">The title is empty.</string>
-  <string name="fudasetedit_titleduplicated">Fuda sets with same name already exists.</string>
-  <string name="fudasetedit_setempty">Empty fuda set.</string>
+  <string name="fudasetedit_titleduplicated">Poem set with same name already exists.</string>
+  <string name="fudasetedit_setempty">Empty poem set.</string>
 
 
   <!-- MESSAGES -->
@@ -250,13 +250,13 @@
     ]]>
   </string>
   <string name="reader_not_found">No audio file for current reader.</string>
-  <string name="all_read_done">No more fuda to play. Choose shuffle to restart.</string>
+  <string name="all_read_done">No more poem to play. Choose shuffle to restart.</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
   <string name="message_karafuda_num">Karafuda: %d</string>
   <string name="message_readindex_random">Random / %d</string>
 
-  <string name="fudaset_title_all">All Fuda</string>
+  <string name="fudaset_title_all">All Poem</string>
   <string name="fudaset_title_one">Unique First Syllables</string>
   <string name="fudaset_five_color_blue">Five Colors: Blue</string>
   <string name="fudaset_five_color_pink">Five Colors: Pink</string>

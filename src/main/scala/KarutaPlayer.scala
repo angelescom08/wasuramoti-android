@@ -207,7 +207,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
 
       // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
-      // Therefore there seems no easy way to do a task when AudioTrack has finished plaing.
+      // Therefore there seems no easy way to do a task when AudioTrack has finished playing.
       // As a workaround, I will start timer that ends when audio length elapsed.
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=2563
@@ -323,7 +323,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
         for (i <- 0 until ss.length ){
           if(isCancelled){
-            // TODO: what shold we return ?
+            // TODO: what should we return ?
             return Left(new AudioQueue())
           }
           val s = ss(i)
