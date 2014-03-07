@@ -95,18 +95,8 @@
     <item>asset:kouzan-gyosho.ttf</item>
   </string-array>
   <string name="yomi_info_furigana_size_desc">Firigana Size</string>
-  <string-array name="conf_yomi_info_furigana_size_entries">
-    <item>Small</item>
-    <item>Medium</item>
-    <item>Large</item>
-  </string-array>
-  <string-array name="conf_yomi_info_furigana_size_entryValues">
-    <item>SMALL</item>
-    <item>MEDIUM</item>
-    <item>LARGE</item>
-  </string-array>
 
-  <string name="yomi_info_usage">[Usage]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Web Search by Poem Text or Author.</string>
+  <string name="yomi_info_usage">[User Guide when Poem Text is on]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Web Search by Poem Text or Author.</string>
 
   <string name="yomi_info_search_title">Web Search</string>
   <string-array name="yomi_info_search_array">

@@ -9,7 +9,6 @@ import _root_.android.text.TextUtils
 
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   val ENTRY_VALUE_ID = R.array.conf_show_yomi_info_entryValues
-  val FSIZE_ID = R.array.conf_yomi_info_furigana_size_entryValues
   var root_view = None:Option[View]
   override def getAbbrValue():String = {
     val v = Globals.prefs.get.getString("show_yomi_info","None")
@@ -29,7 +28,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   def getWidgets(view:View) = {
     val main = view.findViewById(R.id.yomi_info_main).asInstanceOf[Spinner]
     val furigana = view.findViewById(R.id.yomi_info_furigana).asInstanceOf[Spinner]
-    val furigana_size = view.findViewById(R.id.yomi_info_furigana_size).asInstanceOf[Spinner]
+    val furigana_size = view.findViewById(R.id.yomi_info_furigana_width).asInstanceOf[SeekBar]
     val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
     (main,furigana,furigana_size,author)
   }
@@ -47,10 +46,9 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         val edit = Globals.prefs.get.edit
         val (main,furigana,furigana_size,author) = getWidgets(view)
         val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
-        val ar_size = context.getResources.getStringArray(FSIZE_ID)
         edit.putString("show_yomi_info",ar(main.getSelectedItemPosition))
         edit.putString("yomi_info_furigana",ar(furigana.getSelectedItemPosition))
-        edit.putString("yomi_info_furigana_size",ar_size(furigana_size.getSelectedItemPosition))
+        edit.putInt("yomi_info_furigana_width",furigana_size.getProgress)
         edit.putBoolean("yomi_info_author",author.isChecked)
         edit.commit
         notifyChangedPublic
@@ -67,7 +65,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val prefs = Globals.prefs.get
     main.setSelection(getIndexFromValue(prefs.getString("show_yomi_info","None")))
     furigana.setSelection(getIndexFromValue(prefs.getString("yomi_info_furigana","None")))
-    furigana_size.setSelection(getIndexFromValue(prefs.getString("yomi_info_furigana_size","SMALL"),FSIZE_ID))
+    furigana_size.setProgress(prefs.getInt("yomi_info_furigana_width",context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)))
 
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     return view

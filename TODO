@@ -1,7 +1,7 @@
 Priority High:
   * Do not fade in/out if fade length is too short.
   * Use Fragment instead of ViewFlipper.
-    - Also use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
+    - Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
     - As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
       (Need to use fragment first since we have to call setTargetFragment to get the result).
 
@@ -19,7 +19,6 @@ Priority High:
 
 
 Priority Middle:
-  * Show play button on each item of fuda list, and with pressing it, make user be able to play each poem.
   * Add Option: play in arbitrary order
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
@@ -39,6 +38,4 @@ Priority Low:
   * Able to read .wav file in case cannot load libvorbis.so
   * Able to record the voice of the player and use it as reader
   * Score the recoded voice (whether it is as good as the official karuta reader). 
-  * Able to switch how to play silence (play silence or sleep thread)
   * Fix problem that when "RANDOM" mode, it always does decoding even if unnecessary.
-  * Fix problem that when application is in background, the audio skipping occurs. (maybe by changing streamType of AudioTrack, or thread priority of audio_thread ?)

@@ -171,7 +171,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_V_FURIGANA = 0.01
   val MARGIN_LEFT_FURIGANA_RATIO = 0.4 // must be between 0.0 and 1.0
   val FURIGANA_TOP_LIMIT = 0.02
-  val FURIGANA_RATIO = 0.82
+  val FURIGANA_RATIO_DEFAULT = 0.82
 
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
@@ -290,13 +290,16 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
       paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
       paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
-      val space_boost = if(show_furigana){
-        Globals.prefs.get.getString("yomi_info_furigana_size","SMALL") match {
-          case "SMALL" => 1.0
-          case "MEDIUM" => 1.14
-          case "LARGE" => 1.3
-          case _ => 1.0
-        }
+      val furigana_width_conf_default = context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
+      val furigana_width_conf_max = context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
+      val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
+      val space_boost = if(show_furigana && furigana_width_conf_cur > furigana_width_conf_default){
+        1.0 + 0.3*(furigana_width_conf_cur - furigana_width_conf_default)/(furigana_width_conf_max - furigana_width_conf_default).toDouble
+      }else{
+        1.0
+      }
+      val furigana_ratio = if(show_furigana && furigana_width_conf_cur < furigana_width_conf_default){
+        1.0 - 0.3*(1.0 - (furigana_width_conf_cur/furigana_width_conf_default.toDouble))
       }else{
         1.0
       }
@@ -318,7 +321,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
         val actual_width_furigana = measureActualTextWidth(only_furigana,paint_furigana)
         val actual_ratio_furigana = furisize / actual_width_furigana.toFloat
-        paint_furigana.setTextSize(span_h.toFloat*actual_ratio_furigana*FURIGANA_RATIO.toFloat)
+        paint_furigana.setTextSize(span_h.toFloat*actual_ratio_furigana*furigana_ratio.toFloat*FURIGANA_RATIO_DEFAULT.toFloat)
         margin_left_furigana = actual_width/2.0+actual_width_furigana/2.0 + (Math.max(0.0, span_h-actual_width_furigana))*MARGIN_LEFT_FURIGANA_RATIO
       }
       for((t,m) <- text_array_with_margin){

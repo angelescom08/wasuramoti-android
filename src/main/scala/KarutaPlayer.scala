@@ -350,7 +350,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }catch{
               // Some device throws 'No space left on device' here
               case e:java.io.IOException => {
-                if(e.getMessage == "No space left on device"){
+                if(Option(e.getMessage).getOrElse("").indexOf("No space left on device") >= 0){
                   activity.runOnUiThread(new Runnable{
                       override def run(){
                         val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)

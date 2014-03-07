@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <integer name="yomi_info_furigana_width_max">8</integer>
+  <integer name="yomi_info_furigana_width_default">4</integer>
+</resources>
