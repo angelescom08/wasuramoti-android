@@ -77,6 +77,23 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
 
   override def onCreate(bundle:Bundle){
     super.onCreate(bundle)
+    Globals.prefs.foreach{ p =>
+      val str = p.getString("fudaset_edit_list_dlg_mode",null)
+      if(str != null){
+        val Array(srt,lim) = str.split(",")
+        sort_mode = SortMode.withName(srt)
+        list_item_mode = ListItemMode.withName(lim)
+      }
+    }
+    setOnDismissListener(new DialogInterface.OnDismissListener(){
+        override def onDismiss(di:DialogInterface){
+          Globals.prefs.foreach{ p => 
+            val str = Array(sort_mode.toString,list_item_mode.toString).mkString(",")
+            p.edit.putString("fudaset_edit_list_dlg_mode",str).commit
+          }
+        }
+      }
+    )
     setContentView(R.layout.fudasetedit_list)
     setTitle(R.string.button_fudasetedit_list)
     findViewById(R.id.button_invert).asInstanceOf[Button].setText(

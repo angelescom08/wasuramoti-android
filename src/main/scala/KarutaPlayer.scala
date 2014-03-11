@@ -4,6 +4,7 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.os.{AsyncTask,Bundle}
 import _root_.android.media.audiofx.Equalizer
+import _root_.android.util.Log
 
 import scala.collection.mutable
 
@@ -116,9 +117,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
-      // Since we insert some silence at beginning of audio,
-      // the actual wait_time should be shorter.
-      val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
+      val wait_time = bundle.getLong("wait_time",100)
       if(Utils.showYomiInfo){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
@@ -129,7 +128,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
         KarutaPlayUtils.Action.Start,
-        wait_time.toLong,
+        wait_time,
         {_.putExtra("bundle",bundle)}
       )
     }
@@ -193,7 +192,33 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         }
       }
-      audio_track.get.write(buf,0,buf.length)
+      var r_write = audio_track.get.write(buf,0,buf.length)
+
+      // The following exception is throwed if AudioTrack.getState != STATE_INITIALIZED when AudioTrack.play() is called
+      // `java.lang.IllegalStateException: play() called on uninitialized AudioTrack.`
+      // It is occasionally reported from customer, but I could not figure out the cause.
+      // Thus I will just retry again, and throw exeception if it occurs second time.
+      if( Array(AudioTrack.ERROR_INVALID_OPERATION,AudioTrack.ERROR_BAD_VALUE).contains(r_write) ||
+          audio_track.get.getState != AudioTrack.STATE_INITIALIZED ){
+          val message = "AudioTrack.write failed: rval=" + r_write + ", state=" + audio_track.get.getState + ", blen=" + buf.length
+          Log.v("wasuramoti",message)
+          if(Globals.audio_track_failed_count == 0){
+            Globals.audio_track_failed_count += 1
+            // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
+            activity.runOnUiThread(new Runnable(){
+                override def run(){
+                  doWhenStop()
+                  Globals.player = AudioHelper.refreshKarutaPlayer(activity,Globals.player,true)
+                  // we won't wait playing for second time
+                  bundle.remove("wait_time")
+                  Globals.player.foreach{_.play(bundle)}
+                }
+            })
+          }else{
+            throw new Exception(message)
+          }
+          return
+      }
 
       if(bundle.getBoolean("have_to_run_border",false)){
         val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
@@ -229,6 +254,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         {_.putExtra("bundle",bundle)}
       )
       audio_track.get.play()
+      Globals.audio_track_failed_count = 0
     }}}).start()
   }
 

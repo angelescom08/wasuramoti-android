@@ -106,7 +106,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           Globals.database.foreach{ db =>
             DbUtils.initializeFudaSets(getApplicationContext,db.getWritableDatabase,true)
           }
-          finish()
+          Utils.restartApplication(context)
         })
         return false
       }
@@ -121,7 +121,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           }
           PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,true)
           ReaderList.setDefaultReader(getApplicationContext())
-          finish()
+          Utils.restartApplication(context)
         })
         return false
       }

@@ -415,6 +415,10 @@ trait MainButtonTrait{
         val bundle = new Bundle()
         bundle.putBoolean("have_to_run_border",Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext))
         bundle.putSerializable("from",KarutaPlayUtils.Sender.Main)
+        // Since we insert some silence at beginning of audio,
+        // the actual wait_time should be shorter.
+        val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
+        bundle.putLong("wait_time",wait_time.toLong)
         player.play(bundle)
       }
     }

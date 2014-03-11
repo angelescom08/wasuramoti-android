@@ -173,6 +173,12 @@ trait FudaSetTrait{
             db.close()
             if(is_add){
               adapter.add(new FudaSetWithSize(title,st_size))
+              adapter.notifyDataSetChanged()
+              val spinner = view.getRootView.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
+              if(spinner != null){
+                spinner.setSelection(adapter.getCount-1)
+              }
+
             }else{
               adapter.remove(orig_fs)
               adapter.insert(new FudaSetWithSize(title,st_size),pos)
