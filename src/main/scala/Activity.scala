@@ -3,11 +3,13 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
+import _root_.android.util.Base64
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
+import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
@@ -21,6 +23,69 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   var run_refresh_text = None:Option[Runnable]
   var ringer_mode_bkup = None:Option[Int]
   val handler = new Handler()
+
+  override def onNewIntent(intent:Intent){
+    super.onNewIntent(intent)
+    // Since Android core system cannot determine whether or not the new intent is important for us,
+    // We have to set intent by our own.
+    // We can rely on fact that onResume() is called after onNewIntent()
+    setIntent(intent)
+  }
+  def handleActionView(){
+    val intent = getIntent
+    // Android 2.x sends same intent at onResume() even after setIntent() is called if resumed from shown list where home button is long pressed.
+    // Therefore we check FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY flag to distinguish it.
+    if(intent == null ||
+      intent.getAction != Intent.ACTION_VIEW || 
+      (intent.getFlags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) > 0
+    ){
+      return
+    }
+    // we dont need the current intent anymore so replace it with empty one.
+    setIntent(new Intent())
+
+    if(android.os.Build.VERSION.SDK_INT < 8){
+      // Base64 was added in API >= 8
+      Utils.messageDialog(this,Left("Sorry. Importing group of poem sets is supported in Android >= 2.2"))
+      return
+    }
+    try{
+      val data = intent.getDataString.split("/").last
+      val bytes = Base64.decode(data,Base64.URL_SAFE)
+      val str = new String(bytes,"UTF-8")
+      val obj = new JSONTokener(str).nextValue.asInstanceOf[JSONObject]
+      val title = obj.keys.next.asInstanceOf[String]
+      val ar = obj.getJSONArray(title)
+      Utils.confirmDialog(this,Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),{ Unit =>
+        var count = 0
+        val res = (0 until ar.length).map{ i =>
+          val o = ar.get(i).asInstanceOf[JSONObject]
+          val name = o.keys.next.asInstanceOf[String]
+          val n = BigInt(o.getString(name),36)
+          val a = mutable.Buffer[Int]()
+          for(j <- 0 until n.bitLength){
+            if ( ((n >> j) & 1) == 1 ){
+              a += j + 1
+            }
+          }
+          val r = TrieUtils.makeKimarijiSetFromNumList(a.toList).exists{
+            case (kimari,st_size) =>
+              Utils.writeFudaSetToDB(name,kimari,st_size,true)
+          }
+          (if(r){count+=1;"[OK]"}else{"[NG]"}) + " " + name
+        }
+        val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) + 
+        "\n" + res.mkString("\n")
+        Utils.messageDialog(this,Left(msg))
+      })
+    }catch{
+      case e:Exception => {
+        val msg = getResources.getString(R.string.confirm_action_view_fudaset_fail) + "\n" + e.toString
+        Utils.messageDialog(this,Left(msg))
+      }
+    }
+  }
+
   def restartRefreshTimer(){
     Globals.global_lock.synchronized{
       run_refresh_text.foreach(handler.removeCallbacks(_))
@@ -266,6 +331,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     startDimLockTimer()
     setLongClickButtonOnResume()
     setLongClickYomiInfoOnResume()
+    handleActionView()
   }
   override def onPause(){
     super.onPause()

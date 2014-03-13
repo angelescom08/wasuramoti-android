@@ -268,5 +268,9 @@
   <string name="timers_remaining">タイマー</string>
   <string name="timers_minutes_left">分前</string>
 
+  <string name="confirm_action_view_fudaset">「%1$s」という札セット群を取り込んで良いですか？ %2$dつの札セットが追加されます．</string>
+  <string name="confirm_action_view_fudaset_done">札セットを%dつ追加しました．</string>
+  <string name="confirm_action_view_fudaset_fail">札セット群を取り込むのに失敗しました．</string>
+
   <string name="cannot_load_vorbis_library">Vorbisライブラリの読込み失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
 </resources>

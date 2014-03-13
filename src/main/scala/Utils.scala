@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
-import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent}
+import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
@@ -342,6 +342,21 @@ object Utils {
       mgr.set(AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
       System.exit(0)
     }
+  }
+  // return true if succeed
+  def writeFudaSetToDB(title:String,kimari:String,st_size:Int,is_add:Boolean,orig_title:String=null):Boolean = Globals.db_lock.synchronized{
+    val cv = new ContentValues()
+    val db = Globals.database.get.getWritableDatabase
+    cv.put("title",title)
+    cv.put("body",kimari)
+    cv.put("set_size",new java.lang.Integer(st_size))
+    val r = if(is_add){
+      db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
+    }else{
+      db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig_title)) > 0
+    }
+    db.close()
+    return r
   }
 }
 

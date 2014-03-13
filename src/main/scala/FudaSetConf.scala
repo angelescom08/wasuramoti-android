@@ -1,7 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.Dialog
-import _root_.android.content.ContentValues
 import _root_.android.content.Context
 import _root_.android.preference.DialogPreference
 import _root_.android.text.{TextUtils,Html}
@@ -159,18 +158,8 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
           val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
-          Utils.confirmDialog(context,Left(message),_ => Globals.db_lock.synchronized{
-            val cv = new ContentValues()
-            val db = Globals.database.get.getWritableDatabase
-            cv.put("title",title)
-            cv.put("body",kimari)
-            cv.put("set_size",new java.lang.Integer(st_size))
-            if(is_add){
-              db.insert(Globals.TABLE_FUDASETS,null,cv)
-            }else{
-              db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig_title))
-            }
-            db.close()
+          Utils.confirmDialog(context,Left(message),_ => {
+            Utils.writeFudaSetToDB(title,kimari,st_size,is_add,orig_title)
             if(is_add){
               adapter.add(new FudaSetWithSize(title,st_size))
               adapter.notifyDataSetChanged()

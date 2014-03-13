@@ -283,6 +283,10 @@
   <string name="timers_remaining">Timers</string>
   <string name="timers_minutes_left">min. left</string>
 
+  <string name="confirm_action_view_fudaset">Really import group of poem sets named `%1$s`?  It will add %2$d poem sets.</string>
+  <string name="confirm_action_view_fudaset_done">Added %d poem sets.</string>
+  <string name="confirm_action_view_fudaset_fail">Failed to import group of poem sets.</string>
+
   <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targeted to your CPU.</string>
   <string name="alarm_service_not_supported">ALARM_SERVICE is not supported on this device.</string>
 </resources>
