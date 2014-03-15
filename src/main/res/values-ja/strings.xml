@@ -75,9 +75,12 @@
   <string name="category_order">順番</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
-  <string name="yomi_info_main_desc">読み句</string>
-  <string name="yomi_info_furigana_desc">ふりがな</string>
-  <string name="yomi_info_author_desc">歌人の表示</string>
+  <string name="yomi_info_main_desc">読み句:</string>
+  <string name="yomi_info_furigana_desc">ふりがな:</string>
+  <string name="yomi_info_display_desc">表示:</string>
+  <string name="yomi_info_author_desc">歌人</string>
+  <string name="yomi_info_kami_desc">上の句</string>
+  <string name="yomi_info_simo_desc">下の句</string>
   <string name="yomi_info_abbrev_furigana">ふ</string>
   <string name="yomi_info_abbrev_author">人</string>
   <string-array name="conf_show_yomi_info_entries">
@@ -94,14 +97,18 @@
     <item>行書</item>
     <item>草書</item>
   </string-array>
-  <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ</string>
+  <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
 
-  <string name="yomi_info_usage">[読み句表示時の操作]\n左右にスワイプ: 次/前の札に移動\n長押し: 読み句/歌人でWeb検索</string>
+  <string name="yomi_info_usage">[読み句表示時の操作]\n左右にスワイプ: 次/前の札に移動\n長押し: 各項目の表示およびWeb検索</string>
 
-  <string name="yomi_info_search_title">Web検索</string>
+  <string name="yomi_info_search_title">歌番号: %d</string>
   <string-array name="yomi_info_search_array">
-    <item>読み句で検索</item>
-    <item>歌人で検索</item>
+    <item>DISPLAY_KAMI|表示: 上の句</item>
+    <item>DISPLAY_SIMO|表示: 下の句</item>
+    <item>DISPLAY_AUTHOR|表示: 歌人</item>
+    <item>DISPLAY_FURIGANA|表示: ふりがな</item>
+    <item>SEARCH_TEXT|Web検索: 読み句</item>
+    <item>SEARCH_AUTHOR|Web検索: 歌人</item>
   </string-array>
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>

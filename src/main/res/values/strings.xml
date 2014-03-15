@@ -71,9 +71,12 @@
   <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
-  <string name="yomi_info_main_desc">Poem Text</string>
-  <string name="yomi_info_furigana_desc">Furigana</string>
-  <string name="yomi_info_author_desc">Show Author</string>
+  <string name="yomi_info_main_desc">Poem Text:</string>
+  <string name="yomi_info_furigana_desc">Furigana:</string>
+  <string name="yomi_info_display_desc">Display:</string>
+  <string name="yomi_info_author_desc">Author</string>
+  <string name="yomi_info_kami_desc">Upper</string>
+  <string name="yomi_info_simo_desc">Lower</string>
   <string name="yomi_info_abbrev_furigana">F</string>
   <string name="yomi_info_abbrev_author">A</string>
   <string-array name="conf_show_yomi_info_entries">
@@ -97,14 +100,18 @@
     <item>asset:kouzan-gyosho.ttf</item>
     <item>asset:kouzan-sousho.ttf</item>
   </string-array>
-  <string name="yomi_info_furigana_size_desc">Firigana Size</string>
+  <string name="yomi_info_furigana_size_desc">Firigana Size:</string>
 
-  <string name="yomi_info_usage">[User Guide when Poem Text is on]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Web Search by Poem Text or Author.</string>
+  <string name="yomi_info_usage">[User Guide when Poem Text is on]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Display Invisible Info or Web Search.</string>
 
-  <string name="yomi_info_search_title">Web Search</string>
+  <string name="yomi_info_search_title">Poem No.: %d</string>
   <string-array name="yomi_info_search_array">
-    <item>Search by Poem Text</item>
-    <item>Search by Author</item>
+    <item>DISPLAY_KAMI|Show Upper Phrase</item>
+    <item>DISPLAY_SIMO|Show Lower Phrase</item>
+    <item>DISPLAY_AUTHOR|Show Author</item>
+    <item>DISPLAY_FURIGANA|Show Furigana</item>
+    <item>SEARCH_TEXT|Web Search by Poem Text</item>
+    <item>SEARCH_AUTHOR|Web Search by Author</item>
   </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>

@@ -30,7 +30,9 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val furigana = view.findViewById(R.id.yomi_info_furigana).asInstanceOf[Spinner]
     val furigana_size = view.findViewById(R.id.yomi_info_furigana_width).asInstanceOf[SeekBar]
     val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
-    (main,furigana,furigana_size,author)
+    val kami = view.findViewById(R.id.yomi_info_kami).asInstanceOf[CheckBox]
+    val simo = view.findViewById(R.id.yomi_info_simo).asInstanceOf[CheckBox]
+    (main,furigana,furigana_size,author,kami,simo)
   }
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   def getIndexFromValue(value:String,id:Int=ENTRY_VALUE_ID) = {
@@ -44,12 +46,14 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (main,furigana,furigana_size,author) = getWidgets(view)
+        val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
         val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
         edit.putString("show_yomi_info",ar(main.getSelectedItemPosition))
         edit.putString("yomi_info_furigana",ar(furigana.getSelectedItemPosition))
         edit.putInt("yomi_info_furigana_width",furigana_size.getProgress)
         edit.putBoolean("yomi_info_author",author.isChecked)
+        edit.putBoolean("yomi_info_kami",kami.isChecked)
+        edit.putBoolean("yomi_info_simo",simo.isChecked)
         edit.commit
         notifyChangedPublic
       }
@@ -61,13 +65,15 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     super.onCreateDialogView()
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf, null)
     root_view = Some(view)
-    val (main,furigana,furigana_size,author) = getWidgets(view)
+    val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
     val prefs = Globals.prefs.get
     main.setSelection(getIndexFromValue(prefs.getString("show_yomi_info","None")))
     furigana.setSelection(getIndexFromValue(prefs.getString("yomi_info_furigana","None")))
     furigana_size.setProgress(prefs.getInt("yomi_info_furigana_width",context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)))
 
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
+    kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
+    simo.setChecked(prefs.getBoolean("yomi_info_simo",true))
     return view
   }
 }

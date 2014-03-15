@@ -4,7 +4,7 @@ import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
-import _root_.android.util.AttributeSet
+import _root_.android.util.{Log,AttributeSet}
 import _root_.android.os.{CountDownTimer,Bundle}
 import _root_.android.net.Uri
 import _root_.android.app.{AlertDialog,SearchManager,Dialog}
@@ -188,6 +188,9 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
 
   var show_furigana = true
   var show_author = true
+  var show_kami = true
+  var show_simo = true
+
   var cur_num = None:Option[Int]
 
   // This does not include span height
@@ -299,6 +302,10 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     }else{
       FudaListHelper.getOrQueryFudaNumToRead(context,fn)
     }
+    show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
+    show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
+    show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
+    show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
   }
 
   override def onDraw(canvas:Canvas){
@@ -318,16 +325,21 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_LIMIT).toInt,
           (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-MARGIN_BOTTOM)).toInt,paint_debug)
       }
-      show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
-      show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
       paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
       paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
       val furigana_width_conf_default = context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
       val furigana_width_conf_max = context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
-      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{Array()}) ++
-        AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
+      val full = AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
+      
+      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
+      (if(show_kami){full.take(3)}else{new Array[(String,Double)](0)}) ++
+      (if(show_simo){full.takeRight(2)}else{new Array[(String,Double)](0)})
+
+      if(text_array_with_margin.isEmpty){
+        return
+      }
 
       val space_boost1 = if(show_furigana){
         1.3
@@ -383,22 +395,22 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val margin_t = screen_range.top / getHeight.toDouble
         val margin_r = (getWidth - screen_range.right) / getWidth.toDouble
         val margin_b = (getHeight - screen_range.bottom) / getHeight.toDouble
-        println(String.format("wasuramoti_debug: screen_range l=%.3f t=%.3f r=%.3f b=%.3f",
+        Log.v("wasuramoti_debug",String.format("screen_range l=%.3f t=%.3f r=%.3f b=%.3f",
           new java.lang.Double(margin_l),
           new java.lang.Double(margin_t),
           new java.lang.Double(margin_r),
           new java.lang.Double(margin_b)))
         if(margin_l <= MARGIN_LR*0.7){
-          println("wasuramoti_debug: [WARN] cur_num=" + cur_num + ", margin_l is too small: " + margin_l)
+          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_l is too small: " + margin_l)
         }
         if(margin_r <= MARGIN_LR*0.7){
-          println("wasuramoti_debug: [WARN] cur_num=" + cur_num + ", margin_r is too small: " + margin_r)
+          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_r is too small: " + margin_r)
         }
         if(margin_t <= FURIGANA_TOP_LIMIT*0.7){
-          println("wasuramoti_debug: [WARN] cur_num=" + cur_num + ", margin_t is too small: " + margin_t)
+          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_t is too small: " + margin_t)
         }
         if(margin_b <= MARGIN_BOTTOM*0.7){
-          println("wasuramoti_debug: [WARN] cur_num=" + cur_num + ", margin_b is too small: " + margin_b)
+          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_b is too small: " + margin_b)
         }
       }
     }
@@ -419,49 +431,91 @@ object YomiInfoSearchDialogBuilder{
 }
 
 class YomiInfoSearchDialog extends DialogFragment{
+  def doWebSearch(fudanum:Int,mode:String){
+    val query = if(mode == "TEXT"){
+      AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
+    }else{
+      AllFuda.removeInsideParens(AllFuda.author(fudanum)).replace(" ","") + " 歌人"
+    }
+    val f1 = {_:Unit =>
+      val intent = new Intent(Intent.ACTION_WEB_SEARCH)
+      intent.putExtra(SearchManager.QUERY,query)
+      Left(intent)
+    }
+    val f2 = {_:Unit => 
+      val intent = new Intent(Intent.ACTION_VIEW)
+      intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
+      Left(intent)
+    }
+    val f3 = {_:Unit => 
+      Right({ _:Unit =>
+        Utils.messageDialog(getActivity,Left("Application for Web search not found on this device."))
+      })
+    }
+    // scala.util.control.Breaks.break does not work (why?)
+    // Therefore we use `exists` in Traversable trait instead
+    Seq(f1,f2,f3) exists {f=>
+        f() match {
+          case Left(intent) =>
+            try{
+              startActivity(intent)
+              true
+            }catch{
+              case _:android.content.ActivityNotFoundException => false
+            }
+          case Right(g) => {g();true}
+        }
+      }
+  }
+  def getCurYomiInfoView():Option[YomiInfoView] = {
+    val yi = getActivity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(yi == null){ return None }
+    yi.cur_view.flatMap{x:Int =>
+      Option(getActivity.findViewById(x).asInstanceOf[YomiInfoView])
+    }
+  }
   override def onCreateDialog(saved:Bundle):Dialog = {
     val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
-    builder.setTitle(R.string.yomi_info_search_title)
-    .setItems(R.array.yomi_info_search_array, new DialogInterface.OnClickListener(){
+    val items = getActivity.getApplicationContext.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
+      val tag = x.split("\\|")(0)
+      if(tag.startsWith("DISPLAY_")){
+        getCurYomiInfoView.map{vw =>
+          tag.split("_")(1) match{
+            case "AUTHOR" => ! vw.show_author
+            case "KAMI" => ! vw.show_kami
+            case "SIMO" => ! vw.show_simo
+            case "FURIGANA" => ! vw.show_furigana
+            case _ => true
+          }
+        }.getOrElse(true)
+      }else{
+        true
+      }
+    }
+    
+    builder.setTitle(getActivity.getApplicationContext.getResources.getString(R.string.yomi_info_search_title,new java.lang.Integer(fudanum)))
+    .setItems(items.map{_.split("\\|")(1)}.toArray[java.lang.CharSequence],
+      new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          val query = if(which == 0){
-            AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
+          val tag = items(which).split("\\|")(0)
+          if(tag.startsWith("SEARCH_")){
+            doWebSearch(fudanum,tag.split("_")(1))
           }else{
-            AllFuda.removeInsideParens(AllFuda.author(fudanum)).replace(" ","") + " 歌人"
-          }
-          val f1 = {_:Unit =>
-            val intent = new Intent(Intent.ACTION_WEB_SEARCH)
-            intent.putExtra(SearchManager.QUERY,query)
-            Left(intent)
-          }
-          val f2 = {_:Unit => 
-            val intent = new Intent(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
-            Left(intent)
-          }
-          val f3 = {_:Unit => 
-            Right({ _:Unit =>
-              Utils.messageDialog(getActivity,Left("Application for Web search not found on this device."))
-            })
-          }
-          // scala.util.control.Breaks.break does not work (why?)
-          // Therefore we use `exists` in Traversable trait instead
-          Seq(f1,f2,f3) exists {f=>
-              f() match {
-                case Left(intent) =>
-                  try{
-                    startActivity(intent)
-                    true
-                  }catch{
-                    case _:android.content.ActivityNotFoundException => false
-                  }
-                case Right(g) => {g();true}
+            getCurYomiInfoView.foreach{vw =>
+              tag.split("_")(1) match{
+                case "AUTHOR" => vw.show_author = true
+                case "KAMI" => vw.show_kami = true
+                case "SIMO" => vw.show_simo = true
+                case "FURIGANA" => vw.show_furigana = true
               }
+              vw.invalidate
             }
+          }
         }
       }
     )
+    .setNegativeButton(android.R.string.cancel,null)
     .create()
   }
 }
