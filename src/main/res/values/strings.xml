@@ -81,18 +81,21 @@
     <item>Default</item>
     <item>T-Font Kaisho</item>
     <item>Kouzan Gyousho</item>
+    <item>Kouzan Sousho</item>
   </string-array>
   <string-array name="conf_show_yomi_info_entries_abbr">
     <item>None</item>
     <item>Default</item>
     <item>Kaisho</item>
     <item>Gyousho</item>
+    <item>Sousho</item>
   </string-array>
   <string-array name="conf_show_yomi_info_entryValues">
     <item>None</item>
     <item>Default</item>
     <item>asset:tfont-kaisho.ttf</item>
     <item>asset:kouzan-gyosho.ttf</item>
+    <item>asset:kouzan-sousho.ttf</item>
   </string-array>
   <string name="yomi_info_furigana_size_desc">Firigana Size</string>
 

@@ -85,12 +85,14 @@
     <item>デフォルト</item>
     <item>Tフォント楷書</item>
     <item>衡山毛筆行書</item>
+    <item>衡山毛筆草書</item>
   </string-array>
   <string-array name="conf_show_yomi_info_entries_abbr">
     <item>なし</item>
     <item>デフォルト</item>
     <item>楷書</item>
     <item>行書</item>
+    <item>草書</item>
   </string-array>
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ</string>
 
