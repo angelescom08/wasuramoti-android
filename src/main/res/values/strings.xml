@@ -79,6 +79,9 @@
   <string name="yomi_info_simo_desc">Lower</string>
   <string name="yomi_info_abbrev_furigana">F</string>
   <string name="yomi_info_abbrev_author">A</string>
+  <string name="yomi_info_abbrev_kami">U</string>
+  <string name="yomi_info_abbrev_simo">L</string>
+  <string name="yomi_info_abbrev_both">B</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>None</item>
     <item>Default</item>
@@ -102,9 +105,10 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">Firigana Size:</string>
 
-  <string name="yomi_info_usage">[User Guide when Poem Text is on]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Display Invisible Info or Web Search.</string>
+  <string name="yomi_info_usage">[User Guide when Poem Text is Enabled]\nHorizontal Swipe: Move to Next/Previous Poem.\nLong Press: Show Poem Text Info.</string>
 
-  <string name="yomi_info_search_title">Poem No.: %d</string>
+  <string name="yomi_info_search_poem_num">Poem No.:</string>
+  <string name="yomi_info_search_kimariji">Kimariji:</string>
   <string-array name="yomi_info_search_array">
     <item>DISPLAY_KAMI|Show Upper Phrase</item>
     <item>DISPLAY_SIMO|Show Lower Phrase</item>

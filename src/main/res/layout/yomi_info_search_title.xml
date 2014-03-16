@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:background="#FF222222"
+  android:paddingTop="7dip"
+  android:paddingBottom="3dip"
+  android:paddingLeft="3dip"
+  android:paddingRight="1dip"
+  >
+  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
+      android:orientation="horizontal"  >
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_search_poem_num"
+      style="?android:attr/textAppearanceMedium"
+      android:textColor="#ff00ccff"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+      style="?android:attr/textAppearanceLarge"
+      android:textColor="@android:color/white"
+      android:id="@+id/yomi_info_search_poem_num"
+      android:paddingLeft="4dip"
+    />
+  </LinearLayout>
+  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
+      android:orientation="horizontal"
+    >
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_search_kimariji"
+      style="?android:attr/textAppearanceMedium"
+      android:textColor="#ff00ccff"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:textColor="@android:color/white"
+      style="?android:attr/textAppearanceLarge"
+      android:paddingLeft="4dip"
+      android:id="@+id/yomi_info_search_kimariji"
+    />
+  </LinearLayout>
+</LinearLayout>

@@ -5,13 +5,11 @@ Priority High:
     - As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
       (Need to use fragment first since we have to call setTargetFragment to get the result).
 
-  * Show Kimariji on poem text.
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
   * Able to show previous/next poem text on random mode.
   * Show animation (maybe green count down?) on custom view of ActionBar when auto play.
-  * If firigana's size exceeds the window height, shrink it.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.

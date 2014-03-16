@@ -83,6 +83,9 @@
   <string name="yomi_info_simo_desc">下の句</string>
   <string name="yomi_info_abbrev_furigana">ふ</string>
   <string name="yomi_info_abbrev_author">人</string>
+  <string name="yomi_info_abbrev_kami">上</string>
+  <string name="yomi_info_abbrev_simo">下</string>
+  <string name="yomi_info_abbrev_both">両</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
     <item>デフォルト</item>
@@ -99,9 +102,10 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
 
-  <string name="yomi_info_usage">[読み句表示時の操作]\n左右にスワイプ: 次/前の札に移動\n長押し: 各項目の表示およびWeb検索</string>
+  <string name="yomi_info_usage">[読み句表示時の操作]\n左右にスワイプ: 次/前の札に移動\n長押し: 歌情報の表示</string>
 
-  <string name="yomi_info_search_title">歌番号: %d</string>
+  <string name="yomi_info_search_poem_num">歌番号:</string>
+  <string name="yomi_info_search_kimariji">決まり字:</string>
   <string-array name="yomi_info_search_array">
     <item>DISPLAY_KAMI|表示: 上の句</item>
     <item>DISPLAY_SIMO|表示: 下の句</item>

@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.{Context,DialogInterface,Intent}
-import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
+import _root_.android.view.{View,MotionEvent,ViewTreeObserver,LayoutInflater}
 import _root_.android.text.TextUtils
-import _root_.android.widget.HorizontalScrollView
+import _root_.android.widget.{HorizontalScrollView,TextView}
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.{Log,AttributeSet}
 import _root_.android.os.{CountDownTimer,Bundle}
@@ -161,10 +161,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 }
 
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
-  var screen_range:Rect = null
-  if(Globals.IS_DEBUG){
-    screen_range = new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)
-  }
+  var screen_range_main:Rect = null
+  var screen_range_furi:Rect = null
 
   val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from right to left, rate of view height
   val MARGIN_AUTHOR = Array(0.09,0.13) // rate of view height
@@ -174,8 +172,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_V = 0.15 // rate of text size
   val SPACE_H = 0.05 // rate of view width
   val SPACE_V_FURIGANA = 0.15 // rate of text size
-  val MARGIN_LEFT_FURIGANA_RATIO = 0.4 // must be between 0.0 and 1.0
-  val FURIGANA_TOP_LIMIT = 0.02 // rate of view height
+  val FURIGANA_TOP_BOTTOM_LIMIT = 0.02 // rate of view height
   val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
   val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
 
@@ -194,7 +191,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   var cur_num = None:Option[Int]
 
   // This does not include span height
-  def calcVerticalBound(str:String,paint:Paint):(Int,Int) = {
+  def measureBoundOneLine(str:String,paint:Paint):(Int,Int) = {
     var w = 0
     var h = 0
     for(s <- str){
@@ -206,12 +203,17 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     (w,h)
   }
 
-  def measureActualTextWidthAve(text_array:Array[String],paint:Paint):Int = {
-    val ar = text_array.map{x=>val (w,h)=calcVerticalBound(x,paint);w}
-    ar.sum / ar.length
+  def measureBoundAve(text_array:Array[String],paint:Paint):(Int,Int) = {
+    val ar = text_array.map{measureBoundOneLine(_,paint)}
+    val w_ave = ar.map{_._1}.sum / ar.length
+    val h_ave = ar.map{_._2}.sum / ar.length
+    (w_ave,h_ave)
   }
-  def measureActualTextWidthMax(text_array:Array[String],paint:Paint):Int = {
-    text_array.map{x=>val (w,h)=calcVerticalBound(x,paint);w}.max.toInt
+  def measureBoundMax(text_array:Array[String],paint:Paint):(Int,Int) = {
+    val ar = text_array.map{measureBoundOneLine(_,paint)}
+    val w_max = ar.map{_._1}.max.toInt
+    val h_max = ar.map{_._2}.max.toInt
+    (w_max,h_max)
   }
 
   // Typeface of paint must be set before calling this function
@@ -220,7 +222,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     // we estimate the result text size, the closer it is, the result will be more accurate
     val estimate_size = getWidth / text_array_with_margin.length
     paint.setTextSize(estimate_size)
-    val bounds = (for((t,m)<-text_array_with_margin)yield(calcVerticalBound(t,paint)))
+    val bounds = (for((t,m)<-text_array_with_margin)yield(measureBoundOneLine(t,paint)))
     val r1 = (for(((w,h),(t,m)) <- bounds.zip(text_array_with_margin))yield{
       val ya = (1-m-MARGIN_BOTTOM)*getHeight.toFloat
       val yb = h + (t.length-1) * SPACE_V * estimate_size;
@@ -236,7 +238,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,margin_left_furigana:Int){
     val text_s = AllFuda.parseFurigana(text)
     var y = starty
-    var prev_furigana_bottom = (getHeight*FURIGANA_TOP_LIMIT).toInt
+    var prev_furigana_bottom = (getHeight*FURIGANA_TOP_BOTTOM_LIMIT).toInt
     for((t,furigana) <- text_s){
       val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,margin_left_furigana,prev_furigana_bottom)
       // TODO: the following is so ugly
@@ -249,7 +251,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
       val span_v = (paint_furigana.getTextSize*SPACE_V_FURIGANA).toInt
-      val (_,this_height_wo) = calcVerticalBound(furigana,paint_furigana)
+      val (_,this_height_wo) = measureBoundOneLine(furigana,paint_furigana)
       val this_height = this_height_wo + (furigana.length-1)*span_v
       val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
       val sx = (startx+Math.max(margin_left_furigana,width/2+paint_furigana.getTextSize/2+FURIGANA_MARGIN_LEFT_MIN)).toInt
@@ -279,6 +281,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val r_r = startx+(r.right-r.left)/2
         val r_b = yy+r.bottom
         canvas.drawRect(r_l,r_t,r_r,r_b,paint_debug)
+        val screen_range = if(paint.hashCode == paint_furigana.hashCode){screen_range_furi}else{screen_range_main}
         screen_range.left = Math.min(r_l,screen_range.left)
         screen_range.top = Math.min(r_t,screen_range.top)
         screen_range.right = Math.max(r_r,screen_range.right)
@@ -320,10 +323,16 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       if(Globals.IS_DEBUG){
         val paint_debug = new Paint()
         paint_debug.setStyle(Paint.Style.STROKE)
-        paint_debug.setColor(Color.GREEN)
         paint_debug.setStrokeWidth(3)
-        canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_LIMIT).toInt,
+        paint_debug.setColor(Color.GREEN)
+        canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*MARGIN_TOP.min).toInt,
           (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-MARGIN_BOTTOM)).toInt,paint_debug)
+        paint_debug.setColor(Color.CYAN)
+        canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_BOTTOM_LIMIT).toInt,
+          (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-FURIGANA_TOP_BOTTOM_LIMIT)).toInt,paint_debug)
+        val ni = {_:Unit=>new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)}
+        screen_range_main = ni()
+        screen_range_furi = ni()
       }
       paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
       paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
@@ -353,10 +362,14 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       }
 
       val space_boost3 = text_array_with_margin.length match {
+        case 1 => 1.4
+        case 2 => 1.3
+        case 3 => 1.2
+        case 4 => 1.1
         case 5 => 1.0
         case 6 => 0.9
         case 7 => 0.8
-        case _ => 1.0 // does not happen
+        case _ => 0.8
       }
 
       val furigana_ratio = if(show_furigana && furigana_width_conf_cur < furigana_width_conf_default){
@@ -369,20 +382,23 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
       var text_size = calculateTextSize(no_furigana,paint,space_h)
       paint.setTextSize(text_size)
-      val actual_width_ave = measureActualTextWidthAve(no_furigana.map{case(t,m)=>t},paint)
-      val actual_width_max = measureActualTextWidthMax(no_furigana.map{case(t,m)=>t},paint)
+      val (actual_width_ave,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
+      val (actual_width_max,_) = measureBoundMax(no_furigana.map{case(t,m)=>t},paint)
       val span_h = space_h*getWidth
       var rowspan = (span_h+actual_width_ave).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
       var margin_left_furigana = 0.0
       if(show_furigana){
-        var furisize = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
-        paint_furigana.setTextSize(furisize)
+        val furisize_tmp = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
+        paint_furigana.setTextSize(furisize_tmp)
         val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
-        val actual_width_furigana = measureActualTextWidthMax(only_furigana,paint_furigana)
-        val actual_ratio_furigana = furisize / actual_width_furigana.toFloat
-        paint_furigana.setTextSize(span_h.toFloat*actual_ratio_furigana*furigana_ratio.toFloat*FURIGANA_RATIO_DEFAULT.toFloat)
-        margin_left_furigana = actual_width_ave/2.0+actual_width_furigana/2.0 + (Math.max(0.0, span_h-actual_width_furigana))*MARGIN_LEFT_FURIGANA_RATIO
+        val (actual_width_furigana,furigana_height_max) = measureBoundMax(only_furigana,paint_furigana)
+        val actual_ratio_furigana = furisize_tmp / actual_width_furigana.toFloat
+        val candidate_w = span_h.toFloat*actual_ratio_furigana*furigana_ratio.toFloat*FURIGANA_RATIO_DEFAULT
+
+        val candidate_h = furisize_tmp * (1-FURIGANA_TOP_BOTTOM_LIMIT*2)*getHeight / (furisize_tmp* SPACE_V_FURIGANA * (only_furigana.map{_.length-1}).max + furigana_height_max)
+        paint_furigana.setTextSize(Math.min(candidate_w,candidate_h).toFloat)
+        margin_left_furigana = rowspan / 2.0
         startx -= (span_h / 2.0).toInt
       }
       for((t,m) <- text_array_with_margin){
@@ -391,26 +407,35 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         startx -= rowspan
       }
       if(Globals.IS_DEBUG){
-        val margin_l = screen_range.left / getWidth.toDouble
-        val margin_t = screen_range.top / getHeight.toDouble
-        val margin_r = (getWidth - screen_range.right) / getWidth.toDouble
-        val margin_b = (getHeight - screen_range.bottom) / getHeight.toDouble
-        Log.v("wasuramoti_debug",String.format("screen_range l=%.3f t=%.3f r=%.3f b=%.3f",
-          new java.lang.Double(margin_l),
-          new java.lang.Double(margin_t),
-          new java.lang.Double(margin_r),
-          new java.lang.Double(margin_b)))
-        if(margin_l <= MARGIN_LR*0.7){
-          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_l is too small: " + margin_l)
-        }
-        if(margin_r <= MARGIN_LR*0.7){
-          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_r is too small: " + margin_r)
-        }
-        if(margin_t <= FURIGANA_TOP_LIMIT*0.7){
-          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_t is too small: " + margin_t)
-        }
-        if(margin_b <= MARGIN_BOTTOM*0.7){
-          Log.w("wasuramoti_debug","cur_num=" + cur_num + ", margin_b is too small: " + margin_b)
+        for(screen_range <- Array(screen_range_main,screen_range_furi) if screen_range.left != Integer.MAX_VALUE){
+          val (name,t_top,t_bottom) = if(screen_range.hashCode == screen_range_furi.hashCode){
+            ("screen_range_furi",FURIGANA_TOP_BOTTOM_LIMIT,FURIGANA_TOP_BOTTOM_LIMIT)
+          }else{
+            ("screen_range_main",MARGIN_TOP.min,MARGIN_BOTTOM)
+          }
+          val margin_l = screen_range.left / getWidth.toDouble
+          val margin_t = screen_range.top / getHeight.toDouble
+          val margin_r = (getWidth - screen_range.right) / getWidth.toDouble
+          val margin_b = (getHeight - screen_range.bottom) / getHeight.toDouble
+          Log.v("wasuramoti_debug",String.format("%s,n=%d,l=%.3f t=%.3f r=%.3f b=%.3f",
+            name,
+            new java.lang.Integer(num),
+            new java.lang.Double(margin_l),
+            new java.lang.Double(margin_t),
+            new java.lang.Double(margin_r),
+            new java.lang.Double(margin_b)))
+          if(margin_l < MARGIN_LR*0.5){
+            Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_l is too small")
+          }
+          if(margin_r < MARGIN_LR*0.5){
+            Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_r is too small")
+          }
+          if(margin_t < t_top*0.5){
+            Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_t is too small")
+          }
+          if(margin_b < t_bottom*0.5){
+            Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_b is too small")
+          }
         }
       }
     }
@@ -493,8 +518,15 @@ class YomiInfoSearchDialog extends DialogFragment{
         true
       }
     }
-    
-    builder.setTitle(getActivity.getApplicationContext.getResources.getString(R.string.yomi_info_search_title,new java.lang.Integer(fudanum)))
+    val (fudanum_s,kimari) = if(fudanum == 0){
+      ((if(Romanization.is_japanese(getActivity)){"序歌"}else{"Joka"}),"---")
+    }else{
+      (fudanum.toString,Romanization.jap_to_local(getActivity,AllFuda.list(fudanum-1)))
+    }
+    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
+    title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
+    title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
+    builder.setCustomTitle(title_view)
     .setItems(items.map{_.split("\\|")(1)}.toArray[java.lang.CharSequence],
       new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){

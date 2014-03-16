@@ -3,7 +3,7 @@ import _root_.android.preference.DialogPreference
 import _root_.android.content.Context
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Spinner}
+import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Spinner,AdapterView}
 import _root_.android.media.AudioManager
 import _root_.android.text.TextUtils
 
@@ -16,11 +16,23 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val res = context.getResources
     var base = res.getStringArray(R.array.conf_show_yomi_info_entries_abbr)(index)
     if(v != "None"){
+      val ex = new StringBuilder()
       if(Globals.prefs.get.getBoolean("yomi_info_author",false)){
-        base += "/" + res.getString(R.string.yomi_info_abbrev_author)
+        ex.append(res.getString(R.string.yomi_info_abbrev_author))
+      }
+      val kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
+      val simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
+      (kami,simo) match {
+        case (true,true) => ex.append(res.getString(R.string.yomi_info_abbrev_both))
+        case (true,false) => ex.append(res.getString(R.string.yomi_info_abbrev_kami))
+        case (false,true) => ex.append(res.getString(R.string.yomi_info_abbrev_simo))
+        case _ => Unit
       }
       if(Globals.prefs.get.getString("yomi_info_furigana","None") != "None"){
-        base += "/" + res.getString(R.string.yomi_info_abbrev_furigana)
+        ex.append(res.getString(R.string.yomi_info_abbrev_furigana))
+      }
+      if(ex.length > 0){
+        base += "/" + ex.toString
       }
     }
     base
@@ -74,6 +86,25 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
     simo.setChecked(prefs.getBoolean("yomi_info_simo",true))
+    
+    // switch visibility by spinner
+    val layout = view.findViewById(R.id.yomi_info_conf_layout)
+    val f = (pos:Int) => {
+      layout.setVisibility(if(pos==0){
+        View.INVISIBLE
+      }else{
+        View.VISIBLE
+      })
+    }
+    f(main.getSelectedItemPosition)
+    main.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        override def onItemSelected(parent:AdapterView[_],view:View,pos:Int,id:Long){
+          f(pos)
+        }
+        override def onNothingSelected(parent:AdapterView[_]){
+        }
+    })
+
     return view
   }
 }

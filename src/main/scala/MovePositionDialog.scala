@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{AlertDialog,Dialog}
 import _root_.android.os.Bundle
-import _root_.android.view.{View,ViewGroup,LayoutInflater}
+import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.Button
 import _root_.android.support.v4.app.DialogFragment
 import _root_.android.content.DialogInterface

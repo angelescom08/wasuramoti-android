@@ -13,11 +13,19 @@ adb push bin/$JARFILE /data/local/tmp/ || exit 1
 mkdir $DATADIR || exit 1
 counter=0
 REMOTE_USER=$(adb shell su -c "stat -c '%u' $SHARED_PREF_DIR")
+if [ $? -ne 0 ];then
+  exit 1
+fi
 for font in $FONTS_MAIN;do
 for font_furigana in $FONTS_FURIGANA;do
 for furigana_width in $FURIGANA_WIDTH;do
 for author in true false;do
+for kami in true false;do
+for simo in true false;do
   if [ $font_furigana = "None" ] && [ $furigana_width -ne 4 ];then
+    continue
+  fi
+  if [ $author = "false" ] && [ $kami = "false" ] && [ $simo = "false" ];then
     continue
   fi
   ((counter++))
@@ -30,6 +38,8 @@ for author in true false;do
 <string name="yomi_info_furigana">$font_furigana</string>
 <int name="yomi_info_furigana_width" value="$furigana_width" />
 <boolean name="yomi_info_author" value="$author" />
+<boolean name="yomi_info_kami" value="$kami" />
+<boolean name="yomi_info_simo" value="$simo" />
 <string name="dimlock_minutes">5</string>
 <string name="wav_fadein_kami">0.1</string>
 <string name="read_order_each">CUR2_NEXT1</string>
@@ -53,11 +63,13 @@ HEREDOC
   sleep 3
   adb logcat -c
   adb shell uiautomator runtest $JARFILE -c karuta.hpnpwd.wasuramoti.uitest.TakeScreenshotAll || exit 1
-  adb logcat -d | grep wasuramoti_debug > $DATADIR/logcat_$counter0.log
+  adb logcat -d > $DATADIR/logcat_$counter0.log
   SCDIR=$DATADIR/screenshot_$counter0
   mkdir $SCDIR 
   adb pull /data/local/tmp/wasuramoti_screenshot/ $SCDIR/
   adb shell rm -rf /data/local/tmp/wasuramoti_screenshot/
+done
+done
 done
 done
 done
