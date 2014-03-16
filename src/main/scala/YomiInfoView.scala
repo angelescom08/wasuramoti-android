@@ -172,7 +172,8 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val SPACE_V = 0.15 // rate of text size
   val SPACE_H = 0.05 // rate of view width
   val SPACE_V_FURIGANA = 0.15 // rate of text size
-  val FURIGANA_TOP_BOTTOM_LIMIT = 0.02 // rate of view height
+  val FURIGANA_TOP_LIMIT = 0.02 // rate of view height
+  val FURIGANA_BOTTOM_LIMIT = 0.03 // rate of view height
   val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
   val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
 
@@ -238,7 +239,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   def verticalText(canvas:Canvas,startx:Int,starty:Int,text:String,margin_left_furigana:Int){
     val text_s = AllFuda.parseFurigana(text)
     var y = starty
-    var prev_furigana_bottom = (getHeight*FURIGANA_TOP_BOTTOM_LIMIT).toInt
+    var prev_furigana_bottom = (getHeight*FURIGANA_TOP_LIMIT).toInt
     for((t,furigana) <- text_s){
       val (y_,prev_furigana_bottom_) = verticalWord(canvas,startx,y,t,furigana,margin_left_furigana,prev_furigana_bottom)
       // TODO: the following is so ugly
@@ -253,7 +254,10 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val span_v = (paint_furigana.getTextSize*SPACE_V_FURIGANA).toInt
       val (_,this_height_wo) = measureBoundOneLine(furigana,paint_furigana)
       val this_height = this_height_wo + (furigana.length-1)*span_v
-      val sy = Math.max(prev_furigana_bottom,starty+height/2-this_height.toInt/2)
+      val candidate_y1 = starty+height/2-this_height.toInt/2
+      val candidate_y2 = (getHeight*(1-FURIGANA_BOTTOM_LIMIT)).toInt - this_height
+      val sy = Math.max(prev_furigana_bottom, Math.min(candidate_y1,candidate_y2))
+
       val sx = (startx+Math.max(margin_left_furigana,width/2+paint_furigana.getTextSize/2+FURIGANA_MARGIN_LEFT_MIN)).toInt
       val(furigana_y,_,_) = drawVertical(paint_furigana,canvas,sx,sy,furigana,span_v)
       new_furigana_bottom = furigana_y
@@ -309,6 +313,8 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
     show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
     show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
+    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
+    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
   }
 
   override def onDraw(canvas:Canvas){
@@ -318,36 +324,40 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       // The default background has gradation when hardware acceleration is turned on
       // Therefore we have to fill it with black
       canvas.drawColor(Color.BLACK)
+    } 
+    if(Globals.IS_DEBUG){
+      val paint_debug = new Paint()
+      paint_debug.setStyle(Paint.Style.STROKE)
+      paint_debug.setStrokeWidth(3)
+      paint_debug.setColor(Color.GREEN)
+      canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*MARGIN_TOP.min).toInt,
+        (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-MARGIN_BOTTOM)).toInt,paint_debug)
+      paint_debug.setColor(Color.CYAN)
+      canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_LIMIT).toInt,
+        (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-FURIGANA_BOTTOM_LIMIT)).toInt,paint_debug)
+      val ni = {_:Unit=>new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)}
+      screen_range_main = ni()
+      screen_range_furi = ni()
     }
     cur_num.foreach{num =>
-      if(Globals.IS_DEBUG){
-        val paint_debug = new Paint()
-        paint_debug.setStyle(Paint.Style.STROKE)
-        paint_debug.setStrokeWidth(3)
-        paint_debug.setColor(Color.GREEN)
-        canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*MARGIN_TOP.min).toInt,
-          (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-MARGIN_BOTTOM)).toInt,paint_debug)
-        paint_debug.setColor(Color.CYAN)
-        canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_BOTTOM_LIMIT).toInt,
-          (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-FURIGANA_TOP_BOTTOM_LIMIT)).toInt,paint_debug)
-        val ni = {_:Unit=>new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)}
-        screen_range_main = ni()
-        screen_range_furi = ni()
-      }
-      paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
-      paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
       val furigana_width_conf_default = context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
       val furigana_width_conf_max = context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
       val full = AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
       
-      val text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
-      (if(show_kami){full.take(3)}else{new Array[(String,Double)](0)}) ++
-      (if(show_simo){full.takeRight(2)}else{new Array[(String,Double)](0)})
+      var text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
+        (if(show_kami){full.take(3)}else{new Array[(String,Double)](0)}) ++
+        (if(show_simo){full.takeRight(2)}else{new Array[(String,Double)](0)})
 
       if(text_array_with_margin.isEmpty){
         return
+      }
+
+      if(show_author && ! show_kami && ! show_simo){
+        // if only author then vertical center since the furigana will sometimes be larger than poem text
+        val mint = text_array_with_margin.map{_._2}.min
+        text_array_with_margin = text_array_with_margin.map{case(t,m)=>(t,m-mint+MARGIN_BOTTOM)}
       }
 
       val space_boost1 = if(show_furigana){
@@ -396,7 +406,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val actual_ratio_furigana = furisize_tmp / actual_width_furigana.toFloat
         val candidate_w = span_h.toFloat*actual_ratio_furigana*furigana_ratio.toFloat*FURIGANA_RATIO_DEFAULT
 
-        val candidate_h = furisize_tmp * (1-FURIGANA_TOP_BOTTOM_LIMIT*2)*getHeight / (furisize_tmp* SPACE_V_FURIGANA * (only_furigana.map{_.length-1}).max + furigana_height_max)
+        val candidate_h = furisize_tmp * (1-FURIGANA_TOP_LIMIT-FURIGANA_BOTTOM_LIMIT)*getHeight / (furisize_tmp* SPACE_V_FURIGANA * (only_furigana.map{_.length-1}).max + furigana_height_max)
         paint_furigana.setTextSize(Math.min(candidate_w,candidate_h).toFloat)
         margin_left_furigana = rowspan / 2.0
         startx -= (span_h / 2.0).toInt
@@ -409,7 +419,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       if(Globals.IS_DEBUG){
         for(screen_range <- Array(screen_range_main,screen_range_furi) if screen_range.left != Integer.MAX_VALUE){
           val (name,t_top,t_bottom) = if(screen_range.hashCode == screen_range_furi.hashCode){
-            ("screen_range_furi",FURIGANA_TOP_BOTTOM_LIMIT,FURIGANA_TOP_BOTTOM_LIMIT)
+            ("screen_range_furi",FURIGANA_TOP_LIMIT,FURIGANA_BOTTOM_LIMIT)
           }else{
             ("screen_range_main",MARGIN_TOP.min,MARGIN_BOTTOM)
           }
@@ -424,16 +434,16 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
             new java.lang.Double(margin_t),
             new java.lang.Double(margin_r),
             new java.lang.Double(margin_b)))
-          if(margin_l < MARGIN_LR*0.5){
+          if(margin_l < MARGIN_LR*0.9){
             Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_l is too small")
           }
-          if(margin_r < MARGIN_LR*0.5){
+          if(margin_r < MARGIN_LR*0.9){
             Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_r is too small")
           }
-          if(margin_t < t_top*0.5){
+          if(margin_t < t_top*0.9){
             Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_t is too small")
           }
-          if(margin_b < t_bottom*0.5){
+          if(margin_b < t_bottom*0.9){
             Log.w("wasuramoti_debug",name + ",n=" + num + " => margin_b is too small")
           }
         }

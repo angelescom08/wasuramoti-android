@@ -102,7 +102,12 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
 
-  <string name="yomi_info_usage">[読み句表示時の操作]\n左右にスワイプ: 次/前の札に移動\n長押し: 歌情報の表示</string>
+  <string name="yomi_info_usage"><![CDATA[
+    <b>[読み句表示時の操作]</b><br>
+    <font color="#33CC99">左右にスワイプ</font>: 次/前の札に移動<br>
+    <font color="#33CC99">長押し</font>: 決まり字などの歌情報の表示
+    ]]>
+  </string>
 
   <string name="yomi_info_search_poem_num">歌番号:</string>
   <string name="yomi_info_search_kimariji">決まり字:</string>

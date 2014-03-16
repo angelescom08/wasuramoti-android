@@ -2,6 +2,12 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/category_global">
+    <karuta.hpnpwd.wasuramoti.YomiInfoPreference
+      android:key="show_yomi_info"
+      android:title="@string/conf_show_yomi_info_title"
+      android:summary="@string/conf_show_yomi_info_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <karuta.hpnpwd.wasuramoti.FudaSetPreference
       android:key="fudaset"
       android:title="@string/conf_fudaset_title"
@@ -12,12 +18,6 @@
       android:key="karafuda"
       android:title="@string/conf_karafuda"
       android:summary="@string/conf_karafuda_summary"
-      android:widgetLayout="@layout/conf_current_value"
-      />
-    <karuta.hpnpwd.wasuramoti.YomiInfoPreference
-      android:key="show_yomi_info"
-      android:title="@string/conf_show_yomi_info_title"
-      android:summary="@string/conf_show_yomi_info_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
     <karuta.hpnpwd.wasuramoti.AutoPlayPreference

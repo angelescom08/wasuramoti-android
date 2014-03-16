@@ -85,7 +85,9 @@
     <TextView
                   android:layout_height="wrap_content"
                   android:layout_width="wrap_content"
-                  android:text="@string/yomi_info_usage"
+                  android:id="@+id/yomi_info_usage"
+                  android:textColor="@android:color/white"
+                  android:background="@drawable/round_border_gray" android:padding="6dip"
           />
   </LinearLayout>
 </LinearLayout>
