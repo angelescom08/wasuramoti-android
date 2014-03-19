@@ -1,14 +1,11 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.content.{Context,DialogInterface,Intent}
-import _root_.android.view.{View,MotionEvent,ViewTreeObserver,LayoutInflater}
+import _root_.android.content.Context
+import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.text.TextUtils
-import _root_.android.widget.{HorizontalScrollView,TextView}
+import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
 import _root_.android.util.{Log,AttributeSet}
-import _root_.android.os.{CountDownTimer,Bundle}
-import _root_.android.net.Uri
-import _root_.android.app.{AlertDialog,SearchManager,Dialog}
-import _root_.android.support.v4.app.DialogFragment
+import _root_.android.os.CountDownTimer
 
 import scala.collection.mutable
 
@@ -452,113 +449,3 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   }
 }
 
-// The constructor of Fragment must be empty since when fragment is recreated,
-// The empty constructor is called.
-// Therefore we have to create instance through this function.
-object YomiInfoSearchDialogBuilder{
-  def newInstance(fudanum:Int):YomiInfoSearchDialog = {
-    val fragment = new YomiInfoSearchDialog()
-    val args = new Bundle()
-    args.putInt("fudanum",fudanum)
-    fragment.setArguments(args)
-    return fragment
-  }
-}
-
-class YomiInfoSearchDialog extends DialogFragment{
-  def doWebSearch(fudanum:Int,mode:String){
-    val query = if(mode == "TEXT"){
-      AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
-    }else{
-      AllFuda.removeInsideParens(AllFuda.author(fudanum)).replace(" ","") + " 歌人"
-    }
-    val f1 = {_:Unit =>
-      val intent = new Intent(Intent.ACTION_WEB_SEARCH)
-      intent.putExtra(SearchManager.QUERY,query)
-      Left(intent)
-    }
-    val f2 = {_:Unit => 
-      val intent = new Intent(Intent.ACTION_VIEW)
-      intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
-      Left(intent)
-    }
-    val f3 = {_:Unit => 
-      Right({ _:Unit =>
-        Utils.messageDialog(getActivity,Left("Application for Web search not found on this device."))
-      })
-    }
-    // scala.util.control.Breaks.break does not work (why?)
-    // Therefore we use `exists` in Traversable trait instead
-    Seq(f1,f2,f3) exists {f=>
-        f() match {
-          case Left(intent) =>
-            try{
-              startActivity(intent)
-              true
-            }catch{
-              case _:android.content.ActivityNotFoundException => false
-            }
-          case Right(g) => {g();true}
-        }
-      }
-  }
-  def getCurYomiInfoView():Option[YomiInfoView] = {
-    val yi = getActivity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-    if(yi == null){ return None }
-    yi.cur_view.flatMap{x:Int =>
-      Option(getActivity.findViewById(x).asInstanceOf[YomiInfoView])
-    }
-  }
-  override def onCreateDialog(saved:Bundle):Dialog = {
-    val fudanum = getArguments.getInt("fudanum",0)
-    val builder = new AlertDialog.Builder(getActivity)
-    val items = getActivity.getApplicationContext.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
-      val tag = x.split("\\|")(0)
-      if(tag.startsWith("DISPLAY_")){
-        getCurYomiInfoView.map{vw =>
-          tag.split("_")(1) match{
-            case "AUTHOR" => ! vw.show_author
-            case "KAMI" => ! vw.show_kami
-            case "SIMO" => ! vw.show_simo
-            case "FURIGANA" => ! vw.show_furigana
-            case _ => true
-          }
-        }.getOrElse(true)
-      }else{
-        true
-      }
-    }
-    val (fudanum_s,kimari) = if(fudanum == 0){
-      ((if(Romanization.is_japanese(getActivity)){"序歌"}else{"Joka"}),"---")
-    }else{
-      (fudanum.toString,Romanization.jap_to_local(getActivity,AllFuda.list(fudanum-1)))
-    }
-    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
-    title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
-    title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
-    builder.setCustomTitle(title_view)
-    .setItems(items.map{_.split("\\|")(1)}.toArray[java.lang.CharSequence],
-      new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          val tag = items(which).split("\\|")(0)
-          if(tag.startsWith("SEARCH_")){
-            doWebSearch(fudanum,tag.split("_")(1))
-          }else{
-            getCurYomiInfoView.foreach{vw =>
-              tag.split("_")(1) match{
-                case "AUTHOR" => vw.show_author = true
-                case "KAMI" => vw.show_kami = true
-                case "SIMO" => vw.show_simo = true
-                case "FURIGANA" => vw.show_furigana = true
-              }
-              vw.invalidate
-            }
-          }
-        }
-      }
-    )
-    .setNegativeButton(android.R.string.cancel,null)
-    .create()
-  }
-}
-// このファイルはutf-8で日本語を含んでいます

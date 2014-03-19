@@ -107,8 +107,8 @@
 
   <string name="yomi_info_usage"><![CDATA[
     <b>[User Guide for Poem Text]</b><br>
-    <font color="#33CC99">Horizontal Swipe</font>: Next/Previous Poem.<br>
-    <font color="#33CC99">Long Press</font>: Show Poem Text Info.
+    <font color="#BBFFBB">Horizontal Swipe</font>: Next/Previous Poem.<br>
+    <font color="#BBFFBB">Long Press</font>: Show Poem Text Info.
     ]]>
   </string>
 
@@ -122,6 +122,28 @@
     <item>SEARCH_TEXT|Web Search by Poem Text</item>
     <item>SEARCH_AUTHOR|Web Search by Author</item>
   </string-array>
+  <string name="yomi_info_search_detail_btn">Kimariji Log</string>
+  <string name="kimariji_changelog_joka">
+    `Joka` is an introduction poem which is played before all poems. Therefore it has no Kimariji.
+  </string>
+  <string name="kimariji_changelog_init">
+    <![CDATA[
+      Initial Kimariji of this poem is <font color="#DDA0DD">%s</font>.
+    ]]>
+  </string>
+  <string name="kimariji_changelog_fudaset">
+    <![CDATA[
+      The Kimariji inside current fudaset is <font color="#DDA0DD">%s</font>.
+    ]]>
+  </string>
+  <string name="kimariji_changelog_changed">
+    <![CDATA[
+      Since <font color="#BBFFBB">%1$s</font> has already been read, the Kimariji was changed to <font color="#DDA0DD">%2$s</font>.
+    ]]>
+  </string>
+  <string name="kimariji_changelog_current">It is the current Kimariji.</string>
+  <string name="kimariji_changelog_sameas">The Kimariji in current poem set is as same as above.</string>
+
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">Change where to stop playing at each half of the poem.</string>

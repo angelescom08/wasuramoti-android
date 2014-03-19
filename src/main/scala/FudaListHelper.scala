@@ -185,6 +185,76 @@ object FudaListHelper{
     //db.close
     have_to_read
   }
+
+  def getNotYetRead(context:Context,index:Int):Set[String] = Globals.db_lock.synchronized{
+    val db = Globals.database.get.getReadableDatabase
+    val cond = if(getOrQueryNumbersOfKarafuda(context) > 0){
+      // When Karafuda is enabled, we treat all the fuda is supposed to be read
+      // since the Kimariji will be the hint to which Karafuda is choosed.
+      "OR (read_order < "+index+" AND skip = 1)"
+    }else{
+      "AND skip = 0" 
+    }
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"num > 0 AND ( read_order > ? " + cond + ")",Array(index.toString),null,null,null,null)
+    cursor.moveToFirst 
+    val notyetread = ( 0 until cursor.getCount ).map{ x=>
+      val r = AllFuda.list(cursor.getInt(0)-1)
+      cursor.moveToNext
+      r
+    }.toSet
+    cursor.close()
+    //db.close 
+    notyetread
+  }
+  def getFudanumIndex(context:Context,fudanum:Int):Int = Globals.db_lock.synchronized{
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"num = ?",Array(fudanum.toString),null,null,null,"1")
+    cursor.moveToFirst
+    val r = cursor.getInt(0)
+    cursor.close()
+    // db.close()
+    r
+  }
+  def getKimarijiAtIndex(context:Context,fudanum:Int,index:Option[Int]):String = {
+    val target_index = index.getOrElse(getFudanumIndex(context,fudanum))
+    val notyetread = getNotYetRead(context,target_index)
+    TrieUtils.calcKimariji(notyetread,AllFuda.list(fudanum-1))
+  }
+  def getAlreadyReadFromKimariji(context:Context,fudanum:Int,kimari:String):Array[(String,Int)] = Globals.db_lock.synchronized{
+    val current_index = getFudanumIndex(context,fudanum)
+    val db = Globals.database.get.getReadableDatabase
+    val nums = TrieUtils.makeNumListFromKimariji(kimari)
+    if(nums.isEmpty){
+      return new Array[(String,Int)](0)
+    }
+    val cursor = db.rawQuery("SELECT num,read_order FROM " + Globals.TABLE_FUDALIST + " WHERE skip <=0 AND read_order < "+current_index+" AND num IN ("+nums.mkString(",")+") ORDER BY read_order ASC",null)
+    cursor.moveToFirst 
+    val alreadyread = ( 0 until cursor.getCount ).map{ x=>
+      val n = AllFuda.list(cursor.getInt(0)-1)
+      val r = cursor.getInt(1)
+      cursor.moveToNext
+      (n,r)
+    }
+    cursor.close()
+    //db.close()
+    alreadyread.toArray
+  }
+
+  def getKimarijis(context:Context,fudanum:Int):(String,String,String) = {
+    val kimari_all = AllFuda.list(fudanum-1)
+    val kimari_in_fudaset = if(FudaListHelper.getOrQueryNumbersToRead(context) < 100){
+      FudaListHelper.getKimarijiAtIndex(context,fudanum,Some(-1))
+    }else{
+      kimari_all
+    }
+    val kimari_cur = if(Utils.isRandom){
+      kimari_in_fudaset
+    }else{
+      FudaListHelper.getKimarijiAtIndex(context,fudanum,None)
+    }
+    (kimari_all,kimari_cur,kimari_in_fudaset)
+  }
+
   def chooseKarafuda():Int={
     val have_to_read = getHaveToReadFromDB("= 0")
     val not_read = AllFuda.list.toSet -- have_to_read

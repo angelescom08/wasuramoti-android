@@ -109,6 +109,10 @@ object TrieUtils{
       Some((kimari,st.size))
     }
   }
+  def makeNumListFromKimariji(str:String):Set[Int] = {
+    val trie = CreateTrie.makeTrie(AllFuda.list.filter{x=>x.head == str.head})
+    trie.traversePrefix(str).map{AllFuda.getFudaNum(_)}.toSet
+  }
   def makeHaveToRead(str:String):Set[String] = {
     var ret = mutable.Set[String]()
     if(TextUtils.isEmpty(str)){
@@ -153,5 +157,11 @@ object TrieUtils{
         s
       }
     }.toSet
+  }
+  def calcKimariji(notyetread:Set[String],target:String):String = {
+    val trie = CreateTrie.makeTrie(notyetread.toSeq.filter{x=> x != target && x.head == target.head})
+    var count = 0
+    trie.traverseSingle(target, {_ => count += 1})
+    target.substring(0,count)
   }
 }

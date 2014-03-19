@@ -104,8 +104,8 @@
 
   <string name="yomi_info_usage"><![CDATA[
     <b>[読み句表示時の操作]</b><br>
-    <font color="#33CC99">左右にスワイプ</font>: 次/前の札に移動<br>
-    <font color="#33CC99">長押し</font>: 決まり字などの歌情報の表示
+    <font color="#BBFFBB">左右にスワイプ</font>: 次/前の札に移動<br>
+    <font color="#BBFFBB">長押し</font>: 決まり字などの歌情報の表示
     ]]>
   </string>
 
@@ -119,6 +119,27 @@
     <item>SEARCH_TEXT|Web検索: 読み句</item>
     <item>SEARCH_AUTHOR|Web検索: 歌人</item>
   </string-array>
+  <string name="yomi_info_search_detail_btn">決まり字の変化</string>
+  <string name="kimariji_changelog_joka">
+    序歌は全ての歌の前に詠まれる歌なので決まり字はありません．
+  </string>
+  <string name="kimariji_changelog_init">
+    <![CDATA[
+      百首全体におけるこの札の決まり字は「<font color="#DDA0DD">%s</font>」です．
+    ]]>
+  </string>
+  <string name="kimariji_changelog_fudaset">
+    <![CDATA[
+      現在の札セット内での決まり字は「<font color="#DDA0DD">%s</font>」です．
+    ]]>
+  </string>
+  <string name="kimariji_changelog_changed">
+    <![CDATA[
+    「<font color="#BBFFBB">%1$s</font>」が詠まれたことにより，決まり字は「<font color="#DDA0DD">%2$s</font>」になりました．
+    ]]>
+  </string>
+  <string name="kimariji_changelog_current">これが現在の決まり字です．</string>
+  <string name="kimariji_changelog_sameas">現在の札セット内での決まり字も上記と同じです．</string>
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>

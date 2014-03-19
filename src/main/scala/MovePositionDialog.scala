@@ -11,7 +11,7 @@ class MovePositionDialog extends DialogFragment{
   var numbers_to_read = 0
   var current_index = 0
   def setTitleWithNum(dialog:Option[Dialog]=None){
-    val title = getActivity.getResources().getString(R.string.move_position_title) + ": " + current_index + " / " + numbers_to_read
+    val title = getActivity.getString(R.string.move_position_title) + ": " + current_index + " / " + numbers_to_read
     dialog.getOrElse(getDialog).setTitle(title)
   }
   def incCurrentIndex(dx:Int){
@@ -50,12 +50,12 @@ class MovePositionDialog extends DialogFragment{
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.move_position,null)
     builder.setView(view)
-    .setPositiveButton(getActivity.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
+    .setPositiveButton(getActivity.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           onOk()
         }
       })
-    .setNegativeButton(getActivity.getResources.getString(android.R.string.cancel),null)
+    .setNegativeButton(getActivity.getString(android.R.string.cancel),null)
     setOnClick(view,R.id.move_button_prev, _ => onPrev )
     setOnClick(view,R.id.move_button_prev_ten, _ => onPrevTen )
     setOnClick(view,R.id.move_button_next, _ => onNext )
