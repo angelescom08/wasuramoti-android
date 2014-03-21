@@ -5,11 +5,8 @@ import _root_.android.util.AttributeSet
 import _root_.android.content.Context
 import _root_.android.text.TextUtils
 import _root_.android.view.{View,ViewGroup,Gravity}
+import _root_.android.graphics.Color
 
-
-// displays button list
-//   large, xlarge screen -> two rows
-//   otherwise -> one rows
 
 object YomiInfoButtonList{
   abstract class OnClickListener{
@@ -35,11 +32,15 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
   }
   def addButtons(context:Context,text_and_tags:Array[(String,String)]){
 
-    if(Utils.isLarge(context)){
+    if(Utils.isScreenWide(context)){
       for(ar<-text_and_tags.grouped(2)){
         val lay = new TableRow(context)
         for((text,tag)<-ar if ! TextUtils.isEmpty(text)){
           val button = genButton(tag,text)
+          if(Utils.isLandscape(context) && Utils.isScreenNormal(context)){
+            button.setTextAppearance(context,android.R.style.TextAppearance_Small)
+            button.setTextColor(Color.WHITE)
+          }
           val params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
           lay.addView(button,params)
         }

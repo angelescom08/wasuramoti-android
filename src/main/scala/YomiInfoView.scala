@@ -28,7 +28,9 @@ object TypefaceManager{
 }
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-  val SCROLL_THREASHOLD = 0.25
+
+  var SCROLL_THREASHOLD = 0.25
+  var SCROLL_THREASHOLD_DIP = 100
   val SCROLL_SPEED = 200 // in millisec
   var cur_view = None:Option[Int]
   def scrollAnimation(endx:Int,on_finish:Unit=>Unit=Unit=>Unit){
@@ -58,7 +60,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
           val v = findViewById(vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
-            val nvid = if(Math.abs(dx) > v.getWidth * SCROLL_THREASHOLD){
+            val threshold = Math.min((v.getWidth * SCROLL_THREASHOLD).toInt, Utils.DipToPx(context,SCROLL_THREASHOLD_DIP).toInt)
+            val nvid = if(Math.abs(dx) > threshold){
               if(dx > 0){
                 vid match{
                   case R.id.yomi_info_view_next => R.id.yomi_info_view_cur

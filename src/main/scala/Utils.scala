@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
+import _root_.android.util.TypedValue
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import _root_.android.content.res.Configuration
 import _root_.android.database.sqlite.SQLiteDatabase
@@ -9,7 +10,7 @@ import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
 import _root_.android.os.Environment
 import _root_.android.media.AudioManager
-import _root_.android.view.{LayoutInflater,View}
+import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button}
 
 import _root_.java.io.File
@@ -72,6 +73,10 @@ object Utils {
     }
   }
 
+  def DipToPx(context:Context,dip:Int):Float = {
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.getResources.getDisplayMetrics)
+  }
+
   def showYomiInfo():Boolean = {
     Globals.prefs.exists{_.getString("show_yomi_info","None") != "None"}
   }
@@ -80,9 +85,28 @@ object Utils {
     "RANDOM" == Globals.prefs.get.getString("read_order",null)
   }
 
-  def isLarge(context:Context):Boolean = {
+  def isScreenWide(context:Context):Boolean = {
+    isScreenLarge(context) || (isScreenNormal(context) && isLandscape(context))
+  }
+
+  def getScreenLayout(context:Context):Int = {
+    context.getResources.getConfiguration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK
+  }
+
+  def isScreenNormal(context:Context):Boolean = {
+    Configuration.SCREENLAYOUT_SIZE_NORMAL == getScreenLayout(context)
+  }
+  def isScreenLarge(context:Context):Boolean = {
     Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains 
-    (context.getResources.getConfiguration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+    getScreenLayout(context)
+  }
+  def isLandscape(context:Context):Boolean = {
+    if(android.os.Build.VERSION.SDK_INT >= 8){
+      val display = context.getSystemService(Context.WINDOW_SERVICE).asInstanceOf[WindowManager].getDefaultDisplay
+      Array(Surface.ROTATION_90,Surface.ROTATION_270).contains(display.getRotation)
+    }else{
+      context.getResources.getConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
   }
 
   def readCurNext(context:Context):Boolean = {
