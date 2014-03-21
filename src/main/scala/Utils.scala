@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
+import _root_.android.content.res.Configuration
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
@@ -77,6 +78,11 @@ object Utils {
 
   def isRandom():Boolean = {
     "RANDOM" == Globals.prefs.get.getString("read_order",null)
+  }
+
+  def isLarge(context:Context):Boolean = {
+    Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains 
+    (context.getResources.getConfiguration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
   }
 
   def readCurNext(context:Context):Boolean = {

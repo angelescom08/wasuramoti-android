@@ -13,6 +13,8 @@ Priority High:
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
+  * Min(XX dip, percent of screen width) for swipe threshold
+  * Treat as tablet if screen size is normal and landscape mode
 
 
 Priority Middle:

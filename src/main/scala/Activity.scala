@@ -244,6 +244,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     actionbar.setCustomView(actionview)
     actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
     actionview.findViewById(R.id.actionbar_blue_ring).setVisibility(View.INVISIBLE)
+
+    if(findViewById(R.id.yomi_info_search_fragment) != null){
+      val fragment = YomiInfoSearchDialog.newInstance(false,0)
+      getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
+    }
   }
   def showProgress(){
     val v = getSupportActionBar.getCustomView
@@ -278,6 +283,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
       yomi_info.invalidateAndScroll()
+      val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
+      val yomi_cur = findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
+      if(yomi_dlg != null && yomi_cur != null){
+        yomi_cur.cur_num.foreach{
+          yomi_dlg.setFudanum(_)
+        }
+      }
     }
   }
   def scrollYomiInfo(id:Int,smooth:Boolean){
@@ -401,7 +413,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         new View.OnLongClickListener(){
           override def onLongClick(v:View):Boolean = {
             view.cur_num.foreach{num=>
-              val dlg = YomiInfoSearchDialogBuilder.newInstance(view.cur_num.getOrElse(num))
+              val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num.getOrElse(num))
               dlg.show(getSupportFragmentManager,"yomi_info_search")
             }
             return true

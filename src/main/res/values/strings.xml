@@ -115,14 +115,15 @@
   <string name="yomi_info_search_poem_num">Poem No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>
   <string-array name="yomi_info_search_array">
-    <item>DISPLAY_KAMI|Show 1st Half</item>
-    <item>DISPLAY_SIMO|Show 2nd Half</item>
-    <item>DISPLAY_AUTHOR|Show Author</item>
-    <item>DISPLAY_FURIGANA|Show Furigana</item>
-    <item>SEARCH_TEXT|Web Search by Poem Text</item>
-    <item>SEARCH_AUTHOR|Web Search by Author</item>
+    <item>A.DISPLAY_KAMI|Show 1st Half</item>
+    <item>A.DISPLAY_SIMO|Show 2nd Half</item>
+    <item>A.DISPLAY_AUTHOR|Show Author</item>
+    <item>A.DISPLAY_FURIGANA|Show Furigana</item>
+    <item>B.SEARCH_TEXT|Web Search by Poem Text</item>
+    <item>B.SEARCH_AUTHOR|Web Search by Author</item>
+    <item>C.KIMARIJI_LOG|Kimariji Log</item>
   </string-array>
-  <string name="yomi_info_search_detail_btn">Kimariji Log</string>
+  <string name="yomi_info_search_detail_title">Kimariji Log</string>
   <string name="kimariji_changelog_joka">
     `Joka` is an introduction poem which is played before all poems. Therefore it has no Kimariji.
   </string>

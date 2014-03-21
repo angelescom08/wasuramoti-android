@@ -112,14 +112,15 @@
   <string name="yomi_info_search_poem_num">歌番号:</string>
   <string name="yomi_info_search_kimariji">決まり字:</string>
   <string-array name="yomi_info_search_array">
-    <item>DISPLAY_KAMI|表示: 上の句</item>
-    <item>DISPLAY_SIMO|表示: 下の句</item>
-    <item>DISPLAY_AUTHOR|表示: 歌人</item>
-    <item>DISPLAY_FURIGANA|表示: ふりがな</item>
-    <item>SEARCH_TEXT|Web検索: 読み句</item>
-    <item>SEARCH_AUTHOR|Web検索: 歌人</item>
+    <item>A.DISPLAY_KAMI|表示: 上の句</item>
+    <item>A.DISPLAY_SIMO|表示: 下の句</item>
+    <item>A.DISPLAY_AUTHOR|表示: 歌人</item>
+    <item>A.DISPLAY_FURIGANA|表示: ふりがな</item>
+    <item>B.SEARCH_TEXT|Web検索: 読み句</item>
+    <item>B.SEARCH_AUTHOR|Web検索: 歌人</item>
+    <item>C.KIMARIJI_LOG|決まり字の変化</item>
   </string-array>
-  <string name="yomi_info_search_detail_btn">決まり字の変化</string>
+  <string name="yomi_info_search_detail_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">
     序歌は全ての歌の前に詠まれる歌なので決まり字はありません．
   </string>

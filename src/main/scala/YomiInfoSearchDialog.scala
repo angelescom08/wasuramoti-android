@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.support.v4.app.DialogFragment
 import _root_.android.content.{Context,DialogInterface,Intent}
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{TextView,LinearLayout}
+import _root_.android.view.{View,LayoutInflater,ViewGroup}
+import _root_.android.widget.{TextView,LinearLayout,Button}
 import _root_.android.os.Bundle
 import _root_.android.net.Uri
 import _root_.android.text.Html
@@ -12,17 +12,31 @@ import scala.collection.mutable
 // The constructor of Fragment must be empty since when fragment is recreated,
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
-object YomiInfoSearchDialogBuilder{
-  def newInstance(fudanum:Int):YomiInfoSearchDialog = {
+object YomiInfoSearchDialog{
+  def newInstance(is_dialog:Boolean,fudanum:Int):YomiInfoSearchDialog = {
     val fragment = new YomiInfoSearchDialog()
     val args = new Bundle()
     args.putInt("fudanum",fudanum)
+    args.putBoolean("is_dialog",is_dialog)
     fragment.setArguments(args)
     return fragment
   }
 }
 
 class YomiInfoSearchDialog extends DialogFragment{
+  def setFudanum(fudanum:Int){
+    getArguments.putInt("fudanum",fudanum)
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    if(btnlist != null){
+      for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
+        val b = btnlist.findViewWithTag("A.DISPLAY_" + t).asInstanceOf[Button]
+        if(b != null){
+          b.setEnabled(true)
+        }
+      }
+    }
+
+  }
   def doWebSearch(fudanum:Int,mode:String){
     val query = if(mode == "TEXT"){
       AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
@@ -66,12 +80,19 @@ class YomiInfoSearchDialog extends DialogFragment{
       Option(getActivity.findViewById(x).asInstanceOf[YomiInfoView])
     }
   }
-  override def onCreateDialog(saved:Bundle):Dialog = {
-    val fudanum = getArguments.getInt("fudanum",0)
-    val builder = new AlertDialog.Builder(getActivity)
-    val items = getActivity.getApplicationContext.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
+  override def onCreateView(inflater:LayoutInflater,container:ViewGroup,saved:Bundle):View = {
+    if(!getArguments.getBoolean("is_dialog")){
+      genContentView()
+    }else{
+      super.onCreateView(inflater,container,saved)
+    }
+  }
+  def genContentView():View = {
+    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_dialog,null) 
+    val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
-      if(tag.startsWith("DISPLAY_")){
+      if(tag.startsWith("A.DISPLAY_")){
         getCurYomiInfoView.map{vw =>
           tag.split("_")(1) match{
             case "AUTHOR" => ! vw.show_author
@@ -80,29 +101,26 @@ class YomiInfoSearchDialog extends DialogFragment{
             case "FURIGANA" => ! vw.show_furigana
             case _ => true
           }
-        }.getOrElse(true)
+        }.getOrElse{
+          val p = Globals.prefs.get
+          tag.split("_")(1) match{
+            case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
+            case "FURIGANA" => p.getString("yomi_info_furigana","None") == "None"
+            case _ => true
+          }
+        }
+      }else if(tag=="C.KIMARIJI_LOG"){
+        ! getArguments.getBoolean("is_dialog")
       }else{
         true
       }
     }
-    val (fudanum_s,kimari) = if(fudanum == 0){
-      ((if(Romanization.is_japanese(getActivity)){"序歌"}else{"Joka"}),"---")
-    }else{
-      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,fudanum)
-      val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
-      val k_c = kimari_all.substring(kimari_in_fudaset.length)
-      val html = "<font color=\"#DDA0DD\">"+kimari_cur+"</font><font color=\"#FFFFFF\">"+k_b+"</font><font color=\"#999999\">"+k_c+"</font>"
-      (fudanum.toString,Html.fromHtml(html))
-    }
-    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
-    title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
-    title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
-    builder.setCustomTitle(title_view)
-    .setItems(items.map{_.split("\\|")(1)}.toArray[java.lang.CharSequence],
-      new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          val tag = items(which).split("\\|")(0)
-          if(tag.startsWith("SEARCH_")){
+    btnlist.setOnClickListener(new YomiInfoButtonList.OnClickListener(){
+        override def onClick(btn:Button,tag:String){
+          if(tag == "C.KIMARIJI_LOG"){
+            showYomiInfoDetailDialog()
+          }else if(tag.startsWith("B.SEARCH_")){
+            val fudanum = getArguments.getInt("fudanum",0)
             doWebSearch(fudanum,tag.split("_")(1))
           }else{
             getCurYomiInfoView.foreach{vw =>
@@ -115,15 +133,54 @@ class YomiInfoSearchDialog extends DialogFragment{
               vw.invalidate
             }
           }
+          if(getArguments.getBoolean("is_dialog")){
+            dismiss()
+          }else if(tag.startsWith("A.DISPLAY_")){
+            btn.setEnabled(false)
+          }
         }
-      }
-    )
+      })
+
+    btnlist.addButtons(getActivity,items
+      .groupBy(_.split("\\|").head.split("_").head).values.toArray.sortBy{_.head}
+      .map{v=>if(v.length%2==0){v}else{v++Array("|")}}.flatten.toArray
+      .map{_.split("\\|") match {
+        case Array(l,t) => (t,l)
+        case _ => ("","")
+      }})
+    view
+  }
+  def showYomiInfoDetailDialog(){
+    val dlg = new YomiInfoDetailDialog()
+    dlg.setArguments(getArguments)
+    dlg.show(getActivity.getSupportFragmentManager,"yomi_info_detail")
+  }
+  override def onCreateDialog(saved:Bundle):Dialog = {
+    if(!getArguments.getBoolean("is_dialog")){
+      return super.onCreateDialog(saved)
+    }
+    val fudanum = getArguments.getInt("fudanum",0)
+    val builder = new AlertDialog.Builder(getActivity)
+    val (fudanum_s,kimari) = if(fudanum == 0){
+      ((if(Romanization.is_japanese(getActivity)){"序歌"}else{"Joka"}),"---")
+    }else{
+      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,fudanum)
+      val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
+      val k_c = kimari_all.substring(kimari_in_fudaset.length)
+      val html = "<font color=\"#DDA0DD\">"+kimari_cur+"</font><font color=\"#FFFFFF\">"+k_b+"</font><font color=\"#999999\">"+k_c+"</font>"
+      (fudanum.toString,Html.fromHtml(html))
+    }
+    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
+    title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
+    title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
+    val body_view = genContentView()
+    builder
+    .setView(body_view)
+    .setCustomTitle(title_view)
     .setNegativeButton(android.R.string.cancel,null)
-    .setNeutralButton(R.string.yomi_info_search_detail_btn,new DialogInterface.OnClickListener(){
+    .setNeutralButton(R.string.yomi_info_search_detail_title,new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          val dlg = new YomiInfoDetailDialog()
-          dlg.setArguments(getArguments)
-          dlg.show(getActivity.getSupportFragmentManager,"yomi_info_detail")
+          showYomiInfoDetailDialog()
        }
       })
     .create()
@@ -181,7 +238,7 @@ class YomiInfoDetailDialog extends DialogFragment{
     val table = view.findViewById(R.id.kimariji_changelog).asInstanceOf[LinearLayout]
     addKimarijiChangelog(table,fudanum)
     builder
-    .setTitle(getActivity.getString(R.string.yomi_info_search_detail_btn))
+    .setTitle(getActivity.getString(R.string.yomi_info_search_detail_title))
     .setView(view)
     .setPositiveButton(android.R.string.ok,null)
     .create
