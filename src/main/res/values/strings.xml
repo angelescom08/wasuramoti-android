@@ -111,6 +111,9 @@
     <font color="#BBFFBB">Long Press</font>: Show Poem Text Info.
     ]]>
   </string>
+  <string name="yomi_info_caution">The following setting is valid only when device width is wide enough.</string>
+  <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
+  <string name="yomi_info_show_info_button">Show Web Search and Other Buttons. </string>
 
   <string name="yomi_info_search_poem_num">Poem No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>

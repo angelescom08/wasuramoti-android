@@ -5,7 +5,7 @@ import _root_.android.view.{View,LayoutInflater,ViewGroup}
 import _root_.android.widget.{TextView,LinearLayout,Button}
 import _root_.android.os.Bundle
 import _root_.android.net.Uri
-import _root_.android.text.Html
+import _root_.android.text.{Html,Spanned}
 import _root_.android.app.{AlertDialog,SearchManager,Dialog}
 import scala.collection.mutable
 
@@ -20,6 +20,17 @@ object YomiInfoSearchDialog{
     args.putBoolean("is_dialog",is_dialog)
     fragment.setArguments(args)
     return fragment
+  }
+  def getFudaNumAndKimari(context:Context,fudanum:Int):(String,Spanned) ={
+    if(fudanum == 0){
+      ((if(Romanization.is_japanese(context)){"序歌"}else{"Joka"}),Html.fromHtml("---"))
+    }else{
+      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(context,fudanum)
+      val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
+      val k_c = kimari_all.substring(kimari_in_fudaset.length)
+      val html = s"""<font color="#DDA0DD">$kimari_cur</font><font color="#FFFFFF">$k_b</font><font color="#999999">$k_c</font>"""
+      (fudanum.toString,Html.fromHtml(html))
+    }
   }
 }
 
@@ -161,15 +172,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     }
     val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
-    val (fudanum_s,kimari) = if(fudanum == 0){
-      ((if(Romanization.is_japanese(getActivity)){"序歌"}else{"Joka"}),"---")
-    }else{
-      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,fudanum)
-      val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
-      val k_c = kimari_all.substring(kimari_in_fudaset.length)
-      val html = "<font color=\"#DDA0DD\">"+kimari_cur+"</font><font color=\"#FFFFFF\">"+k_b+"</font><font color=\"#999999\">"+k_c+"</font>"
-      (fudanum.toString,Html.fromHtml(html))
-    }
+    val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(getActivity,fudanum)
     val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
     title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
     title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)

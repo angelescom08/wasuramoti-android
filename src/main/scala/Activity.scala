@@ -7,7 +7,7 @@ import _root_.android.util.Base64
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
-import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper}
+import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper,TextView,LinearLayout}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
@@ -243,11 +243,33 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val actionview = getLayoutInflater.inflate(R.layout.actionbar_custom,null)
     actionbar.setCustomView(actionview)
     actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
-    actionview.findViewById(R.id.actionbar_blue_ring).setVisibility(View.INVISIBLE)
+    val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container)
+    if(bar_kima != null &&
+      Utils.showYomiInfo &&
+      Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true) &&
+      Utils.isScreenWide(this)
+    ){
+      bar_kima.setVisibility(View.VISIBLE)
+      actionbar.setDisplayShowTitleEnabled(false)
+    }
 
-    if(findViewById(R.id.yomi_info_search_fragment) != null){
+    val fragv = findViewById(R.id.yomi_info_search_fragment)
+    if(fragv != null && 
+      Utils.showYomiInfo &&
+      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
+    ){
+      fragv.setVisibility(View.VISIBLE)
       val fragment = YomiInfoSearchDialog.newInstance(false,0)
       getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
+    }else if(fragv != null){
+      val rbs = findViewById(R.id.read_button_small)
+      if(rbs != null){
+        val lp = rbs.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+        if(lp != null){
+          lp.weight = 1.0f
+          rbs.setLayoutParams(lp)
+        }
+      }
     }
   }
   def showProgress(){
@@ -283,11 +305,23 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
       yomi_info.invalidateAndScroll()
-      val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
       val yomi_cur = findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
-      if(yomi_dlg != null && yomi_cur != null){
-        yomi_cur.cur_num.foreach{
-          yomi_dlg.setFudanum(_)
+      if(yomi_cur != null){
+        yomi_cur.cur_num.foreach{fudanum =>
+          val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
+          if(yomi_dlg != null && Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
+            yomi_dlg.setFudanum(fudanum)
+          }
+          val cv = getSupportActionBar.getCustomView
+          if(cv!=null && Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)){
+            val v_fn = cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]
+            val v_kima = cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]
+            if(v_fn != null && v_kima != null){
+              val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
+              v_fn.setText(fudanum_s)
+              v_kima.setText(kimari)
+            }
+          }
         }
       }
     }

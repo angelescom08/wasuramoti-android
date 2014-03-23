@@ -45,7 +45,9 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
     val kami = view.findViewById(R.id.yomi_info_kami).asInstanceOf[CheckBox]
     val simo = view.findViewById(R.id.yomi_info_simo).asInstanceOf[CheckBox]
-    (main,furigana,furigana_size,author,kami,simo)
+    val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
+    val show_btn = view.findViewById(R.id.yomi_info_show_info_button).asInstanceOf[CheckBox]
+    (main,furigana,furigana_size,author,kami,simo,show_kimari,show_btn)
   }
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   def getIndexFromValue(value:String,id:Int=ENTRY_VALUE_ID) = {
@@ -59,7 +61,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
+        val (main,furigana,furigana_size,author,kami,simo,show_kimari,show_btn) = getWidgets(view)
         val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
         edit.putString("show_yomi_info",ar(main.getSelectedItemPosition))
         edit.putString("yomi_info_furigana",ar(furigana.getSelectedItemPosition))
@@ -67,6 +69,8 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         edit.putBoolean("yomi_info_author",author.isChecked)
         edit.putBoolean("yomi_info_kami",kami.isChecked)
         edit.putBoolean("yomi_info_simo",simo.isChecked)
+        edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
+        edit.putBoolean("yomi_info_show_info_button",show_btn.isChecked)
         edit.commit
         notifyChangedPublic
       }
@@ -78,7 +82,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     super.onCreateDialogView()
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf, null)
     root_view = Some(view)
-    val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
+    val (main,furigana,furigana_size,author,kami,simo,show_kimari,show_btn) = getWidgets(view)
     val prefs = Globals.prefs.get
     main.setSelection(getIndexFromValue(prefs.getString("show_yomi_info","None")))
     furigana.setSelection(getIndexFromValue(prefs.getString("yomi_info_furigana","None")))
@@ -87,9 +91,11 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
     simo.setChecked(prefs.getBoolean("yomi_info_simo",true))
+    show_kimari.setChecked(prefs.getBoolean("yomi_info_show_bar_kimari",true))
+    show_btn.setChecked(prefs.getBoolean("yomi_info_show_info_button",true))
     
-    val usage_view = view.findViewById(R.id.yomi_info_usage).asInstanceOf[TextView]
-    usage_view.setText(Html.fromHtml(context.getResources.getString(R.string.yomi_info_usage)))
+    //val usage_view = view.findViewById(R.id.yomi_info_usage).asInstanceOf[TextView]
+    //usage_view.setText(Html.fromHtml(context.getResources.getString(R.string.yomi_info_usage)))
 
     // switch visibility when spinner changed
     val layout = view.findViewById(R.id.yomi_info_conf_layout)

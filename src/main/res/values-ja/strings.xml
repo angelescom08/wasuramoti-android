@@ -108,6 +108,9 @@
     <font color="#BBFFBB">長押し</font>: 決まり字などの歌情報の表示
     ]]>
   </string>
+  <string name="yomi_info_caution">以下の設定は端末の幅が一定以上の時のみ有効です．</string>
+  <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
+  <string name="yomi_info_show_info_button">Web検索などのボタンを表示</string>
 
   <string name="yomi_info_search_poem_num">歌番号:</string>
   <string name="yomi_info_search_kimariji">決まり字:</string>

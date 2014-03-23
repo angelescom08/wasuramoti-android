@@ -7,12 +7,63 @@
       android:layout_width="wrap_content" android:layout_height="fill_parent"
       android:weightSum="1.0"
       android:gravity="center"
+      android:layout_alignParentTop="true"
+      android:id="@+id/actionbar_blue_ring_container"
       >
       <ImageView
         android:id="@+id/actionbar_blue_ring"
         android:layout_weight="0.6"
         android:layout_width="wrap_content" android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:visibility="invisible"
         android:src="@drawable/blue_ring" />
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="wrap_content" android:layout_height="fill_parent"
+      android:weightSum="1.0"
+      android:gravity="center"
+      android:layout_alignParentTop="true"
+      android:layout_toRightOf="@id/actionbar_blue_ring_container"
+      android:id="@+id/yomi_info_bar_kimari_container"
+      android:visibility="gone"
+      >
+      <LinearLayout
+        android:layout_width="wrap_content" android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:paddingLeft="7dip"
+        >
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
+          android:orientation="horizontal"
+          android:paddingRight="12dip"
+          >
+          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_search_poem_num"
+            style="?android:attr/textAppearanceMedium"
+            android:textColor="#ff00ccff"
+          />
+          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            style="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
+            android:id="@+id/yomi_info_search_poem_num"
+            android:paddingLeft="4dip"
+          />
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:orientation="horizontal"
+          >
+          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_search_kimariji"
+            style="?android:attr/textAppearanceMedium"
+            android:textColor="#ff00ccff"
+          />
+          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            style="?android:attr/textAppearanceLarge"
+            android:paddingLeft="4dip"
+            android:id="@+id/yomi_info_search_kimariji"
+          />
+        </LinearLayout>
+      </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

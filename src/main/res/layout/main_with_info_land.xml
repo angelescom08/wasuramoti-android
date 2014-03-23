@@ -26,6 +26,7 @@
               android:layout_height="0dp"
               android:background="@android:color/black"
               android:textColor="@android:color/white"
+              android:visibility="gone"
               />
       <Button android:id="@+id/read_button_small"
               android:layout_width="fill_parent"
