@@ -102,13 +102,7 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
 
-  <string name="yomi_info_usage"><![CDATA[
-    <b>[読み句表示時の操作]</b><br>
-    <font color="#BBFFBB">左右にスワイプ</font>: 次/前の札に移動<br>
-    <font color="#BBFFBB">長押し</font>: 決まり字などの歌情報の表示
-    ]]>
-  </string>
-  <string name="yomi_info_caution">以下の設定は端末の幅が一定以上の時のみ有効です．</string>
+  <string name="yomi_info_caution">以下の設定は画面が横向きか大きい端末のみ有効です．小さい端末では読み句を長押しすることで情報を表示できます．</string>
   <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
   <string name="yomi_info_show_info_button">Web検索などのボタンを表示</string>
 
@@ -129,17 +123,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      百首全体におけるこの札の決まり字は「<font color="#DDA0DD">%s</font>」です．
+      百首全体におけるこの札の決まり字は「<font color="#90EE90">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      現在の札セット内での決まり字は「<font color="#DDA0DD">%s</font>」です．
+      現在の札セット内での決まり字は「<font color="#90EE90">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-    「<font color="#BBFFBB">%1$s</font>」が詠まれたことにより，決まり字は「<font color="#DDA0DD">%2$s</font>」になりました．
+    「<font color="#EE90EE">%1$s</font>」が詠まれたことにより，決まり字は「<font color="#90EE90">%2$s</font>」になりました．
     ]]>
   </string>
   <string name="kimariji_changelog_current">これが現在の決まり字です．</string>

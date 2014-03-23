@@ -43,20 +43,3 @@ class PatchedTextView(context:Context, attrs:AttributeSet) extends TextView(cont
     }
   }
 }
-
-// When we use android.widget.ViewFlipper, changing the orientation a lot of times in a short time raises following exception:
-//   java.lang.IllegalArgumentException: Receiver not registered: android.widget.ViewFlipper
-// This bug mainly occurs in Android 2.1, but also seems to occur occasionally in Android >= 2.2
-// This bug is reported in following URL:
-//   https://code.google.com/p/android/issues/detail?id=6191
-
-class SafeViewFlipper(context:Context, attrs:AttributeSet) extends ViewFlipper(context,attrs){
-  override def onDetachedFromWindow(){
-    try{
-      super.onDetachedFromWindow()
-    }catch{
-      case _:IllegalArgumentException =>
-        stopFlipping()
-    }
-  }
-}

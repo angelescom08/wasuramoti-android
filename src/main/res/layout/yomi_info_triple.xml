@@ -5,6 +5,9 @@
   android:fillViewport="true"
   android:scrollbars="none"
   android:contentDescription="yomi_info"
+  android:background="@android:color/black"
+  android:fadingEdge="none"
+  android:requiresFadingEdge="none"
   >
   <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
                 android:id="@+id/yomi_info_double"

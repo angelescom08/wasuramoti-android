@@ -104,13 +104,7 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">Firigana Size:</string>
 
-  <string name="yomi_info_usage"><![CDATA[
-    <b>[User Guide for Poem Text]</b><br>
-    <font color="#BBFFBB">Horizontal Swipe</font>: Next/Previous Poem.<br>
-    <font color="#BBFFBB">Long Press</font>: Show Poem Text Info.
-    ]]>
-  </string>
-  <string name="yomi_info_caution">The following setting is valid only when device width is wide enough.</string>
+  <string name="yomi_info_caution">The following setting is valid only when device is wide enough or in landscape mode. As for small device, you can display it by long pressing the poem text.</string>
   <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
   <string name="yomi_info_show_info_button">Show Web Search and Other Buttons. </string>
 
@@ -131,17 +125,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      Initial Kimariji of this poem is <font color="#DDA0DD">%s</font>.
+      Initial Kimariji of this poem is <font color="#90EE90">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      The Kimariji inside current fudaset is <font color="#DDA0DD">%s</font>.
+      The Kimariji inside current fudaset is <font color="#90EE90">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-      Since <font color="#BBFFBB">%1$s</font> has already been read, the Kimariji was changed to <font color="#DDA0DD">%2$s</font>.
+      Since <font color="#EE90EE">%1$s</font> has already been read, the Kimariji was changed to <font color="#90EE90">%2$s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>

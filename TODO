@@ -1,9 +1,8 @@
 Priority High:
   * Do not fade in/out if fade length is too short.
-  * Use Fragment instead of ViewFlipper.
-    - Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
-    - As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
-      (Need to use fragment first since we have to call setTargetFragment to get the result).
+  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
+  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
+    (Need to use fragment first since we have to call setTargetFragment to get the result).
 
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
@@ -19,14 +18,9 @@ Priority Middle:
   * Add Option: play in arbitrary order
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
-  * Show same view in any dpi/size display (avoid using px unit), and consider about landscape mode. 
-  * Special words such as 'one' 'two' 'red' in fuda sets
   * Split strings.xml since it is too long.
-  * Fuda-otoshi mode
-  * Yomi-fuda mode
   * Able to customize notify timer (add new, set icons)
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
-  * Use other effects in android.media.audiofx.AudioEffect
   * Create Fuda List from camera photo
 
 Priority Low:

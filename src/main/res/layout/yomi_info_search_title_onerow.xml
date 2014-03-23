@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent" android:layout_height="fill_parent"
-  android:orientation="vertical"
-  android:background="#222222"
-  android:paddingTop="7dip"
-  android:paddingBottom="3dip"
-  android:paddingLeft="3dip"
-  android:paddingRight="1dip"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content" android:layout_height="fill_parent"
+  android:gravity="center"
+  android:paddingLeft="7dip"
   >
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
-      android:orientation="horizontal"  >
+    android:orientation="horizontal"
+    android:paddingRight="12dip"
+    >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/yomi_info_search_poem_num"
       style="?android:attr/textAppearanceMedium"

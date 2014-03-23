@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<karuta.hpnpwd.wasuramoti.SafeViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/main_flip"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
->
+              android:orientation="vertical"
+              >
+  <ViewStub
+        android:id="@+id/yomi_info_stub"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75"
+        android:layout="@layout/yomi_info_triple"
+        />
   <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                >
-      <Button android:id="@+id/read_button_large"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:text="Press Here"
-              android:textSize="36dp"
-              android:onClick="onMainButtonClick"
-              android:background="@android:color/black"
-              android:textColor="@android:color/white"
-              android:contentDescription="ReadButton"
-              />
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25" >
+    <ViewStub
+          android:id="@+id/yomi_info_search_stub"
+          android:layout_width="0dp"
+          android:layout_height="fill_parent"
+          android:layout_weight="0.5"
+          android:layout="@layout/yomi_info_fragment" />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5" >
+      <include layout="@layout/main_button" />
+    </FrameLayout>
   </LinearLayout>
-  <include layout="@layout/main_with_info" />
-</karuta.hpnpwd.wasuramoti.SafeViewFlipper>
+</LinearLayout>

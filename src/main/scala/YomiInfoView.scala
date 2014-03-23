@@ -320,11 +320,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
 
-    if(android.os.Build.VERSION.SDK_INT >= 11 && canvas.isHardwareAccelerated){
-      // The default background has gradation when hardware acceleration is turned on
-      // Therefore we have to fill it with black
-      canvas.drawColor(Color.BLACK)
-    } 
     if(Globals.IS_DEBUG){
       val paint_debug = new Paint()
       paint_debug.setStyle(Paint.Style.STROKE)

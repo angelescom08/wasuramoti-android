@@ -24,7 +24,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
     button.setTag(tag)
     button.setText(text)
     val drawable = tag.split("_").head match{
-      case "A.DISPLAY" => R.drawable.ic_action_brightness_high
+      case "A.DISPLAY" => R.drawable.ic_action_brightness_medium
       case "B.SEARCH" => R.drawable.ic_action_web_site
       case "C.KIMARIJI" => R.drawable.ic_action_storage
     }

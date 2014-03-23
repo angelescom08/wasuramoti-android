@@ -3,11 +3,11 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
-import _root_.android.util.Base64
+import _root_.android.util.{Base64,TypedValue}
 import _root_.android.os.{Bundle,Handler,Build}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager}
+import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
-import _root_.android.widget.{ImageView,Button,RelativeLayout,ViewFlipper,TextView,LinearLayout}
+import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
@@ -195,15 +195,18 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   def switchViewAndReloadHandler(){
-    val flipper = findViewById(R.id.main_flip).asInstanceOf[ViewFlipper]
-    val (cn,rb) = if(!Utils.showYomiInfo){
-        (0,R.id.read_button_large)
+    val stub = findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
+    if(Utils.showYomiInfo){
+      stub.inflate()
+      val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
+      read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
     }else{
-        (1,R.id.read_button_small)
+      // Android 2.1 does not ignore ViewStub's layout_weight
+      val lp = stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+      lp.weight = 0.0f
+      stub.setLayoutParams(lp)
     }
-    flipper.setDisplayedChild(cn)
-
-    val read_button = findViewById(rb).asInstanceOf[Button]
+    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     Globals.setButtonText = Some( arg =>
       handler.post(new Runnable(){
         override def run(){
@@ -243,33 +246,30 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val actionview = getLayoutInflater.inflate(R.layout.actionbar_custom,null)
     actionbar.setCustomView(actionview)
     actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
-    val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container)
+    val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container).asInstanceOf[ViewStub]
     if(bar_kima != null &&
       Utils.showYomiInfo &&
       Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true) &&
       Utils.isScreenWide(this)
     ){
-      bar_kima.setVisibility(View.VISIBLE)
+      bar_kima.inflate()
       actionbar.setDisplayShowTitleEnabled(false)
     }
 
-    val fragv = findViewById(R.id.yomi_info_search_fragment)
-    if(fragv != null && 
+    val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
+    if(frag_stub != null && 
       Utils.showYomiInfo &&
-      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
+      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true) &&
+      Utils.isScreenWide(this)
     ){
-      fragv.setVisibility(View.VISIBLE)
+      frag_stub.inflate()
       val fragment = YomiInfoSearchDialog.newInstance(false,0)
       getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
-    }else if(fragv != null){
-      val rbs = findViewById(R.id.read_button_small)
-      if(rbs != null){
-        val lp = rbs.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-        if(lp != null){
-          lp.weight = 1.0f
-          rbs.setLayoutParams(lp)
-        }
-      }
+    }else if(frag_stub != null){
+      // Android 2.1 does not ignore ViewStub's layout_weight
+      val lp = frag_stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+      lp.weight = 0.0f
+      frag_stub.setLayoutParams(lp)
     }
   }
   def showProgress(){
@@ -443,43 +443,43 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   def setLongClickYomiInfoOnResume(){
     for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
       val view = findViewById(id).asInstanceOf[YomiInfoView]
-      view.setOnLongClickListener(
-        new View.OnLongClickListener(){
-          override def onLongClick(v:View):Boolean = {
-            view.cur_num.foreach{num=>
-              val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num.getOrElse(num))
-              dlg.show(getSupportFragmentManager,"yomi_info_search")
-            }
-            return true
-          }
-        }
-      )
-    }
-  }
-  def setLongClickButtonOnResume(){
-    for(id <- Array(R.id.read_button_small,R.id.read_button_large)){
-      val btn = findViewById(id).asInstanceOf[Button]
-      btn.setOnLongClickListener(
-        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+      if(view != null){
+        view.setOnLongClickListener(
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
-              Globals.global_lock.synchronized{
-                if(Globals.is_playing){
-                  Globals.player.foreach{p=>
-                    p.stop()
-                    moveToNextFuda()
-                    doPlay(false)
-                  }
-                }
+              view.cur_num.foreach{num=>
+                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num.getOrElse(num))
+                dlg.show(getSupportFragmentManager,"yomi_info_search")
               }
               return true
             }
           }
-        }else{
-          null
-        }
-      )
+        )
+      }
     }
+  }
+  def setLongClickButtonOnResume(){
+    val btn = findViewById(R.id.read_button).asInstanceOf[Button]
+    btn.setOnLongClickListener(
+      if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+        new View.OnLongClickListener(){
+          override def onLongClick(v:View):Boolean = {
+            Globals.global_lock.synchronized{
+              if(Globals.is_playing){
+                Globals.player.foreach{p=>
+                  p.stop()
+                  moveToNextFuda()
+                  doPlay(false)
+                }
+              }
+            }
+            return true
+          }
+        }
+      }else{
+        null
+      }
+    )
   }
 }
 
