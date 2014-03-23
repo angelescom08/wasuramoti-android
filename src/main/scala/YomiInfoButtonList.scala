@@ -10,7 +10,7 @@ import _root_.android.graphics.Color
 
 object YomiInfoButtonList{
   abstract class OnClickListener{
-    def onClick(btn:Button,tag:String)
+    def onClick(btn:View,tag:String)
   }
 }
 
@@ -23,9 +23,16 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
     val button = new Button(context)
     button.setTag(tag)
     button.setText(text)
+    val drawable = tag.split("_").head match{
+      case "A.DISPLAY" => R.drawable.ic_action_brightness_high
+      case "B.SEARCH" => R.drawable.ic_action_web_site
+      case "C.KIMARIJI" => R.drawable.ic_action_storage
+    }
+    val img = context.getResources.getDrawable(drawable)
+    button.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
     button.setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
-          m_on_click_listener.onClick(v.asInstanceOf[Button],tag)
+          m_on_click_listener.onClick(v,tag)
         }
       })
     button
@@ -37,11 +44,6 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
         val lay = new TableRow(context)
         for((text,tag)<-ar if ! TextUtils.isEmpty(text)){
           val button = genButton(tag,text)
-          if(Utils.isLandscape(context) && Utils.isScreenNormal(context)){
-            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14)
-            button.setMaxLines(2)
-            button.setText(button.getText.toString.replace(" by ","\n"))
-          }
           val params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
           lay.addView(button,params)
         }

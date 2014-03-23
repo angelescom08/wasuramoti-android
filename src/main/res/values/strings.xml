@@ -8,7 +8,6 @@
   <string name="button_cancel">Cancel</string>
   <string name="button_help">Help</string>
   <string name="button_config">Config</string>
-  <string name="button_invert"><![CDATA[&spades;]]></string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
   <string name="now_searching">Searching</string>
@@ -118,13 +117,13 @@
   <string name="yomi_info_search_poem_num">Poem No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>
   <string-array name="yomi_info_search_array">
-    <item>A.DISPLAY_KAMI|Show 1st Half</item>
-    <item>A.DISPLAY_SIMO|Show 2nd Half</item>
-    <item>A.DISPLAY_AUTHOR|Show Author</item>
-    <item>A.DISPLAY_FURIGANA|Show Furigana</item>
-    <item>B.SEARCH_TEXT|Web Search by Poem Text</item>
-    <item>B.SEARCH_AUTHOR|Web Search by Author</item>
-    <item>C.KIMARIJI_LOG|Kimariji Log</item>
+    <item>A.DISPLAY_KAMI|1st Half</item>
+    <item>A.DISPLAY_SIMO|2nd Half</item>
+    <item>A.DISPLAY_AUTHOR|Author</item>
+    <item>A.DISPLAY_FURIGANA|Furigana</item>
+    <item>B.SEARCH_TEXT|Poem Text</item>
+    <item>B.SEARCH_AUTHOR|Author</item>
+    <item>C.KIMARIJI_LOG|Kimariji</item>
   </string-array>
   <string name="yomi_info_search_detail_title">Kimariji Log</string>
   <string name="kimariji_changelog_joka">

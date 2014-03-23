@@ -96,9 +96,6 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     )
     setContentView(R.layout.fudasetedit_list)
     setTitle(R.string.button_fudasetedit_list)
-    findViewById(R.id.button_invert).asInstanceOf[Button].setText(
-      Html.fromHtml(context.getString(R.string.button_invert))
-    )
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     addItemsToListView()
     val get_num_list = ()=> {

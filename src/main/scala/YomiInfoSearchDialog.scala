@@ -40,7 +40,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
-        val b = btnlist.findViewWithTag("A.DISPLAY_" + t).asInstanceOf[Button]
+        val b = btnlist.findViewWithTag("A.DISPLAY_" + t)
         if(b != null){
           b.setEnabled(true)
         }
@@ -127,7 +127,7 @@ class YomiInfoSearchDialog extends DialogFragment{
       }
     }
     btnlist.setOnClickListener(new YomiInfoButtonList.OnClickListener(){
-        override def onClick(btn:Button,tag:String){
+        override def onClick(btn:View,tag:String){
           if(tag == "C.KIMARIJI_LOG"){
             showYomiInfoDetailDialog()
           }else if(tag.startsWith("B.SEARCH_")){
