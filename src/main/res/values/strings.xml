@@ -115,7 +115,7 @@
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
     <item>A.DISPLAY_FURIGANA|Furigana</item>
-    <item>B.SEARCH_TEXT|Poem Text</item>
+    <item>B.SEARCH_TEXT|Poem</item>
     <item>B.SEARCH_AUTHOR|Author</item>
     <item>C.KIMARIJI_LOG|Kimariji</item>
   </string-array>
@@ -125,7 +125,7 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      Initial Kimariji of this poem is <font color="#90EE90">%s</font>.
+      Original Kimariji of this poem is <font color="#90EE90">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">

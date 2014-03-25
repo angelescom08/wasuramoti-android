@@ -3,7 +3,7 @@ import _root_.android.content.Context
 import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.text.TextUtils
 import _root_.android.widget.HorizontalScrollView
-import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect}
+import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
 import _root_.android.util.{Log,AttributeSet}
 import _root_.android.os.CountDownTimer
 
@@ -155,6 +155,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
         scrollTo(x,0)
       }
       cur_view = Some(id)
+      getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
     }
   }
 
@@ -163,6 +164,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
   var screen_range_main:Rect = null
   var screen_range_furi:Rect = null
+
+  var render_with_path = false
 
   val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from right to left, rate of view height
   val MARGIN_AUTHOR = Array(0.09,0.13) // rate of view height
@@ -192,29 +195,34 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   var cur_num = None:Option[Int]
 
   // This does not include span height
-  def measureBoundOneLine(str:String,paint:Paint):(Int,Int) = {
-    var w = 0
-    var h = 0
+  def measureBoundOneLine(str:String,paint:Paint):(Int,Int,Int) = {
+    var wchar = 0
+    var hchar = 0
+    var hline = 0
     for(s <- str){
       val r = new Rect()
       paint.getTextBounds(s.toString,0,1,r)
-      w = Math.max(w, r.right - r.left + 1)
-      h += (r.bottom - r.top + 1)
+      wchar = Math.max(wchar, r.right - r.left + 1)
+      val h = r.bottom - r.top + 1
+      hchar = Math.max(hchar,h)
+      hline += h
     }
-    (w,h)
+    (wchar,hchar,hline)
   }
 
-  def measureBoundAve(text_array:Array[String],paint:Paint):(Int,Int) = {
+  def measureBoundAve(text_array:Array[String],paint:Paint):(Int,Int,Int) = {
     val ar = text_array.map{measureBoundOneLine(_,paint)}
     val w_ave = ar.map{_._1}.sum / ar.length
     val h_ave = ar.map{_._2}.sum / ar.length
-    (w_ave,h_ave)
+    val hh_ave = ar.map{_._3}.sum / ar.length
+    (w_ave,h_ave,hh_ave)
   }
-  def measureBoundMax(text_array:Array[String],paint:Paint):(Int,Int) = {
+  def measureBoundMax(text_array:Array[String],paint:Paint):(Int,Int,Int) = {
     val ar = text_array.map{measureBoundOneLine(_,paint)}
     val w_max = ar.map{_._1}.max.toInt
     val h_max = ar.map{_._2}.max.toInt
-    (w_max,h_max)
+    val hh_max = ar.map{_._3}.max.toInt
+    (w_max,h_max,hh_max)
   }
 
   // Typeface of paint must be set before calling this function
@@ -224,13 +232,13 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     val estimate_size = getWidth / text_array_with_margin.length
     paint.setTextSize(estimate_size)
     val bounds = (for((t,m)<-text_array_with_margin)yield(measureBoundOneLine(t,paint)))
-    val r1 = (for(((w,h),(t,m)) <- bounds.zip(text_array_with_margin))yield{
+    val r1 = (for(((w,_,h),(t,m)) <- bounds.zip(text_array_with_margin))yield{
       val ya = (1-m-MARGIN_BOTTOM)*getHeight.toFloat
       val yb = h + (t.length-1) * SPACE_V * estimate_size;
       ya / yb
     }).min
     val xa = (1-MARGIN_LR*2-text_array_with_margin.length*space_h)*getWidth.toFloat
-    val xb = bounds.map{case(w,h)=>w}.sum
+    val xb = bounds.map{case(w,_,h)=>w}.sum
     val r2 = xa / xb
     (Math.min(r1,r2)*estimate_size).toInt
   }
@@ -252,7 +260,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     var new_furigana_bottom = prev_furigana_bottom
     if(show_furigana && !TextUtils.isEmpty(furigana)){
       val span_v = (paint_furigana.getTextSize*SPACE_V_FURIGANA).toInt
-      val (_,this_height_wo) = measureBoundOneLine(furigana,paint_furigana)
+      val (_,_,this_height_wo) = measureBoundOneLine(furigana,paint_furigana)
       val this_height = this_height_wo + (furigana.length-1)*span_v
       val candidate_y1 = starty+height/2-this_height.toInt/2
       val candidate_y2 = (getHeight*(1-FURIGANA_BOTTOM_LIMIT)).toInt - this_height
@@ -273,7 +281,14 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       paint.getTextBounds(t.toString,0,1,r)
       width = Math.max(r.right-r.left,width)
       val yy = (y - r.top).toInt
-      canvas.drawText(t.toString,startx,yy,paint)
+      if(render_with_path){
+        val path = new Path()
+        paint.getTextPath(t.toString,0,1,startx,yy,path)
+        path.close
+        canvas.drawPath(path,paint)
+      }else{
+        canvas.drawText(t.toString,startx,yy,paint)
+      }
       y += r.bottom - r.top + span
       if(Globals.IS_DEBUG){
         val paint_debug = new Paint()
@@ -385,10 +400,21 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       val space_h = SPACE_H * space_boost1 * space_boost2 * space_boost3
 
       val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
-      var text_size = calculateTextSize(no_furigana,paint,space_h)
+      val text_size = calculateTextSize(no_furigana,paint,space_h)
       paint.setTextSize(text_size)
-      val (actual_width_ave,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
-      val (actual_width_max,_) = measureBoundMax(no_furigana.map{case(t,m)=>t},paint)
+
+      val (actual_width_ave,_,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
+      val (actual_width_max,height_char_max,_) = measureBoundMax(no_furigana.map{case(t,m)=>t},paint)
+      
+      // When hardware acceleration is enabled, trying to render big text causes exception:
+      //  E/OpenGLRenderer(16754): Font size too large to fit in cache. width, height = ...
+      // Reading libs/hwui/FontRenderer.cpp we found that this occurs when following equation holds:
+      //  glyph.fHeight + TEXTURE_BORDER_SIZE * 2 > DEFAULT_TEXT_LARGE_CACHE_HEIGHT
+      //    where TEXTURE_BORDER_SIZE = 1 and DEFAULT_TEXT_LARGE_CACHE_HEIGHT = 512
+      // so we use getTextPath and drawPath instead of drawText when this equation holds.
+      // Note: since height_char_max is not accurate, we consider the threshold a litte bit smaller.
+      render_with_path = height_char_max >= 496
+
       val span_h = space_h*getWidth
       var rowspan = (span_h+actual_width_ave).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
@@ -397,7 +423,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
         val furisize_tmp = (getWidth/text_array_with_margin.length)/4 // this must be close to result text size
         paint_furigana.setTextSize(furisize_tmp)
         val only_furigana = text_array_with_margin.map{case(t,m)=>AllFuda.onlyInsideParens(t)}
-        val (actual_width_furigana,furigana_height_max) = measureBoundMax(only_furigana,paint_furigana)
+        val (actual_width_furigana,_,furigana_height_max) = measureBoundMax(only_furigana,paint_furigana)
         val actual_ratio_furigana = furisize_tmp / actual_width_furigana.toFloat
         val candidate_w = span_h.toFloat*actual_ratio_furigana*furigana_ratio.toFloat*FURIGANA_RATIO_DEFAULT
 

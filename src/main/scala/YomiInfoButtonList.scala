@@ -4,7 +4,7 @@ import _root_.android.widget.{Button,TableLayout,TableRow}
 import _root_.android.util.{AttributeSet,TypedValue}
 import _root_.android.content.Context
 import _root_.android.text.TextUtils
-import _root_.android.view.{View,ViewGroup,Gravity}
+import _root_.android.view.{View,ViewGroup,Gravity,LayoutInflater}
 import _root_.android.graphics.Color
 
 
@@ -20,7 +20,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
     m_on_click_listener = listener
   }
   def genButton(tag:String,text:String):Button = {
-    val button = new Button(context)
+    val button = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_button,null).asInstanceOf[Button]
     button.setTag(tag)
     button.setText(text)
     val drawable = tag.split("_").head match{
@@ -41,7 +41,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
 
     if(Utils.isScreenWide(context)){
       for(ar<-text_and_tags.grouped(2)){
-        val lay = new TableRow(context)
+        val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[TableRow]
         for((text,tag)<-ar if ! TextUtils.isEmpty(text)){
           val button = genButton(tag,text)
           val params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)

@@ -3,13 +3,16 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="horizontal"
+              android:background="#222222"
               >
   <ViewStub
         android:id="@+id/yomi_info_stub"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="0.6"
-        android:layout="@layout/yomi_info_triple" />
+        android:layout="@layout/yomi_info_triple"
+        android:layout_marginRight="3dp"
+        />
   <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="0.4"
@@ -22,11 +25,14 @@
           android:layout_width="fill_parent"
           android:layout_height="0dp"
           android:layout_weight="0.5"
-          android:layout="@layout/yomi_info_fragment" />
+          android:layout="@layout/yomi_info_fragment"
+          android:layout_marginBottom="3dp"
+          />
     <FrameLayout
           android:layout_width="fill_parent"
           android:layout_height="0dp"
-          android:layout_weight="0.5" >
+          android:layout_weight="0.5"
+          >
       <include layout="@layout/main_button" />
     </FrameLayout>
   </LinearLayout>
