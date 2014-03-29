@@ -11,18 +11,14 @@ class MovePositionDialog extends DialogFragment{
   var numbers_to_read = 0
   var current_index = 0
   def setTitleWithNum(dialog:Option[Dialog]=None){
-    val title = getActivity.getString(R.string.move_position_title) + ": " + current_index + " / " + numbers_to_read
+    val (index_s,total_s) = Utils.makeDisplayedNum(current_index,numbers_to_read)
+    val title = getActivity.getString(R.string.move_position_title) + ": " + index_s + " / " + total_s
     dialog.getOrElse(getDialog).setTitle(title)
   }
   def incCurrentIndex(dx:Int){
-    val n = current_index + dx
-    current_index = if( n < 1 ){
-      1
-    }else if( n > numbers_to_read){
-      numbers_to_read
-    }else{
-      n
-    }
+    val offset = if(Utils.readFirstFuda){ 0 } else { 1 }
+    val (n,total_s) = Utils.makeDisplayedNum(current_index+dx,numbers_to_read)
+    current_index = Math.min(Math.max(n,1),total_s) + offset
     setTitleWithNum()
   }
   def setOnClick(view:View,id:Int,func:Unit=>Unit){
@@ -44,7 +40,7 @@ class MovePositionDialog extends DialogFragment{
       numbers_to_read = savedState.getInt("numbers_to_read",0)
       current_index = savedState.getInt("current_index",0)
     }else{
-      numbers_to_read = FudaListHelper.getOrQueryNumbersToRead(getActivity)
+      numbers_to_read = FudaListHelper.getOrQueryNumbersToReadAlt(getActivity)
       current_index = FudaListHelper.getOrQueryCurrentIndexWithSkip(getActivity)
     }
     val builder = new AlertDialog.Builder(getActivity)

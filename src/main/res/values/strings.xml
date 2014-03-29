@@ -161,8 +161,8 @@
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>
     <item>CUR2_NEXT1_NEXT2</item>
-    <item>NEXT1_NEXT2</item>
-    <item>NEXT1_NEXT2_NEXT2</item>
+    <item>CUR1_CUR2</item>
+    <item>CUR1_CUR2_CUR2</item>
     <item>CUR2_NEXT2</item>
   </string-array>
 
@@ -293,6 +293,7 @@
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
   <string name="message_karafuda_num">Karafuda: %d</string>
   <string name="message_readindex_random">Random / %d</string>
+  <string name="message_readindex_done">Done: %d</string>
 
   <string name="fudaset_title_all">All Poem</string>
   <string name="fudaset_title_one">Unique First Syllables</string>

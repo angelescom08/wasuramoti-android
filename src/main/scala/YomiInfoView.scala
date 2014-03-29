@@ -125,32 +125,27 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     scrollToView(R.id.yomi_info_view_cur,false)
   }
 
-  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false){
+  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[Unit=>Unit]=None){
     val v = findViewById(id).asInstanceOf[YomiInfoView]
     if(v!=null){
       val x = v.getLeft
       val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
-      if(smooth){
-        scrollAnimation(x,
-          _=>
+      val func = do_after_done.getOrElse(
+          {_:Unit=>
             if(have_to_move){
               val wa = context.asInstanceOf[WasuramotiActivity]
               wa.cancelAllPlay()
               v.cur_num.foreach{ cn =>
                 FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
-                  if(Utils.readCurNext(context)){
-                    FudaListHelper.putCurrentIndex(context,index)
-                  }else{
-                    FudaListHelper.queryPrevOrNext(context,index,false).foreach{ x=>
-                      FudaListHelper.putCurrentIndex(context,x._4)
-                    }
-                  }
+                  FudaListHelper.putCurrentIndex(context,index)
                 }
               }
               wa.refreshAndSetButton()
               wa.invalidateYomiInfo()
             }
-        )
+          })
+      if(smooth){
+        scrollAnimation(x,func)
       }else{
         scrollTo(x,0)
       }
@@ -311,15 +306,12 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   }
 
   def updateCurNum(){
-    var fn = getId match {
+    val fn = getId match {
       case R.id.yomi_info_view_prev => -1
       case R.id.yomi_info_view_next => 1
       case _ => 0
     }
-    if(!Utils.readCurNext(context)){
-      fn += 1
-    }
-    cur_num = if(Utils.isRandom && (Array(2,-1).contains(fn) || !Utils.readCurNext(context) && fn == 0)){
+    cur_num = if(Utils.isRandom && fn == -1){
       None
     }else{
       FudaListHelper.getOrQueryFudaNumToRead(context,fn)

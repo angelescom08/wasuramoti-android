@@ -25,7 +25,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 3
-  val PREFERENCE_VERSION = 2
+  val PREFERENCE_VERSION = 3
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -62,9 +62,21 @@ object Utils {
       if(Globals.prefs.isEmpty){
         Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
       }
-      if(Globals.prefs.get.getInt("preference_version",0) < Globals.PREFERENCE_VERSION){
+      val prev_version = Globals.prefs.get.getInt("preference_version",0)
+      if(prev_version < Globals.PREFERENCE_VERSION){
         PreferenceManager.setDefaultValues(app_context,R.xml.conf,true)
         val edit = Globals.prefs.get.edit
+        if(prev_version <= 2){
+          val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+          val new_roe = roe match {
+            case "NEXT1_NEXT2" => "CUR1_CUR2"
+            case "NEXT1_NEXT2_NEXT2" => "CUR1_CUR2_CUR2"
+            case _ => roe
+          }
+          if(roe != new_roe){
+            edit.putString("read_order_each",new_roe)
+          }
+        }
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()
       }
@@ -111,12 +123,29 @@ object Utils {
 
   def readCurNext(context:Context):Boolean = {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    val is_joka = FudaListHelper.getCurrentIndex(context)  == 0 && readJoka
+    (is_joka || roe.contains("CUR")) && roe.contains("NEXT")
+  }
+  def readJoka():Boolean = {
     val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+    roj != "upper_0,lower_0" 
+  }
+  def readFirstFuda():Boolean = {
+    val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    roe.contains("NEXT") || readJoka
+  }
 
-    roe.startsWith("CUR") ||
-    (
-      FudaListHelper.getCurrentIndex(context)  == 0 && roj != "upper_0,lower_0"
-    )
+  def incTotalRead():Int = {
+    val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    if(roe.contains("CUR") && roe.contains("NEXT")){
+     0
+    }else{
+     1
+    }
+  }
+  def makeDisplayedNum(index:Int,total:Int):(Int,Int) = {
+    val dx = if(Utils.readFirstFuda){ 0 } else { 1 }
+    (index-dx,total-dx)
   }
 
   def findAncestorViewById(v:View,id:Int):Option[View] = {

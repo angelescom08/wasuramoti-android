@@ -106,7 +106,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       case e:NoClassDefFoundError => None
     }
   }
-  def play(bundle:Bundle){
+  def play(bundle:Bundle,auto_play:Boolean=false){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -121,6 +121,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(Utils.showYomiInfo){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
+        }else if(auto_play){
+          activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({_:Unit => activity.invalidateYomiInfo()}))
         }else{
           activity.invalidateYomiInfo()
         }
@@ -136,7 +138,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def getFirstDecoder():OggVorbisDecoder = {
     waitDecode()
-    audio_queue.find{_.isLeft}.get match{case Left(w)=>w.decoder}
+    audio_queue.find{_.isLeft} match{
+      case Some(x) => x match{
+        case Left(w)=>w.decoder
+        case Right(_) => throw new AudioQueueEmptyException("")// never happen
+      }
+      case None => throw new AudioQueueEmptyException("")
+    }
   }
 
   def doWhenStop(){
@@ -180,6 +188,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             })
             return
           }
+        case e:AudioQueueEmptyException => {
+          stop()
+          Utils.setButtonTextByState(activity.getApplicationContext())
+          return
+        }
       }
     
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
@@ -344,7 +357,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
           } ++ ss.filter(_.startsWith("NEXT"))
         }
-        if(is_last_fuda && !read_order_each.endsWith("NEXT2")){
+        if(is_last_fuda && read_order_each.endsWith("NEXT1")){
           ss ++= Array("NEXT2")
         }
         for (i <- 0 until ss.length ){
@@ -376,7 +389,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }catch{
               // Some device throws 'No space left on device' here
               case e:java.io.IOException => {
-                if(Option(e.getMessage).getOrElse("").indexOf("No space left on device") >= 0){
+                if(Option(e.getMessage).getOrElse("").contains("No space left on device")){
                   activity.runOnUiThread(new Runnable{
                       override def run(){
                         val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
@@ -401,5 +414,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
     }
   }
+}
+
+class AudioQueueEmptyException(s:String) extends Exception(s){
 }
 

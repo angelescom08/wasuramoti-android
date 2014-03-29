@@ -29,6 +29,7 @@ for f in "${READER_ASSETS}"/*; do
     unlink "${f}"
   fi
 done
+mkdir -p "${READER_ASSETS}"
 ln -s "${READER_DIR}"/$1 "${READER_ASSETS}"
 cd ${ROOT}
 

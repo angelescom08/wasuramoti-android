@@ -338,13 +338,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def scrollYomiInfo(id:Int,smooth:Boolean){
+  def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[Unit=>Unit]=None){
     if(!Utils.showYomiInfo){
       return
     }
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
-      yomi_info.scrollToView(id,smooth)
+      yomi_info.scrollToView(id,smooth,false,do_after_done)
     }
 
   }
@@ -381,6 +381,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         p.activity = this
       }
       if(Globals.player.isEmpty || Globals.forceRefresh){
+        if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
+          FudaListHelper.moveToFirst(this)
+        }
         Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
       }
       Utils.setButtonTextByState(getApplicationContext())
@@ -543,7 +546,7 @@ trait MainButtonTrait{
         // the actual wait_time should be shorter.
         val wait_time = Math.max(100,Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0 - Globals.HEAD_SILENCE_LENGTH)
         bundle.putLong("wait_time",wait_time.toLong)
-        player.play(bundle)
+        player.play(bundle,auto_play)
       }
     }
   }

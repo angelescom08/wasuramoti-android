@@ -36,7 +36,12 @@ object FudaListHelper{
   }
 
   def moveToFirst(context:Context){
-    queryNext(context, 0).foreach(
+    val fst = if(Utils.readFirstFuda){
+      0
+    }else{
+      1
+    }
+    queryNext(context, fst).foreach(
       {case (_,_,first_index,_) => putCurrentIndex(context,first_index)}
     )
   }
@@ -54,15 +59,25 @@ object FudaListHelper{
   }
 
   def makeReadIndexMessage(context:Context):String = {
-    val num_to_read = new java.lang.Integer(getOrQueryNumbersToRead(context))
+    val num_to_read = getOrQueryNumbersToReadAlt(context)
     val num_of_kara = getOrQueryNumbersOfKarafuda(context)
     val body = if(Utils.isRandom){
-      context.getResources.getString(R.string.message_readindex_random,num_to_read)
+      context.getResources.getString(R.string.message_readindex_random,
+        new java.lang.Integer(num_to_read)
+      )
     }else{
-      val current_index = new java.lang.Integer(getOrQueryCurrentIndexWithSkip(context))
-      context.getResources.getString(R.string.message_readindex_shuffle,current_index,num_to_read)
+      val current_index = getOrQueryCurrentIndexWithSkip(context)
+      val (index_s,total_s) = Utils.makeDisplayedNum(current_index,num_to_read)
+      if(current_index > num_to_read){
+        context.getResources.getString(R.string.message_readindex_done,
+          new java.lang.Integer(total_s))
+      }else{
+        context.getResources.getString(R.string.message_readindex_shuffle,
+          new java.lang.Integer(index_s),
+          new java.lang.Integer(total_s))
+      }
     }
-    (if(num_to_read == AllFuda.list.size && num_of_kara == 0){
+    (if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
       ""
     }else{
       Globals.prefs.get.getString("fudaset","") + "\n"
@@ -78,7 +93,7 @@ object FudaListHelper{
     if(Utils.isRandom){
       false
     }else{
-      getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToRead(context)
+      getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToReadAlt(context)
     }
   }
 
@@ -86,7 +101,7 @@ object FudaListHelper{
     if(Utils.isRandom){
       false
     }else{
-      getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToRead(context)
+      getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToReadAlt(context)
     }
   }
 
@@ -108,7 +123,11 @@ object FudaListHelper{
     val index = cursor.getInt(0)
     cursor.close()
     //db.close()
-    return(index)
+    if(current_index == AllFuda.list.length + 1){
+      return(index+1)
+    }else{
+      return(index)
+    }
   }
   def queryPrevOrNext(context:Context,index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
@@ -118,8 +137,10 @@ object FudaListHelper{
       cursor.moveToFirst()
       val simo_num = cursor.getInt(0)
       val simo_order = cursor.getInt(1)
-      if(current_only){
-        return Some((simo_num,-1,simo_order,-1))
+      val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+      if(current_only || (is_next && cursor.getCount == 1 && !roe.contains("NEXT"))){
+        val maxn = AllFuda.list.length + 1
+        return Some((simo_num,maxn,simo_order,maxn))
       }
       cursor.moveToNext()
       val kami_num = cursor.getInt(0)
@@ -152,12 +173,6 @@ object FudaListHelper{
 
   def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(context,index,true)
-  }
-  def queryNext2(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
-    // TODO: do it in one query
-    queryNext(context,index).flatMap{case(_,_,_,x)=>
-      queryNext(context,x)
-    }
   }
   def queryPrev(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(context,index,false)
@@ -351,6 +366,10 @@ object FudaListHelper{
       r
     }
   }
+  def getOrQueryNumbersToReadAlt(context:Context):Int = {
+    val r = getOrQueryNumbersToRead(context)
+    r + Utils.incTotalRead()
+  }
   def getOrQueryNumbersOfKarafuda(context:Context):Int = {
     numbers_of_karafuda.getOrElse{
       val r = queryNumbersToRead(context,"= -1")
@@ -359,7 +378,7 @@ object FudaListHelper{
     }
   }
   def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[Int] = {
-    offset match{
+    val r = offset match{
       case 0 =>
         if(!Globals.player.isEmpty){
           Some(Globals.player.get.cur_num)
@@ -374,14 +393,18 @@ object FudaListHelper{
           val current_index = getCurrentIndex(context)
           queryNext(context, current_index).map{_._2}
         }
-      case 2 =>
-        val current_index = getCurrentIndex(context)
-        queryNext2(context, current_index).map{_._2}
       case -1 =>
         val current_index = getCurrentIndex(context)
         queryPrev(context, current_index).map{_._2}
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)
+    }
+    if(r == Some(AllFuda.list.length + 1) ||
+      ! Utils.readFirstFuda && r == Some(0)
+    ){
+      None
+    }else{
+      r
     }
   }
 }

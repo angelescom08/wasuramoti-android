@@ -35,14 +35,16 @@
       sbt 0.12.1 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
       sbt-android-plugin 0.7.1-SNAPSHOT (https://github.com/jberkel/android-plugin)
-    # downloaded from official Android SDK site and SDK manager
-      Android SDK v18
-      Android NDK v7
-      Android Support Library & Android Support Repository v19.0.1
+    # downloaded from official Android SDK/NDK site and Android SDK manager
+      Android SDK v18 (https://developer.android.com/sdk/index.html#download)
+      Android NDK v9 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)
+      Android Support Library & Android Support Repository v19.0.1 (Extras in Android SDK manager)
   Where to place keystore:
     sbt-android-plugin 0.7.1-SNAPSHOT requires keystore files to be placed in ~/.keystore
   How to build:
-    ./scripts/make_package.sh <reader>
+    1. set environment variable ANDROID_SDK_HOME,ANDROID_NDK_HOME to path where you installed Android SDK/NDK.
+    2. execute $ cd src/main/jni/libogg-1.3.0 && configure ( this will generate config.h )
+    3. in this directory, execute $ ./scripts/make_package.sh <reader>
 
 [How to Install apk file]
   You can install apk file by running a command `adb install wasuramoti-*.apk'.

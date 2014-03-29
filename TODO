@@ -14,7 +14,7 @@ Priority High:
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Full Screen Mode
   * Change Color Theme
-
+  * Show Poem Text not only yomi fuda but also tori fuda
 
 Priority Middle:
   * Add Option: play in arbitrary order

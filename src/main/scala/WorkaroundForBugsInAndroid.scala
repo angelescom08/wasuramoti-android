@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.android.content.Context
-import _root_.android.widget.{TextView,ViewFlipper}
+import _root_.android.widget.TextView
 import _root_.android.util.AttributeSet
 
 // Android 4.1 and 4.1.1 has following bug:

@@ -75,7 +75,7 @@
   <string name="category_order">順番</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
-  <string name="yomi_info_main_desc">読み句:</string>
+  <string name="yomi_info_main_desc">詠み句:</string>
   <string name="yomi_info_furigana_desc">ふりがな:</string>
   <string name="yomi_info_display_desc">表示:</string>
   <string name="yomi_info_author_desc">歌人</string>
@@ -102,7 +102,7 @@
   </string-array>
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
 
-  <string name="yomi_info_caution">以下の設定は画面が横向きか大きい端末のみ有効です．小さい端末では読み句を長押しすることで情報を表示できます．</string>
+  <string name="yomi_info_caution">以下の設定は画面が横向きか大きい端末のみ有効です．小さい端末では詠み句を長押しすることで情報を表示できます．</string>
   <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
   <string name="yomi_info_show_info_button">Web検索などのボタンを表示</string>
 
@@ -113,7 +113,7 @@
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>
     <item>A.DISPLAY_FURIGANA|ふりがな</item>
-    <item>B.SEARCH_TEXT|読み句</item>
+    <item>B.SEARCH_TEXT|詠み句</item>
     <item>B.SEARCH_AUTHOR|歌人</item>
     <item>C.KIMARIJI_LOG|決まり字</item>
   </string-array>
@@ -186,7 +186,7 @@
   <string name="conf_silent_mode_on_start">マナーモード</string>
   <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_hardware_accelerate">GPUレンダリング</string>
-  <string name="conf_hardware_accelerate_summary">読み句の描画が滑らかになるが，メモリ使用量が微増する</string>
+  <string name="conf_hardware_accelerate_summary">詠み句の描画が滑らかになるが，メモリ使用量が微増する</string>
   <string name="conf_hardware_accelerate_restart_confirm">GPUレンダリングの設定変更を反映するにはアプリを再起動する必要があります．いますぐ再起動しますか？</string>
   <!-- CATEGORY_PROCESSINNG -->
   <string name="category_processing">音声処理</string>
@@ -277,6 +277,7 @@
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
   <string name="message_karafuda_num">空札 %d枚</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
+  <string name="message_readindex_done">完了: %d 首</string>
 
   <string name="fudaset_title_all">全部の札</string>
   <string name="fudaset_title_one">一字札</string>
@@ -309,5 +310,5 @@
   <string name="confirm_action_view_fudaset_done">札セットを%dつ追加しました．</string>
   <string name="confirm_action_view_fudaset_fail">札セット群を取り込むのに失敗しました．</string>
 
-  <string name="cannot_load_vorbis_library">Vorbisライブラリの読込み失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
+  <string name="cannot_load_vorbis_library">Vorbisライブラリのロード失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
 </resources>
