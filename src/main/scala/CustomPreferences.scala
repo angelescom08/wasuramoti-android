@@ -2,7 +2,6 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.preference.DialogPreference
 import _root_.android.content.Context
 import _root_.android.util.AttributeSet
-import _root_.android.text.Html
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Spinner,AdapterView}
 import _root_.android.media.AudioManager
@@ -94,9 +93,6 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     show_kimari.setChecked(prefs.getBoolean("yomi_info_show_bar_kimari",true))
     show_btn.setChecked(prefs.getBoolean("yomi_info_show_info_button",true))
     
-    //val usage_view = view.findViewById(R.id.yomi_info_usage).asInstanceOf[TextView]
-    //usage_view.setText(Html.fromHtml(context.getResources.getString(R.string.yomi_info_usage)))
-
     // switch visibility when spinner changed
     val layout = view.findViewById(R.id.yomi_info_conf_layout)
     val f = (pos:Int) => {

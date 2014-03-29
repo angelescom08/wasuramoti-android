@@ -1,162 +1,44 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.content.Context
-import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
+import _root_.android.view.View
 import _root_.android.text.TextUtils
-import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
 import _root_.android.util.{Log,AttributeSet}
-import _root_.android.os.CountDownTimer
 
 import scala.collection.mutable
 
-object TypefaceManager{
-  val cache = new mutable.HashMap[String,Typeface]()
-  def get(context:Context,conf:String):Typeface = {
-    if(conf.startsWith("asset:")){
-      cache.getOrElse(conf,
-        try{
-          val t = Typeface.createFromAsset(context.getAssets,"font/"+conf.substring(6))
-          cache.put(conf,t)
-          t
-        }catch{
-          case _:Throwable => Typeface.DEFAULT
-        })
+class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait{
+  // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
+  // `Don't create render objects in draw methods`
+  val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
+  paint.setColor(Color.WHITE)
+  var cur_num = None:Option[Int]
+  def updateCurNum(){
+    val fn = getId match {
+      case R.id.yomi_info_view_prev => -1
+      case R.id.yomi_info_view_next => 1
+      case _ => 0
+    }
+    cur_num = if(Utils.isRandom && fn == -1){
+      None
     }else{
-      Typeface.DEFAULT
+      FudaListHelper.getOrQueryFudaNumToRead(context,fn)
     }
+    show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
+    show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
+    show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
+    show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
+    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
+    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
+  }
+  override def onDraw(canvas:Canvas){
+    super.onDraw(canvas)
+    onDrawYomifuda(canvas)
   }
 }
 
-class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-
-  var SCROLL_THREASHOLD = 0.25
-  var SCROLL_THREASHOLD_DIP = 100
-  val SCROLL_SPEED = 200 // in millisec
-  var cur_view = None:Option[Int]
-  def scrollAnimation(endx:Int,on_finish:Unit=>Unit=Unit=>Unit){
-    val startx = getScrollX
-    new CountDownTimer(SCROLL_SPEED,10){
-      override def onTick(millisUntilFinished:Long){
-        val r = millisUntilFinished / SCROLL_SPEED.toFloat
-        val pos = (startx * r + endx * (1-r)).toInt
-        smoothScrollTo(pos,0)
-      }
-      override def onFinish(){
-        smoothScrollTo(endx,0)
-        // There seems no simple way to run a hook after smoothScrollTo() is ended.
-        // Therefore we run on_finish() after specific time.
-        postDelayed(new Runnable(){
-            override def run(){
-              on_finish()
-            }},30)
-      }
-    }.start
-  }
-  override def onTouchEvent(ev:MotionEvent):Boolean = {
-    super.onTouchEvent(ev)
-    ev.getAction match{
-      case MotionEvent.ACTION_UP =>
-        cur_view.foreach{ vid=>
-          val v = findViewById(vid)
-          if(v != null){
-            val dx = getScrollX-v.getLeft
-            val threshold = Math.min((v.getWidth * SCROLL_THREASHOLD).toInt, Utils.DipToPx(context,SCROLL_THREASHOLD_DIP).toInt)
-            val nvid = if(Math.abs(dx) > threshold){
-              if(dx > 0){
-                vid match{
-                  case R.id.yomi_info_view_next => R.id.yomi_info_view_cur
-                  case _ => R.id.yomi_info_view_prev
-                }
-              }else{
-                vid match{
-                  case R.id.yomi_info_view_prev => R.id.yomi_info_view_cur
-                  case _ => R.id.yomi_info_view_next
-                }
-              }
-            }else{
-              vid
-            }
-            scrollToView(nvid,true,true)
-          }
-        }
-      case _ => Unit
-    }
-    true
-  }
-  override def onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
-    super.onSizeChanged(w,h,oldw,oldh)
-    if(w == 0){
-      return
-    }
-    val that = this
-    // as for android 2.1, we have to execute the following in post(...) method
-    post(new Runnable(){
-        override def run(){
-          for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-            val v = findViewById(i)
-            if(v!=null){
-              val prop = v.getLayoutParams
-              prop.width = w
-              v.setLayoutParams(prop)
-            }
-          }
-
-          val vto = that.getViewTreeObserver
-          vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
-              override def onGlobalLayout(){
-                that.getViewTreeObserver.removeGlobalOnLayoutListener(this)
-                val vid = Globals.player.flatMap{_.current_yomi_info}.getOrElse(R.id.yomi_info_view_cur)
-                that.scrollToView(vid,false)
-              }
-          })
-
-          requestLayout()
-      }
-    })
-  }
-  def invalidateAndScroll(){
-    for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-      val v = findViewById(i).asInstanceOf[YomiInfoView]
-      if(v!=null){
-        v.updateCurNum
-        v.invalidate
-      }
-    }
-    scrollToView(R.id.yomi_info_view_cur,false)
-  }
-
-  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[Unit=>Unit]=None){
-    val v = findViewById(id).asInstanceOf[YomiInfoView]
-    if(v!=null){
-      val x = v.getLeft
-      val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
-      val func = do_after_done.getOrElse(
-          {_:Unit=>
-            if(have_to_move){
-              val wa = context.asInstanceOf[WasuramotiActivity]
-              wa.cancelAllPlay()
-              v.cur_num.foreach{ cn =>
-                FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
-                  FudaListHelper.putCurrentIndex(context,index)
-                }
-              }
-              wa.refreshAndSetButton()
-              wa.invalidateYomiInfo()
-            }
-          })
-      if(smooth){
-        scrollAnimation(x,func)
-      }else{
-        scrollTo(x,0)
-      }
-      cur_view = Some(id)
-      getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
-    }
-  }
-
-}
-
-class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, attrs) {
+trait YomiInfoYomifudaTrait{
+  self:YomiInfoView =>
   var screen_range_main:Rect = null
   var screen_range_furi:Rect = null
 
@@ -175,10 +57,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
   val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
 
-  // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
-  // `Don't create render objects in draw methods`
-  val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint.setColor(Color.WHITE)
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint_furigana.setColor(Color.rgb(199,239,251))
 
@@ -186,8 +64,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   var show_author = true
   var show_kami = true
   var show_simo = true
-
-  var cur_num = None:Option[Int]
 
   // This does not include span height
   def measureBoundOneLine(str:String,paint:Paint):(Int,Int,Int) = {
@@ -224,7 +100,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   // Also text size must be default before calling this function ( I don't know why, maybe it's a bug ? )
   def calculateTextSize(text_array_with_margin:Array[(String,Double)],paint:Paint,space_h:Double):Int ={
     // we estimate the result text size, the closer it is, the result will be more accurate
-    val estimate_size = getWidth / text_array_with_margin.length
+    val estimate_size = self.getWidth / text_array_with_margin.length
     paint.setTextSize(estimate_size)
     val bounds = (for((t,m)<-text_array_with_margin)yield(measureBoundOneLine(t,paint)))
     val r1 = (for(((w,_,h),(t,m)) <- bounds.zip(text_array_with_margin))yield{
@@ -305,27 +181,7 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
     (y,width,y-starty-span)
   }
 
-  def updateCurNum(){
-    val fn = getId match {
-      case R.id.yomi_info_view_prev => -1
-      case R.id.yomi_info_view_next => 1
-      case _ => 0
-    }
-    cur_num = if(Utils.isRandom && fn == -1){
-      None
-    }else{
-      FudaListHelper.getOrQueryFudaNumToRead(context,fn)
-    }
-    show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
-    show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
-    show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
-    show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
-    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
-    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
-  }
-
-  override def onDraw(canvas:Canvas){
-    super.onDraw(canvas)
+  def onDrawYomifuda(canvas:Canvas){
 
     if(Globals.IS_DEBUG){
       val paint_debug = new Paint()
@@ -342,8 +198,8 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
       screen_range_furi = ni()
     }
     cur_num.foreach{num =>
-      val furigana_width_conf_default = context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
-      val furigana_width_conf_max = context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
+      val furigana_width_conf_default = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
+      val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
       val full = AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
@@ -465,3 +321,6 @@ class YomiInfoView(context:Context, attrs:AttributeSet) extends View(context, at
   }
 }
 
+trait YomiInfoTorifudaTrait{
+  //TODO
+}
