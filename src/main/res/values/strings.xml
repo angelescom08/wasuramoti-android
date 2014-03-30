@@ -8,6 +8,7 @@
   <string name="button_cancel">Cancel</string>
   <string name="button_help">Help</string>
   <string name="button_config">Config</string>
+  <string name="button_config_detail">Detail</string>
   <string name="now_playing">Playing</string>
   <string name="now_decoding">Loading</string>
   <string name="now_searching">Searching</string>
@@ -70,8 +71,15 @@
   <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
+  <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
   <string name="yomi_info_main_desc">Poem Text:</string>
   <string name="yomi_info_furigana_desc">Furigana:</string>
+  <string name="yomi_info_torifuda_desc">Torifuda:</string>
+  <string name="yomi_info_torifuda_mode_desc">Initial Mode:</string>
+  <string-array name="yomi_info_mode">
+    <item>Yomifuda</item>
+    <item>Torifuda</item>
+  </string-array>
   <string name="yomi_info_display_desc">Display:</string>
   <string name="yomi_info_author_desc">Author</string>
   <string name="yomi_info_kami_desc">1st</string>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true" >
+<LinearLayout android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical" >
+    <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+      <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/yomi_info_torifuda_mode_desc"
+        />
+      <Spinner android:id="@+id/yomi_info_torifuda_mode"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:entries="@array/yomi_info_mode"
+                 />
+    </LinearLayout>
+    <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+      <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/yomi_info_torifuda_desc"
+        />
+      <Spinner android:id="@+id/yomi_info_torifuda_font"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:entries="@array/conf_show_yomi_info_entries"
+                 />
+    </LinearLayout>
+    <include layout="@layout/horizontal_rule" />
+    <TextView
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:text="@string/yomi_info_caution"
+      />
+    <CheckBox
+      android:id="@+id/yomi_info_show_bar_kimari"
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_show_bar_kimari"
+      />
+    <CheckBox
+      android:id="@+id/yomi_info_show_info_button"
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_show_info_button"
+      />
+</LinearLayout>
+</ScrollView>
