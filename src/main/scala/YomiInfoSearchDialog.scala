@@ -35,18 +35,33 @@ object YomiInfoSearchDialog{
 }
 
 class YomiInfoSearchDialog extends DialogFragment{
-  def setFudanum(fudanum:Int){
-    getArguments.putInt("fudanum",fudanum)
+  def enableDisplayButton(enabled:Boolean){
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
         val b = btnlist.findViewWithTag("A.DISPLAY_" + t)
         if(b != null){
-          b.setEnabled(true)
+          b.setEnabled(enabled)
         }
       }
     }
-
+  }
+  def getOrigText(tag:String):String ={
+    var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
+    items.find{_.startsWith(tag+"|")}.get.split("\\|")(1)
+  }
+  def setFudanum(fudanum:Int){
+    getArguments.putInt("fudanum",fudanum)
+    val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
+    enableDisplayButton(!torifuda_mode)
+    val tag = "C.SWITCH_MODE"
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    if(btnlist != null){
+      val btn = btnlist.findViewWithTag(tag).asInstanceOf[Button]
+      if(btn != null){
+        btn.setText(getSwitchModeButtonText(tag,torifuda_mode))
+      }
+    }
   }
   def doWebSearch(fudanum:Int,mode:String){
     val query = if(mode == "TEXT"){
@@ -98,10 +113,21 @@ class YomiInfoSearchDialog extends DialogFragment{
       super.onCreateView(inflater,container,saved)
     }
   }
+
+  def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
+    val orig = getOrigText(tag)
+    val s = if(torifuda_mode){
+      1
+    }else{
+      0
+    }
+    orig.split(";")(s)
+  }
+
   def genContentView():View = {
     val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_dialog,null) 
     val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
-    val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
+    var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
       if(tag.startsWith("A.DISPLAY_")){
         getCurYomiInfoView.map{vw =>
@@ -130,6 +156,13 @@ class YomiInfoSearchDialog extends DialogFragment{
         override def onClick(btn:View,tag:String){
           if(tag == "C.KIMARIJI_LOG"){
             showYomiInfoDetailDialog()
+          }else if(tag == "C.SWITCH_MODE"){
+            getCurYomiInfoView.foreach{vw =>
+              vw.torifuda_mode ^= true
+              vw.invalidate
+              btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
+              enableDisplayButton(!vw.torifuda_mode)
+            }
           }else if(tag.startsWith("B.SEARCH_")){
             val fudanum = getArguments.getInt("fudanum",0)
             doWebSearch(fudanum,tag.split("_")(1))
@@ -142,22 +175,37 @@ class YomiInfoSearchDialog extends DialogFragment{
                 case "FURIGANA" => vw.show_furigana = true
               }
               vw.invalidate
+              btn.setEnabled(false)
             }
           }
           if(getArguments.getBoolean("is_dialog")){
             dismiss()
-          }else if(tag.startsWith("A.DISPLAY_")){
-            btn.setEnabled(false)
           }
         }
       })
+    val init_torifuda_mode = getCurYomiInfoView.map{_.torifuda_mode}.getOrElse(
+      Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
+    )
+    val text_convert= {(s:String,label:String) =>
+      label match {
+        case "C.SWITCH_MODE" => 
+          getSwitchModeButtonText(label,init_torifuda_mode)
+        case _ => s
+      }
+    }
+    if(init_torifuda_mode && getArguments.getBoolean("is_dialog")){
+      items = items.filterNot{_.startsWith("A.DISPLAY_")}
+    }
+    val have_to_enable = {(label:String) =>
+      !init_torifuda_mode || !label.startsWith("A.DISPLAY_")
+    }
 
     btnlist.addButtons(getActivity,items
-      .groupBy(_.split("\\|").head.split("_").head).values.toArray.sortBy{_.head}
+      .groupBy(_.split("\\|").head.split("\\.").head).values.toArray.sortBy{_.head}
       .map{v=>if(v.length%2==0){v}else{v++Array("|")}}.flatten.toArray
       .map{_.split("\\|") match {
-        case Array(l,t) => (t,l)
-        case _ => ("","")
+        case Array(l,t) => (text_convert(t,l),l,have_to_enable(l))
+        case _ => ("","",false)
       }})
     view
   }

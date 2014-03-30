@@ -118,6 +118,7 @@
     <item>B.SEARCH_TEXT|Poem</item>
     <item>B.SEARCH_AUTHOR|Author</item>
     <item>C.KIMARIJI_LOG|Kimariji</item>
+    <item>C.SWITCH_MODE|Torifuda;Yomifuda</item>
   </string-array>
   <string name="yomi_info_search_detail_title">Kimariji Log</string>
   <string name="kimariji_changelog_joka">

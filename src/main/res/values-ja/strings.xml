@@ -116,6 +116,7 @@
     <item>B.SEARCH_TEXT|詠み句</item>
     <item>B.SEARCH_AUTHOR|歌人</item>
     <item>C.KIMARIJI_LOG|決まり字</item>
+    <item>C.SWITCH_MODE|取り札;読み札</item>
   </string-array>
   <string name="yomi_info_search_detail_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">

@@ -13,6 +13,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   var cur_num = None:Option[Int]
+  var torifuda_mode = false:Boolean
   def updateCurNum(){
     val fn = getId match {
       case R.id.yomi_info_view_prev => -1
@@ -28,12 +29,19 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
     show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
     show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
+
+    torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
+
     paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
     paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
   }
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
-    onDrawYomifuda(canvas)
+    if(torifuda_mode){
+      onDrawTorifuda(canvas)
+    }else{
+      onDrawYomifuda(canvas)
+    }
   }
 }
 
@@ -322,5 +330,7 @@ trait YomiInfoYomifudaTrait{
 }
 
 trait YomiInfoTorifudaTrait{
-  //TODO
+  def onDrawTorifuda(canvas:Canvas){
+    //TODO    
+  }
 }
