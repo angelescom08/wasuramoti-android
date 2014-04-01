@@ -43,9 +43,10 @@ class YomiInfoSearchDialog extends DialogFragment{
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
-        val b = btnlist.findViewWithTag(YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t)
+        val tag = YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t
+        val b = btnlist.findViewWithTag(tag)
         if(b != null){
-          b.setEnabled(enabled)
+          b.setEnabled(enabled && haveToEnableButton(tag))
         }
       }
     }
@@ -121,11 +122,30 @@ class YomiInfoSearchDialog extends DialogFragment{
   def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
     val orig = getOrigText(tag)
     val s = if(torifuda_mode){
-      0
-    }else{
       1
+    }else{
+      0
     }
     orig.split(";")(s)
+  }
+
+  def haveToEnableButton(tag:String):Boolean = {
+    getCurYomiInfoView.map{vw =>
+      tag.split("_")(1) match{
+        case "AUTHOR" => ! vw.show_author
+        case "KAMI" => ! vw.show_kami
+        case "SIMO" => ! vw.show_simo
+        case "FURIGANA" => ! vw.show_furigana
+        case _ => true
+      }
+    }.getOrElse{
+      val p = Globals.prefs.get
+      tag.split("_")(1) match{
+        case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
+        case "FURIGANA" => ! p.getBoolean("yomi_info_furigana_show",false)
+        case _ => true
+      }
+    }
   }
 
   def genContentView():View = {
@@ -134,22 +154,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
-        getCurYomiInfoView.map{vw =>
-          tag.split("_")(1) match{
-            case "AUTHOR" => ! vw.show_author
-            case "KAMI" => ! vw.show_kami
-            case "SIMO" => ! vw.show_simo
-            case "FURIGANA" => ! vw.show_furigana
-            case _ => true
-          }
-        }.getOrElse{
-          val p = Globals.prefs.get
-          tag.split("_")(1) match{
-            case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
-            case "FURIGANA" => p.getString("yomi_info_furigana","None") == "None"
-            case _ => true
-          }
-        }
+        haveToEnableButton(tag)
       }else{
         true
       }
@@ -161,6 +166,7 @@ class YomiInfoSearchDialog extends DialogFragment{
           }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true
+              vw.initDrawing
               vw.invalidate
               btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
               enableDisplayButton(!vw.torifuda_mode)

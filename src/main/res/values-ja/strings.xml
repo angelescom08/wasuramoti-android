@@ -87,6 +87,7 @@
   </string-array>
   <string name="yomi_info_display_desc">表示:</string>
   <string name="yomi_info_author_desc">歌人</string>
+  <string name="yomi_info_furigana_show_desc">ふりがな</string>
   <string name="yomi_info_kami_desc">上の句</string>
   <string name="yomi_info_simo_desc">下の句</string>
   <string name="yomi_info_abbrev_furigana">ふ</string>
@@ -95,6 +96,7 @@
   <string name="yomi_info_abbrev_simo">下</string>
   <string name="yomi_info_abbrev_both">両</string>
   <string name="yomi_info_sameas_yomifuda">詠み札と同じ</string>
+  <string name="yomi_info_sameas_kanji">漢字と同じ</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
     <item>デフォルト</item>

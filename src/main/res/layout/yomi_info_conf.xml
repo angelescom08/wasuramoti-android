@@ -25,27 +25,43 @@
     android:orientation="vertical"
     >
     <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+        android:layout_width="wrap_content" android:layout_height="wrap_content" >
       <TextView
+        android:layout_gravity="center"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="@string/yomi_info_display_desc"
         />
-      <CheckBox
-        android:id="@+id/yomi_info_author"
+      <LinearLayout
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/yomi_info_author_desc"
-        />
-      <CheckBox
-        android:id="@+id/yomi_info_kami"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/yomi_info_kami_desc"
-        />
-      <CheckBox
-        android:id="@+id/yomi_info_simo"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/yomi_info_simo_desc"
-        />
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content" android:layout_height="wrap_content" >
+          <CheckBox
+            android:id="@+id/yomi_info_kami"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_kami_desc"
+            />
+          <CheckBox
+            android:id="@+id/yomi_info_simo"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_simo_desc"
+            />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content" android:layout_height="wrap_content" >
+          <CheckBox
+            android:id="@+id/yomi_info_author"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_author_desc"
+            />
+          <CheckBox
+            android:id="@+id/yomi_info_furigana_show"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/yomi_info_furigana_show_desc"
+            />
+        </LinearLayout>
+      </LinearLayout>
     </LinearLayout>
     <View
       android:layout_width="fill_parent" android:layout_height="10dip" />
@@ -58,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:text="@string/yomi_info_furigana_desc"
         />
-      <Spinner android:id="@+id/yomi_info_furigana"
+      <Spinner android:id="@+id/yomi_info_furigana_font"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:entries="@array/conf_show_yomi_info_entries"

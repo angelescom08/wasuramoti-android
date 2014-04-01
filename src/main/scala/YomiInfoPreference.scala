@@ -27,7 +27,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         case (false,true) => ex.append(res.getString(R.string.yomi_info_abbrev_simo))
         case _ => Unit
       }
-      if(Globals.prefs.get.getString("yomi_info_furigana","None") != "None"){
+      if(Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)){
         ex.append(res.getString(R.string.yomi_info_abbrev_furigana))
       }
       if(ex.length > 0){
@@ -38,23 +38,25 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   }
   def getWidgets(view:View) = {
     val main = view.findViewById(R.id.yomi_info_main).asInstanceOf[Spinner]
-    val furigana = view.findViewById(R.id.yomi_info_furigana).asInstanceOf[Spinner]
+    val furigana_font = view.findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]
     val furigana_size = view.findViewById(R.id.yomi_info_furigana_width).asInstanceOf[SeekBar]
+    val furigana_show = view.findViewById(R.id.yomi_info_furigana_show).asInstanceOf[CheckBox]
     val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
     val kami = view.findViewById(R.id.yomi_info_kami).asInstanceOf[CheckBox]
     val simo = view.findViewById(R.id.yomi_info_simo).asInstanceOf[CheckBox]
-    (main,furigana,furigana_size,author,kami,simo)
+    (main,furigana_font,furigana_size,furigana_show,author,kami,simo)
   }
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
+        val (main,furigana_font,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
         val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
         edit.putString("show_yomi_info",ar(main.getSelectedItemPosition))
-        edit.putString("yomi_info_furigana",ar(furigana.getSelectedItemPosition))
+        edit.putString("yomi_info_furigana_font",ar(furigana_font.getSelectedItemPosition))
         edit.putInt("yomi_info_furigana_width",furigana_size.getProgress)
+        edit.putBoolean("yomi_info_furigana_show",furigana_show.isChecked)
         edit.putBoolean("yomi_info_author",author.isChecked)
         edit.putBoolean("yomi_info_kami",kami.isChecked)
         edit.putBoolean("yomi_info_simo",simo.isChecked)
@@ -68,12 +70,18 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf, null)
     root_view = Some(view)
-    val (main,furigana,furigana_size,author,kami,simo) = getWidgets(view)
+    val (main,furigana_font,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
     val prefs = Globals.prefs.get
     main.setSelection(getIndexFromValue(context,prefs.getString("show_yomi_info","None")))
-    furigana.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_furigana","None")))
+    val adapter = new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,
+      Array(context.getResources.getString(R.string.yomi_info_sameas_kanji))
+      ++ context.getResources.getStringArray(R.array.conf_show_yomi_info_entries).tail
+    )
+    furigana_font.setAdapter(adapter)
+    furigana_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_furigana_font","None")))
     furigana_size.setProgress(prefs.getInt("yomi_info_furigana_width",context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)))
 
+    furigana_show.setChecked(prefs.getBoolean("yomi_info_furigana_show",false))
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
     simo.setChecked(prefs.getBoolean("yomi_info_simo",true))

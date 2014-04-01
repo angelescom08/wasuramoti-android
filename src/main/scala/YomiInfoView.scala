@@ -30,9 +30,11 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
     show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
     show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
-    show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
-
+    show_furigana = Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)
     torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
+    initDrawing()
+  }
+  def initDrawing(){
     if(torifuda_mode){
       initTorifuda()
     }else{
@@ -135,13 +137,22 @@ trait YomiInfoYomifudaTrait{
   var show_simo = true
   
   def initYomifuda(){
+    
     val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
     MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
     MARGIN_AUTHOR = MARGIN_AUTHOR_BASE.map{_*margin_boost}
     MARGIN_BOTTOM = MARGIN_BOTTOM_BASE*margin_boost
     MARGIN_LR = MARGIN_LR_BASE*margin_boost
-    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
-    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
+
+    val main_font = TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None"))
+    paint.setTypeface(main_font)
+    val furigana_tmp = Globals.prefs.get.getString("yomi_info_furigana_font","None")
+    val furigana_font = if(furigana_tmp == "None"){
+      main_font
+    }else{
+      TypefaceManager.get(context,furigana_tmp)
+    }
+    paint_furigana.setTypeface(furigana_font)
   }
 
   // Typeface of paint must be set before calling this function

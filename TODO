@@ -7,14 +7,12 @@ Priority High:
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
   * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
-  * Able to show previous/next poem text on random mode.
   * Show animation (maybe green count down?) on custom view of ActionBar when auto play.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Full Screen Mode
   * Change Color Theme
-  * Show Poem Text not only yomi fuda but also tori fuda
 
 Priority Middle:
   * Add Option: play in arbitrary order
