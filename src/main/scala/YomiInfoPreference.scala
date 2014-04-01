@@ -122,7 +122,7 @@ class YomiInfoConfigDetailDialog(context:Context,after_done:Unit=>Unit) extends 
     val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
     edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
     edit.putBoolean("yomi_info_show_info_button",show_btn.isChecked)
-    edit.putString("yomi_info_torifuda_font",ar(torifuda_font.getSelectedItemPosition+1))
+    edit.putString("yomi_info_torifuda_font",ar(torifuda_font.getSelectedItemPosition))
     edit.putBoolean("yomi_info_torifuda_mode",torifuda_mode.getSelectedItemPosition == 1)
     edit.commit
     Globals.forceRestart = true
@@ -138,10 +138,11 @@ class YomiInfoConfigDetailDialog(context:Context,after_done:Unit=>Unit) extends 
     show_btn.setChecked(prefs.getBoolean("yomi_info_show_info_button",true))
 
     val adapter = new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,
-      context.getResources.getStringArray(R.array.conf_show_yomi_info_entries).tail
+      Array(context.getResources.getString(R.string.yomi_info_sameas_yomifuda))
+      ++ context.getResources.getStringArray(R.array.conf_show_yomi_info_entries).tail
     )
     torifuda_font.setAdapter(adapter)
-    torifuda_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_torifuda_font","Default"))-1)
+    torifuda_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_torifuda_font","None")))
     torifuda_mode.setSelection(if(prefs.getBoolean("yomi_info_torifuda_mode",false)){1}else{0})
     setView(view)
     setTitle(R.string.yomi_info_conf_detail_title)

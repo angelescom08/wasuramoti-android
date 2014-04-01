@@ -94,6 +94,7 @@
   <string name="yomi_info_abbrev_kami">上</string>
   <string name="yomi_info_abbrev_simo">下</string>
   <string name="yomi_info_abbrev_both">両</string>
+  <string name="yomi_info_sameas_yomifuda">詠み札と同じ</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>なし</item>
     <item>デフォルト</item>
@@ -121,10 +122,10 @@
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>
     <item>A.DISPLAY_FURIGANA|ふりがな</item>
-    <item>B.SEARCH_TEXT|詠み句</item>
-    <item>B.SEARCH_AUTHOR|歌人</item>
-    <item>C.KIMARIJI_LOG|決まり字</item>
-    <item>C.SWITCH_MODE|取り札;読み札</item>
+    <item>B.KIMARIJI_LOG|決まり字</item>
+    <item>B.SWITCH_MODE|取り札;詠み札</item>
+    <item>C.SEARCH_TEXT|詠み句</item>
+    <item>C.SEARCH_AUTHOR|歌人</item>
   </string-array>
   <string name="yomi_info_search_detail_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">

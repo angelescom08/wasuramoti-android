@@ -14,6 +14,8 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   paint.setColor(Color.WHITE)
   var cur_num = None:Option[Int]
   var torifuda_mode = false:Boolean
+  var render_with_path = false
+
   def updateCurNum(){
     val fn = getId match {
       case R.id.yomi_info_view_prev => -1
@@ -31,9 +33,11 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_furigana = Globals.prefs.get.getString("yomi_info_furigana","None") != "None"
 
     torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-
-    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
-    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
+    if(torifuda_mode){
+      initTorifuda()
+    }else{
+      initYomifuda()
+    }
   }
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
@@ -43,35 +47,6 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       onDrawYomifuda(canvas)
     }
   }
-}
-
-trait YomiInfoYomifudaTrait{
-  self:YomiInfoView =>
-  var screen_range_main:Rect = null
-  var screen_range_furi:Rect = null
-
-  var render_with_path = false
-
-  val MARGIN_TOP = Array(0.04,0.08,0.12,0.06,0.10) // from right to left, rate of view height
-  val MARGIN_AUTHOR = Array(0.09,0.13) // rate of view height
-  val MARGIN_BOTTOM = 0.06 // rate of view height
-  val MARGIN_LR = 0.06 // rate of view width
-
-  val SPACE_V = 0.15 // rate of text size
-  val SPACE_H = 0.05 // rate of view width
-  val SPACE_V_FURIGANA = 0.15 // rate of text size
-  val FURIGANA_TOP_LIMIT = 0.02 // rate of view height
-  val FURIGANA_BOTTOM_LIMIT = 0.03 // rate of view height
-  val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
-  val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
-
-  val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_furigana.setColor(Color.rgb(199,239,251))
-
-  var show_furigana = true
-  var show_author = true
-  var show_kami = true
-  var show_simo = true
 
   // This does not include span height
   def measureBoundOneLine(str:String,paint:Paint):(Int,Int,Int) = {
@@ -101,7 +76,72 @@ trait YomiInfoYomifudaTrait{
     val w_max = ar.map{_._1}.max.toInt
     val h_max = ar.map{_._2}.max.toInt
     val hh_max = ar.map{_._3}.max.toInt
-    (w_max,h_max,hh_max)
+    (w_max,h_max,hh_max) 
+  }
+
+  def switchRenderWithPathWhenLarge(paint:Paint,texts:Array[String]){
+    // When hardware acceleration is enabled, trying to render big text causes exception:
+    //  E/OpenGLRenderer(16754): Font size too large to fit in cache. width, height = ...
+    // Reading libs/hwui/FontRenderer.cpp we found that this occurs when following equation holds:
+    //  glyph.fHeight + TEXTURE_BORDER_SIZE * 2 > DEFAULT_TEXT_LARGE_CACHE_HEIGHT
+    //    where TEXTURE_BORDER_SIZE = 1 and DEFAULT_TEXT_LARGE_CACHE_HEIGHT = 512
+    // so we use getTextPath and drawPath instead of drawText when this equation holds.
+    // Note: since height_char_max is not accurate, we consider the threshold a litte bit smaller.
+    val (_,height_char_max,_) = measureBoundMax(texts,paint)
+    render_with_path = height_char_max >= 496
+  }
+
+  def drawChar(canvas:Canvas,paint:Paint,str:String,x:Float,y:Float){
+    if(render_with_path){
+      val path = new Path()
+      paint.getTextPath(str,0,1,x,y,path)
+      path.close
+      canvas.drawPath(path,paint)
+    }else{
+      canvas.drawText(str,x,y,paint)
+    }
+  }
+}
+
+trait YomiInfoYomifudaTrait{
+  self:YomiInfoView =>
+  var screen_range_main:Rect = null
+  var screen_range_furi:Rect = null
+
+  val MARGIN_TOP_BASE = Array(0.04,0.08,0.12,0.06,0.10) // from right to left, rate of view height
+  val MARGIN_AUTHOR_BASE = Array(0.09,0.13) // rate of view height
+  val MARGIN_BOTTOM_BASE = 0.06 // rate of view height
+  val MARGIN_LR_BASE = 0.06 // rate of view width
+
+  var MARGIN_TOP = MARGIN_TOP_BASE
+  var MARGIN_AUTHOR = MARGIN_AUTHOR_BASE
+  var MARGIN_BOTTOM = MARGIN_BOTTOM_BASE
+  var MARGIN_LR = MARGIN_LR_BASE
+
+  val SPACE_V = 0.15 // rate of text size
+  val SPACE_H = 0.05 // rate of view width
+  val SPACE_V_FURIGANA = 0.15 // rate of text size
+  val FURIGANA_TOP_LIMIT = 0.02 // rate of view height
+  val FURIGANA_BOTTOM_LIMIT = 0.03 // rate of view height
+  val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
+  val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
+
+  val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
+  paint_furigana.setColor(Color.rgb(199,239,251))
+
+  var show_furigana = true
+  var show_author = true
+  var show_kami = true
+  var show_simo = true
+  
+  def initYomifuda(){
+    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
+    MARGIN_AUTHOR = MARGIN_AUTHOR_BASE.map{_*margin_boost}
+    MARGIN_BOTTOM = MARGIN_BOTTOM_BASE*margin_boost
+    MARGIN_LR = MARGIN_LR_BASE*margin_boost
+    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None")))
+    paint_furigana.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_furigana","None")))
   }
 
   // Typeface of paint must be set before calling this function
@@ -160,14 +200,7 @@ trait YomiInfoYomifudaTrait{
       paint.getTextBounds(t.toString,0,1,r)
       width = Math.max(r.right-r.left,width)
       val yy = (y - r.top).toInt
-      if(render_with_path){
-        val path = new Path()
-        paint.getTextPath(t.toString,0,1,startx,yy,path)
-        path.close
-        canvas.drawPath(path,paint)
-      }else{
-        canvas.drawText(t.toString,startx,yy,paint)
-      }
+      self.drawChar(canvas,paint,t.toString,startx,yy)
       y += r.bottom - r.top + span
       if(Globals.IS_DEBUG){
         val paint_debug = new Paint()
@@ -259,18 +292,9 @@ trait YomiInfoYomifudaTrait{
       val text_size = calculateTextSize(no_furigana,paint,space_h)
       paint.setTextSize(text_size)
 
-      val (actual_width_ave,_,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
-      val (actual_width_max,height_char_max,_) = measureBoundMax(no_furigana.map{case(t,m)=>t},paint)
-      
-      // When hardware acceleration is enabled, trying to render big text causes exception:
-      //  E/OpenGLRenderer(16754): Font size too large to fit in cache. width, height = ...
-      // Reading libs/hwui/FontRenderer.cpp we found that this occurs when following equation holds:
-      //  glyph.fHeight + TEXTURE_BORDER_SIZE * 2 > DEFAULT_TEXT_LARGE_CACHE_HEIGHT
-      //    where TEXTURE_BORDER_SIZE = 1 and DEFAULT_TEXT_LARGE_CACHE_HEIGHT = 512
-      // so we use getTextPath and drawPath instead of drawText when this equation holds.
-      // Note: since height_char_max is not accurate, we consider the threshold a litte bit smaller.
-      render_with_path = height_char_max >= 496
+      switchRenderWithPathWhenLarge(paint,no_furigana.map{case(t,m)=>t})
 
+      val (actual_width_ave,_,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
       val span_h = space_h*getWidth
       var rowspan = (span_h+actual_width_ave).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
@@ -330,7 +354,100 @@ trait YomiInfoYomifudaTrait{
 }
 
 trait YomiInfoTorifudaTrait{
+  self:YomiInfoView =>
+  val FUDA_RATE = 74.0/53.0 // fuda size of kyogi karuta is 74mm x 53mm
+  val FUDA_MARGIN_TB = 0.05
+  val FUDA_MARGIN_LR = 0.05
+  val FUDA_PADDING_LR = 0.09
+  val FUDA_PADDING_TB = 0.09
+  val FUDA_SPAN_V = 0.07
+  val FUDA_SPAN_H = 0.07
+  val FUDA_CHARS_PER_ROW = 5
+  val FUDA_MAX_ROW = 3
+  val FUDA_EDGE_SIZE = 0.04
+  
+  val paint_edge = new Paint(Paint.ANTI_ALIAS_FLAG)
+  paint_edge.setColor(Color.rgb(0,42,17))
+  paint_edge.setStyle(Paint.Style.STROKE)
+
+  def initTorifuda(){
+    val tmp = Globals.prefs.get.getString("yomi_info_torifuda_font","None")
+    val font = if(tmp != "None"){
+      tmp
+    }else{
+      Globals.prefs.get.getString("show_yomi_info","None")
+    }
+    paint.setTypeface(TypefaceManager.get(context,font))
+  }
+  def drawEdge(canvas:Canvas,frame:Rect){
+    val edge_size = FUDA_EDGE_SIZE*(frame.bottom-frame.top)
+    paint_edge.setStrokeWidth(edge_size.toFloat)
+    val edge_rect = new Rect(
+      (frame.left + edge_size / 2).toInt,
+      (frame.top + edge_size / 2).toInt,
+      (frame.right - edge_size / 2).toInt,
+      (frame.bottom - edge_size / 2).toInt)
+    canvas.drawRect(edge_rect,paint_edge)
+  }
+  def calcFudaTextSize(paint:Paint,frame:Rect):Float ={
+    val wmax = frame.right - frame.left
+    val hmax = frame.bottom - frame.top
+    val wtext = (1.0-FUDA_PADDING_LR*2-FUDA_SPAN_H*(FUDA_MAX_ROW-1))*wmax/FUDA_MAX_ROW
+    val htext = (1.0-FUDA_PADDING_TB*2-FUDA_SPAN_V*(FUDA_CHARS_PER_ROW-1))*hmax/FUDA_CHARS_PER_ROW
+    val estimate_size = hmax / FUDA_CHARS_PER_ROW
+    paint.setTextSize(estimate_size)
+    // we set same text tize for all fuda
+    val (w_ave,h_ave,hh_ave) = measureBoundAve(AllFuda.list_yomifuda.head.replace(" ","").toArray.map{_.toString},paint)
+    (Math.min(wtext.toDouble/w_ave.toDouble,htext.toDouble/h_ave.toDouble)*estimate_size).toFloat
+  }
   def onDrawTorifuda(canvas:Canvas){
-    //TODO    
+    cur_num.foreach{ num=>
+      val margin_boost = if(Utils.isScreenLarge(context)){
+        2.0
+      }else{
+        1.0
+      }
+      val max_height = getHeight * (1.0 - 2*FUDA_MARGIN_TB*margin_boost)
+      val max_width = getWidth * (1.0 - 2*FUDA_MARGIN_LR*margin_boost)
+      val r = max_height / max_width
+      val (fuda_width,fuda_height) = if(r < FUDA_RATE){
+        (max_height/FUDA_RATE,max_height)
+      }else{
+        (max_width,max_width*FUDA_RATE)
+      }
+      val center_x = getWidth / 2.0
+      val center_y = getHeight / 2.0
+      val frame = new Rect((center_x - fuda_width/2.0).toInt,
+        (center_y - fuda_height/2.0).toInt,
+        (center_x + fuda_width/2.0).toInt,
+        (center_y + fuda_height/2.0).toInt)
+      drawEdge(canvas,frame)
+      paint.setTextSize(calcFudaTextSize(paint,frame))
+      val ary = AllFuda.list_yomifuda(num).replace(" ","").toArray.map{_.toString}.grouped(FUDA_CHARS_PER_ROW).toArray
+
+      switchRenderWithPathWhenLarge(paint,ary.map{_.mkString("")})
+      
+      val width = (1.0 - 2*FUDA_PADDING_LR)*fuda_width
+      val height = (1.0 - 2*FUDA_PADDING_TB)*fuda_height
+      val dx = width / FUDA_MAX_ROW.toDouble
+      for(i <- 0 until FUDA_MAX_ROW){
+        val x = center_x + width/2.0 - dx/2.0 - dx*i
+        val row:Array[String] = (if(i == FUDA_MAX_ROW-1){
+          ary.drop(i).flatten.toArray
+        }else{
+          ary(i)
+        })
+        val dy = height / Math.max(row.length,FUDA_CHARS_PER_ROW).toDouble
+        for(j <- 0 until row.length){
+          val s = row(j)
+          val y = center_y - height/2.0 + dy/2.0 + dy*j
+          paint.setTextAlign(Paint.Align.CENTER)
+          val r = new Rect()
+          paint.getTextBounds(s,0,1,r)
+          val ch = r.bottom - r.top
+          drawChar(canvas,paint,s,x.toFloat,y.toFloat+ch/2.0f-r.bottom)
+        }
+      }
+    }
   }
 }

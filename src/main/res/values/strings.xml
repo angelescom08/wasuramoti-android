@@ -89,6 +89,7 @@
   <string name="yomi_info_abbrev_kami">1</string>
   <string name="yomi_info_abbrev_simo">2</string>
   <string name="yomi_info_abbrev_both">12</string>
+  <string name="yomi_info_sameas_yomifuda">Same as Yomifuda</string>
   <string-array name="conf_show_yomi_info_entries">
     <item>None</item>
     <item>Default</item>
@@ -123,10 +124,10 @@
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
     <item>A.DISPLAY_FURIGANA|Furigana</item>
-    <item>B.SEARCH_TEXT|Poem</item>
-    <item>B.SEARCH_AUTHOR|Author</item>
-    <item>C.KIMARIJI_LOG|Kimariji</item>
-    <item>C.SWITCH_MODE|Torifuda;Yomifuda</item>
+    <item>B.KIMARIJI_LOG|Kimariji</item>
+    <item>B.SWITCH_MODE|Torifuda;Yomifuda</item>
+    <item>C.SEARCH_TEXT|Poem</item>
+    <item>C.SEARCH_AUTHOR|Author</item>
   </string-array>
   <string name="yomi_info_search_detail_title">Kimariji Log</string>
   <string name="kimariji_changelog_joka">

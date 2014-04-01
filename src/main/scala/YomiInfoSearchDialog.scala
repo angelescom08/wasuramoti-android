@@ -13,6 +13,10 @@ import scala.collection.mutable
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
 object YomiInfoSearchDialog{
+  val PREFIX_DISPLAY = "A.DISPLAY"
+  val PREFIX_KIMARIJI = "B.KIMARIJI"
+  val PREFIX_SWITCH = "B.SWITCH"
+  val PREFIX_SEARCH = "C.SEARCH"
   def newInstance(is_dialog:Boolean,fudanum:Int):YomiInfoSearchDialog = {
     val fragment = new YomiInfoSearchDialog()
     val args = new Bundle()
@@ -39,7 +43,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
-        val b = btnlist.findViewWithTag("A.DISPLAY_" + t)
+        val b = btnlist.findViewWithTag(YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t)
         if(b != null){
           b.setEnabled(enabled)
         }
@@ -54,7 +58,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     getArguments.putInt("fudanum",fudanum)
     val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
     enableDisplayButton(!torifuda_mode)
-    val tag = "C.SWITCH_MODE"
+    val tag = YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       val btn = btnlist.findViewWithTag(tag).asInstanceOf[Button]
@@ -117,9 +121,9 @@ class YomiInfoSearchDialog extends DialogFragment{
   def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
     val orig = getOrigText(tag)
     val s = if(torifuda_mode){
-      1
-    }else{
       0
+    }else{
+      1
     }
     orig.split(";")(s)
   }
@@ -129,7 +133,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
-      if(tag.startsWith("A.DISPLAY_")){
+      if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         getCurYomiInfoView.map{vw =>
           tag.split("_")(1) match{
             case "AUTHOR" => ! vw.show_author
@@ -146,24 +150,22 @@ class YomiInfoSearchDialog extends DialogFragment{
             case _ => true
           }
         }
-      }else if(tag=="C.KIMARIJI_LOG"){
-        ! getArguments.getBoolean("is_dialog")
       }else{
         true
       }
     }
     btnlist.setOnClickListener(new YomiInfoButtonList.OnClickListener(){
         override def onClick(btn:View,tag:String){
-          if(tag == "C.KIMARIJI_LOG"){
+          if(tag == YomiInfoSearchDialog.PREFIX_KIMARIJI + "_LOG"){
             showYomiInfoDetailDialog()
-          }else if(tag == "C.SWITCH_MODE"){
+          }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true
               vw.invalidate
               btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
               enableDisplayButton(!vw.torifuda_mode)
             }
-          }else if(tag.startsWith("B.SEARCH_")){
+          }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             val fudanum = getArguments.getInt("fudanum",0)
             doWebSearch(fudanum,tag.split("_")(1))
           }else{
@@ -187,17 +189,17 @@ class YomiInfoSearchDialog extends DialogFragment{
       Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
     )
     val text_convert= {(s:String,label:String) =>
-      label match {
-        case "C.SWITCH_MODE" => 
-          getSwitchModeButtonText(label,init_torifuda_mode)
-        case _ => s
+      if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){
+        getSwitchModeButtonText(label,init_torifuda_mode)
+      }else{
+        s
       }
     }
     if(init_torifuda_mode && getArguments.getBoolean("is_dialog")){
-      items = items.filterNot{_.startsWith("A.DISPLAY_")}
+      items = items.filterNot{_.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")}
     }
     val have_to_enable = {(label:String) =>
-      !init_torifuda_mode || !label.startsWith("A.DISPLAY_")
+      !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
     }
 
     btnlist.addButtons(getActivity,items
@@ -229,11 +231,6 @@ class YomiInfoSearchDialog extends DialogFragment{
     .setView(body_view)
     .setCustomTitle(title_view)
     .setNegativeButton(android.R.string.cancel,null)
-    .setNeutralButton(R.string.yomi_info_search_detail_title,new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          showYomiInfoDetailDialog()
-       }
-      })
     .create()
   }
 }
