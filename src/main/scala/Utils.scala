@@ -62,6 +62,7 @@ object Utils {
       if(Globals.prefs.isEmpty){
         Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
       }
+      AllFuda.init(app_context)
       val prev_version = Globals.prefs.get.getInt("preference_version",0)
       if(prev_version < Globals.PREFERENCE_VERSION){
         PreferenceManager.setDefaultValues(app_context,R.xml.conf,true)

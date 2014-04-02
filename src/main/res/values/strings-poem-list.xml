@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="musumefusahose">むすめふさほせうつしもゆいちひきはやよかみたこおわなあ</string>
+  <string-array name="poem_list">
+    <item>あきの</item><item>はるす</item><item>あし</item><item>たご</item><item>おく</item>
+    <item>かさ</item><item>あまの</item><item>わがい</item><item>はなの</item><item>これ</item>
+    <item>わたのはらや</item><item>あまつ</item><item>つく</item><item>みち</item><item>きみがためは</item>
+    <item>たち</item><item>ちは</item><item>す</item><item>なにわが</item><item>わび</item>
+    <item>いまこ</item><item>ふ</item><item>つき</item><item>この</item><item>なにし</item>
+    <item>おぐ</item><item>みかの</item><item>やまざ</item><item>こころあ</item><item>ありあ</item>
+    <item>あさぼらけあ</item><item>やまが</item><item>ひさ</item><item>たれ</item><item>ひとは</item>
+    <item>なつ</item><item>しら</item><item>わすら</item><item>あさじ</item><item>しの</item>
+    <item>こい</item><item>ちぎりき</item><item>あい</item><item>おおこ</item><item>あわれ</item>
+    <item>ゆら</item><item>やえ</item><item>かぜを</item><item>みかき</item><item>きみがためお</item>
+    <item>かく</item><item>あけ</item><item>なげき</item><item>わすれ</item><item>たき</item>
+    <item>あらざ</item><item>め</item><item>ありま</item><item>やす</item><item>おおえ</item>
+    <item>いに</item><item>よを</item><item>いまは</item><item>あさぼらけう</item><item>うら</item>
+    <item>もろ</item><item>はるの</item><item>こころに</item><item>あらし</item><item>さ</item>
+    <item>ゆう</item><item>おと</item><item>たか</item><item>うか</item><item>ちぎりお</item>
+    <item>わたのはらこ</item><item>せ</item><item>あわじ</item><item>あきか</item><item>ながか</item>
+    <item>ほ</item><item>おも</item><item>よのなかよ</item><item>ながら</item><item>よも</item>
+    <item>なげけ</item><item>む</item><item>なにわえ</item><item>たま</item><item>みせ</item>
+    <item>きり</item><item>わがそ</item><item>よのなかは</item><item>みよ</item><item>おおけ</item>
+    <item>はなさ</item><item>こぬ</item><item>かぜそ</item><item>ひとも</item><item>もも</item>
+  </string-array>
+  <string-array name="list_torifuda">
+    <item>いまをはるへと さくやこのはな</item>
+    <item>わかころもては つゆにぬれつつ</item>
+    <item>ころもほすてふ あまのかくやま</item>
+    <item>なかなかしよを ひとりかもねむ</item>
+    <item>ふしのたかねに ゆきはふりつつ</item>
+    <item>こゑきくときそ あきはかなしき</item>
+    <item>しろきをみれは よそふけにける</item>
+    <item>みかさのやまに いてしつきかも</item>
+    <item>よをうちやまと ひとはいふなり</item>
+    <item>わかみよにふる なかめせしまに</item>
+    <item>しるもしらぬも あふさかのせき</item>
+    <item>ひとにはつけよ あまのつりふね</item>
+    <item>をとめのすかた しはしととめむ</item>
+    <item>こひそつもりて ふちとなりぬる</item>
+    <item>みたれそめにし われならなくに</item>
+    <item>わかころもてに ゆきはふりつつ</item>
+    <item>まつとしきかは いまかへりこむ</item>
+    <item>からくれなゐに みつくくるとは</item>
+    <item>ゆめのかよひち ひとめよくらむ</item>
+    <item>あはてこのよを すくしてよとや</item>
+    <item>みをつくしても あはむとそおもふ</item>
+    <item>ありあけのつきを まちいてつるかな</item>
+    <item>むへやまかせを あらしといふらむ</item>
+    <item>わかみひとつの あきにはあらねと</item>
+    <item>もみちのにしき かみのまにまに</item>
+    <item>ひとにしられて くるよしもかな</item>
+    <item>いまひとたひの みゆきまたなむ</item>
+    <item>いつみきとてか こひしかるらむ</item>
+    <item>ひとめもくさも かれぬとおもへは</item>
+    <item>おきまとはせる しらきくのはな</item>
+    <item>あかつきはかり うきものはなし</item>
+    <item>よしののさとに ふれるしらゆき</item>
+    <item>なかれもあへぬ もみちなりけり</item>
+    <item>しつこころなく はなのちるらむ</item>
+    <item>まつもむかしの ともならなくに</item>
+    <item>はなそむかしの かににほひける</item>
+    <item>くものいつこに つきやとるらむ</item>
+    <item>つらぬきとめぬ たまそちりける</item>
+    <item>ひとのいのちの をしくもあるかな</item>
+    <item>あまりてなとか ひとのこひしき</item>
+    <item>ものやおもふと ひとのとふまて</item>
+    <item>ひとしれすこそ おもひそめしか</item>
+    <item>すゑのまつやま なみこさしとは</item>
+    <item>むかしはものを おもはさりけり</item>
+    <item>ひとをもみをも うらみさらまし</item>
+    <item>みのいたつらに なりぬへきかな</item>
+    <item>ゆくへもしらぬ こひのみちかな</item>
+    <item>ひとこそみえね あきはきにけり</item>
+    <item>くたけてものを おもふころかな</item>
+    <item>ひるはきえつつ ものをこそおもへ</item>
+    <item>なかくもかなと おもひけるかな</item>
+    <item>さしもしらしな もゆるおもひを</item>
+    <item>なほうらめしき あさほらけかな</item>
+    <item>いかにひさしき ものとかはしる</item>
+    <item>けふをかきりの いのちともかな</item>
+    <item>なこそなかれて なほきこえけれ</item>
+    <item>いまひとたひの あふこともかな</item>
+    <item>くもかくれにし よはのつきかな</item>
+    <item>いてそよひとを わすれやはする</item>
+    <item>かたふくまての つきをみしかな</item>
+    <item>またふみもみす あまのはしたて</item>
+    <item>けふここのへに にほひぬるかな</item>
+    <item>よにあふさかの せきはゆるさし</item>
+    <item>ひとつてならて いふよしもかな</item>
+    <item>あらはれわたる せせのあしろき</item>
+    <item>こひにくちなむ なこそをしけれ</item>
+    <item>はなよりほかに しるひともなし</item>
+    <item>かひなくたたむ なこそをしけれ</item>
+    <item>こひしかるへき よはのつきかな</item>
+    <item>たつたのかはの にしきなりけり</item>
+    <item>いつくもおなし あきのゆふくれ</item>
+    <item>あしのまろやに あきかせそふく</item>
+    <item>かけしやそての ぬれもこそすれ</item>
+    <item>とやまのかすみ たたすもあらなむ</item>
+    <item>はけしかれとは いのらぬものを</item>
+    <item>あはれことしの あきもいぬめり</item>
+    <item>くもゐにまかふ おきつしらなみ</item>
+    <item>われてもすゑに あはむとそおもふ</item>
+    <item>いくよねさめぬ すまのせきもり</item>
+    <item>もれいつるつきの かけのさやけさ</item>
+    <item>みたれてけさは ものをこそおもへ</item>
+    <item>たたありあけの つきそのこれる</item>
+    <item>うきにたへぬは なみたなりけり</item>
+    <item>やまのおくにも しかそなくなる</item>
+    <item>うしとみしよそ いまはこひしき</item>
+    <item>ねやのひまさへ つれなかりけり</item>
+    <item>かこちかほなる わかなみたかな</item>
+    <item>きりたちのほる あきのゆふくれ</item>
+    <item>みをつくしてや こひわたるへき</item>
+    <item>しのふることの よわりもそする</item>
+    <item>ぬれにそぬれし いろはかはらす</item>
+    <item>ころもかたしき ひとりかもねむ</item>
+    <item>ひとこそしらね かわくまもなし</item>
+    <item>あまのをふねの つなてかなしも</item>
+    <item>ふるさとさむく ころもうつなり</item>
+    <item>わかたつそまに すみそめのそて</item>
+    <item>ふりゆくものは わかみなりけり</item>
+    <item>やくやもしほの みもこかれつつ</item>
+    <item>みそきそなつの しるしなりける</item>
+    <item>よをおもふゆゑに ものおもふみは</item>
+    <item>なほあまりある むかしなりけり</item> 
+  </string-array>
+  <string-array name="list_full">
+    <item>難波津(なにはづ)に 咲(さ)くやこの花(はな) 冬(ふゆ)ごもり 今(いま)を春(はる)べと 咲(さ)くやこの花(はな)</item>
+    <item>秋(あき)の田(た)の かりほの庵(いほ)の 苫(とま)をあらみ わが衣手(ころもで)は 露(つゆ)にぬれつつ</item>
+    <item>春(はる)すぎて 夏(なつ)来(き)にけらし 白妙(しろたへ)の 衣(ころも)ほすてふ 天(あま)の香具山(かぐやま)</item>
+    <item>あしびきの 山鳥(やまどり)の尾(を)の しだり尾(を)の ながながし夜(よ)を ひとりかも寝(ね)む</item>
+    <item>田子(たご)の浦(うら)に うち出(い)でて見(み)れば 白妙(しろたへ)の 富士(ふじ)の高嶺(たかね)に 雪(ゆき)はふりつつ</item>
+    <item>奥山(おくやま)に もみぢ踏(ふ)み分(わ)け 鳴(な)く鹿(しか)の 声(こゑ)聞(き)く時(とき)ぞ 秋(あき)は悲(かな)しき</item>
+    <item>かささぎの 渡(わた)せる橋(はし)に おく霜(しも)の 白(しろ)きを見(み)れば 夜(よ)ぞふけにける</item>
+    <item>天(あま)の原(はら) ふりさけ見(み)れば 春日(かすが)なる 三笠(みかさ)の山(やま)に 出(い)でし月(つき)かも</item>
+    <item>わが庵(いほ)は 都(みやこ)のたつみ しかぞすむ 世(よ)をうぢ山(やま)と 人(ひと)はいふなり</item>
+    <item>花(はな)の色(いろ)は うつりにけりな いたづらに わが身世(みよ)にふる ながめせしまに</item>
+    <item>これやこの 行(ゆ)くも帰(かへ)るも 別(わか)れては 知(し)るも知(し)らぬも あふ坂(さか)の関(せき)</item>
+    <item>わたの原(はら) 八十島(やそしま)かけて 漕(こ)ぎ出(い)でぬと 人(ひと)には告(つ)げよ あまのつり舟(ぶね)</item>
+    <item>天(あま)つ風(かぜ) 雲(くも)のかよひ路(ぢ) 吹(ふ)きとぢよ をとめの姿(すがた) しばしとどめむ</item>
+    <item>つくばねの 峰(みね)より落(お)つる みなの川(がは) こひぞつもりて 淵(ふち)となりぬる</item>
+    <item>陸奥(みちのく)の しのぶもぢずり 誰(たれ)ゆゑに 乱(みだ)れそめにし われならなくに</item>
+    <item>君(きみ)がため 春(はる)の野(の)に出(い)でて 若菜(わかな)つむ わが衣手(ころもで)に 雪(ゆき)はふりつつ</item>
+    <item>立(た)ち別(わか)れ いなばの山(やま)の 峰(みね)に生(お)ふる まつとし聞(き)かば 今(いま)帰(かへ)り来(こ)む</item>
+    <item>ちはやぶる 神代(かみよ)もきかず 竜田川(たつたがは) からくれなゐに 水(みづ)くくるとは</item>
+    <item>住(すみ)の江(え)の 岸(きし)による波(なみ) よるさへや 夢(ゆめ)の通(かよ)ひ路(ぢ) 人(ひと)めよくらむ</item>
+    <item>難波潟(なにはがた) みじかき葦(あし)の ふしの間(ま)も あはでこの世(よ)を 過(す)ぐしてよとや</item>
+    <item>わびぬれば 今(いま)はた同(おな)じ 難波(なには)なる みをつくしても あはむとぞ思(おも)ふ</item>
+    <item>今(いま)こむと 言(い)ひしばかりに 長月(ながつき)の 有明(ありあけ)の月(つき)を 待(ま)ちいでつるかな</item>
+    <item>吹(ふ)くからに 秋(あき)の草木(くさき)の しをるれば むべ山風(やまかぜ)を 嵐(あらし)といふらむ</item>
+    <item>月(つき)みれば 千々(ちぢ)に物(もの)こそ 悲(かな)しけれ 我(わ)が身(み)ひとつの 秋(あき)にはあらねど</item>
+    <item>このたびは ぬさもとりあへず 手向山(たむけやま) 紅葉(もみぢ)のにしき 神(かみ)のまにまに</item>
+    <item>名(な)にしおはば 逢坂山(あふさかやま)の さねかづら 人(ひと)に知(し)られで くるよしもがな</item>
+    <item>小倉山(をぐらやま) 峰(みね)のもみぢ葉(ば) 心(こころ)あらば 今(いま)ひとたびの みゆき待(ま)たなむ</item>
+    <item>みかの原(はら) わきて流(なが)るる いづみ川(がは) いつみきとてか 恋(こひ)しかるらむ</item>
+    <item>山里(やまざと)は 冬(ふゆ)ぞさびしさ まさりける 人(ひと)めも草(くさ)も かれぬと思(おも)へば</item>
+    <item>心(こころ)あてに 折(を)らばや折(を)らむ 初霜(はつしも)の おきまどはせる 白菊(しらぎく)の花(はな)</item>
+    <item>ありあけの つれなく見(み)えし 別(わか)れより 暁(あかつき)ばかり 憂(う)きものはなし</item>
+    <item>朝(あさ)ぼらけ ありあけの月(つき)と 見(み)るまでに 吉野(よしの)の里(さと)に 降(ふ)れる白雪(しらゆき)</item>
+    <item>山川(やまがは)に 風(かぜ)のかけたる しがらみは 流(なが)れもあへぬ 紅葉(もみぢ)なりけり</item>
+    <item>ひさかたの 光(ひかり)のどけき 春(はる)の日(ひ)に しづ心(ごころ)なく 花(はな)の散(ち)るらむ</item>
+    <item>誰(たれ)をかも 知(し)る人(ひと)にせむ 高砂(たかさご)の 松(まつ)も昔(むかし)の 友(とも)ならなくに</item>
+    <item>人(ひと)はいさ 心(こころ)も知(し)らず ふるさとは 花(はな)ぞ昔(むかし)の 香(か)に匂(にほ)ひける</item>
+    <item>夏(なつ)の夜(よ)は まだ宵(よひ)ながら 明(あ)けぬるを 雲(くも)のいづこに 月(つき)やどるらむ</item>
+    <item>白露(しらつゆ)に 風(かぜ)の吹(ふ)きしく 秋(あき)の野(の)は つらぬきとめぬ 玉(たま)ぞ散(ち)りける</item>
+    <item>忘(わす)らるる 身(み)をば思(おも)はず 誓(ちか)ひてし 人(ひと)のいのちの 惜(を)しくもあるかな</item>
+    <item>浅茅生(あさぢふ)の 小野(をの)の篠原(しのはら) しのぶれど あまりてなどか 人(ひと)の恋(こひ)しき</item>
+    <item>しのぶれど 色(いろ)に出(い)でにけり わが恋(こひ)は 物(もの)や思(おも)ふと 人(ひと)の問(と)ふまで</item>
+    <item>恋(こひ)すてふ わが名(な)はまだき 立(た)ちにけり 人(ひと)知(し)れずこそ 思(おも)ひ初(そ)めしか</item>
+    <item>契(ちぎ)りきな かたみに袖(そで)を しぼりつつ 末(すゑ)の松山(まつやま) 波(なみ)越(こ)さじとは</item>
+    <item>あひ見(み)ての のちの心(こころ)に くらぶれば 昔(むかし)は物(もの)を 思(おも)はざりけり</item>
+    <item>あふことの たえてしなくは なかなかに 人(ひと)をも身(み)をも 恨(うら)みざらまし</item>
+    <item>あはれとも いふべき人(ひと)は 思(おも)ほえで 身(み)のいたづらに なりぬべきかな</item>
+    <item>由良(ゆら)のとを 渡(わた)る舟人(ふなびと) かぢを絶(た)え ゆくへも知(し)らぬ 恋(こひ)の道(みち)かな</item>
+    <item>八重(やへ)むぐら しげれる宿(やど)の さびしきに 人(ひと)こそ見(み)えね 秋(あき)は来(き)にけり</item>
+    <item>風(かぜ)をいたみ 岩(いは)うつ波(なみ)の おのれのみ くだけて物(もの)を 思(おも)ふころかな</item>
+    <item>みかきもり 衛士(ゑじ)のたく火(ひ)の 夜(よる)は燃(も)え 昼(ひる)は消(き)えつつ 物(もの)をこそ思(おも)へ</item>
+    <item>君(きみ)がため 惜(を)しからざりし 命(いのち)さへ 長(なが)くもがなと 思(おも)ひけるかな</item>
+    <item>かくとだに えやはいぶきの さしも草(ぐさ) さしも知(し)らじな もゆる思(おも)ひを</item>
+    <item>明(あ)けぬれば 暮(く)るるものとは 知(し)りながら なほうらめしき 朝(あさ)ぼらけかな</item>
+    <item>嘆(なげ)きつつ ひとり寝(ぬ)る夜(よ)の 明(あ)くるまは いかに久(ひさ)しき ものとかは知(し)る</item>
+    <item>忘(わす)れじの 行(ゆ)く末(すゑ)までは かたければ 今日(けふ)をかぎりの 命(いのち)ともがな</item>
+    <item>滝(たき)の音(おと)は 絶(た)えて久(ひさ)しく なりぬれど 名(な)こそ流(なが)れて なほ聞(き)こえけれ</item>
+    <item>あらざらむ この世(よ)のほかの 思(おも)ひ出(で)に 今(いま)ひとたびの 逢(あ)ふこともがな</item>
+    <item>めぐりあひて 見(み)しやそれとも 分(わ)かぬまに 雲(くも)がくれにし 夜半(よは)の月(つき)かな</item>
+    <item>ありま山(やま) ゐなの笹原(ささはら) 風(かぜ)吹(ふ)けば いでそよ人(ひと)を 忘(わす)れやはする</item>
+    <item>やすらはで 寝(ね)なましものを さ夜(よ)更(ふ)けて かたぶくまでの 月(つき)を見(み)しかな</item>
+    <item>大江山(おほえやま) いく野(の)の道(みち)の 遠(とほ)ければ まだふみも見(み)ず 天(あま)の橋立(はしだて)</item>
+    <item>いにしへの 奈良(なら)の都(みやこ)の 八重桜(やへざくら) けふ九重(ここのへ)に にほひぬるかな</item>
+    <item>夜(よ)をこめて 鳥(とり)のそらねは はかるとも よに逢坂(あふさか)の 関(せき)はゆるさじ</item>
+    <item>今(いま)はただ 思(おも)ひ絶(た)えなむ とばかりを 人(ひと)づてならで 言(い)ふよしもがな</item>
+    <item>朝(あさ)ぼらけ 宇治(うぢ)の川霧(かはぎり) たえだえに あらはれわたる 瀬々(せぜ)の網代木(あじろぎ)</item>
+    <item>恨(うら)みわび ほさぬ袖(そで)だに あるものを 恋(こひ)にくちなむ 名(な)こそ惜(を)しけれ</item>
+    <item>もろともに あはれと思(おも)へ 山桜(やまざくら) 花(はな)よりほかに 知(し)る人(ひと)もなし</item>
+    <item>春(はる)の夜(よ)の 夢(ゆめ)ばかりなる 手枕(たまくら)に かひなく立(た)たむ 名(な)こそ惜(を)しけれ</item>
+    <item>心(こころ)にも あらでうき世(よ)に ながらへば 恋(こひ)しかるべき 夜半(よは)の月(つき)かな</item>
+    <item>あらし吹(ふ)く み室(むろ)の山(やま)の もみぢ葉(ば)は 竜田(たつた)の川(かは)の 錦(にしき)なりけり</item>
+    <item>さびしさに 宿(やど)をたち出(い)でて ながむれば いづこも同(おな)じ 秋(あき)の夕(ゆふ)暮(ぐ)れ</item>
+    <item>夕(ゆふ)されば 門田(かどた)の稲葉(いなば) おとづれて 葦(あし)のまろやに 秋風(あきかぜ)ぞ吹(ふ)く</item>
+    <item>音(おと)にきく たかしの浜(はま)の あだ波(なみ)は かけじや袖(そで)の ぬれもこそすれ</item>
+    <item>高砂(たかさご)の をのへの桜(さくら) 咲(さ)きにけり 外山(とやま)のかすみ 立(た)たずもあらなむ</item>
+    <item>憂(う)かりける 人(ひと)を初瀬(はつせ)の 山(やま)おろしよ はげしかれとは 祈(いの)らぬものを</item>
+    <item>契(ちぎ)りおきし させもが露(つゆ)を いのちにて あはれ今年(ことし)の 秋(あき)もいぬめり</item>
+    <item>わたの原(はら) こぎ出(い)でてみれば 久方(ひさかた)の 雲(くも)ゐにまがふ 冲(おき)つ白波(しらなみ)</item>
+    <item>瀬(せ)をはやみ 岩(いは)にせかるる 滝川(たきがは)の われても末(すゑ)に あはむとぞ思(おも)ふ</item>
+    <item>淡路島(あはぢしま) かよふ千鳥(ちどり)の 鳴(な)く声(こゑ)に 幾夜(いくよ)ねざめぬ 須磨(すま)の関守(せきもり)</item>
+    <item>秋風(あきかぜ)に たなびく雲(くも)の たえ間(ま)より もれ出(い)づる月(つき)の かげのさやけさ</item>
+    <item>長(なが)からむ 心(こころ)も知(し)らず 黒髪(くろかみ)の 乱(みだ)れてけさは 物(もの)をこそ思(おも)へ</item>
+    <item>ほととぎす 鳴(な)きつる方(かた)を ながむれば ただありあけの 月(つき)ぞ残(のこ)れる</item>
+    <item>思(おも)ひわび さてもいのちは あるものを 憂(う)きにたへぬは 涙(なみだ)なりけり</item>
+    <item>世(よ)の中(なか)よ 道(みち)こそなけれ 思(おも)ひ入(い)る 山(やま)の奥(おく)にも 鹿(しか)ぞ鳴(な)くなる</item>
+    <item>ながらへば またこのごろや しのばれむ 憂(う)しと見(み)し世(よ)ぞ 今(いま)は恋(こひ)しき</item>
+    <item>夜(よ)もすがら 物(もの)思(おも)ふころは 明(あ)けやらで 閨(ねや)のひまさへ つれなかりけり</item>
+    <item>嘆(なげ)けとて 月(つき)やは物(もの)を 思(おも)はする かこち顔(がほ)なる わが涙(なみだ)かな</item>
+    <item>村雨(むらさめ)の 露(つゆ)もまだひぬ まきの葉(は)に 霧(きり)立(た)ちのぼる 秋(あき)の夕(ゆふ)暮(ぐ)れ</item>
+    <item>難波江(なにはえ)の 葦(あし)のかりねの ひとよゆゑ みをつくしてや 恋(こ)ひわたるべき</item>
+    <item>玉(たま)のをよ たえなばたえね ながらへば 忍(しの)ぶることの 弱(よわ)りもぞする</item>
+    <item>見(み)せばやな 雄島(をじま)のあまの 袖(そで)だにも 濡(ぬ)れにぞ濡(ぬ)れし 色(いろ)は変(か)はらず</item>
+    <item>きりぎりす 鳴(な)くや霜夜(しもよ)の さむしろに 衣(ころも)かたしき ひとりかも寝(ね)む</item>
+    <item>わが袖(そで)は 潮干(しほひ)に見(み)えぬ 沖(おき)の石(いし)の 人(ひと)こそ知(し)らね 乾(かわ)くまもなし</item>
+    <item>世(よ)の中(なか)は つねにもがもな 渚(なぎさ)こぐ あまの小舟(をぶね)の 綱手(つなで)かなしも</item>
+    <item>み吉野(よしの)の 山(やま)の秋風(あきかぜ) さ夜(よ)ふけて ふるさと寒(さむ)く 衣(ころも)うつなり</item>
+    <item>おほけなく うき世(よ)の民(たみ)に おほふかな わが立(た)つ杣(そま)に すみぞめの袖(そで)</item>
+    <item>花(はな)さそふ 嵐(あらし)の庭(には)の 雪(ゆき)ならで ふりゆくものは わが身(み)なりけり</item>
+    <item>こぬ人(ひと)を まつほの浦(うら)の 夕(ゆふ)なぎに 焼(や)くやもしほの 身(み)もこがれつつ</item>
+    <item>風(かぜ)そよぐ ならの小川(をがは)の 夕(ゆふ)暮(ぐ)れは みそぎぞ夏(なつ)の しるしなりける</item>
+    <item>人(ひと)もをし 人(ひと)も恨(うら)めし あぢきなく 世(よ)を思(おも)ふゆゑに 物(もの)思(おも)ふ身(み)は</item>
+    <item>百敷(ももしき)や ふるき軒端(のきば)の しのぶにも なほあまりある 昔(むかし)なりけり</item>  
+  </string-array>
+  <string-array name="author">
+    <item>王仁(わに)</item>
+    <item>天智天皇(てんじてんのう)</item>
+    <item>持統天皇(じとうてんのう)</item>
+    <item>柿本人麻呂(かきのもとのひとまろ)</item>
+    <item>山部赤人(やまべのあかひと)</item>
+    <item>猿丸大夫(さるまるだゆう)</item>
+    <item>中納言家持(ちゅうなごんやかもち)</item>
+    <item>安倍仲麿(あべのなかまろ)</item>
+    <item>喜撰法師(きせんほうし)</item>
+    <item>小野小町(おののこまち)</item>
+    <item>蝉丸(せみまる)</item>
+    <item>参議篁(さんぎたかむら)</item>
+    <item>僧正遍昭(そうじょうへんじょう)</item>
+    <item>陽成院(ようぜいいん)</item>
+    <item>河原左大臣(かわらのさだいじん)</item>
+    <item>光孝天皇(こうこうてんのう)</item>
+    <item>中納言行平(ちゅうなごんゆきひら)</item>
+    <item>在原業平朝臣(ありわらのなりひらあそん)</item>
+    <item>藤原敏行朝臣(ふじわらのとしゆきあそん)</item>
+    <item>伊勢(いせ)</item>
+    <item>元良親王(もとよししんのう)</item>
+    <item>素性法師(そせいほうし)</item>
+    <item>文屋康秀(ふんやのやすひで)</item>
+    <item>大江千里(おおえのちさと)</item>
+    <item>菅家(かんけ)</item>
+    <item>三条右大臣(さんじょうのうだいじん)</item>
+    <item>貞信公(ていしんこう)</item>
+    <item>中納言兼輔(ちゅうなごんかねすけ)</item>
+    <item>源宗于朝臣(みなもとのむねゆきあそん)</item>
+    <item>凡河内躬恒(おおしこうちのみつね)</item>
+    <item>壬生忠岑(みぶのただみね)</item>
+    <item>坂上是則(さかのうえのこれのり)</item>
+    <item>春道列樹(はるみちのつらき)</item>
+    <item>紀友則(きのとものり)</item>
+    <item>藤原興風(ふじわらのおきかぜ)</item>
+    <item>紀貫之(きのつらゆき)</item>
+    <item>清原深養父(きよはらのふかやぶ)</item>
+    <item>文屋朝康(ふんやのあさやす)</item>
+    <item>右近(うこん)</item>
+    <item>参議等(さんぎひとし)</item>
+    <item>平兼盛(たいらのかねもり)</item>
+    <item>壬生忠見(みぶのただみ)</item>
+    <item>清原元輔(きよはらのもとすけ)</item>
+    <item>権中納言敦忠(ごんちゅうなごんあつただ)</item>
+    <item>中納言朝忠(ちゅうなごんあさただ)</item>
+    <item>謙徳公(けんとくこう)</item>
+    <item>曾禰好忠(そねのよしただ)</item>
+    <item>恵慶法師(えぎょうほうし)</item>
+    <item>源重之(みなもとのしげゆき)</item>
+    <item>大中臣能宣朝臣(おおなかとみのよしのぶあそん)</item>
+    <item>藤原義孝(ふじわらのよしたか)</item>
+    <item>藤原実方朝臣(ふじわらのさねかたあそん)</item>
+    <item>藤原道信朝臣(ふじわらのみちのぶあそん)</item>
+    <item>右大将道綱母(うだいしょうみちつなのはは)</item>
+    <item>儀同三司母(ぎどうさんしのはは)</item>
+    <item>大納言公任(だいなごんきんとう)</item>
+    <item>和泉式部(いずみしきぶ)</item>
+    <item>紫式部(むらさきしきぶ)</item>
+    <item>大弐三位(だいにのさんみ)</item>
+    <item>赤染衛門(あかぞめえもん)</item>
+    <item>小式部内侍(こしきぶのないし)</item>
+    <item>伊勢大輔(いせのたいふ)</item>
+    <item>清少納言(せいしょうなごん)</item>
+    <item>左京大夫道雅(さきょうのだいぶみちまさ)</item>
+    <item>権中納言定頼(ごんちゅうなごんさだより)</item>
+    <item>相模(さがみ)</item>
+    <item>前大僧正行尊(さきのだいそうじょうぎょうそん)</item>
+    <item>周防内侍(すおうのないし)</item>
+    <item>三条院(さんじょういん)</item>
+    <item>能因法師(のういんほうし)</item>
+    <item>良暹法師(りょうぜんほうし)</item>
+    <item>大納言経信(だいなごんつねのぶ)</item>
+    <item>祐子内親王家紀伊(ゆうしないしんのうけのき)</item>
+    <item>権中納言匡房(ごんちゅうなごんまさふさ)</item>
+    <item>源俊頼朝臣(みなもとのとしよりあそん)</item>
+    <item>藤原基俊(ふじわらのもととし)</item>
+    <item>法性寺入道前(ほっしょうじにゅうどうさきの) 関白太政大臣(かんぱくだいじょうだいじん)</item>
+    <item>崇徳院(すとくいん)</item>
+    <item>源兼昌(みなもとのかねまさ)</item>
+    <item>左京大夫顕輔(さきょうのだいぶあきすけ)</item>
+    <item>待賢門院堀河(たいけんもんいんのほりかわ)</item>
+    <item>後徳大寺左大臣(ごとくだいじのさだいじん)</item>
+    <item>道因法師(どういんほうし)</item>
+    <item>皇太后宮大夫俊成(こうたいごうぐうのだいぶしゅんぜい)</item>
+    <item>藤原清輔朝臣(ふじわらのきよすけあそん)</item>
+    <item>俊恵法師(しゅんえほうし)</item>
+    <item>西行法師(さいぎょうほうし)</item>
+    <item>寂蓮法師(じゃくれんほうし)</item>
+    <item>皇嘉門院別当(こうかもんいんのべっとう)</item>
+    <item>式子内親王(しょくしないしんのう)</item>
+    <item>殷富門院大輔(いんぶもんいんのたいふ)</item>
+    <item>後京極摂政前(ごきょうごくせっしょうさきの) 太政大臣(だいじょうだいじん)</item>
+    <item>二条院讃岐(にじょういんのさぬき)</item>
+    <item>鎌倉右大臣(かまくらのうだいじん)</item>
+    <item>参議雅経(さんぎまさつね)</item>
+    <item>前大僧正慈円(さきのだいそうじょうじえん)</item>
+    <item>入道前太政大臣(にゅうどうさきのだいじょうだいじん)</item>
+    <item>権中納言定家(ごんちゅうなごんさだいえ)</item>
+    <item>従二位家隆(じゅにいいえたか)</item>
+    <item>後鳥羽院(ごとばいん)</item>
+    <item>順徳院(じゅんとくいん)</item> 
+  </string-array>
+  <string-array name="list_full_en">
+    <item>Coarse the rush-mat roof//Sheltering the harvest-hut//Of the autumn rice-field;//And my sleeves are growing wet//With the moisture dripping through.</item>
+    <item>The spring has passed//And the summer come again;//For the silk-white robes,//So they say, are spread to dry//On the \"Mount of Heaven\'s Perfume\".</item>
+    <item>Oh, the foot-drawn trail//Of the mountain-pheasant\'s tail//Drooped like down-curved branch!//Through this long, long-dragging night//Must I lie in bed alone?</item>
+    <item>When I take the path//To Tago\'s coast, I see//Perfect whiteness laid//On Mount Fuji\'s lofty peak//By the drift of falling snow.</item>
+    <item>In the mountain depths,//Treading through the crimson leaves,//The wandering stag calls.//When I hear the lonely cry,//Sad (how sad!) the autumn is.</item>
+    <item>If I see that bridge//That is spanned by flights of magpies//Across the arc of heaven//Made white with a deep-laid frost,//Then the night is almost past.</item>
+    <item>When I look up at//The wide-stretched plain of heaven,//Is the moon the same//That rose on Mount Mikasa//In the land of Kasuga?</item>
+    <item>My lowly hut is//Southeast from the capital.//Thus I choose to live.//And the world in which I live//Men have named a \"Mount of Gloom\".</item>
+    <item>Color of the flower//Has already faded away,//While in idle thoughts//My life passes vainly by,//As I watch the long rains fall.</item>
+    <item>Truly, this is where//Travelers who go or come//Over parting ways --//Friends or strangers -- all must meet://The gate of \"Meeting Hill\".</item>
+    <item>Over the wide sea//Towards its many distant isles//My ship sets sail.//Will the fishing boats thronged here//Proclaim my journey to the world?</item>
+    <item>Let the winds of heaven//Blow through the paths among the clouds//And close their gates.//Then for a while I could detain//These messengers in maiden form.</item>
+    <item>From Tsukuba\'s peak//Falling waters have become//Mina\'s still, full flow://So my love has grown to be//Like the river\'s quiet deeps.</item>
+    <item>Like Michinoku prints//Of the tangled leaves of ferns,//It is because of you//That I have become confused;//But my love for you remains.</item>
+    <item>It is for your sake//That I walk the fields in spring,//Gathering green herbs,//While my garment\'s hanging sleeves//Are speckled with falling snow.</item>
+    <item>Though we are parted,//If on Mount Inaba\'s peak//I should hear the sound//Of the pine trees growing there,//I\'ll come back again to you.</item>
+    <item>Even when the gods//Held sway in the ancient days,//I have never heard//That water gleamed with autumn red//As it does in Tatta\'s stream</item>
+    <item>The waves are gathered//On the shore of Sumi Bay,//And in the gathered night,//When in dreams I go to you,//I hide from people\'s eyes.</item>
+    <item>Even for a time//Short as a piece of the reeds//In Naniwa\'s marsh,//We must never meet again://Is this what you are asking me?</item>
+    <item>In this dire distress//My life is meaningless.//So we must meet now,//Even though it costs my life//In the Bay of Naniwa.</item>
+    <item>Just because she said//\"In a moment I will come\",//I\'ve awaited her//Until the moon of daybreak,//In the long month, has appeared.</item>
+    <item>It is by its breath//That autumn\'s leaves of trees and grass//Are wasted and driven.//So they call this mountain wind//The wild one, the destroyer.</item>
+    <item>As I view the moon,//Many things come into my mind,//And my thoughts are sad;//Yet it\'s not for me alone,//That the autumn time has come.</item>
+    <item>At the present time,//Since I could bring no offering,//See Mount Tamuke!//Here are brocades of red leaves,//As a tribute to the gods.</item>
+    <item>If your name is true,//Trailing vine of \"Meeting Hill\",//Isn\'t there some way,//Hidden from people\'s gaze,//That you can draw her to my side?</item>
+    <item>If the maple leaves//On Ogura mountain//Could only have hearts,//They would longingly await//The emperor\'s pilgrimage.</item>
+    <item>Over Mika\'s plain,//Gushing forth and flowing free,//Is Izumi\'s stream.//I do not know if we have met://Why, then, do I long for her?</item>
+    <item>Winter loneliness//In a mountain village grows//Only deeper, when//Guests are gone, and leaves and grass//Are withered: troubling thoughts.</item>
+    <item>If it were my wish//To pick the white chrysanthemums,//Puzzled by the frost//Of the early autumn time,//I by chance might pluck the flower.</item>
+    <item>Like the morning moon,//Cold, unpitying was my love.//And since we parted,//I dislike nothing so much//As the breaking light of day.</item>
+    <item>At the break of day,//Just as though the morning moon//Lightened the dim scene,//Yoshino\'s village lay//In a haze of falling snow.</item>
+    <item>In a mountain stream//There is a wattled barrier//Built by the busy wind.//Yet it\'s only maple leaves,//Powerless to flow away.</item>
+    <item>In the peaceful light//Of the ever-shining sun//In the days of spring,//Why do the cherry\'s new-blown blooms//Scatter like restless thoughts?</item>
+    <item>Who is still alive//When I have grown so old//That I can call my friends?//Even Takasago\'s pines//No longer offer comfort.</item>
+    <item>The depths of the hearts//Of humankind cannot be known.//But in my birthplace//The plum blossoms smell the same//As in the years gone by.</item>
+    <item>In the summer night//The evening still seems present,//But the dawn is here.//To what region of the clouds//Has the wandering moon come home?</item>
+    <item>In the autumn fields//When the heedless wind blows by//Over the pure-white dew,//How the myriad unstrung gems//Are scattered everywhere around</item>
+    <item>Though he forsook me,//For myself I do not care://He made a promise,//And his life, who is forsworn,//Oh how pitiful that is.</item>
+    <item>Bamboo growing//Among the tangled reeds//Like my hidden love://But it is too much to bear//That I still love her so.</item>
+    <item>Though I would hide it,//In my face it still appears --//My fond, secret love.//And now he questions me://\"Is something bothering you?\"</item>
+    <item>It is true I love,//But the rumor of my love//Had gone far and wide,//When people should not have known//That I had begun to love.</item>
+    <item>Our sleeves were wet with tears//As pledges that our love --//Will last until//Over Sue\'s Mount of Pines//Ocean waves are breaking.</item>
+    <item>I have met my love.//When I compare this present//With feelings of the past,//My passion is now as if//I have never loved before.</item>
+    <item>If it should happen//That we never met again,//I would not complain;//And I doubt that she or I//Would feel that we were left alone.</item>
+    <item>Surely there is none//Who will speak a pitying word//About my lost love.//Now my folly\'s fitting end//Is my own nothingness.</item>
+    <item>Like a mariner//Sailing over Yura\'s strait//With his rudder gone://Where, over the deep of love,//The end lies, I do not know.</item>
+    <item>To the dim cottage//Overgrown with thick-leaved vines//In its loneliness//Comes the dreary autumn time://But there no people come.</item>
+    <item>Like a driven wave,//Dashed by fierce winds on a rock,//So am I: alone//And crushed upon the shore,//Remembering what has been.</item>
+    <item>Like the guard\'s fires//Kept at the imperial gateway --//Burning through the night,//Dull in ashes through the day --//Is the love aglow in me.</item>
+    <item>For your precious sake,//Once my eager life itself//Was not dear to me.//But now it is my heart\'s desire//It may long, long years endure.</item>
+    <item>How can I tell her//How fierce my love for her is?//Will she understand//That the love I feel for her//Burns like Ibuki\'s fire plant?</item>
+    <item>Though I know indeed//That the night will come again//After day has dawned,//Still, in truth, I hate the sight//Of the morning\'s coming light.</item>
+    <item>Lying all alone,//Through the hours of the night,//Till the daylight comes://Can you realize at all//The emptiness of that night?</item>
+    <item>If remembering me//Will for him in future years//Be too difficult,//It would be well this very day//That I should end my life.</item>
+    <item>Though the waterfall//Ceased its flowing long ago,//And its sound is stilled,//Yet, in name it ever flows,//And in fame may yet be heard.</item>
+    <item>Soon my life will close.//When I am beyond this world//And have forgotten it,//Let me remember only this://One final meeting with you.</item>
+    <item>Meeting on the path://But I cannot clearly know//If it was he,//Because the midnight moon//In a cloud had disappeared.</item>
+    <item>As Mount Arima//Sends its rustling winds across//Ina\'s bamboo plains,//I will be just as steadfast//And never will forget you.</item>
+    <item>Better to have slept//Care-free, than to keep vain watch//Through the passing night,//Till I saw the lonely moon//Traverse her descending path.</item>
+    <item>By Oe Mountain//The road to Ikuno//Is far away,//And neither have I beheld//Nor crossed its bridge of heaven.</item>
+    <item>Eight-fold cherry flowers//That at Nara -- ancient seat//Of our state -- have bloomed,//In our nine-fold palace court//Shed their sweet perfume today.</item>
+    <item>The rooster\'s crowing//In the middle of the night//Deceived the hearers;//But at Osaka\'s gateway//The guards are never fooled.</item>
+    <item>Is there any way//Except by a messenger//To send these words to you?//If I could, I\'d come to you//To say goodbye forever.</item>
+    <item>In the early dawn//When the mists on Uji River//Slowly lift and clear,//From the shallows to the deep,//The stakes of fishing nets appear.</item>
+    <item>Even when your hate//Makes me stain my sleeves with tears//In cold misery,//Worse than hate and misery//Is the loss of my good name.</item>
+    <item>On a mountain slope,//Solitary, uncompanioned,//Stands a cherry tree.//Except for you, lonely friend,//To others I am unknown.</item>
+    <item>If I lay my head//Upon his arm in the dark//Of a short spring night,//This innocent dream pillow//Will be the death of my good name.</item>
+    <item>Though I do not want//To live on in this floating world,//If I remain here,//Let me remember only//This midnight and this moonrise.</item>
+    <item>By the wind storm\'s blast//From Mimuro\'s mountain slopes//Maples leaves are torn,//Which turn Tatsuta River//Into a rich brocade.</item>
+    <item>In my loneliness//I leave my little hut.//When I look around,//Everywhere it is the same://One lone, darkening autumn eve.</item>
+    <item>When the evening comes,//From the rice leaves at my gate,//Gentle knocks are heard,//And, into my round rush-hut,//Enters autumn\'s roaming breeze.</item>
+    <item>Famous are the waves//That break on Takashi beach//In noisy arrogance.//If I should go near that shore.//I would only wet my sleeves.</item>
+    <item>On that far mountain//On the slope below the peak//Cherries are in flower.//Oh, let the mountain mists//Not arise to hide the scene.</item>
+    <item>It was not for this//I prayed at the holy shrine://That she would become//As pitiless and as cold//As the storms on Hase\'s hills.</item>
+    <item>As dew promises//New life to the thirsty plant,//So did your vow to me.//Yet the year has passed away,//And autumn has come again.</item>
+    <item>Over the wide sea//As I sail and look around,//It appears to me//That the white waves, far away,//Are the ever shining sky.</item>
+    <item>Though a swift stream is//Divided by a boulder//In its headlong flow,//Though divided, on it rushes,//And at last unites again.</item>
+    <item>Guard of Suma Gate,//From your sleep, how many nights//Have you awakened//At the cries of sanderlings,//Flying from Awaji Island?</item>
+    <item>See how clear and bright//Is the moonlight finding ways//Through the riven clouds//That, with drifting autumn wind,//Gracefully float in the sky.</item>
+    <item>Is it forever//That he hopes our love will last?//He did not answer.//And now my daylight thoughts//Are as tangled as my black hair.</item>
+    <item>When I turned my look//Toward the place where I had heard//The cuckoo\'s call,//The only thing I found//Was the moon of early dawn.</item>
+    <item>Though in deep distress//Through your cruel blow, my life//Still is left to me.//But I cannot keep my tears;//They break forth from my grief.</item>
+    <item>From this world I think//That there is nowhere to escape.//I wanted to hide//In the mountains\' farthest depths;//But there I hear the stag\'s cry.</item>
+    <item>If I should live long,//Then perhaps the present days//May be dear to me,//Just as past time filled with grief//Comes quietly back in thought.</item>
+    <item>Through an unsleeping night//Longingly I pass the hours,//While the day\'s dawn lags.//And now the bedroom shutters//Are keeping light and life from me.</item>
+    <item>Should I blame the moon//For bringing forth this sadness,//As if it pictured grief?//Lifting up my troubled face,//I regard it through my tears.</item>
+    <item>An autumn eve://See the valley mists arise//Among the fir leaves//That still hold the dripping wet//Of the chill day\'s sudden showers.</item>
+    <item>After one brief night --//Short as a piece of the reeds//Growing in Naniwa bay --//Must I forever long for him//With my whole heart, till life ends?</item>
+    <item>Like a string of gems//Grown weak, my life will break now;//For if I live on,//All I do to hide my love//May at last grow weak and fail.</item>
+    <item>Let me show him these!//Even the fishermen\'s sleeves//On Ojima\'s shores,//Though wet through and wet again,//Do not so change their colors.</item>
+    <item>In my cold bed,//Drawing close my folded quilt,//I sleep alone,//While all through the frosty night//I hear a cricket\'s lonely sound.</item>
+    <item>Like a rock at sea,//At ebb-tide hidden from view,//Is my tear-drenched sleeve://Never for a moment dry,//And no one knows it is there.</item>
+    <item>If only our world//Could be always as it is!//How moving the sight//Of the little fishing boat//Drawn by ropes along the bank.</item>
+    <item>From Mount Yoshino//Blows a chill, autumnal wind.//In the deepening night//The ancient village shivers://Sounds of beating cloth I hear.</item>
+    <item>From the monastery//On Mount Hiei I look out//On this world of tears,//And though I am unworthy,//I shield it with my black sleeves.</item>
+    <item>Not the snow of flowers,//That the hurrying wild wind whirls//Round the garden court://What withers and falls away//In this place is I myself.</item>
+    <item>Like the salt sea-weed,//Burning in the evening calm.//On Matsuo\'s shore,//All my being is aflame,//Awaiting her who does not come.</item>
+    <item>To Nara\'s brook comes//Evening, and the rustling winds//Stir the oak-trees\' leaves.//Not a sign of summer left//But the sacred bathing there.</item>
+    <item>For some men I grieve;//Some men are hateful to me;//And this wretched world//To me, with all my sadness,//Is a place of misery.</item>
+    <item>In this ancient house,//Paved with a hundred stones,//Ferns grow in the eaves;//But numerous as they are,//My old memories are more.</item>
+  </string-array>
+  <string-array name="author_en">
+    <item>Emperor Tenchi</item>
+    <item>Empress Jitou</item>
+    <item>Kakinomoto no Hitomaro</item>
+    <item>Yamabe no Akahito</item>
+    <item>Sarumaru</item>
+    <item>outomo no Yakamochi</item>
+    <item>Abe no Nakamaro</item>
+    <item>The Monk Kisen</item>
+    <item>Ono no Komachi</item>
+    <item>Semimaru</item>
+    <item>Ono no Takamura</item>
+    <item>The Monk Henjou</item>
+    <item>Emperor Youzei</item>
+    <item>Minamoto no Touru</item>
+    <item>Emperor Koukou</item>
+    <item>Ariwara no Yukihira</item>
+    <item>Ariwara no Narihira</item>
+    <item>Fujiwara no Toshiyuki</item>
+    <item>Lady Ise</item>
+    <item>Prince Motoyoshi</item>
+    <item>The Monk Sosei</item>
+    <item>Fun\'ya no Yasuhide</item>
+    <item>oue no Chisato</item>
+    <item>Sugawara no Michizane</item>
+    <item>Fujiwara no Sadakata</item>
+    <item>Fujiwara no Tadahira</item>
+    <item>Fujiwara no Kanesuke</item>
+    <item>Minamoto no Muneyuki</item>
+    <item>oushikouchi no Mitsune</item>
+    <item>Mibu no Tadamine</item>
+    <item>Sakanoue no Korenori</item>
+    <item>Harumichi no Tsuraki</item>
+    <item>Ki no Tomonori</item>
+    <item>Fujiwara no Okikaze</item>
+    <item>Ki no Tsurayuki</item>
+    <item>Kiyohara no Fukayabu</item>
+    <item>Fun\'ya no Asayasu</item>
+    <item>Lady Ukon</item>
+    <item>Minamoto no Hitoshi</item>
+    <item>Taira no Kanemori</item>
+    <item>Mibu no Tadami</item>
+    <item>Kiyohara no Motosuke</item>
+    <item>Fujiwara no Atsutada</item>
+    <item>Fujiwara no Asatada</item>
+    <item>Fujiwara no Koremasa</item>
+    <item>Sone no Yoshitada</item>
+    <item>The Monk Egyou</item>
+    <item>Minamoto no Shigeyuki</item>
+    <item>ounakatomi no Yoshinobu</item>
+    <item>Fujiwara no Yoshitaka</item>
+    <item>Fujiwara no Sanekata</item>
+    <item>Fujiwara no Michinobu</item>
+    <item>The Mother of Fujiwara no Michitsuna</item>
+    <item>The Mother of Fujiwara no Korechika, Lady Kishi</item>
+    <item>Fujiwara no Kintou</item>
+    <item>Lady Izumi Shikibu</item>
+    <item>Lady Murasaki Shikibu</item>
+    <item>Daini no Sanmi, Lady Kataiko</item>
+    <item>Lady Akazome Emon</item>
+    <item>Lady Koshikibu</item>
+    <item>Lady Ise no ousuke</item>
+    <item>Lady Sei Shounagon</item>
+    <item>Fujiwara no Michimasa</item>
+    <item>Fujiwara no Sadayori</item>
+    <item>Lady Sagami</item>
+    <item>Abbot Gyouson</item>
+    <item>Lady Suou</item>
+    <item>Emperor Sanjou</item>
+    <item>The Monk Nouin</item>
+    <item>The Monk Ryousen</item>
+    <item>Minamoto no Tsunenobu</item>
+    <item>Lady Kii</item>
+    <item>oue no Masafusa</item>
+    <item>Minamoto no Toshiyori</item>
+    <item>Fujiwara no Mototoshi</item>
+    <item>Fujiwara no Tadamichi</item>
+    <item>Emperor Sutoku</item>
+    <item>Minamoto no Kanemasa</item>
+    <item>Fujiwara no Akisuke</item>
+    <item>Lady Horikawa</item>
+    <item>Fujiwara no Sanesada</item>
+    <item>The Monk Douin</item>
+    <item>Fujiwara no Toshinari</item>
+    <item>Fujiwara no Kiyosuke</item>
+    <item>The Monk Shun\'e</item>
+    <item>The Monk Saigyou</item>
+    <item>The Monk Jakuren</item>
+    <item>Attendant to Empress Kiyoko</item>
+    <item>Princess Shokushi</item>
+    <item>Attendant to Empress Ryoushi</item>
+    <item>Fujiwara no Yoshitsune</item>
+    <item>Lady Sanuki</item>
+    <item>Minamoto no Sanetomo</item>
+    <item>Fujiwara no Masatsune</item>
+    <item>Abbot Jien</item>
+    <item>Fujiwara no Kintsune</item>
+    <item>Fujiwara no Teika</item>
+    <item>Fujiwara no Ietaka</item>
+    <item>Emperor Gotoba</item>
+    <item>Emperor Juntoku</item>
+  </string-array>
+</resources>

@@ -254,9 +254,9 @@ trait YomiInfoYomifudaTrait{
       val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
-      val full = AllFuda.list_full(num).split(" ").zip(MARGIN_TOP)
+      val full = AllFuda.get(context,R.array.list_full)(num).split(" ").zip(MARGIN_TOP)
       
-      var text_array_with_margin = (if(show_author){AllFuda.author(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
+      var text_array_with_margin = (if(show_author){AllFuda.get(context,R.array.author)(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
         (if(show_kami){full.take(3)}else{new Array[(String,Double)](0)}) ++
         (if(show_simo){full.takeRight(2)}else{new Array[(String,Double)](0)})
 
@@ -408,7 +408,7 @@ trait YomiInfoTorifudaTrait{
     val estimate_size = hmax / FUDA_CHARS_PER_ROW
     paint.setTextSize(estimate_size)
     // we set same text tize for all fuda
-    val (w_ave,h_ave,hh_ave) = measureBoundAve(AllFuda.list_yomifuda.head.replace(" ","").toArray.map{_.toString},paint)
+    val (w_ave,h_ave,hh_ave) = measureBoundAve(AllFuda.get(context,R.array.list_torifuda).head.replace(" ","").toArray.map{_.toString},paint)
     (Math.min(wtext.toDouble/w_ave.toDouble,htext.toDouble/h_ave.toDouble)*estimate_size).toFloat
   }
   def onDrawTorifuda(canvas:Canvas){
@@ -434,7 +434,7 @@ trait YomiInfoTorifudaTrait{
         (center_y + fuda_height/2.0).toInt)
       drawEdge(canvas,frame)
       paint.setTextSize(calcFudaTextSize(paint,frame))
-      val ary = AllFuda.list_yomifuda(num).replace(" ","").toArray.map{_.toString}.grouped(FUDA_CHARS_PER_ROW).toArray
+      val ary = AllFuda.get(context,R.array.list_torifuda)(num).replace(" ","").toArray.map{_.toString}.grouped(FUDA_CHARS_PER_ROW).toArray
 
       switchRenderWithPathWhenLarge(paint,ary.map{_.mkString("")})
       

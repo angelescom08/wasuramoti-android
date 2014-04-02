@@ -15,15 +15,27 @@ KANJI = u'''々三上世中丸久之九乱乾二于京人仁今代仲任伊位�
 蓮藤蝉行衛衣袖西見親言誓誰謙議讃貞貫賢赤越路踏身躬軒輔近通逢遍過道遠部都里重野錦
 鎌長門間関閨防降院陸陽隆雄雅難雨雪雲霜霧露音順須頼顔顕風養香高髪鳥鳴鹿麻麿黒'''
 
-import sys, fontforge
+ASCII = u'''!"'(),-.:;?ABCDEFGHIJKLMNOPRSTUWYabcdefghijklmnopqrstuvwxyz'''
 
-if len(sys.argv) != 3:
-  print "USAGE:%s [input.ttf] [output.ttf]" % sys.argv[0]
+import sys, argparse, fontforge
+
+parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options] [input.ttf] [output.ttf]',description='remove characters not in Hyakunin-Isshu from TTF file.')
+parser.add_argument('--jpn',action="store_true",help='process japanese font')
+parser.add_argument('--eng',action="store_true",help='process english font')
+parser.add_argument("rest",nargs=argparse.REMAINDER)
+args = parser.parse_args()
+WORDS = None
+if len(args.rest) != 2 or (not args.jpn and not args.eng):
+  parser.print_help()
   sys.exit(0)
+elif args.jpn:
+  WORDS = HIRA+KANJI
+elif args.eng:
+  WORDS = ASCII
 
-(in_file,out_file) = sys.argv[1:]
+(in_file,out_file) = args.rest
 font = fontforge.open(in_file)
-chars = set(ord(i) for i in HIRA+KANJI if i != "\n")
+chars = set(ord(i) for i in WORDS if i != "\n")
 lst = [-1] + sorted(chars) + [0x10000]
 for (x,y) in zip(lst,lst[1:]):
   if y - x <= 1:

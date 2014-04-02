@@ -29,8 +29,8 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
         case SortMode.NUM => fudanum + ". "
         }
       val body = if(list_item_mode == ListItemMode.FULL){
-        val poem = AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
-        val author = AllFuda.removeInsideParens(AllFuda.author(fudanum))
+        val poem = AllFuda.removeInsideParens(AllFuda.get(context,R.array.list_full)(fudanum))
+        val author = AllFuda.removeInsideParens(AllFuda.get(context,R.array.author)(fudanum))
         poem + " (" + author.replace(" ","") + ")"
       }else{
         Romanization.jap_to_local(context,str)

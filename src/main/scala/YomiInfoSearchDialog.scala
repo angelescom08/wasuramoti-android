@@ -70,9 +70,9 @@ class YomiInfoSearchDialog extends DialogFragment{
   }
   def doWebSearch(fudanum:Int,mode:String){
     val query = if(mode == "TEXT"){
-      AllFuda.removeInsideParens(AllFuda.list_full(fudanum))
+      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(fudanum))
     }else{
-      AllFuda.removeInsideParens(AllFuda.author(fudanum)).replace(" ","") + " 歌人"
+      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(fudanum)).replace(" ","") + " 歌人"
     }
     val f1 = {_:Unit =>
       val intent = new Intent(Intent.ACTION_WEB_SEARCH)
