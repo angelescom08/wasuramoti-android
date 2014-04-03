@@ -3,7 +3,7 @@ import _root_.android.preference.DialogPreference
 import _root_.android.content.{Context,DialogInterface}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{SeekBar,CheckBox,Spinner,AdapterView,ArrayAdapter}
+import _root_.android.widget.{SeekBar,CheckBox,Spinner,AdapterView,ArrayAdapter,Button}
 import _root_.android.os.Bundle
 import _root_.android.app.AlertDialog
 
@@ -103,20 +103,30 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         override def onNothingSelected(parent:AdapterView[_]){
         }
     })
-    builder.setView(view)
 
-    builder.setNeutralButton(R.string.button_config_detail, new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          val dlg = new YomiInfoConfigDetailDialog(context,{_:Unit=>dialog.asInstanceOf[AlertDialog].show()})
+    val btn_detail = view.findViewById(R.id.yomi_info_conf_button_detail).asInstanceOf[Button]
+    btn_detail.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          val dlg = new YomiInfoConfigDetailDialog(context)
           dlg.show
         }
-      })
+    })
+    val btn_trans = view.findViewById(R.id.yomi_info_conf_button_translation).asInstanceOf[Button]
+    btn_trans.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          val dlg = new YomiInfoConfigTranslateDialog(context)
+          dlg.show
+        }
+    })
+
+
+    builder.setView(view)
 
     super.onPrepareDialogBuilder(builder)
   }
 }
 
-class YomiInfoConfigDetailDialog(context:Context,after_done:Unit=>Unit) extends AlertDialog(context) with YomiInfoPreferenceTrait{
+class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
   def getWidgets(view:View) = {
     val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
     val show_btn = view.findViewById(R.id.yomi_info_show_info_button).asInstanceOf[CheckBox]
@@ -124,7 +134,7 @@ class YomiInfoConfigDetailDialog(context:Context,after_done:Unit=>Unit) extends 
     val torifuda_mode =  view.findViewById(R.id.yomi_info_torifuda_mode).asInstanceOf[Spinner]
     (show_kimari,show_btn,torifuda_font,torifuda_mode)
   }
-  def doWhenClose(view:View){
+  override def doWhenClose(view:View){
     val edit = Globals.prefs.get.edit
     val (show_kimari,show_btn,torifuda_font,torifuda_mode) = getWidgets(view)
     val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
@@ -152,21 +162,42 @@ class YomiInfoConfigDetailDialog(context:Context,after_done:Unit=>Unit) extends 
     torifuda_font.setAdapter(adapter)
     torifuda_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_torifuda_font","None")))
     torifuda_mode.setSelection(if(prefs.getBoolean("yomi_info_torifuda_mode",false)){1}else{0})
-    setView(view)
     setTitle(R.string.yomi_info_conf_detail_title)
-    setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
-            override def onClick(dialog:DialogInterface,which:Int){
-                doWhenClose(view)
-                dismiss()
-                after_done()
-            }
-        })
-    setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){
-            override def onClick(dialog:DialogInterface,which:Int){
-                dismiss()
-                after_done()
-            }
-        })
+    setViewAndButton(view)
+    super.onCreate(state)
+  }
+}
+
+class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
+  def getWidgets(view:View) = {
+    val english_font =  view.findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
+    val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
+    val show_button = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
+    (english_font,default_lang,show_button)
+  }
+  override def doWhenClose(view:View){
+    val edit = Globals.prefs.get.edit
+    val (english_font,default_lang,show_button) = getWidgets(view)
+    val ar = context.getResources.getStringArray(R.array.yomi_info_english_fonts_values)
+    edit.putString("yomi_info_english_font",ar(english_font.getSelectedItemPosition))
+    edit.putBoolean("yomi_info_show_translate_button",show_button.isChecked)
+    edit.putBoolean("yomi_info_default_lang_is_jpn",default_lang.getSelectedItemPosition == 0)
+    edit.commit
+    Globals.forceRestart = true
+  }
+    
+  override def onCreate(state:Bundle){
+    val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_translation, null)
+
+    val (english_font,default_lang,show_button) = getWidgets(view)
+    val prefs = Globals.prefs.get
+
+    show_button.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
+    english_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_english_font","Default"),R.array.yomi_info_english_fonts_values))
+    default_lang.setSelection(if(prefs.getBoolean("yomi_info_default_lang_is_jpn",Romanization.is_japanese(context))){0}else{1})
+
+    setTitle(R.string.yomi_info_conf_translation_title)
+    setViewAndButton(view)
     super.onCreate(state)
   }
 }
@@ -179,5 +210,24 @@ trait YomiInfoPreferenceTrait{
     }catch{
       case _:IndexOutOfBoundsException => 0
     }
+  }
+}
+
+trait YomiInfoPreferenceSubDialogTrait{
+  self:AlertDialog =>
+  def doWhenClose(view:View)
+  def setViewAndButton(view:View){
+    self.setView(view)
+    self.setButton(DialogInterface.BUTTON_POSITIVE,self.getContext.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
+      override def onClick(dialog:DialogInterface,which:Int){
+        doWhenClose(view)
+        dismiss()
+      }
+    })
+    self.setButton(DialogInterface.BUTTON_NEGATIVE,self.getContext.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){
+      override def onClick(dialog:DialogInterface,which:Int){
+        dismiss()
+      }
+    })
   }
 }

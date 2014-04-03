@@ -5,6 +5,11 @@
 <LinearLayout android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical" >
+    <CheckBox
+      android:id="@+id/yomi_info_show_translate_button"
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_show_translate_button"
+      />
     <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -12,12 +17,12 @@
       <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/yomi_info_torifuda_mode_desc"
+                android:text="@string/yomi_info_default_language_desc"
         />
-      <Spinner android:id="@+id/yomi_info_torifuda_mode"
+      <Spinner android:id="@+id/yomi_info_default_language"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:entries="@array/yomi_info_mode"
+                android:entries="@array/yomi_info_default_languages"
                  />
     </LinearLayout>
     <LinearLayout
@@ -27,30 +32,13 @@
       <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/yomi_info_torifuda_desc"
-                android:layout_gravity="fill"
+                android:text="@string/yomi_info_english_fonts_desc"
         />
-      <Spinner android:id="@+id/yomi_info_torifuda_font"
+      <Spinner android:id="@+id/yomi_info_english_font"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:entries="@array/conf_show_yomi_info_entries"
+                android:entries="@array/yomi_info_english_fonts"
                  />
     </LinearLayout>
-    <include layout="@layout/horizontal_rule" />
-    <TextView
-              android:layout_height="wrap_content"
-              android:layout_width="wrap_content"
-              android:text="@string/yomi_info_caution"
-      />
-    <CheckBox
-      android:id="@+id/yomi_info_show_bar_kimari"
-      android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:text="@string/yomi_info_show_bar_kimari"
-      />
-    <CheckBox
-      android:id="@+id/yomi_info_show_info_button"
-      android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:text="@string/yomi_info_show_info_button"
-      />
 </LinearLayout>
 </ScrollView>

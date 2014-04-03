@@ -7,13 +7,14 @@ import _root_.android.util.{Log,AttributeSet}
 
 import scala.collection.mutable
 
-class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait{
+class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait{
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   var cur_num = None:Option[Int]
   var torifuda_mode = false:Boolean
+  var english_mode = false:Boolean
   var render_with_path = false
 
   def updateCurNum(){
@@ -32,10 +33,13 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
     show_furigana = Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)
     torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
+    english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",Romanization.is_japanese(context))
     initDrawing()
   }
   def initDrawing(){
-    if(torifuda_mode){
+    if(english_mode){
+      initEnglish()
+    }else if(torifuda_mode){
       initTorifuda()
     }else{
       initYomifuda()
@@ -43,7 +47,9 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   }
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
-    if(torifuda_mode){
+    if(english_mode){
+      onDrawEnglish(canvas)
+    }else if(torifuda_mode){
       onDrawTorifuda(canvas)
     }else{
       onDrawYomifuda(canvas)
@@ -460,5 +466,14 @@ trait YomiInfoTorifudaTrait{
         }
       }
     }
+  }
+}
+trait YomiInfoEnglishTrait{
+  self:YomiInfoView =>
+  def initEnglish(){
+    // TODO
+  }
+  def onDrawEnglish(canvas:Canvas){
+    // TODO
   }
 }

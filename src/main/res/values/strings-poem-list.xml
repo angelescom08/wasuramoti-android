@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="musumefusahose">むすめふさほせうつしもゆいちひきはやよかみたこおわなあ</string>
+  <string name="search_text_author">歌人</string>
   <string-array name="poem_list">
     <item>あきの</item><item>はるす</item><item>あし</item><item>たご</item><item>おく</item>
     <item>かさ</item><item>あまの</item><item>わがい</item><item>はなの</item><item>これ</item>
@@ -333,6 +334,7 @@
     <item>順徳院(じゅんとくいん)</item> 
   </string-array>
   <string-array name="list_full_en">
+    <item>In Naniwa Bay,//Now the flowers are blossoming.//After lying dormant all winter,//Now the spring has come//And those flowers are blossoming.</item>
     <item>Coarse the rush-mat roof//Sheltering the harvest-hut//Of the autumn rice-field;//And my sleeves are growing wet//With the moisture dripping through.</item>
     <item>The spring has passed//And the summer come again;//For the silk-white robes,//So they say, are spread to dry//On the \"Mount of Heaven\'s Perfume\".</item>
     <item>Oh, the foot-drawn trail//Of the mountain-pheasant\'s tail//Drooped like down-curved branch!//Through this long, long-dragging night//Must I lie in bed alone?</item>
@@ -435,6 +437,7 @@
     <item>In this ancient house,//Paved with a hundred stones,//Ferns grow in the eaves;//But numerous as they are,//My old memories are more.</item>
   </string-array>
   <string-array name="author_en">
+    <item>Wani</item>
     <item>Emperor Tenchi</item>
     <item>Empress Jitou</item>
     <item>Kakinomoto no Hitomaro</item>

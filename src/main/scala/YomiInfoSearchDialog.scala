@@ -27,7 +27,7 @@ object YomiInfoSearchDialog{
   }
   def getFudaNumAndKimari(context:Context,fudanum:Int):(String,Spanned) ={
     if(fudanum == 0){
-      ((if(Romanization.is_japanese(context)){"序歌"}else{"Joka"}),Html.fromHtml("---"))
+      (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
     }else{
       val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(context,fudanum)
       val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
@@ -72,7 +72,8 @@ class YomiInfoSearchDialog extends DialogFragment{
     val query = if(mode == "TEXT"){
       AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(fudanum))
     }else{
-      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(fudanum)).replace(" ","") + " 歌人"
+      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(fudanum)).replace(" ","") +
+        " " + getActivity.getString(R.string.search_text_author)
     }
     val f1 = {_:Unit =>
       val intent = new Intent(Intent.ACTION_WEB_SEARCH)
@@ -155,6 +156,8 @@ class YomiInfoSearchDialog extends DialogFragment{
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableButton(tag)
+      }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_LANG"){
+        Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
       }else{
         true
       }
@@ -165,11 +168,19 @@ class YomiInfoSearchDialog extends DialogFragment{
             showYomiInfoDetailDialog()
           }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
+              vw.english_mode = false
               vw.torifuda_mode ^= true
               vw.initDrawing
               vw.invalidate
               btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
               enableDisplayButton(!vw.torifuda_mode)
+            }
+          }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_LANG"){
+            getCurYomiInfoView.foreach{vw =>
+              vw.english_mode ^= true
+              vw.initDrawing
+              vw.invalidate
+              enableDisplayButton(vw.english_mode || !vw.torifuda_mode)
             }
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             val fudanum = getArguments.getInt("fudanum",0)
@@ -298,4 +309,3 @@ class YomiInfoDetailDialog extends DialogFragment{
     .create
   }
 }
-// このファイルはutf-8で日本語を含んでいます

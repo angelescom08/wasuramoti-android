@@ -72,17 +72,18 @@
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
   <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
+  <string name="yomi_info_conf_translation_title">Poem Text Translation</string>
   <string name="yomi_info_main_desc">Poem Text:</string>
-  <string name="yomi_info_furigana_desc">Furigana:</string>
-  <string name="yomi_info_torifuda_desc">Torifuda:</string>
-  <string name="yomi_info_torifuda_mode_desc">Initial Mode:</string>
+  <string name="yomi_info_furigana_desc">Furigana\nFont:</string>
+  <string name="yomi_info_torifuda_desc">Torifuda\nFont:</string>
+  <string name="yomi_info_torifuda_mode_desc">Default Mode:</string>
   <string-array name="yomi_info_mode">
     <item>Yomifuda</item>
     <item>Torifuda</item>
   </string-array>
   <string name="yomi_info_display_desc">Display:</string>
   <string name="yomi_info_author_desc">Author</string>
-  <string name="yomi_info_furigana_show_desc">Furigana</string>
+  <string name="yomi_info_furigana_show_desc">Furigana Font</string>
   <string name="yomi_info_kami_desc">1st</string>
   <string name="yomi_info_simo_desc">2nd</string>
   <string name="yomi_info_abbrev_furigana">F</string>
@@ -113,7 +114,8 @@
     <item>asset:kouzan-gyosho.ttf</item>
     <item>asset:kouzan-sousho.ttf</item>
   </string-array>
-  <string name="yomi_info_furigana_size_desc">Firigana Size:</string>
+  <string name="yomi_info_furigana_size_desc">Firigana\nSize:</string>
+  <string name="yomi_info_joka">Joka</string>
 
   <string name="yomi_info_caution">The following setting is valid only when device is wide enough or in landscape mode. As for small device, you can display it by long pressing the poem text.</string>
   <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
@@ -126,8 +128,9 @@
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
     <item>A.DISPLAY_FURIGANA|Furigana</item>
-    <item>B.KIMARIJI_LOG|Kimariji</item>
+    <item>B.SWITCH_LANG|Translate</item>
     <item>B.SWITCH_MODE|Torifuda;Yomifuda</item>
+    <item>B.KIMARIJI_LOG|Kimariji</item>
     <item>C.SEARCH_TEXT|Poem</item>
     <item>C.SEARCH_AUTHOR|Author</item>
   </string-array>
@@ -153,6 +156,24 @@
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>
   <string name="kimariji_changelog_sameas">The Kimariji in current poem set is as same as above.</string>
 
+  <string name="yomi_info_button_config_translation">Translation</string>
+  <string name="yomi_info_default_language_desc">Default Language:</string>
+  <string-array name="yomi_info_default_languages">
+    <item>Japanese</item>
+    <item>English</item>
+  </string-array>
+  <string name="yomi_info_show_translate_button">Show Translate Button</string>
+  <string name="yomi_info_english_fonts_desc">English Font:</string>
+  <string-array name="yomi_info_english_fonts">
+    <item>Default</item>
+    <item>Serif</item>
+    <item>Black Chancery</item>
+  </string-array>
+  <string-array name="yomi_info_english_fonts_values">
+    <item>Default</item>
+    <item>Serif</item>
+    <item>asset:black-chancery.ttf</item>
+  </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">Change where to stop playing at each half of the poem.</string>
