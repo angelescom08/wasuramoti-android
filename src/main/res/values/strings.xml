@@ -165,14 +165,14 @@
   <string name="yomi_info_show_translate_button">Show Translate Button</string>
   <string name="yomi_info_english_fonts_desc">English Font:</string>
   <string-array name="yomi_info_english_fonts">
-    <item>Default</item>
     <item>Serif</item>
     <item>Black Chancery</item>
+    <item>Dancing Script</item>
   </string-array>
   <string-array name="yomi_info_english_fonts_values">
-    <item>Default</item>
     <item>Serif</item>
     <item>asset:black-chancery.ttf</item>
+    <item>asset:dancing-script.ttf</item>
   </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>

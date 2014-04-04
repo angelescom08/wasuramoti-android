@@ -193,8 +193,8 @@ class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context
     val prefs = Globals.prefs.get
 
     show_button.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
-    english_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_english_font","Default"),R.array.yomi_info_english_fonts_values))
-    default_lang.setSelection(if(prefs.getBoolean("yomi_info_default_lang_is_jpn",Romanization.is_japanese(context))){0}else{1})
+    english_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_english_font","Serif"),R.array.yomi_info_english_fonts_values))
+    default_lang.setSelection(if(prefs.getBoolean("yomi_info_default_lang_is_jpn",true)){0}else{1})
 
     setTitle(R.string.yomi_info_conf_translation_title)
     setViewAndButton(view)

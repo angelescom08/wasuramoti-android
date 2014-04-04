@@ -15,7 +15,7 @@ KANJI = u'''々三上世中丸久之九乱乾二于京人仁今代仲任伊位�
 蓮藤蝉行衛衣袖西見親言誓誰謙議讃貞貫賢赤越路踏身躬軒輔近通逢遍過道遠部都里重野錦
 鎌長門間関閨防降院陸陽隆雄雅難雨雪雲霜霧露音順須頼顔顕風養香高髪鳥鳴鹿麻麿黒'''
 
-ASCII = u'''!"'(),-.:;?ABCDEFGHIJKLMNOPRSTUWYabcdefghijklmnopqrstuvwxyz'''
+ASCII = u''' !"'(),-.:;?ABCDEFGHIJKLMNOPRSTUWYabcdefghijklmnopqrstuvwxyz'''
 
 import sys, argparse, fontforge
 
@@ -61,7 +61,7 @@ for g in font.glyphs():
     font.clear()
 
 if chars:
-  print "Error, %d glypths missing:"%(len(chars)), "".join(unichr(i).encode('utf-8') for i in chars)
-else:
-  font.generate(out_file,flags=("TeX-table",))
+  print "Warning, %d glypths missing: '%s'"%(len(chars), "','".join(unichr(i).encode('utf-8') for i in chars))
+
+font.generate(out_file,flags=("TeX-table",))
 

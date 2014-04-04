@@ -20,6 +20,8 @@ object TypefaceManager{
         }catch{
           case _:Throwable => Typeface.DEFAULT
         })
+    }else if(conf == "Serif"){
+      Typeface.SERIF
     }else{
       Typeface.DEFAULT
     }
@@ -59,7 +61,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
           val v = findViewById(vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
-            val threshold = Math.min((v.getWidth * SCROLL_THREASHOLD).toInt, Utils.DipToPx(context,SCROLL_THREASHOLD_DIP).toInt)
+            val threshold = Math.min((v.getWidth * SCROLL_THREASHOLD).toInt, Utils.dipToPx(context,SCROLL_THREASHOLD_DIP).toInt)
             val nvid = if(Math.abs(dx) > threshold){
               if(dx > 0){
                 vid match{

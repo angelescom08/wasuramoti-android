@@ -86,7 +86,7 @@ object Utils {
     }
   }
 
-  def DipToPx(context:Context,dip:Int):Float = {
+  def dipToPx(context:Context,dip:Int):Float = {
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.getResources.getDisplayMetrics)
   }
 

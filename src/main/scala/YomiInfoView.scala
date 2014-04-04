@@ -33,7 +33,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
     show_furigana = Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)
     torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",Romanization.is_japanese(context))
+    english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
     initDrawing()
   }
   def initDrawing(){
@@ -108,6 +108,28 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }else{
       canvas.drawText(str,x,y,paint)
     }
+  }
+  def getTextArrayWithMargin[T](num:Int,res_id:Int,res_author:Int,delimiter:String,sub_delimiter:String,author_is_right:Boolean,
+    margin_top:Array[T],margin_author:Array[T],author_prefix:String=""):Array[(String,T)] = {
+      val full = AllFuda.get(context,res_id)(num).split(delimiter).zip(margin_top) 
+      val author = if(show_author){
+        (author_prefix + AllFuda.get(context,res_author)(num)).split(delimiter).zip(margin_author)
+      }else{
+        new Array[(String,T)](0)
+      }
+      val body = 
+        (if(show_kami){full.take(3)}else{new Array[(String,T)](0)}) ++
+        (if(show_simo){full.takeRight(2)}else{new Array[(String,T)](0)})
+      val res = if(author_is_right){
+        author ++ body
+      }else{
+        body ++ author
+      }
+      if(TextUtils.isEmpty(sub_delimiter)){
+        res
+      }else{
+        res.map{case (s,t) => s.split(sub_delimiter).map{(_,t)}}.flatten
+      }
   }
 }
 
@@ -260,12 +282,7 @@ trait YomiInfoYomifudaTrait{
       val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
-      val full = AllFuda.get(context,R.array.list_full)(num).split(" ").zip(MARGIN_TOP)
-      
-      var text_array_with_margin = (if(show_author){AllFuda.get(context,R.array.author)(num).split(" ").zip(MARGIN_AUTHOR)}else{new Array[(String,Double)](0)}) ++
-        (if(show_kami){full.take(3)}else{new Array[(String,Double)](0)}) ++
-        (if(show_simo){full.takeRight(2)}else{new Array[(String,Double)](0)})
-
+      var text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",true,MARGIN_TOP,MARGIN_AUTHOR)
       if(text_array_with_margin.isEmpty){
         return
       }
@@ -470,10 +487,69 @@ trait YomiInfoTorifudaTrait{
 }
 trait YomiInfoEnglishTrait{
   self:YomiInfoView =>
+  // TODO: use infinite array
+  val ENG_MARGIN_LEFT = Array.fill[Paint.Align](8)(Paint.Align.CENTER)
+  val ENG_MARGIN_AUTHOR = Array.fill[Paint.Align](2)(Paint.Align.RIGHT)
+  val ENG_MARGIN_TB_BASE = 0.04 // rate of view height
+  val ENG_MARGIN_LR_BASE = 0.04 // rate of view height
+  val ENG_ROWSPAN = 0.04 // rate of view height
+
+  var ENG_MARGIN_TB = ENG_MARGIN_TB_BASE
+  var ENG_MARGIN_LR = ENG_MARGIN_LR_BASE
   def initEnglish(){
-    // TODO
+    paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_english_font","Serif")))
+    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    ENG_MARGIN_TB = ENG_MARGIN_TB_BASE*margin_boost
+    ENG_MARGIN_LR = ENG_MARGIN_LR_BASE*margin_boost
+  }
+  
+  def measureTextSizeEng(ar:Array[String],paint:Paint):(Int,Int) = {
+    var tsumx = 0
+    var tsumy = 0
+    for(t<-ar){
+      val r = new Rect()
+      paint.getTextBounds(t,0,t.length,r)
+      tsumx = Math.max(tsumx,r.right-r.left)
+      tsumy += r.bottom - r.top
+    }
+    (tsumx,tsumy)
+  }
+  def calculateTextSizeEng(text_array_with_margin:Array[(String,Paint.Align)],paint:Paint):Int ={
+    val rows = text_array_with_margin.size
+    val estimated = getHeight / rows
+    paint.setTextSize(estimated)
+    val resty = (1.0 - ENG_MARGIN_TB*2 - (rows-1)*ENG_ROWSPAN)*getHeight
+    val restx = (1.0 - ENG_MARGIN_LR*2)*getWidth
+    val (tsumx,tsumy) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+    val rr = Math.min(resty/tsumy,restx/tsumx)
+    (rr*estimated).toInt
   }
   def onDrawEnglish(canvas:Canvas){
-    // TODO
+    cur_num.foreach{num =>
+      val text_array_with_margin = getTextArrayWithMargin[Paint.Align](num,R.array.list_full_en,R.array.author_en,"//","##",false,ENG_MARGIN_LEFT,ENG_MARGIN_AUTHOR,"- ")
+      if(text_array_with_margin.isEmpty){
+        return
+      }
+      val textsize = calculateTextSizeEng(text_array_with_margin,paint)
+      paint.setTextSize(textsize)
+      val (tsumx,tsumy) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+      val rows = text_array_with_margin.length
+      val rowspan = getHeight*ENG_ROWSPAN
+      val charheight = tsumy / rows
+      val rowheight = charheight + rowspan
+      var starty = getHeight/2.0 - tsumy/2.0 - (rows-1)*rowspan/2.0 + charheight
+
+      for((t,m) <- text_array_with_margin){
+        paint.setTextAlign(m)
+        val x = if(
+          m == Paint.Align.CENTER){
+          getWidth/2
+        }else{
+          getWidth - ENG_MARGIN_LR*getWidth
+        }
+        canvas.drawText(t,x.toFloat,starty.toFloat,paint)
+        starty += rowheight
+      }
+    }
   }
 }
