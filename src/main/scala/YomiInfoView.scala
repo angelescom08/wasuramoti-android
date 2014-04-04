@@ -8,6 +8,7 @@ import _root_.android.util.{Log,AttributeSet}
 import scala.collection.mutable
 
 class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait{
+  val RENDER_WITH_PATH_THRESHOLD = 496
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
@@ -96,13 +97,13 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     // so we use getTextPath and drawPath instead of drawText when this equation holds.
     // Note: since height_char_max is not accurate, we consider the threshold a litte bit smaller.
     val (_,height_char_max,_) = measureBoundMax(texts,paint)
-    render_with_path = height_char_max >= 496
+    render_with_path = height_char_max >= RENDER_WITH_PATH_THRESHOLD
   }
 
-  def drawChar(canvas:Canvas,paint:Paint,str:String,x:Float,y:Float){
+  def drawTextOrPath(canvas:Canvas,paint:Paint,str:String,x:Float,y:Float){
     if(render_with_path){
       val path = new Path()
-      paint.getTextPath(str,0,1,x,y,path)
+      paint.getTextPath(str,0,str.length,x,y,path)
       path.close
       canvas.drawPath(path,paint)
     }else{
@@ -239,7 +240,7 @@ trait YomiInfoYomifudaTrait{
       paint.getTextBounds(t.toString,0,1,r)
       width = Math.max(r.right-r.left,width)
       val yy = (y - r.top).toInt
-      self.drawChar(canvas,paint,t.toString,startx,yy)
+      self.drawTextOrPath(canvas,paint,t.toString,startx,yy)
       y += r.bottom - r.top + span
       if(Globals.IS_DEBUG){
         val paint_debug = new Paint()
@@ -479,7 +480,19 @@ trait YomiInfoTorifudaTrait{
           val r = new Rect()
           paint.getTextBounds(s,0,1,r)
           val ch = r.bottom - r.top
-          drawChar(canvas,paint,s,x.toFloat,y.toFloat+ch/2.0f-r.bottom)
+          val yy = y.toFloat+ch/2.0f-r.bottom
+          drawTextOrPath(canvas,paint,s,x.toFloat,yy)
+          if(Globals.IS_DEBUG){
+            val paint_debug = new Paint()
+            paint_debug.setStyle(Paint.Style.STROKE)
+            paint_debug.setColor(Color.RED)
+            paint_debug.setStrokeWidth(3)
+            val r_l = x-(r.right-r.left)/2
+            val r_t = yy+r.top
+            val r_r = x+(r.right-r.left)/2
+            val r_b = yy+r.bottom
+            canvas.drawRect(r_l.toFloat,r_t.toFloat,r_r.toFloat,r_b.toFloat,paint_debug)
+          }
         }
       }
     }
@@ -503,16 +516,18 @@ trait YomiInfoEnglishTrait{
     ENG_MARGIN_LR = ENG_MARGIN_LR_BASE*margin_boost
   }
   
-  def measureTextSizeEng(ar:Array[String],paint:Paint):(Int,Int) = {
+  def measureTextSizeEng(ar:Array[String],paint:Paint):(Int,Int,Int) = {
     var tsumx = 0
     var tsumy = 0
+    var topsum = 0
     for(t<-ar){
       val r = new Rect()
       paint.getTextBounds(t,0,t.length,r)
       tsumx = Math.max(tsumx,r.right-r.left)
       tsumy += r.bottom - r.top
+      topsum += r.top
     }
-    (tsumx,tsumy)
+    (tsumx,tsumy,topsum/ar.length)
   }
   def calculateTextSizeEng(text_array_with_margin:Array[(String,Paint.Align)],paint:Paint):Int ={
     val rows = text_array_with_margin.size
@@ -520,11 +535,22 @@ trait YomiInfoEnglishTrait{
     paint.setTextSize(estimated)
     val resty = (1.0 - ENG_MARGIN_TB*2 - (rows-1)*ENG_ROWSPAN)*getHeight
     val restx = (1.0 - ENG_MARGIN_LR*2)*getWidth
-    val (tsumx,tsumy) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+    val (tsumx,tsumy,topave) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
     val rr = Math.min(resty/tsumy,restx/tsumx)
     (rr*estimated).toInt
   }
   def onDrawEnglish(canvas:Canvas){
+    if(Globals.IS_DEBUG){
+      val paint_debug = new Paint()
+      paint_debug.setStyle(Paint.Style.STROKE)
+      paint_debug.setColor(Color.RED)
+      paint_debug.setStrokeWidth(3)
+      val r_l = getWidth * ENG_MARGIN_LR
+      val r_r = getWidth - r_l
+      val r_t = getHeight * ENG_MARGIN_TB
+      val r_b = getHeight - r_t
+      canvas.drawRect(r_l.toFloat,r_t.toFloat,r_r.toFloat,r_b.toFloat,paint_debug)
+    }
     cur_num.foreach{num =>
       val text_array_with_margin = getTextArrayWithMargin[Paint.Align](num,R.array.list_full_en,R.array.author_en,"//","##",false,ENG_MARGIN_LEFT,ENG_MARGIN_AUTHOR,"- ")
       if(text_array_with_margin.isEmpty){
@@ -532,12 +558,16 @@ trait YomiInfoEnglishTrait{
       }
       val textsize = calculateTextSizeEng(text_array_with_margin,paint)
       paint.setTextSize(textsize)
-      val (tsumx,tsumy) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+      val (tsumx,tsumy,topave) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
       val rows = text_array_with_margin.length
       val rowspan = getHeight*ENG_ROWSPAN
       val charheight = tsumy / rows
       val rowheight = charheight + rowspan
-      var starty = getHeight/2.0 - tsumy/2.0 - (rows-1)*rowspan/2.0 + charheight
+      var starty = getHeight/2.0 - tsumy/2.0 - (rows-1)*rowspan/2.0 - topave
+
+      if(charheight >= RENDER_WITH_PATH_THRESHOLD){
+        render_with_path = true
+      }
 
       for((t,m) <- text_array_with_margin){
         paint.setTextAlign(m)
@@ -547,7 +577,7 @@ trait YomiInfoEnglishTrait{
         }else{
           getWidth - ENG_MARGIN_LR*getWidth
         }
-        canvas.drawText(t,x.toFloat,starty.toFloat,paint)
+        drawTextOrPath(canvas,paint,t,x.toFloat,starty.toFloat)
         starty += rowheight
       }
     }

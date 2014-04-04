@@ -43,7 +43,7 @@ class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
               cancel()
             }
             case DialogInterface.BUTTON_NEUTRAL => {
-              Utils.generalHtmlDialog(context,R.string.how_to_add_reader_html,{Unit=>show()})
+              Utils.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html),{Unit=>show()})
             }
             case _ => {
             }

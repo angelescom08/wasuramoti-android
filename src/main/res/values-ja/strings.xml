@@ -335,4 +335,7 @@
   <string name="confirm_action_view_fudaset_fail">札セット群を取り込むのに失敗しました．</string>
 
   <string name="cannot_load_vorbis_library">Vorbisライブラリのロード失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
+  <string name="conf_show_credits">謝辞</string>
+  <string name="conf_show_credits_summary">使用しているフォントやライブラリなどのライセンス表示</string>
+  <string name="category_other">その他</string>
 </resources>

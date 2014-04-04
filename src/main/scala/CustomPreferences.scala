@@ -254,4 +254,3 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
     return view
   }
 }
-

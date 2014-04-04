@@ -8,6 +8,7 @@ import _root_.android.content.res.Configuration
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
+import _root_.android.text.method.LinkMovementMethod
 import _root_.android.os.Environment
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
@@ -86,6 +87,10 @@ object Utils {
     }
   }
 
+  def readStream(is:java.io.InputStream):String = {
+    val s = new java.util.Scanner(is,"UTF-8").useDelimiter("\\A")
+    if(s.hasNext){s.next}else{""}
+  }
   def dipToPx(context:Context,dip:Int):Float = {
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.getResources.getDisplayMetrics)
   }
@@ -213,11 +218,19 @@ object Utils {
     Globals.alert_dialog = None
   }
 
-  def generalHtmlDialog(context:Context,html_id:Int,func_done:Unit=>Unit=identity[Unit]){
+  def generalHtmlDialog(context:Context,html_id:Either[String,Int],func_done:Unit=>Unit=identity[Unit]){
     val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = context.getResources.getString(html_id)
-    view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView].setText(Html.fromHtml(html))
+    val html = html_id match {
+      case Left(txt) => txt
+      case Right(id) => context.getResources.getString(id)
+    }
+    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+    txtview.setText(Html.fromHtml(html))
+
+    // this makes "<a href='...'></a>" clickable
+    txtview.setMovementMethod(LinkMovementMethod.getInstance)
+    
     builder.setView(view)
     builder.setPositiveButton(context.getResources.getString(android.R.string.ok), new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){

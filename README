@@ -1,31 +1,56 @@
 [About]
-  App Name: Wasuramoti
+  App Name: Hyakunin Isshu - Wasuramoti
   App Version: 0.8.9
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
+  Required CPU: ARM, ARM-v7a, x86
   Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
                `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport which uses the set.
-  Note: The packaged wasuramoti-*.apk is compiled in Android NDK which is targeted to ARM,ARM-v7a,x86 CPU.
-        Therefore the wasuramoti-*.apk only works on those CPU's.
 
 [License]
   Wasuramoti is an open source software, which is licensed under BSD 3-Clause License.
   You can download the source code from https://github.com/pjmtdw/wasuramoti-android
-  The licence is written in COPYING file which is placed on the same directory of this README.
+  The license is written in COPYING file which is placed in the apk file. 
 
-  However, note that the audio file enclosed in the *.apk package might have another licence.
+  However, note that the audio file enclosed in the *.apk package might have another license.
   Therefore, redistributing the *.apk file might have some limits.
-  I will write the copyrights and licence of the audio file in below when packaging *.apk.
+  See credits for copyright.
 
-  __WRITE_AUDIO_LICENCE_HERE__
+  __BEGIN_CREDITS__
 
 [Credits]
-  This software uses the following library which is copyrighted as follows:
-   - <libogg/libvorbis> Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
+  This software uses the following libaries, audio datas, and fonts which is copyrighted as follows:
+  <libogg/libvorbis>
+     %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
+    The body text of license is included in apk with file name of `COPYING-OGGVORBIS`
+  <Audio Data>
+    __WRITE_AUDIO_LICENSE_HERE__
+  <T-Font>
+    %% T-Font (C) Sakamura-Koshizuka Laboratory, The University of Tokyo, http://www.sakamura-lab.org
+    Wasuramoti's authorization number for using T-Font is 80004
+  <Dancing Script>
+    %% Copyright (c) 2010, Pablo Impallari (www.impallari.com|impallari@gmail.com),
+    %% Copyright (c) 2010, Igino Marini. (www.ikern.com|mail@iginomarini.com),
+    %% with Reserved Font Name Dancing Script.
+    The body text of license is incuded in apk with file name of `DANCING-SCRIPT-OFL.txt`
+  ---
+  Also the following fonts are public domain but thanks anyway:
+  <Kouzan Font>
+    Kouzan Mouhitu Font, http://opentype.jp/freemouhitufont.htm
+  <Black Chancery>
+    Black Chancery Font, (URL UNKNOWN)
+  ---
+  The english translation of Hyakunin Isshu is taken from a book written in 1917, which is currently public domain.
+    Title: Hyakunin-isshu (Single songs of a hundred poets.)
+    Author: Clay MacCauley
+    Published: Kelly and Walsh, 1917
+    URL: http://en.wikisource.org/wiki/Hyakunin_Issh%C5%AB
+
+__END_CREDITS__
 
 [Where to put .ogg file inside the application]
   Read how_to_add_reader_hml in src/main/res/values/strings.xml for name conventions for *.ogg files
-  Place 202 ogg files in ./players/<reader>/ and licence in ./players/<reader>-licence
+  Place 202 ogg files in ./players/<reader>/ and license in ./players/<reader>-license
 
 [How to build apk file]
   Requirements:

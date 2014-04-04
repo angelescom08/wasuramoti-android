@@ -3,6 +3,8 @@ players/
 target/
 project/target/
 src/main/assets/reader/
+src/main/assets/license/
+src/main/assets/README*
 src/main/obj/
 uitest/bin/
 

@@ -70,7 +70,7 @@
   <!-- CATEGORY_ORDER -->
   <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
-  <string name="conf_show_yomi_info_summary">Show text of poem while playing.</string>
+  <string name="conf_show_yomi_info_summary">Show current poem text on the screen.</string>
   <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
   <string name="yomi_info_conf_translation_title">Poem Text Translation</string>
   <string name="yomi_info_main_desc">Poem Text:</string>
@@ -361,4 +361,7 @@
 
   <string name="cannot_load_vorbis_library">Failed to load vorbis library. Maybe the compile option of this application is not targeted to your CPU.</string>
   <string name="alarm_service_not_supported">ALARM_SERVICE is not supported on this device.</string>
+  <string name="conf_show_credits">Credits</string>
+  <string name="conf_show_credits_summary">License of fonts and libraries.</string>
+  <string name="category_other">Others</string>
 </resources>

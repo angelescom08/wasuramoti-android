@@ -126,7 +126,7 @@ trait FudaSetTrait{
     help_view.setText(Html.fromHtml(getString(R.string.fudasetedit_help_html)))
     help_view.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        Utils.generalHtmlDialog(dialog.getContext,R.string.fudasetedit_fudanum_html)
+        Utils.generalHtmlDialog(dialog.getContext,Right(R.string.fudasetedit_fudanum_html))
       }
     })
     dialog.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){

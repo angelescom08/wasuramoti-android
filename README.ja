@@ -1,0 +1,46 @@
+[基本情報]
+  アプリ名: 百人一首読み上げ「わすらもち」
+  バージョン: 0.8.9
+  開発者: 吉本晴洋 <pjmtdw@gmail.com>
+  対応 OS: Android OS バージョン 2.1 以上
+  対応 CPU: ARM, ARM-v7a, x86
+  説明: 競技かるたの練習にも使える百人一首読み上げアプリ
+
+[ライセンス]
+  わすらもちは三条項BSDライセンスのフリーソフトウェアです．
+  ソースコードは https://github.com/pjmtdw/wasuramoti-android にあります．
+  ライセンスの全文はapkファイルの中の COPYING というファイルに書いてあります．
+  しかし，apkファイルには音声データが含まれているため，その再配布には制限がある可能性があります．
+  謝辞の項目を参考にして下さい．
+
+__BEGIN_CREDITS__
+
+[謝辞]
+  このソフトウェアは下記のライブラリ，音声データ，フォントを使っています．それぞれの著作権情報は下記の通りになっています．
+  <libogg/libvorbis>
+    %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
+    ライセンス条文はapkファイルの中の `COPYING-OGGVORBIS` にあります．
+  <音声データ>
+    __WRITE_AUDIO_LICENSE_HERE__
+  <Tフォント>
+    %% Tフォント (C) 東京大学 坂村・越塚研究室, http://www.sakamura-lab.org
+    わすらもちはTフォントを使用するにあたり許諾番号80004を戴いています．
+  <Dancing Script>
+    %% Copyright (c) 2010, Pablo Impallari (www.impallari.com|impallari@gmail.com),
+    %% Copyright (c) 2010, Igino Marini. (www.ikern.com|mail@iginomarini.com),
+    %% with Reserved Font Name Dancing Script.
+    ライセンス条文はapkファイルの中の `DANCING-SCRIPT-OFL.txt` にあります．
+  ---
+  下記のフォントはパブリックドメインですがともあれ感謝です:
+  <Kouzan Font>
+    衡山毛筆フォント, http://opentype.jp/freemouhitufont.htm
+  <Black Chancery>
+    Black Chancery Font, (URL不明)
+  ---
+  小倉百人一首の英訳は Clay MacCauley という方が1917年に発行した著作権切れの本から拝借しています．
+    題名: Hyakunin-isshu (Single songs of a hundred poets.)
+    著者: Clay MacCauley
+    発行: Kelly and Walsh, 1917
+    URL: http://en.wikisource.org/wiki/Hyakunin_Issh%C5%AB
+
+__END_CREDITS__

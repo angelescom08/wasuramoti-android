@@ -5,8 +5,12 @@ import _root_.android.os.Bundle
 import _root_.android.view.View
 import _root_.android.widget.{TextView,CheckBox,CompoundButton}
 import _root_.android.util.AttributeSet
-import _root_.android.content.{Context,SharedPreferences}
+import _root_.android.net.Uri
+import _root_.android.text.TextUtils
+import _root_.android.content.{Context,SharedPreferences,Intent}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
+
+import java.util.regex.Pattern
 
 trait PreferenceCustom extends Preference{
   self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
@@ -123,6 +127,25 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           ReaderList.setDefaultReader(getApplicationContext())
           Utils.restartApplication(context)
         })
+        return false
+      }
+    })
+    findPreference("show_credits").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
+      override def onPreferenceClick(pref:Preference):Boolean = {
+        val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
+        val fp = context.getAssets.open("README"+suffix)
+        val pat1 = Pattern.compile(".*__BEGIN_CREDITS__",Pattern.DOTALL)
+        val pat2 = Pattern.compile("__END_CREDITS__.*",Pattern.DOTALL)
+        val buf = TextUtils.htmlEncode(Utils.readStream(fp))
+        .replaceAll("\n","<br>\n")
+        .replaceAll(" ","\u00A0")
+        .replaceAll("(&lt;.*?&gt;)","<b>$1</b>")
+        .replaceAll("%%(.*)","<font color='#CCCCFF'><i>$1</i></font>")
+        .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<a href='$1'>$1</a>")
+        fp.close
+        val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
+        Utils.generalHtmlDialog(context:Context,Left(buf2))
+
         return false
       }
     })
