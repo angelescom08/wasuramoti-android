@@ -118,7 +118,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       Utils.setButtonTextByState(activity.getApplicationContext())
       val wait_time = bundle.getLong("wait_time",100)
-      if(Utils.showYomiInfo){
+      if(YomiInfoUtils.showPoemText){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
         }else if(auto_play){

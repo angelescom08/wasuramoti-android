@@ -3,5 +3,6 @@
   <item android:id="@+id/menu_shuffle" android:title="@string/menu_shuffle" android:numericShortcut="1" />
   <item android:id="@+id/menu_move" android:title="@string/menu_move" android:numericShortcut="2" />
   <item android:id="@+id/menu_timer" android:title="@string/menu_timer" android:numericShortcut="3" />
+  <item android:id="@+id/menu_quick_conf" android:title="@string/menu_quick_conf" android:numericShortcut="3" />
   <item android:id="@+id/menu_conf" android:title="@string/menu_conf" android:numericShortcut="4" />
 </menu>

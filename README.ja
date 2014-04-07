@@ -16,7 +16,7 @@
 __BEGIN_CREDITS__
 
 [謝辞]
-  このソフトウェアは下記のライブラリ，音声データ，フォントを使っています．それぞれの著作権情報は下記の通りになっています．
+  このソフトウェアは下記のライブラリ，音声データ，フォントを使わせていただいています．それぞれの著作権情報は下記の通りになっています．
   <libogg/libvorbis>
     %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
     ライセンス条文はapkファイルの中の `COPYING-OGGVORBIS` にあります．

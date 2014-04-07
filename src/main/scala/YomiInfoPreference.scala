@@ -1,16 +1,17 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.preference.DialogPreference
-import _root_.android.content.{Context,DialogInterface}
+import _root_.android.content.{Context,DialogInterface,SharedPreferences}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{SeekBar,CheckBox,Spinner,AdapterView,ArrayAdapter,Button}
 import _root_.android.os.Bundle
-import _root_.android.app.AlertDialog
+import _root_.android.app.{AlertDialog,Dialog}
+import _root_.android.support.v4.app.DialogFragment
 
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
   var root_view = None:Option[View]
   override def getAbbrValue():String = {
-    val v = Globals.prefs.get.getString("show_yomi_info","None")
+    val v = YomiInfoUtils.getPoemTextFont 
     val index = getIndexFromValue(context,v)
     val res = context.getResources
     var base = res.getStringArray(R.array.conf_show_yomi_info_entries_abbr)(index)
@@ -53,7 +54,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         val edit = Globals.prefs.get.edit
         val (main,furigana_font,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
         val ar = context.getResources.getStringArray(ENTRY_VALUE_ID)
-        edit.putString("show_yomi_info",ar(main.getSelectedItemPosition))
+        YomiInfoUtils.setPoemTextFont(edit,ar(main.getSelectedItemPosition))
         edit.putString("yomi_info_furigana_font",ar(furigana_font.getSelectedItemPosition))
         edit.putInt("yomi_info_furigana_width",furigana_size.getProgress)
         edit.putBoolean("yomi_info_furigana_show",furigana_show.isChecked)
@@ -72,7 +73,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     root_view = Some(view)
     val (main,furigana_font,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
     val prefs = Globals.prefs.get
-    main.setSelection(getIndexFromValue(context,prefs.getString("show_yomi_info","None")))
+    main.setSelection(getIndexFromValue(context,YomiInfoUtils.getPoemTextFont))
     val adapter = new ArrayAdapter[String](context,android.R.layout.simple_spinner_item,
       Array(context.getResources.getString(R.string.yomi_info_sameas_kanji))
       ++ context.getResources.getStringArray(R.array.conf_show_yomi_info_entries).tail
@@ -229,5 +230,81 @@ trait YomiInfoPreferenceSubDialogTrait{
         dismiss()
       }
     })
+  }
+}
+class QuickConfigDialog extends DialogFragment{
+  override def onCreateDialog(saved:Bundle):Dialog = {
+    val listener = new DialogInterface.OnClickListener{
+      override def onClick(dialog:DialogInterface,which:Int){
+        val edit = Globals.prefs.get.edit
+        which match{
+          case 0 =>
+            YomiInfoUtils.setPoemTextVisibility(edit,false) 
+          case 1 =>
+            YomiInfoUtils.setPoemTextVisibility(edit,true)
+            edit.putBoolean("yomi_info_torifuda_mode",false)
+            edit.putBoolean("yomi_info_show_bar_kimari",true)
+            edit.putBoolean("yomi_info_kami",true)
+            edit.putBoolean("yomi_info_simo",true)
+            edit.putBoolean("yomi_info_author",true)
+            edit.putBoolean("yomi_info_furigana_show",true)
+            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+          case 2 =>
+            YomiInfoUtils.setPoemTextVisibility(edit,true)
+            edit.putBoolean("yomi_info_torifuda_mode",true)
+            edit.putBoolean("yomi_info_show_bar_kimari",false)
+            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+          case 3 =>
+            YomiInfoUtils.setPoemTextVisibility(edit,true)
+            edit.putBoolean("yomi_info_torifuda_mode",false)
+            edit.putBoolean("yomi_info_show_bar_kimari",true)
+            edit.putBoolean("yomi_info_kami",true)
+            edit.putBoolean("yomi_info_simo",false)
+            edit.putBoolean("yomi_info_author",false)
+            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+          case 4 =>
+            YomiInfoUtils.setPoemTextVisibility(edit,true)
+            edit.putBoolean("yomi_info_default_lang_is_jpn",false)
+        }
+        edit.commit
+        dismiss
+        getActivity.finish
+        getActivity.startActivity(getActivity.getIntent)
+      }
+    }
+    val builder = new AlertDialog.Builder(getActivity)
+    builder
+    .setTitle(getActivity.getString(R.string.menu_quick_conf))
+    .setItems(R.array.quick_conf_list,listener)
+    .setNegativeButton(android.R.string.cancel,null)
+    .create
+  }
+}
+
+object YomiInfoUtils{
+  def getShowYomiInfo(pref:SharedPreferences):Array[String] = {
+    pref.getString("show_yomi_info","None").split(";")
+  }
+  def showPoemText():Boolean = {
+    Globals.prefs.exists{getShowYomiInfo(_).head != "None"}
+  }
+  def getPoemTextFont():String = {
+    Globals.prefs.map{getShowYomiInfo(_).head}.getOrElse("None")
+  }
+  def setPoemTextFont(edit:SharedPreferences.Editor,str:String){
+    val old = getPoemTextFont
+    edit.putString("show_yomi_info",str + ";" + old)
+  }
+  def setPoemTextVisibility(edit:SharedPreferences.Editor,show:Boolean){
+    var ar = getShowYomiInfo(Globals.prefs.get).filter{_ != "None"}
+    if(ar.isEmpty){
+      ar = Array("asset:tfont-kaisho.ttf")
+    }
+    val (n,old) = if(show){
+      (ar.head,"None")
+    }else{
+      ("None",ar.head)
+    }
+    edit.putString("show_yomi_info",n + ";" + old)
   }
 }

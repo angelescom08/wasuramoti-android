@@ -173,7 +173,7 @@ trait YomiInfoYomifudaTrait{
     MARGIN_BOTTOM = MARGIN_BOTTOM_BASE*margin_boost
     MARGIN_LR = MARGIN_LR_BASE*margin_boost
 
-    val main_font = TypefaceManager.get(context,Globals.prefs.get.getString("show_yomi_info","None"))
+    val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
     paint.setTypeface(main_font)
     val furigana_tmp = Globals.prefs.get.getString("yomi_info_furigana_font","None")
     val furigana_font = if(furigana_tmp == "None"){
@@ -410,7 +410,7 @@ trait YomiInfoTorifudaTrait{
     val font = if(tmp != "None"){
       tmp
     }else{
-      Globals.prefs.get.getString("show_yomi_info","None")
+      YomiInfoUtils.getPoemTextFont
     }
     paint.setTypeface(TypefaceManager.get(context,font))
   }

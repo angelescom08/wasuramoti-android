@@ -13,6 +13,10 @@ Priority High:
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Full Screen Mode
   * Change Color Theme
+  * Customize Quick Config
+  * When in english mode, show Furigana in Roma-ji
+    - We have to enable switching Tate-Gaki and Yoko-Gaki
+  * Able To Add Current Fuda to Fuda-Set
 
 Priority Middle:
   * Add Option: play in arbitrary order

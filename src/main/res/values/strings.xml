@@ -17,7 +17,16 @@
   <string name="menu_shuffle_confirm">Really shuffle and restart from beginning?</string>
   <string name="menu_move">Move</string>
   <string name="menu_timer">Timer</string>
-  <string name="menu_conf">Configure</string>
+  <string name="menu_quick_conf">Quick Config</string>
+  <string name="menu_conf">Advanced Config</string>
+
+  <string-array name="quick_conf_list">
+    <item>Hide Poem Text</item>
+    <item>Full Poem Text</item>
+    <item>Fuda Nagashi</item>
+    <item>Only 1st Half</item>
+    <item>English Mode</item>
+  </string-array>
 
   <string name="conf_unit_minute">&#160;min</string>
   <string name="conf_unit_second">&#160;sec</string>

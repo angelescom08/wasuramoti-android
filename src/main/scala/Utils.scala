@@ -95,10 +95,6 @@ object Utils {
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.getResources.getDisplayMetrics)
   }
 
-  def showYomiInfo():Boolean = {
-    Globals.prefs.exists{_.getString("show_yomi_info","None") != "None"}
-  }
-
   def isRandom():Boolean = {
     "RANDOM" == Globals.prefs.get.getString("read_order",null)
   }

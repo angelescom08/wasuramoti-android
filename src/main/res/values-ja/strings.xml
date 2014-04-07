@@ -18,7 +18,16 @@
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
   <string name="menu_move">移動</string>
   <string name="menu_timer">タイマー</string>
-  <string name="menu_conf">設定</string>
+  <string name="menu_quick_conf">簡易設定</string>
+  <string name="menu_conf">詳細設定</string>
+
+  <string-array name="quick_conf_list">
+    <item>読み句非表示</item>
+    <item>読み句全表示</item>
+    <item>札流し</item>
+    <item>上の句のみ</item>
+    <item>英語モード</item>
+  </string-array>
 
   <string name="conf_unit_minute">分</string>
   <string name="conf_unit_second">秒</string>

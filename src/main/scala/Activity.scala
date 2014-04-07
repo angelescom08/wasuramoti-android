@@ -148,6 +148,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         dlg.show(getSupportFragmentManager,"move_position")
       }
       case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
+      case R.id.menu_quick_conf => {
+        val dlg = new QuickConfigDialog()
+        dlg.show(getSupportFragmentManager,"quick_config")
+      }
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {
         // android.R.id.home is returned when the Icon is clicked if we are using android.support.v7.app.ActionBarActivity
@@ -197,7 +201,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   def switchViewAndReloadHandler(){
     val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
     val stub = findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
-    if(Utils.showYomiInfo){
+    if(YomiInfoUtils.showPoemText){
       stub.inflate()
       read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
       read_button.setBackgroundResource(R.drawable.main_button)
@@ -210,7 +214,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
     val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
     if(frag_stub != null && 
-      Utils.showYomiInfo &&
+      YomiInfoUtils.showPoemText &&
       Globals.prefs.get.getBoolean("yomi_info_show_info_button",true) &&
       Utils.isScreenWide(this)
     ){
@@ -245,7 +249,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
     val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container).asInstanceOf[ViewStub]
     if(bar_kima != null &&
-      Utils.showYomiInfo &&
+      YomiInfoUtils.showPoemText &&
       Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true) &&
       Utils.isScreenWide(this)
     ){
@@ -268,12 +272,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
       return
     }
-    if(Utils.showYomiInfo && Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
+    if(YomiInfoUtils.showPoemText && Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
          getWindow.setFlags(
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
     setContentView(R.layout.main)
+    getSupportActionBar.setHomeButtonEnabled(true)
     switchViewAndReloadHandler()
     setCustomActionBar()
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
@@ -306,7 +311,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
   def invalidateYomiInfo(){
-    if(!Utils.showYomiInfo){
+    if(!YomiInfoUtils.showPoemText){
       return
     }
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
@@ -339,7 +344,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[Unit=>Unit]=None){
-    if(!Utils.showYomiInfo){
+    if(!YomiInfoUtils.showPoemText){
       return
     }
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
@@ -540,7 +545,7 @@ trait MainButtonTrait{
           startDimLockTimer()
         }
         val bundle = new Bundle()
-        bundle.putBoolean("have_to_run_border",Utils.showYomiInfo && Utils.readCurNext(self.getApplicationContext))
+        bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && Utils.readCurNext(self.getApplicationContext))
         bundle.putSerializable("from",KarutaPlayUtils.Sender.Main)
         // Since we insert some silence at beginning of audio,
         // the actual wait_time should be shorter.

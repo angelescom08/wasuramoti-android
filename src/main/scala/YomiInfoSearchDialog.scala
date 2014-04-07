@@ -39,14 +39,14 @@ object YomiInfoSearchDialog{
 }
 
 class YomiInfoSearchDialog extends DialogFragment{
-  def enableDisplayButton(enabled:Boolean){
+  def enableDisplayButton(enabled:Boolean,force:Map[String,Boolean]=Map()){
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
         val tag = YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t
         val b = btnlist.findViewWithTag(tag)
         if(b != null){
-          b.setEnabled(enabled && haveToEnableButton(tag))
+          b.setEnabled(force.getOrElse(t,enabled && haveToEnableButton(tag)))
         }
       }
     }
@@ -58,7 +58,14 @@ class YomiInfoSearchDialog extends DialogFragment{
   def setFudanum(fudanum:Int){
     getArguments.putInt("fudanum",fudanum)
     val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    enableDisplayButton(!torifuda_mode)
+    val english_mode = !Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+    if(english_mode){
+      enableDisplayButton(true,Map("FURIGANA"->false))
+    }else if(torifuda_mode){
+      enableDisplayButton(false)
+    }else{
+      enableDisplayButton(true)
+    }
     val tag = YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
@@ -202,9 +209,13 @@ class YomiInfoSearchDialog extends DialogFragment{
           }
         }
       })
-    val init_torifuda_mode = getCurYomiInfoView.map{_.torifuda_mode}.getOrElse(
-      Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    )
+    val (init_torifuda_mode,init_english_mode) =
+      getCurYomiInfoView.map{x=>
+        (x.torifuda_mode,x.english_mode)
+      }.getOrElse((
+        Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false),
+        !Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+      ))
     val text_convert= {(s:String,label:String) =>
       if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){
         getSwitchModeButtonText(label,init_torifuda_mode)
@@ -215,8 +226,14 @@ class YomiInfoSearchDialog extends DialogFragment{
     if(init_torifuda_mode && getArguments.getBoolean("is_dialog")){
       items = items.filterNot{_.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")}
     }
+    // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
-      !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
+      val r = if(init_english_mode){
+        label != YomiInfoSearchDialog.PREFIX_DISPLAY+"_FURIGANA"
+      }else{
+        !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
+      }
+      r
     }
 
     btnlist.addButtons(getActivity,items
