@@ -4,6 +4,7 @@
               android:layout_height="fill_parent"
               android:orientation="vertical"
               android:background="#222222"
+              android:tag="main_linear_layout"
               >
   <ViewStub
         android:id="@+id/yomi_info_stub"

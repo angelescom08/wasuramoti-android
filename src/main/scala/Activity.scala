@@ -262,9 +262,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
-    if(Globals.IS_DEBUG){
-      setTitle(getResources().getString(R.string.app_name) + " DEBUG")
-    }
 
     //try loading 'libvorbis.so'
     val decoder = new OggVorbisDecoder()
@@ -282,6 +279,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     switchViewAndReloadHandler()
     setCustomActionBar()
     this.setVolumeControlStream(AudioManager.STREAM_MUSIC)
+    if(Globals.IS_DEBUG){
+      setTitle(getResources().getString(R.string.app_name) + " DEBUG")
+      val layout = getWindow.getDecorView.findViewWithTag("main_linear_layout").asInstanceOf[LinearLayout]
+      val view = new TextView(this)
+      view.setTag("main_debug_info")
+      view.setContentDescription("MainDebugInfo")
+      layout.addView(view)
+    }
 
   }
   def showProgress(){
@@ -561,14 +566,12 @@ trait ActivityDebugTrait{
   self:WasuramotiActivity =>
   def showBottomInfo(key:String,value:String){
     if(Globals.IS_DEBUG){
-      // Since button in the bottom is deleted, the following code does not work anymore
-      // TODO: show following `txt` in somewhere else
-      //val btn = findViewById(R.id.read_button_bottom).asInstanceOf[Button]
-      //var found = false
-      //val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
-      //  case Array(k,v)=>(k,v)
-      //}.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")
-      //btn.setText(txt)
+      val btn = getWindow.getDecorView.findViewWithTag("main_debug_info").asInstanceOf[TextView]
+      var found = false
+      val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
+        case Array(k,v)=>(k,v)
+      }.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")
+      btn.setText(txt)
     }
   }
   def showAudioLength(len:Long){

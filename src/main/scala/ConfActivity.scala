@@ -5,9 +5,8 @@ import _root_.android.os.Bundle
 import _root_.android.view.View
 import _root_.android.widget.{TextView,CheckBox,CompoundButton}
 import _root_.android.util.AttributeSet
-import _root_.android.net.Uri
 import _root_.android.text.TextUtils
-import _root_.android.content.{Context,SharedPreferences,Intent}
+import _root_.android.content.{Context,SharedPreferences}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
 
 import java.util.regex.Pattern

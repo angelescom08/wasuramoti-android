@@ -18,8 +18,10 @@ object KarutaPlayerDebug{
       println("wasuramoti_debug: key="+key+" , checksum="+cs)
       checksum_table.get(key) match{
         case None => checksum_table += {(key,cs)}
-        case Some(x) => if( x != cs ){
-                          throw new Exception("checksum mismatch for " + key + ": " + x + " != " + cs)
+        case Some(x) => if( x != cs ){ 
+                          val message = "checksum mismatch for " + key + ": " + x + " != " + cs
+                          println("wasuramoti_debug: " + message)
+                          throw new Exception(message)
                         }
       }
     }

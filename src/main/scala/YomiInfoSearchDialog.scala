@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.support.v4.app.DialogFragment
-import _root_.android.content.{Context,DialogInterface,Intent}
+import _root_.android.content.{Context,Intent}
 import _root_.android.view.{View,LayoutInflater,ViewGroup}
 import _root_.android.widget.{TextView,LinearLayout,Button}
 import _root_.android.os.Bundle

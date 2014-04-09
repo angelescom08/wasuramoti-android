@@ -264,6 +264,8 @@ class QuickConfigDialog extends DialogFragment{
             edit.putBoolean("yomi_info_default_lang_is_jpn",true)
           case 4 =>
             YomiInfoUtils.setPoemTextVisibility(edit,true)
+            edit.putBoolean("yomi_info_kami",true)
+            edit.putBoolean("yomi_info_simo",true)
             edit.putBoolean("yomi_info_default_lang_is_jpn",false)
         }
         edit.commit
