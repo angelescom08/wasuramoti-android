@@ -161,5 +161,6 @@
       </PreferenceCategory>
     </PreferenceScreen>
     <Preference android:title="@string/conf_show_credits" android:summary="@string/conf_show_credits_summary" android:key="show_credits"/>
+    <Preference android:title="@string/conf_bug_report" android:summary="@string/conf_bug_report_summary" android:key="bug_report"/>
   </PreferenceCategory>
 </PreferenceScreen>

@@ -4,10 +4,12 @@ import _root_.android.preference.PreferenceActivity
 import _root_.android.os.Bundle
 import _root_.android.view.View
 import _root_.android.widget.{TextView,CheckBox,CompoundButton}
-import _root_.android.util.AttributeSet
+import _root_.android.util.{AttributeSet,Base64}
 import _root_.android.text.TextUtils
-import _root_.android.content.{Context,SharedPreferences}
+import _root_.android.content.{Context,SharedPreferences,Intent,ComponentName}
+import _root_.android.content.pm.{ResolveInfo,PackageManager}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
+import _root_.android.net.Uri
 
 import java.util.regex.Pattern
 
@@ -145,6 +147,49 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
         val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
         Utils.generalHtmlDialog(context:Context,Left(buf2))
 
+        return false
+      }
+    })
+    findPreference("bug_report").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
+      override def onPreferenceClick(pref:Preference):Boolean = {
+        if( android.os.Build.VERSION.SDK_INT < 8 ){
+          Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
+          return false
+        }
+        val pm = context.getPackageManager
+        val i_temp = new Intent(Intent.ACTION_VIEW)
+        // dummy data to get list of activities
+        i_temp.setData(Uri.parse("http://www.google.com/"))
+        val list = scala.collection.JavaConversions.asScalaBuffer[ResolveInfo](pm.queryIntentActivities(i_temp,0))
+        if(list.isEmpty){
+          Utils.messageDialog(context,Right(R.string.browser_not_found))
+        }else{
+          val defaultActivities = list.filter{ info =>
+            val filters = new java.util.ArrayList[android.content.IntentFilter]()
+            val activities = new java.util.ArrayList[android.content.ComponentName]()
+            pm.getPreferredActivities(filters,activities,info.activityInfo.packageName)
+            ! activities.isEmpty
+          }
+          // TODO: show activity chooser
+          (defaultActivities ++ list).exists{ ri =>
+            val comp = new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name)
+            val intent = pm.getLaunchIntentForPackage(ri.activityInfo.packageName)
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.setComponent(comp)
+            val post_url = context.getResources.getString(R.string.bug_report_url)
+            val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
+            val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
+            val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
+            intent.setData(Uri.parse(dataUri))
+            try{
+              startActivity(intent)
+              true
+            }catch{
+              case _:android.content.ActivityNotFoundException => false
+            }
+          }
+        }
         return false
       }
     })

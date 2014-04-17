@@ -14,4 +14,6 @@ for i in {1..1000}; do
   LAST_JOB=$!
   adb shell uiautomator runtest $JARFILE -c karuta.hpnpwd.wasuramoti.uitest.PlayAll
   kill -INT $LAST_JOB
+  sleep 1
+  kill $LAST_JOB
 done

@@ -347,4 +347,41 @@
   <string name="conf_show_credits">謝辞</string>
   <string name="conf_show_credits_summary">使用しているフォントやライブラリなどのライセンス表示</string>
   <string name="category_other">その他</string>
+  <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです．</string>
+  <string name="bug_report_not_supported">すみません．この端末からはバグレポートを送れません．</string>
+  <string name="conf_bug_report">バグ報告</string>
+  <string name="conf_bug_report_summary">匿名のバグレポートを送ることができます</string>
+  <string name="bug_report_html">
+    <![CDATA[
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta content="width=device-width, initial-scale=1.0" name="viewport">
+          <title>わすらもちバグ報告フォーム</title>
+          <style type="text/css">
+            textarea{
+              width: 24em;
+              height: 6em;
+            }
+          </style>
+        </head>
+        <body>
+          <h3>わすらもちバグ報告フォーム</h3>
+          <form method="post" action="%1$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
+            <div>
+              <div>バグの症状を詳しく書いて下さい:</div>
+              <textarea name="bug_detail"></textarea>
+            </div>
+            <div>
+              <div>その他コメントあったらどうぞ:</div>
+              <textarea name="bug_comment"></textarea>
+            </div>
+            <div>「送信する」をクリックすると機種名やAndroidのバージョンなどデバッグに必要な情報が送信されますが，個人情報は送ってないので信じて下さい．</div>
+            <input type="submit" value="送信する">
+            <input type="hidden" name="bug_device_info value="%2$s">
+          </form>
+        </body>
+      </html>
+    ]]>
+  </string>
 </resources>

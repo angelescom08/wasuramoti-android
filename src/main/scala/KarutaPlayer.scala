@@ -28,7 +28,7 @@ object KarutaPlayerDebug{
   }
 }
 
-class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int){
+class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   var cur_millisec = 0:Long
   var audio_track = None:Option[AudioTrack]
@@ -42,6 +42,31 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // Therefore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask] // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
+
+  def audioQueueInfo():String = {
+    if(audio_queue.isEmpty){
+      "(Empty)"
+    }else{
+      audio_queue.map{
+        case Left(wav_buffer) => s"wav#${wav_buffer.toBugReport}"
+        case Right(length) => s"blank#${length}ms"
+      }.mkString("/")
+    }
+  }
+
+  override def toBugReport():String = {
+    val bld = new mutable.StringBuilder
+    bld ++= s"cur_num:${cur_num},"
+    bld ++= s"next_num:${next_num},"
+    bld ++= s"reader_path:${reader.path},"
+    bld ++= s"equalizer_seq:${equalizer_seq},"
+    bld ++= s"current_yomi_info:${current_yomi_info},"
+    bld ++= s"set_audio_volume:${set_audio_volume},"
+    bld ++= s"is_last_fuda:${is_last_fuda},"
+    val audio_queue_info = audioQueueInfo()
+    bld ++= s"audio_queue:${audio_queue_info}"
+    bld.toString
+  }
 
   def calcBufferSize():Int = {
       audio_queue.map{ arg =>{

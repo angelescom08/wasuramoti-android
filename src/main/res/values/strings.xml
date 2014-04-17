@@ -373,4 +373,41 @@
   <string name="conf_show_credits">Credits</string>
   <string name="conf_show_credits_summary">License of fonts and libraries.</string>
   <string name="category_other">Others</string>
+  <string name="browser_not_found">Web Browser not found in this device</string>
+  <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
+  <string name="bug_report_not_supported">Sorry, you cannot send bug report from this device.</string>
+  <string name="conf_bug_report">Bug Report</string>
+  <string name="conf_bug_report_summary">You can send anonymous bug report from here.</string>
+  <string name="bug_report_html">
+    <![CDATA[
+      <html>
+        <head>
+          <meta content="width=device-width, initial-scale=1.0" name="viewport">
+          <title>Wasuramoti Bug Report Form</title>
+          <style type="text/css">
+            textarea{
+              width: 24em;
+              height: 6em;
+            }
+          </style>
+        </head>
+        <body>
+          <h3>Wasuramoti Bug Report Form</h3>
+          <form method="post" action="%1$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
+            <div>
+              <div>Write the detail of the bug here:</div>
+              <textarea name="bug_detail"></textarea>
+            </div>
+            <div>
+              <div>If you have any comments write here:</div>
+              <textarea name="bug_comment" ></textarea>
+            </div>
+            <div>Clicking the following button will send some device informations which is useful for debugging. However we do not send any personal information so please trust us.</div>
+            <input type="hidden" name="bug_device_info" value="%2$s">
+            <input type="submit" value="Send_Bug_Report">
+          </form>
+        </body>
+      </html>
+    ]]>
+  </string>
 </resources>

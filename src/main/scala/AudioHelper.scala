@@ -11,7 +11,7 @@ import _root_.android.util.Log
 import _root_.android.view.View
 
 import _root_.java.io.{File,RandomAccessFile}
-import _root_.java.nio.{ByteOrder,ShortBuffer}
+import _root_.java.nio.{ByteOrder,ShortBuffer,ByteBuffer}
 import _root_.java.nio.channels.FileChannel
 
 import scala.collection.mutable
@@ -80,11 +80,36 @@ object AudioHelper{
   }
 }
 
-class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder) extends WavBufferDebugTrait{
+class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder) extends WavBufferDebugTrait with BugReportable{
   val SHORT_BYTE = java.lang.Short.SIZE/java.lang.Byte.SIZE
   val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = orig_file.length().toInt / SHORT_BYTE
+
+  override def toBugReport():String = {
+    val bld = new mutable.StringBuilder
+    bld ++= s"index_begin->$index_begin;"
+    bld ++= s"index_end->$index_end;"
+    bld ++= s"orig_file->${orig_file.getName};"
+    val crc = shortBufferCRC(buffer)
+    bld ++= s"buffer->capacity[${buffer.capacity}].crc[${crc}];"
+    bld ++= s"channels->${decoder.channels};"
+    bld ++= s"rate->${decoder.rate};"
+    bld ++= s"bit_depth->${decoder.bit_depth};"
+    bld.toString
+  }
+
+  def shortBufferCRC(buffer:ShortBuffer):String = {
+    val crc = new java.util.zip.CRC32()
+    while(buffer.hasRemaining){
+      val ss = new Array[Short](Math.min(1024,buffer.remaining))
+      val bb = new Array[Byte](ss.size*2)
+      buffer.get(ss)
+      ByteBuffer.wrap(bb).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer.put(ss)
+      crc.update(bb)
+    }
+    f"${crc.getValue}%08X"
+  }
 
   // in milliseconds
   def audioLength():Long = {

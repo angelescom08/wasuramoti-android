@@ -94,7 +94,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     }
     val f3 = {_:Unit => 
       Right({ _:Unit =>
-        Utils.messageDialog(getActivity,Left("Application for Web search not found on this device."))
+        Utils.messageDialog(getActivity,Right(R.string.browser_not_found))
       })
     }
     // scala.util.control.Breaks.break does not work (why?)

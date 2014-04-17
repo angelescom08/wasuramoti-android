@@ -17,6 +17,18 @@ Priority High:
   * When in english mode, show Furigana in Roma-ji
     - We have to enable switching Tate-Gaki and Yoko-Gaki
   * Able To Add Current Fuda to Fuda-Set
+  * Able to attach file to bug report
+  * Support multi window for Samsung devices
+    - add following to <application> ( maybe you can use android:resource="@dimen/app_defaultsize_w" instead of android:value ? )
+      <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
+      <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+      <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:value="632.0dip" />
+      <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:value="598.0dip" />
+      <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:value="632.0dip" />
+      <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:value="598.0dip" />
+    - add following to <intent-filter>
+      <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+
 
 Priority Middle:
   * Add Option: play in arbitrary order
