@@ -10,7 +10,8 @@
   <string name="button_config">Config</string>
   <string name="button_config_detail">Detail</string>
   <string name="now_playing">Playing</string>
-  <string name="now_decoding">Loading</string>
+  <string name="now_auto_playing">Auto Playing</string>
+  <string name="now_stopped">Stopped</string>
   <string name="now_searching">Searching</string>
 
   <string name="menu_shuffle">Shuffle</string>

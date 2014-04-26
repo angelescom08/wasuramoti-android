@@ -4,7 +4,7 @@ import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
 import _root_.android.util.TypedValue
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
-import _root_.android.content.res.Configuration
+import _root_.android.content.res.{Configuration,Resources}
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
@@ -38,7 +38,7 @@ object Globals {
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
-  var setButtonText = None:Option[Either[String,Int]=>Unit]
+  var setButtonText = None:Option[String=>Unit]
   var is_playing = false
   var forceRefresh = false
   var forceRestart = false
@@ -91,8 +91,13 @@ object Utils {
     val s = new java.util.Scanner(is,"UTF-8").useDelimiter("\\A")
     if(s.hasNext){s.next}else{""}
   }
-  def dipToPx(context:Context,dip:Int):Float = {
-    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.getResources.getDisplayMetrics)
+
+  def dpToPx(dp:Float):Float = {
+   (dp * Resources.getSystem.getDisplayMetrics.density).toFloat
+  }
+
+  def pxToDp(px:Float):Float = {
+    (px / Resources.getSystem.getDisplayMetrics.density).toFloat
   }
 
   def isRandom():Boolean = {
@@ -298,15 +303,25 @@ object Utils {
     }
   }
   def setButtonTextByState(context:Context){
-    Globals.setButtonText.foreach( func =>
-      func(
-      if(Globals.is_playing){
-        Right(R.string.now_playing)
-      }else if(!NotifyTimerUtils.notify_timers.isEmpty){
-        Left(NotifyTimerUtils.makeTimerText(context))
+    Globals.setButtonText.foreach{
+      _(
+      (if(!NotifyTimerUtils.notify_timers.isEmpty){
+        NotifyTimerUtils.makeTimerText(context)
       }else{
-        Left(FudaListHelper.makeReadIndexMessage(context))
-      }))
+        FudaListHelper.makeReadIndexMessage(context)
+      })+"\n"+
+      context.getResources.getString(
+        if(Globals.is_playing){
+          if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+            R.string.now_auto_playing
+          }else{
+            R.string.now_playing
+          }
+        }else{
+          R.string.now_stopped
+        })
+      )
+    }
   }
   abstract class PrefAccept[T <% Ordered[T] ] {
     def from(s:String):T

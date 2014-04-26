@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="read_button_text_small">24dp</dimen>
+  <dimen name="read_button_text_small">21dp</dimen>
+  <dimen name="read_button_text_normal">24dp</dimen>
   <dimen name="read_button_text_large">36dp</dimen>
 </resources>

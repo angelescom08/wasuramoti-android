@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
+import _root_.android.content.{Intent,Context}
 import _root_.android.util.{Base64,TypedValue}
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
@@ -203,7 +204,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val stub = findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
     if(YomiInfoUtils.showPoemText){
       stub.inflate()
-      read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
+      read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
       read_button.setBackgroundResource(R.drawable.main_button)
     }else{
       // Android 2.1 does not ignore ViewStub's layout_weight
@@ -228,15 +229,15 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       frag_stub.setLayoutParams(lp)
     }
 
-    Globals.setButtonText = Some( arg =>
+    Globals.setButtonText = Some( txt =>
       handler.post(new Runnable(){
         override def run(){
-          arg match {
-            // TODO: The following way to call setText is not smart.
-            //       Is there any way to do the following two lines in one row ?
-            case Left(text) => read_button.setText(text)
-            case Right(id) => read_button.setText(id)
+          val lines = txt.split("\n").length
+          if(lines >= 4 && YomiInfoUtils.showPoemText){
+            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
           }
+          read_button.setLines(lines)
+          read_button.setText(txt)
         }
       }))
   }

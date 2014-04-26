@@ -10,7 +10,8 @@
   <string name="button_config">設定</string>
   <string name="button_config_detail">詳細設定</string>
   <string name="now_playing">再生中</string>
-  <string name="now_decoding">準備中</string>
+  <string name="now_auto_playing">自動再生中</string>
+  <string name="now_stopped">停止</string>
   <string name="now_searching">検索中</string>
 
 

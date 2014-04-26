@@ -1,6 +1,6 @@
 [About]
   App Name: Hyakunin Isshu - Wasuramoti
-  App Version: 0.8.9
+  App Version: 0.8.10
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
   Required CPU: ARM, ARM-v7a, x86
@@ -19,7 +19,7 @@
   __BEGIN_CREDITS__
 
 [Credits]
-  This software uses the following libaries, audio datas, and fonts which is copyrighted as follows:
+  This software uses the following libaries, audio datas, and fonts. I appreciate the provider of those wonderful materials. The copyright is as follows:
   <libogg/libvorbis>
      %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
     The body text of license is included in apk with file name of `COPYING-OGGVORBIS`
