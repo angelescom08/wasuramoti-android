@@ -89,14 +89,18 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
     addPreferencesFromResource(R.xml.conf)
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
       override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
-        if(Array("read_order_each","reader_path","read_order_joka","wav_span_simokami",
-                 "wav_threashold","wav_fadeout_simo","wav_fadein_kami","fudaset").contains(key)){
-          Globals.forceRefresh = true
-        }
-        if(key == "hardware_accelerate"){
-          // Since there is no way to disable hardware acceleration,
-          // we have to restart application.
-          Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ Unit => Utils.restartApplication(context) })
+        key match{
+          case "read_order_each"|"reader_path"|"read_order_joka"|"wav_span_simokami"|
+               "wav_threashold"|"wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
+            Globals.forceRefresh = true
+          case "read_order" =>
+            FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
+            Globals.forceRefresh = true
+          case "hardware_accelerate" =>
+            // Since there is no way to disable hardware acceleration,
+            // we have to restart application.
+            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ Unit => Utils.restartApplication(context) })
+          case _ => 
         }
         val pref = findPreference(key)
         if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){

@@ -48,10 +48,11 @@
   <string name="conf_karafuda_summary">札セットに加えて何枚かランダムに詠み上げる</string>
 
   <string name="conf_read_order_title">詠む順番</string>
-  <string name="conf_read_order_summary">ランダムまたはシャッフル</string>
+  <string name="conf_read_order_summary">全体を通してどの順序で詠み上げるか</string>
   <string-array name="conf_read_order_entries">
     <item>シャッフル</item>
     <item>ランダム</item>
+    <item>歌番号順</item>
   </string-array>
   <string name="conf_reader_list">詠み手</string>
   <string name="conf_reader_list_summary">追加する方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
@@ -309,7 +310,8 @@
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
-  <string name="message_karafuda_num">空札 %d枚</string>
+  <string name="message_in_fudanum_order">番号順</string>
+  <string name="message_karafuda_num">空札%d枚</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
   <string name="message_readindex_done">完了: %d 首</string>
 

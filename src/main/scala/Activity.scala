@@ -139,9 +139,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     item.getItemId match {
       case R.id.menu_shuffle => {
         Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
-          FudaListHelper.shuffle(getApplicationContext())
-          FudaListHelper.moveToFirst(getApplicationContext())
-          refreshAndInvalidate()
+            FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
+            refreshAndInvalidate()
         })
       }
       case R.id.menu_move => {
@@ -397,7 +396,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         }
         Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
       }
-      Utils.setButtonTextByState(getApplicationContext())
+      Utils.setButtonTextByState(getApplicationContext)
     }
     invalidateYomiInfo()
     startDimLockTimer()

@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.content.{Context,ContentValues}
 import _root_.android.database.CursorIndexOutOfBoundsException
+import _root_.android.text.TextUtils
 import scala.util.Random
 
 // According to one of the Android framework engineer, there is no need to close the database in content provider.
@@ -61,6 +62,28 @@ object FudaListHelper{
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = getOrQueryNumbersToReadAlt(context)
     val num_of_kara = getOrQueryNumbersOfKarafuda(context)
+    val set_name = if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
+      ""
+    }else{
+      Globals.prefs.get.getString("fudaset","") + "\n"
+    }
+    val kara_and_order = {
+      val kara = if(num_of_kara > 0){
+        Some(context.getResources.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)))
+      }else{
+        None
+      }
+      val order = Utils.getReadOrder match {
+        case Utils.ReadOrder.PoemNum => Some(context.getResources.getString(R.string.message_in_fudanum_order))
+        case _ => None
+      }
+      val s = Array(kara,order).collect{case Some(x)=>x}.mkString(" , ")
+      if(TextUtils.isEmpty(s)){
+        s
+      }else{
+        s + "\n"
+      }
+    }
     val body = if(Utils.isRandom){
       context.getResources.getString(R.string.message_readindex_random,
         new java.lang.Integer(num_to_read)
@@ -77,16 +100,7 @@ object FudaListHelper{
           new java.lang.Integer(total_s))
       }
     }
-    (if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
-      ""
-    }else{
-      Globals.prefs.get.getString("fudaset","") + "\n"
-    })+
-    (if(num_of_kara > 0){
-      context.getResources.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)) + "\n"
-    }else{
-      ""
-    }) +body
+    set_name + kara_and_order + body
   }
 
   def allReadDone(context:Context):Boolean = {
@@ -295,12 +309,22 @@ object FudaListHelper{
     //db.close()
     return num
   }
+
+  def shuffleAndMoveToFirst(context:Context){
+     shuffle(context)
+     moveToFirst(context)
+  }
+
   def shuffle(context:Context){ Globals.db_lock.synchronized{
     if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       updateSkipList()
     }
     val rand = new Random()
-    val shuffled = rand.shuffle( (1 to AllFuda.list.length).toList )
+    val num_list = (1 to AllFuda.list.length).toList 
+    val shuffled = Utils.getReadOrder match {
+      case Utils.ReadOrder.PoemNum => num_list
+      case _ => rand.shuffle(num_list)
+    }
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () =>
       for ( (v,i) <- shuffled.zipWithIndex ){

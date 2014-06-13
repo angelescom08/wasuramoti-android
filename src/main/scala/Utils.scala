@@ -51,6 +51,12 @@ object Globals {
 }
 
 object Utils {
+
+  object ReadOrder extends Enumeration{
+    type ReadOrder = Value
+    val Shuffle, Random, PoemNum = Value
+  }
+
   type EqualizerSeq = Seq[Option[Double]]
   // Since every Activity has a possibility to be killed by android when it is background,
   // all the Activity in this application should call this method in onCreate()
@@ -101,7 +107,15 @@ object Utils {
   }
 
   def isRandom():Boolean = {
-    "RANDOM" == Globals.prefs.get.getString("read_order",null)
+    getReadOrder == ReadOrder.Random
+  }
+
+  def getReadOrder():ReadOrder.ReadOrder = {
+    Globals.prefs.get.getString("read_order",null) match {
+      case "RANDOM" => ReadOrder.Random
+      case "POEM_NUM" => ReadOrder.PoemNum
+      case _ => ReadOrder.Shuffle
+    } 
   }
 
   def isScreenWide(context:Context):Boolean = {

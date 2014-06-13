@@ -165,12 +165,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def getFirstDecoder():OggVorbisDecoder = {
     waitDecode()
-    audio_queue.find{_.isLeft} match{
-      case Some(x) => x match{
-        case Left(w)=>w.decoder
-        case Right(_) => throw new AudioQueueEmptyException("")// never happen
-      }
-      case None => throw new AudioQueueEmptyException("")
+    audio_queue.collectFirst{
+      case Left(w) => w.decoder
+    }.getOrElse{
+      throw new AudioQueueEmptyException("")
     }
   }
 
