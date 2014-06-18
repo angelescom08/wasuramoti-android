@@ -367,7 +367,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
         // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
         // we insert additional silence as wave data.
-        add_to_audio_queue(Right(Globals.HEAD_SILENCE_LENGTH),true)
+        // Additionally, playing silence as wave file can avoid some wierd effect        // which occurs at beginning of wav when using bluetooth speaker.
+        val (silence_time,_) = Utils.calcSilenceAndWaitLength
+        add_to_audio_queue(Right(silence_time),true)
         val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
         var ss = read_order_each.split("_")
         if(cur_num == 0){

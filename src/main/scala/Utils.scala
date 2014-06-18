@@ -31,7 +31,6 @@ object Globals {
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
   val CACHE_SUFFIX_WAV = "_decoded.wav"
-  val HEAD_SILENCE_LENGTH = 200 // in milliseconds
   val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
   val db_lock = new Object()
@@ -55,6 +54,17 @@ object Utils {
   object ReadOrder extends Enumeration{
     type ReadOrder = Value
     val Shuffle, Random, PoemNum = Value
+  }
+
+  // return value is (silence, wait) in millisec
+  def calcSilenceAndWaitLength() : (Int,Int) = {
+    val SILENCE_MIN = 250 // in millisec
+    val SILENCE_MAX = 5000 // in millisec, making this too big can consume much memory
+    val WAIT_MIN = 50 // in millisec
+    val total = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0).toInt
+    val silence = Math.max(Math.min(total,SILENCE_MAX)-WAIT_MIN,SILENCE_MIN)
+    val wait = Math.max(total-silence, WAIT_MIN)
+    (silence,wait)
   }
 
   type EqualizerSeq = Seq[Option[Double]]
