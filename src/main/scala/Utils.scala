@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
-import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent}
+import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
 import _root_.android.util.TypedValue
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import _root_.android.content.res.{Configuration,Resources}
@@ -440,6 +440,19 @@ object Utils {
         case Some(x) => "%.3f" format x
       }).mkString(",")
   }
+
+  def restartActivity(activity:Activity){
+    activity.finish
+    try{
+      activity.startActivity(activity.getIntent)
+    }catch{
+      case _:android.content.ActivityNotFoundException =>
+        // When wasuramoti is started from browser's "wasuramoti://" link,
+        // the activity's Intent would be empty, so we create a new one.
+        activity.startActivity(new Intent(activity,activity.getClass))
+    }
+  }
+
   def restartApplication(context:Context){
     // This way totally exits application using System.exit()
     val start_activity = new Intent(context,classOf[WasuramotiActivity])

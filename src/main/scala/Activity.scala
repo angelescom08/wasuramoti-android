@@ -380,8 +380,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
     if(Globals.forceRestart){
       Globals.forceRestart = false
-      finish
-      startActivity(getIntent)
+      Utils.restartActivity(this)
     }
     restartRefreshTimer()
     Globals.global_lock.synchronized{

@@ -270,8 +270,7 @@ class QuickConfigDialog extends DialogFragment{
         }
         edit.commit
         dismiss
-        getActivity.finish
-        getActivity.startActivity(getActivity.getIntent)
+        Utils.restartActivity(getActivity)
       }
     }
     val builder = new AlertDialog.Builder(getActivity)
