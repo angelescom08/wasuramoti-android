@@ -1,6 +1,6 @@
 [基本情報]
   アプリ名: 百人一首読み上げ「わすらもち」
-  バージョン: 0.8.12
+  バージョン: 0.8.13
   開発者: 吉本晴洋 <pjmtdw@gmail.com>
   対応 OS: Android OS バージョン 2.1 以上
   対応 CPU: ARM, ARM-v7a, x86
@@ -31,7 +31,7 @@ __BEGIN_CREDITS__
     %% with Reserved Font Name Dancing Script.
     ライセンス条文はapkファイルの中の `DANCING-SCRIPT-OFL.txt` にあります．
   ---
-  下記のフォントはパブリックドメインですがともあれ感謝です:
+  下記のフォントはパブリックドメインですがともあれ感謝です．
   <Kouzan Font>
     衡山毛筆フォント, http://opentype.jp/freemouhitufont.htm
   <Black Chancery>
