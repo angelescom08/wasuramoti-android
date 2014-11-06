@@ -1,19 +1,16 @@
 import sbt._
-import Keys._
-import Defaults._
-import sbtandroid.AndroidPlugin._
-
-object AndroidBuild extends Build{
-  lazy val globalSettings = Seq (
-    name := "Wasuramoti",
+import sbt.Keys._
+import android.Keys._
+object Build extends android.AutoBuild {
+  lazy val mySettings = super.settings ++ android.Plugin.androidBuild ++ Seq (
+    name := "wasuramoti",
     version := "0.8.13",
-    versionCode := 51,
-    scalaVersion := "2.10.2",
-    platformName := "android-18",
-    keyalias := "techkey",
+    versionCode := Some(51),
+    scalaVersion := "2.10.4",
+    platformTarget in Android := "android-19",
     libraryDependencies ++= Seq(
-      "com.android.support" % "support-v4" % "19.0.1",
-      aarlib("com.android.support" % "appcompat-v7" % "19.0.1")
+      "com.android.support" % "support-v4" % "19.1.0",
+      android.Dependencies.aar("com.android.support" % "appcompat-v7" % "19.1.0")
     ),
     scalacOptions ++= Seq("-unchecked","-deprecation"),
     proguardOptions := Seq(
@@ -49,15 +46,12 @@ object AndroidBuild extends Build{
     ),
     useProguard := true
   )
-
-  lazy val main = AndroidProject(
-    "Wasuramoti",
-    file("."),
-    settings = globalSettings 
-  )
-  lazy val tests = AndroidTestProject(
-    "WasuramotiTests",
-    file("tests"),
-    settings = globalSettings
+  lazy val root = Project(
+      id = "wasuramoti",
+      base = file(".")
+  ).settings(
+    mySettings:_*
   )
 }
+
+// vim: set ts=4 sw=4 et:

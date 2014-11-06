@@ -1,1 +1,5 @@
-addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.7.1-SNAPSHOT")
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+addSbtPlugin("com.hanhuy.sbt" % "android-sdk-plugin" % "1.3.6")
+
+addSbtPlugin("org.ensime" % "ensime-sbt" % "0.1.5-SNAPSHOT")

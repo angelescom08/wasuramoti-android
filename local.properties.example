@@ -1,0 +1,4 @@
+# see https://github.com/pfn/android-sdk-plugin
+key.alias: __KEY_ALIAS_NAME__
+key.store: /path/to/key.store
+key.store.password: __ENTER_PASSWORD_HERE__
