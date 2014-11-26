@@ -144,11 +144,6 @@
           android:summary="@string/conf_skip_on_longclick_summary"
           />
         <CheckBoxPreference
-          android:key="silent_mode_on_start"
-          android:title="@string/conf_silent_mode_on_start"
-          android:summary="@string/conf_silent_mode_on_start_summary"
-          />
-        <CheckBoxPreference
           android:key="hardware_accelerate"
           android:title="@string/conf_hardware_accelerate"
           android:summary="@string/conf_hardware_accelerate_summary"

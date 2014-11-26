@@ -220,8 +220,6 @@
   <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
-  <string name="conf_silent_mode_on_start">マナーモード</string>
-  <string name="conf_silent_mode_on_start_summary">起動時にマナーモードに設定し，終了時に元に戻す</string>
   <string name="conf_hardware_accelerate">GPUレンダリング</string>
   <string name="conf_hardware_accelerate_summary">詠み句の描画が滑らかになるが，メモリ使用量が微増する</string>
   <string name="conf_hardware_accelerate_restart_confirm">GPUレンダリングの設定変更を反映するにはアプリを再起動する必要があります．いますぐ再起動しますか？</string>

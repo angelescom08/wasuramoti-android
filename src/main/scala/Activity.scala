@@ -22,7 +22,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   var release_lock = None:Option[Unit=>Unit]
   var run_dimlock = None:Option[Runnable]
   var run_refresh_text = None:Option[Runnable]
-  var ringer_mode_bkup = None:Option[Int]
   val handler = new Handler()
 
   override def onNewIntent(intent:Intent){
@@ -364,13 +363,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       // onCreate returned before loading preference
       return
     }
-    if(Globals.prefs.get.getBoolean("silent_mode_on_start",false)){
-      val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-      if(am != null && am.getRingerMode() != AudioManager.RINGER_MODE_SILENT){
-        ringer_mode_bkup = Some(am.getRingerMode())
-        am.setRingerMode(AudioManager.RINGER_MODE_SILENT)
-      }
-    }
   }
   override def onResume(){
     super.onResume()
@@ -417,13 +409,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   override def onStop(){
     super.onStop()
-    ringer_mode_bkup.foreach{ mode =>
-      val am = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-      if(am != null){
-        am.setRingerMode(mode)
-      }
-    }
-    ringer_mode_bkup = None
   }
   override def onDestroy(){
     Utils.deleteCache(getApplicationContext(),_=>true)
