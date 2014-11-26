@@ -192,7 +192,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       audio_track.foreach(x => {x.stop();x.release()})
       audio_track = None
       doWhenStop()
-      KarutaPlayUtils.doAfterDone(bundle:Bundle)
+      KarutaPlayUtils.doAfterDone(bundle)
     }
   }
 

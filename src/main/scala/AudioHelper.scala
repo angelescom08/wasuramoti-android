@@ -256,10 +256,13 @@ object KarutaPlayUtils{
     type Action = Value
     val Auto,Start,Border,End = Value
   }
-  object Sender extends Enumeration{
-    type Sender = Value
-    val Main,Conf = Value
-  }
+  // Scalaのバージョンが悪いのか何なのかなぜかEnumrationをBundle.putSerializableすると
+  // getSerializableした時にnullになっているので文字列で代替する
+  // 昔はできてたのだけど…
+  // TODO 原因調査
+  val SENDER_MAIN = "SENDER_MAIN"
+  val SENDER_CONF = "SENDER_CONF"
+
   val karuta_play_schema = "wasuramoti://karuta_play/"
   def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
     val intent = new Intent(context, classOf[KarutaPlayReceiver])
@@ -303,7 +306,7 @@ object KarutaPlayUtils{
               }else{
                 before_play.foreach(_(pl))
                 val bundle = new Bundle()
-                bundle.putSerializable("from",KarutaPlayUtils.Sender.Conf)
+                bundle.putString("fromSender",KarutaPlayUtils.SENDER_CONF)
                 pl.play(bundle)
                 btn.setText(context.getResources().getString(R.string.audio_stop))
               }
@@ -320,10 +323,10 @@ object KarutaPlayUtils{
     })
   }
   def doAfterDone(bundle:Bundle){
-    bundle.getSerializable("from").asInstanceOf[Sender.Sender] match{
-      case Sender.Main =>
+    bundle.getString("fromSender") match{
+      case SENDER_MAIN =>
         doAfterActivity(bundle)
-      case Sender.Conf =>
+      case SENDER_CONF =>
         doAfterConfiguration(bundle)
     }
   }

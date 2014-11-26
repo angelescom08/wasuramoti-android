@@ -1,4 +1,6 @@
 local.properties
+.ensime
+.ensime_cache/
 
 keystore/
 players/

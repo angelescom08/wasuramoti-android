@@ -75,3 +75,8 @@ __END_CREDITS__
   You can install apk file by running a command `adb install wasuramoti-*.apk'.
   Browse following URL for further information:
   http://developer.android.com/tools/device.html#setting-up
+
+[Using ENSIME as Scala IDE]
+  ENSIME brings IDE-like features to your favourite text editor.
+  See https://github.com/ensime/ensime-server/wiki/Quick-Start-Guide
+
