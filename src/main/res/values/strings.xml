@@ -195,6 +195,7 @@
     <item>1st - 2nd</item>
     <item>1st - 2nd - 2nd</item>
     <item>2nd - 2nd</item>
+    <item>1st Only</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>2-1</item>
@@ -202,6 +203,7 @@
     <item>1-2</item>
     <item>1-2-2</item>
     <item>2-2</item>
+    <item>1</item>
   </string-array>
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>
@@ -209,6 +211,7 @@
     <item>CUR1_CUR2</item>
     <item>CUR1_CUR2_CUR2</item>
     <item>CUR2_NEXT2</item>
+    <item>CUR1</item>
   </string-array>
 
   <string name="conf_read_order_joka">How to Play Joka</string>
