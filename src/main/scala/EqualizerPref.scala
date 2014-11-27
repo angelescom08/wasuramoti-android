@@ -35,7 +35,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
         if(prog >= half - 2 && prog <= half + 2){
           None
         }else{
-          Some(seek.getProgress.toDouble/seek.getMax.toDouble)
+          Some(seek.getProgress.toFloat/seek.getMax.toFloat)
         }
       })
     }.getOrElse(Seq())

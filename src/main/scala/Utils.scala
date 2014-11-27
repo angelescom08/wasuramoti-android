@@ -15,6 +15,8 @@ import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button}
 
 import _root_.java.io.File
+import _root_.java.util.Locale
+import _root_.java.text.NumberFormat
 
 import scala.collection.mutable
 
@@ -51,10 +53,57 @@ object Globals {
 
 object Utils {
 
+  abstract class PrefAccept[T <% Ordered[T] ] {
+    def from(s:String):T
+    def >(a:T,b:T):Boolean = a > b
+  }
+  object PrefAccept{
+    implicit val LongPrefAccept = new PrefAccept[Long] {
+      def from(s : String) = s.toLong
+    }
+    implicit val DoublePrefAccept = new PrefAccept[Double] {
+      def from(s : String) = s.toDouble
+    }
+  }
+
+  def getPrefAs[T:PrefAccept](key:String,defValue:T,maxValue:T):T = {
+    if(Globals.prefs.isEmpty){
+      return defValue
+    }
+    val r = try{
+      val v = Globals.prefs.get.getString(key,defValue.toString)
+      implicitly[PrefAccept[T]].from(v)
+    }catch{
+      case _:NumberFormatException => defValue
+    }
+    if( implicitly[PrefAccept[T]].>(r,maxValue)  ){
+      maxValue
+    }else{
+      r
+    }
+  }
+
   object ReadOrder extends Enumeration{
     type ReadOrder = Value
     val Shuffle, Random, PoemNum = Value
   }
+
+  // Never use StringOps.format since the output varies with locale.
+  // Instead, use this funciton.
+  def formatFloat(fmt:String, x:Float):String = {
+    fmt.formatLocal(Locale.US, x) // some country uses comma instead of dot !
+  }
+  def parseFloat(s:String):Float = {
+    // old version of wasuramot forgot to use .formatLocal() ,
+    // so there may be something like "0,12" in setting file
+    try{
+      val nf = NumberFormat.getInstance(Locale.US)
+      nf.parse(s.replaceAll(",",".")).floatValue
+    }catch{
+      case e:java.text.ParseException => throw new NumberFormatException(e.getMessage) // .toFloat() と同じ例外を出すようにする
+    }
+  }
+
 
   // return value is (silence, wait) in millisec
   def calcSilenceAndWaitLength() : (Int,Int) = {
@@ -67,7 +116,7 @@ object Utils {
     (silence,wait)
   }
 
-  type EqualizerSeq = Seq[Option[Double]]
+  type EqualizerSeq = Seq[Option[Float]]
   // Since every Activity has a possibility to be killed by android when it is background,
   // all the Activity in this application should call this method in onCreate()
   // Increment Globals.PREFERENCE_VERSION if you want to read again
@@ -348,35 +397,6 @@ object Utils {
       )
     }
   }
-  abstract class PrefAccept[T <% Ordered[T] ] {
-    def from(s:String):T
-    def >(a:T,b:T):Boolean = a > b
-  }
-  object PrefAccept{
-    implicit val LongPrefAccept = new PrefAccept[Long] {
-      def from(s : String) = s.toLong
-    }
-    implicit val DoublePrefAccept = new PrefAccept[Double] {
-      def from(s : String) = s.toDouble
-    }
-  }
-
-  def getPrefAs[T:PrefAccept](key:String,defValue:T,maxValue:T):T = {
-    if(Globals.prefs.isEmpty){
-      return defValue
-    }
-    val r = try{
-      val v = Globals.prefs.get.getString(key,defValue.toString)
-      implicitly[PrefAccept[T]].from(v)
-    }catch{
-      case _:NumberFormatException => defValue
-    }
-    if( implicitly[PrefAccept[T]].>(r,maxValue)  ){
-      maxValue
-    }else{
-      r
-    }
-  }
 
   def deleteCache(context:Context,match_func:String=>Boolean){
     Globals.global_lock.synchronized{
@@ -398,10 +418,11 @@ object Utils {
   def saveAndSetAudioVolume(context:Context){
     val pref_audio_volume = Globals.prefs.get.getString("audio_volume","")
     if(!TextUtils.isEmpty(pref_audio_volume)){
+      val pref_volume = Utils.parseFloat(pref_audio_volume)
       val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
         val max_volume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        val new_volume = math.min((pref_audio_volume.toFloat*max_volume).toInt,max_volume)
+        val new_volume = math.min((pref_volume*max_volume).toInt,max_volume)
         Globals.audio_volume_bkup = Some(am.getStreamVolume(AudioManager.STREAM_MUSIC))
         am.setStreamVolume(AudioManager.STREAM_MUSIC,new_volume,0)
       }
@@ -428,7 +449,7 @@ object Utils {
           None
         }else{
           try{
-            Some(x.toDouble)
+            Some(Utils.parseFloat(x))
           }catch{
             case e:NumberFormatException => None
           }
@@ -438,7 +459,7 @@ object Utils {
   def equalizerToString(eq:EqualizerSeq):String = {
     eq.map(_ match{
         case None => "None"
-        case Some(x) => "%.3f" format x
+        case Some(x) => formatFloat("%.3f", x)
       }).mkString(",")
   }
 

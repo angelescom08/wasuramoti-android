@@ -121,7 +121,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         val Array(min_eq,max_eq) = dest.getBandLevelRange
         for( i <- 0 until dest.getNumberOfBands){
           try{
-            var r = ar.seq(i).getOrElse(0.5)
+            var r = ar.seq(i).getOrElse(0.5f)
             dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
           }catch{
             case _:Exception => Unit

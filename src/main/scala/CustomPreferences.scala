@@ -181,7 +181,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
         (100 * (current_volume.toFloat / max_volume.toFloat)).toInt
       }).toString
     }else{
-      "* " + (100 * volume.toFloat).toInt.toString + " *"
+      "* " + (100 * Utils.parseFloat(volume)).toInt.toString + " *"
     }
   }
 
@@ -200,7 +200,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
         val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
         val new_value = if(check.isChecked){
           val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
-          "%.2f".format(seek.getProgress.toFloat / seek.getMax.toFloat)
+          Utils.formatFloat("%.2f" , seek.getProgress.toFloat / seek.getMax.toFloat)
         }else{
           Globals.audio_volume_bkup = None // do not restore audio volume
           notifyChangedPublic()
