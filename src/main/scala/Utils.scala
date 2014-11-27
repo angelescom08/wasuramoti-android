@@ -329,21 +329,22 @@ object Utils {
   def setButtonTextByState(context:Context){
     Globals.setButtonText.foreach{
       _(
-      (if(!NotifyTimerUtils.notify_timers.isEmpty){
-        NotifyTimerUtils.makeTimerText(context)
-      }else{
-        FudaListHelper.makeReadIndexMessage(context)
-      })+"\n"+
-      context.getResources.getString(
-        if(Globals.is_playing){
-          if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
-            R.string.now_auto_playing
-          }else{
-            R.string.now_playing
-          }
+        if(!NotifyTimerUtils.notify_timers.isEmpty){
+          NotifyTimerUtils.makeTimerText(context)
         }else{
-          R.string.now_stopped
-        })
+          FudaListHelper.makeReadIndexMessage(context) + "\n" +
+          context.getResources.getString(
+            if(Globals.is_playing){
+              if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+                R.string.now_auto_playing
+              }else{
+                R.string.now_playing
+              }
+            }else{
+              R.string.now_stopped
+            }
+          )
+        }
       )
     }
   }
