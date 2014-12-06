@@ -44,9 +44,11 @@ class YomiInfoSearchDialog extends DialogFragment{
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
         val tag = YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t
-        val b = btnlist.findViewWithTag(tag)
+        val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
         if(b != null){
           b.setEnabled(force.getOrElse(t,enabled && haveToEnableButton(tag)))
+          val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
+          b.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
         }
       }
     }
@@ -138,21 +140,11 @@ class YomiInfoSearchDialog extends DialogFragment{
   }
 
   def haveToEnableButton(tag:String):Boolean = {
-    getCurYomiInfoView.map{vw =>
-      tag.split("_")(1) match{
-        case "AUTHOR" => ! vw.show_author
-        case "KAMI" => ! vw.show_kami
-        case "SIMO" => ! vw.show_simo
-        case "FURIGANA" => ! vw.show_furigana
-        case _ => true
-      }
-    }.getOrElse{
-      val p = Globals.prefs.get
-      tag.split("_")(1) match{
-        case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
-        case "FURIGANA" => ! p.getBoolean("yomi_info_furigana_show",false)
-        case _ => true
-      }
+    val p = Globals.prefs.get
+    tag.split("_")(1) match{
+      case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
+      case "FURIGANA" => ! p.getBoolean("yomi_info_furigana_show",false)
+      case _ => true
     }
   }
 
@@ -195,13 +187,14 @@ class YomiInfoSearchDialog extends DialogFragment{
           }else{
             getCurYomiInfoView.foreach{vw =>
               tag.split("_")(1) match{
-                case "AUTHOR" => vw.show_author = true
-                case "KAMI" => vw.show_kami = true
-                case "SIMO" => vw.show_simo = true
-                case "FURIGANA" => vw.show_furigana = true
+                case "AUTHOR" => vw.show_author ^= true
+                case "KAMI" => vw.show_kami ^= true
+                case "SIMO" => vw.show_simo ^= true
+                case "FURIGANA" => vw.show_furigana ^= true
               }
               vw.invalidate
-              btn.setEnabled(false)
+              val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
+              btn.asInstanceOf[Button].setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
             }
           }
           if(getArguments.getBoolean("is_dialog")){
@@ -236,7 +229,7 @@ class YomiInfoSearchDialog extends DialogFragment{
       r
     }
 
-    btnlist.addButtons(getActivity,items
+    btnlist.addButtons(getActivity, getCurYomiInfoView, items
       .groupBy(_.split("\\|").head.split("\\.").head).values.toArray.sortBy{_.head}
       .map{v=>if(v.length%2==0){v}else{v++Array("|")}}.flatten.toArray
       .map{_.split("\\|") match {

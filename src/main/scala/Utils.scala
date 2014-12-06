@@ -501,6 +501,21 @@ object Utils {
     db.close()
     return r
   }
+  def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
+    yiv.map{vw =>
+      val rx = tag.split("_")(1) match{
+        case "AUTHOR" => vw.show_author
+        case "KAMI" => vw.show_kami
+        case "SIMO" => vw.show_simo
+        case "FURIGANA" => vw.show_furigana
+      }
+      if(rx){
+        R.drawable.ic_action_brightness_high
+      }else{
+        R.drawable.ic_action_brightness_low
+      }
+    }.getOrElse(R.drawable.ic_action_brightness_low)
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

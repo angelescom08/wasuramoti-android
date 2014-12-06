@@ -18,13 +18,13 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
   def setOnClickListener(listener:YomiInfoButtonList.OnClickListener){
     m_on_click_listener = listener
   }
-  def genButton(tag:String,text:String,enabled:Boolean):Button = {
+  def genButton(yiv:Option[YomiInfoView], tag:String,text:String,enabled:Boolean):Button = {
     val button = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_button,null).asInstanceOf[Button]
     button.setTag(tag)
     button.setText(text)
     button.setEnabled(enabled)
     val drawable = tag.split("_").head match{
-      case YomiInfoSearchDialog.PREFIX_DISPLAY => R.drawable.ic_action_brightness_medium
+      case YomiInfoSearchDialog.PREFIX_DISPLAY => Utils.getButtonDrawableId(yiv,tag)
       case YomiInfoSearchDialog.PREFIX_KIMARIJI => R.drawable.ic_action_storage
       case YomiInfoSearchDialog.PREFIX_SWITCH => R.drawable.ic_action_refresh
       case YomiInfoSearchDialog.PREFIX_SEARCH => R.drawable.ic_action_web_site
@@ -38,13 +38,13 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
       })
     button
   }
-  def addButtons(context:Context,text_and_tags:Array[(String,String,Boolean)]){
+  def addButtons(context:Context,yiv:Option[YomiInfoView], text_and_tags:Array[(String,String,Boolean)]){
 
     if(Utils.isScreenWide(context)){
       for(ar<-text_and_tags.grouped(2)){
         val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[TableRow]
         for((text,tag,enabled)<-ar if ! TextUtils.isEmpty(text)){
-          val button = genButton(tag,text,enabled)
+          val button = genButton(yiv,tag,text,enabled)
           val params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
           lay.addView(button,params)
         }
@@ -54,7 +54,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
       }
     }else{
       for((text,tag,enabled)<-text_and_tags if ! TextUtils.isEmpty(text)){
-        val button = genButton(tag,text,enabled)
+        val button = genButton(yiv,tag,text,enabled)
         button.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
         addView(button)
       }
