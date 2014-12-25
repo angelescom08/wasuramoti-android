@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:id="@+id/menu_shuffle" android:title="@string/menu_shuffle" android:numericShortcut="1" />
-  <item android:id="@+id/menu_move" android:title="@string/menu_move" android:numericShortcut="2" />
-  <item android:id="@+id/menu_timer" android:title="@string/menu_timer" android:numericShortcut="3" />
-  <item android:id="@+id/menu_quick_conf" android:title="@string/menu_quick_conf" android:numericShortcut="3" />
-  <item android:id="@+id/menu_conf" android:title="@string/menu_conf" android:numericShortcut="4" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:wasuramoti="http://schemas.android.com/apk/res-auto"
+  >
+  <item
+    android:id="@+id/action_settings"
+    android:icon="@drawable/ic_action_settings"
+    android:title="@string/menu_settings"
+    wasuramoti:showAsAction="always">
+    <menu>
+      <item android:id="@+id/menu_shuffle" android:title="@string/menu_shuffle" android:numericShortcut="1" />
+      <item android:id="@+id/menu_move" android:title="@string/menu_move" android:numericShortcut="2" />
+      <item android:id="@+id/menu_timer" android:title="@string/menu_timer" android:numericShortcut="3" />
+      <item android:id="@+id/menu_quick_conf" android:title="@string/menu_quick_conf" android:numericShortcut="3" />
+      <item android:id="@+id/menu_conf" android:title="@string/menu_conf" android:numericShortcut="4" />
+    </menu>
+  </item>
 </menu>

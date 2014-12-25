@@ -128,8 +128,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   override def onCreateOptionsMenu(menu: Menu):Boolean = {
-    val inflater = getMenuInflater
-    inflater.inflate(R.menu.main, menu)
+    getMenuInflater.inflate(R.menu.main, menu)
     super.onCreateOptionsMenu(menu)
   }
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
