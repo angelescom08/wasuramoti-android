@@ -133,7 +133,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       case e:NoClassDefFoundError => None
     }
   }
-  def play(bundle:Bundle,auto_play:Boolean=false){
+  def play(bundle:Bundle,auto_play:Boolean=false,from_swipe:Boolean=false){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
@@ -148,7 +148,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(YomiInfoUtils.showPoemText){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-        }else if(auto_play){
+        }else if(auto_play && !from_swipe){
           activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({_:Unit => activity.invalidateYomiInfo()}))
         }else{
           activity.invalidateYomiInfo()

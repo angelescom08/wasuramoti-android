@@ -40,5 +40,11 @@
           android:text="@string/autoplay_repeat"
           />
       </LinearLayout>
+      <include layout="@layout/horizontal_rule" />
+      <CheckBox
+        android:id="@+id/play_after_swipe"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="@string/play_after_swipe"
+        />
     </LinearLayout>
 </ScrollView>

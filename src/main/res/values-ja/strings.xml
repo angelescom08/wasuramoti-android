@@ -24,8 +24,8 @@
   <string name="menu_conf">詳細設定</string>
 
   <string-array name="quick_conf_list">
-    <item>読み句非表示</item>
-    <item>読み句全表示</item>
+    <item>詠み句非表示</item>
+    <item>詠み句全表示</item>
     <item>札流し</item>
     <item>上の句のみ</item>
     <item>英語モード</item>
@@ -78,11 +78,11 @@
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
 
   <string name="conf_autoplay">自動詠み上げ</string>
-  <string name="conf_autoplay_summary">詠み終えた後しばらく停止し，その後次の札を詠む</string>
-  <string name="autoplay_enable">有効</string>
+  <string name="conf_autoplay_summary">詠み終えた後に次の札を詠んだり，スワイプ後に詠んだり</string>
+  <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
   <string name="autoplay_repeat">終了後に最初に戻り詠み続ける</string>
-  <string name="autoplay_repeat_abbrev">繰返し</string>
+  <string name="play_after_swipe">詠み句をスワイプしたら自動的に詠む</string>
 
   <!-- CATEGORY_ORDER -->
   <string name="category_order">順番</string>

@@ -6,6 +6,7 @@ import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import _root_.android.media.AudioManager
 import _root_.android.text.TextUtils
+import scala.collection.mutable
 
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   // We can set defaultValue="..." in src/main/res/xml/conf.xml
@@ -57,15 +58,17 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
     val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
     val repeat = view.findViewById(R.id.autoplay_repeat).asInstanceOf[CheckBox]
-    (enable,span,repeat)
+    val play_after_swipe = view.findViewById(R.id.play_after_swipe).asInstanceOf[CheckBox]
+    (enable,span,repeat,play_after_swipe)
   }
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (enable,span,repeat) = getWidgets(view)
+        val (enable,span,repeat,play_after_swipe) = getWidgets(view)
         edit.putBoolean("autoplay_enable",enable.isChecked)
         edit.putBoolean("autoplay_repeat",repeat.isChecked)
+        edit.putBoolean("play_after_swipe",play_after_swipe.isChecked)
         edit.putLong("autoplay_span",Math.max(1,try{
             span.getText.toString.toInt
           }catch{
@@ -82,10 +85,11 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val view = LayoutInflater.from(context).inflate(R.layout.autoplay,null)
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
-    val (enable,span,repeat) = getWidgets(view)
+    val (enable,span,repeat,play_after_swipe) = getWidgets(view)
     val prefs = Globals.prefs.get
     enable.setChecked(prefs.getBoolean("autoplay_enable",false))
     repeat.setChecked(prefs.getBoolean("autoplay_repeat",false))
+    play_after_swipe.setChecked(prefs.getBoolean("play_after_swipe",false))
     span.setText(prefs.getLong("autoplay_span",DEFAULT_VALUE).toString)
     switchVisibilityByCheckBox(root_view,enable,R.id.autoplay_layout)
     return view
@@ -93,11 +97,20 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   override def getAbbrValue():String = {
     val p = Globals.prefs.get
     val r = context.getResources
-    if(p.getBoolean("autoplay_enable",false)){
-      p.getLong("autoplay_span",DEFAULT_VALUE) + r.getString(R.string.conf_unit_second) +
-      (if(p.getBoolean("autoplay_repeat",false)){
-        "/" + r.getString(R.string.autoplay_repeat_abbrev)
-      }else{""})
+    val auto = p.getBoolean("autoplay_enable",false)
+    val play_after_swipe = p.getBoolean("play_after_swipe",false)
+    if(auto || play_after_swipe){
+      val rr = new mutable.MutableList[String]
+      if(auto){
+        rr += p.getLong("autoplay_span",DEFAULT_VALUE) + r.getString(R.string.conf_unit_second) +
+          (if(p.getBoolean("autoplay_repeat",false)){
+            "\u21a9" // U+21A9 leftwards arrow with hook
+          }else{""})
+      }
+      if(play_after_swipe){
+        rr += "\u2194" // left right arrow
+      }
+      rr.mkString("/")
     }else{
       context.getResources.getString(R.string.message_disabled)
     }

@@ -509,7 +509,7 @@ trait MainButtonTrait{
       invalidateYomiInfo()
     }
   }
-  def doPlay(auto_play:Boolean){
+  def doPlay(auto_play:Boolean, from_swipe:Boolean = false){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
@@ -539,7 +539,7 @@ trait MainButtonTrait{
         // the actual wait_time should be shorter.
         val (_,wait_time) = Utils.calcSilenceAndWaitLength
         bundle.putLong("wait_time",wait_time.toLong)
-        player.play(bundle,auto_play)
+        player.play(bundle,auto_play,from_swipe)
       }
     }
   }

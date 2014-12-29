@@ -2,8 +2,8 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.preference.PreferenceActivity
 import _root_.android.os.Bundle
-import _root_.android.view.View
-import _root_.android.widget.{TextView,CheckBox,CompoundButton}
+import _root_.android.view.{View,ViewGroup}
+import _root_.android.widget.{TextView,CheckBox,CompoundButton,LinearLayout}
 import _root_.android.util.{AttributeSet,Base64}
 import _root_.android.text.TextUtils
 import _root_.android.content.{Context,SharedPreferences,Intent,ComponentName}
@@ -29,11 +29,20 @@ trait PreferenceCustom extends Preference{
     super.notifyChanged()
   }
   def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
+    // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
     val f = (isChecked:Boolean) => {
       root_view.foreach{ root =>
         val layout = root.findViewById(layout_id)
         if(layout != null){
-          layout.setVisibility(if(isChecked){View.VISIBLE}else{View.INVISIBLE})
+          val lp = layout.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+          if(isChecked){
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            layout.setVisibility(View.VISIBLE)
+          }else{
+            lp.height = 0
+            layout.setVisibility(View.INVISIBLE)
+          }
+          layout.setLayoutParams(lp)
         }
       }
     }
