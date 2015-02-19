@@ -274,7 +274,7 @@ trait YomiInfoYomifudaTrait{
       paint_debug.setColor(Color.CYAN)
       canvas.drawRect((getWidth*MARGIN_LR).toInt,(getHeight*FURIGANA_TOP_LIMIT).toInt,
         (getWidth*(1.0-MARGIN_LR)).toInt,(getHeight*(1-FURIGANA_BOTTOM_LIMIT)).toInt,paint_debug)
-      val ni = {_:Unit=>new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)}
+      val ni = {()=>new Rect(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE)}
       screen_range_main = ni()
       screen_range_furi = ni()
     }

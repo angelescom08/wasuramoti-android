@@ -6,42 +6,19 @@ object Build extends android.AutoBuild {
     name := "wasuramoti",
     version := "0.8.18",
     versionCode := Some(56),
-    scalaVersion := "2.10.4",
-    platformTarget in Android := "android-19",
+    scalaVersion := "2.11.5",
+    platformTarget in Android := "android-21",
+    // See https://github.com/pfn/android-sdk-plugin/issues/88
+    sourceGenerators in Compile <<= (sourceGenerators in Compile) (g => Seq(g.last)),
     libraryDependencies ++= Seq(
-      "com.android.support" % "support-v4" % "19.1.0",
-      android.Dependencies.aar("com.android.support" % "appcompat-v7" % "19.1.0")
+      "com.android.support" % "support-v4" % "21.0.3",
+      android.Dependencies.aar("com.android.support" % "appcompat-v7" % "21.0.3")
     ),
-    scalacOptions ++= Seq("-unchecked","-deprecation"),
-    proguardOptions := Seq(
-    "-keep class karuta.hpnpwd.audio.OggVorbisDecoder",
-    "-keep class scala.Either",
-    "-keep class scala.Function0",
-    "-keep class scala.Function1",
-    "-keep class scala.Function2",
-    "-keep class scala.Function3",
-    "-keep class scala.Option",
-    "-keep class scala.Tuple2",
-    "-keep class scala.Tuple3",
-    "-keep class scala.Tuple4",
-    "-keep class scala.collection.Seq",
-    "-keep class scala.collection.immutable.List",
-    "-keep class scala.collection.immutable.Set",
-    "-keep class scala.collection.mutable.Buffer",
-    "-keep class scala.collection.mutable.HashMap",
-    "-keep class scala.collection.mutable.Queue",
-    "-keep class scala.collection.mutable.StringBuilder",
-    "-keep class scala.Enumeration$Value",
-    "-keep class scala.PartialFunction",
-    "-keep class scala.runtime.BooleanRef",
-    "-keep class scala.runtime.BoxedUnit",
-    "-keep class scala.runtime.IntRef",
-    "-keep class scala.runtime.FloatRef",
-    "-keep class scala.runtime.LongRef",
-    "-keep class scala.runtime.ObjectRef",
-    "-keep class scala.runtime.VolatileIntRef",
-    "-keep class scala.util.matching.Regex",
-    "-keep class scala.util.Random",
+    scalacOptions in Compile ++= Seq("-unchecked","-deprecation"),
+    // see http://blog.scaloid.org/2014_10_01_archive.html
+    proguardOptions in Android ++= Seq(
+    "-dontwarn scala.collection.**",
+    "-keepattributes Signature",
     "-verbose"
     ),
     useProguard := true

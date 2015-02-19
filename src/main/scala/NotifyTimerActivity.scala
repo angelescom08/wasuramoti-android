@@ -293,7 +293,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
           // using `notif.defaults |= Notification.DEFAULT_VIBRATE' does not work when RINGER_MODE_SILENT
           val vib = context.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
           if(vib != null){
-            vib.vibrate(Array.concat(Array(0),Array.fill(3){Array(1500,500).map{_.toLong}}.flatten),-1)
+            vib.vibrate(Array.concat(Array(0L),Array.fill(3){Array(1500L,500L)}.flatten),-1)
           }else{
             Log.v("wasuramoti","WARNING: VIBRATOR_SERVICE is not supported on this device.")
           }

@@ -109,7 +109,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           case "hardware_accelerate" =>
             // Since there is no way to disable hardware acceleration,
             // we have to restart application.
-            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ Unit => Utils.restartApplication(context) })
+            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ () => Utils.restartApplication(context) })
           case _ => 
         }
         val pref = findPreference(key)
@@ -121,7 +121,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
     Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)
     findPreference("init_fudaset").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {
-        Utils.confirmDialog(context,Right(R.string.confirm_init_fudaset), _ => {
+        Utils.confirmDialog(context,Right(R.string.confirm_init_fudaset), () => {
           Globals.database.foreach{ db =>
             DbUtils.initializeFudaSets(getApplicationContext,db.getWritableDatabase,true)
           }
@@ -132,7 +132,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
     })
     findPreference("init_preference").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {
-        Utils.confirmDialog(context,Right(R.string.confirm_init_preference), _ => {
+        Utils.confirmDialog(context,Right(R.string.confirm_init_preference), () => {
           Globals.prefs.foreach{ p =>
             val ed = p.edit
             ed.clear

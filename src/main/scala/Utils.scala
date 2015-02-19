@@ -252,7 +252,7 @@ object Utils {
     dialog.show()
     Globals.alert_dialog = Some(dialog)
   }
-  def confirmDialog(context:Context,arg:Either[String,Int],func_yes:Unit=>Unit,func_no:Unit=>Unit=identity[Unit]){
+  def confirmDialog(context:Context,arg:Either[String,Int],func_yes:()=>Unit,func_no:()=>Unit={()=>Unit}){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
@@ -272,7 +272,7 @@ object Utils {
     .create
     showDialogAndSetGlobalRef(dialog)
   }
-  def messageDialog(context:Context,arg:Either[String,Int],func_done:Unit=>Unit=identity[Unit]){
+  def messageDialog(context:Context,arg:Either[String,Int],func_done:()=>Unit={()=>Unit}){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
@@ -292,7 +292,7 @@ object Utils {
     Globals.alert_dialog = None
   }
 
-  def generalHtmlDialog(context:Context,html_id:Either[String,Int],func_done:Unit=>Unit=identity[Unit]){
+  def generalHtmlDialog(context:Context,html_id:Either[String,Int],func_done:()=>Unit={()=>Unit}){
     val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
     val html = html_id match {

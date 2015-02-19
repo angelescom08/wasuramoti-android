@@ -34,7 +34,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   var SCROLL_THREASHOLD_DIP = 80f
   val SCROLL_SPEED = 200 // in millisec
   var cur_view = None:Option[Int]
-  def scrollAnimation(endx:Int,on_finish:Unit=>Unit=Unit=>Unit){
+  def scrollAnimation(endx:Int,on_finish:()=>Unit={()=>Unit}){
     val startx = getScrollX
     new CountDownTimer(SCROLL_SPEED,10){
       override def onTick(millisUntilFinished:Long){
@@ -126,13 +126,13 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     scrollToView(R.id.yomi_info_view_cur,false)
   }
 
-  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[Unit=>Unit]=None){
+  def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[()=>Unit]=None){
     val v = findViewById(id).asInstanceOf[YomiInfoView]
     if(v!=null){
       val x = v.getLeft
       val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
       val func = do_after_done.getOrElse(
-          {_:Unit=>
+          {()=>
             if(have_to_move){
               val wa = context.asInstanceOf[WasuramotiActivity]
               wa.cancelAllPlay()

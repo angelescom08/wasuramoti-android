@@ -19,7 +19,7 @@ import scala.collection.mutable
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
-  var release_lock = None:Option[Unit=>Unit]
+  var release_lock = None:Option[()=>Unit]
   var run_dimlock = None:Option[Runnable]
   var run_refresh_text = None:Option[Runnable]
   val handler = new Handler()
@@ -56,7 +56,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       val obj = new JSONTokener(str).nextValue.asInstanceOf[JSONObject]
       val title = obj.keys.next.asInstanceOf[String]
       val ar = obj.getJSONArray(title)
-      Utils.confirmDialog(this,Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),{ Unit =>
+      Utils.confirmDialog(this,Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),{ () =>
         var count = 0
         val res = (0 until ar.length).map{ i =>
           val o = ar.get(i).asInstanceOf[JSONObject]
@@ -136,7 +136,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
-        Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm),_=>{
+        Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm), ()=>{
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
             refreshAndInvalidate()
         })
@@ -264,7 +264,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     //try loading 'libvorbis.so'
     val decoder = new OggVorbisDecoder()
     if(!OggVorbisDecoder.library_loaded){
-      Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), _=> {finish()})
+      Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), {() => finish()})
       return
     }
     if(YomiInfoUtils.showPoemText && Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
@@ -346,7 +346,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[Unit=>Unit]=None){
+  def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[()=>Unit]=None){
     if(!YomiInfoUtils.showPoemText){
       return
     }
@@ -418,7 +418,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       release_lock.foreach(_())
       getWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
       release_lock = {
-          Some( _ => {
+          Some( () => {
             getWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
           })
       }
@@ -513,7 +513,7 @@ trait MainButtonTrait{
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
-          Utils.messageDialog(self,Right(R.string.all_read_done),{_=>openOptionsMenu()})
+          Utils.messageDialog(self,Right(R.string.all_read_done),{()=>openOptionsMenu()})
         }else{
           Utils.messageDialog(self,Right(R.string.reader_not_found))
         }

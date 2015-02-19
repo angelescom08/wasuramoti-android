@@ -36,14 +36,14 @@ class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
                 dismiss()
               }else{
                 // we have to re-show this dialog since BUTTON_{POSITIVE,NEGATIVE,NEUTRAL} closes the dialog
-                Utils.messageDialog(context,Right(R.string.scan_reader_invalid_path),{Unit=>show()})
+                Utils.messageDialog(context,Right(R.string.scan_reader_invalid_path),{()=>show()})
               }
             }
             case DialogInterface.BUTTON_NEGATIVE => {
               cancel()
             }
             case DialogInterface.BUTTON_NEUTRAL => {
-              Utils.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html),{Unit=>show()})
+              Utils.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html),{()=>show()})
             }
             case _ => {
             }

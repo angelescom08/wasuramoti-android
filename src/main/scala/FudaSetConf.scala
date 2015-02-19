@@ -158,7 +158,7 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
         case Some((kimari,st_size)) =>
           val message = getResources().getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
-          Utils.confirmDialog(context,Left(message),_ => {
+          Utils.confirmDialog(context,Left(message),() => {
             Utils.writeFudaSetToDB(title,kimari,st_size,is_add,orig_title)
             if(is_add){
               adapter.add(new FudaSetWithSize(title,st_size))
@@ -214,7 +214,7 @@ trait FudaSetTrait{
     }
     val fs = adapter.getItem(pos)
     val message = getResources().getString(R.string.fudaset_confirmdelete,fs.title)
-    Utils.confirmDialog(this,Left(message), _ => Globals.db_lock.synchronized{
+    Utils.confirmDialog(this,Left(message), () => Globals.db_lock.synchronized{
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
       db.close()

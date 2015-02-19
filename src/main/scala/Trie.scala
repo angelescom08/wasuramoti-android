@@ -5,7 +5,7 @@ import scala.collection.mutable.Buffer
 import scala.util.Random
 
 class TrieVertex{
-  var char:Char = '\0'
+  var char:Char = '\u0000'
   var isLeaf:Boolean = false
   var flag:Boolean = false
   var childs:Buffer[TrieVertex] = Buffer()

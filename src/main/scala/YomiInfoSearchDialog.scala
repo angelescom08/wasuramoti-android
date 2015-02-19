@@ -84,18 +84,18 @@ class YomiInfoSearchDialog extends DialogFragment{
       AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(fudanum)).replace(" ","") +
         " " + getActivity.getString(R.string.search_text_author)
     }
-    val f1 = {_:Unit =>
+    val f1 = {() =>
       val intent = new Intent(Intent.ACTION_WEB_SEARCH)
       intent.putExtra(SearchManager.QUERY,query)
       Left(intent)
     }
-    val f2 = {_:Unit => 
+    val f2 = {() => 
       val intent = new Intent(Intent.ACTION_VIEW)
       intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
       Left(intent)
     }
-    val f3 = {_:Unit => 
-      Right({ _:Unit =>
+    val f3 = {() => 
+      Right({() =>
         Utils.messageDialog(getActivity,Right(R.string.browser_not_found))
       })
     }

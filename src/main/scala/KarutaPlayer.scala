@@ -149,7 +149,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
         }else if(auto_play && !from_swipe){
-          activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({_:Unit => activity.invalidateYomiInfo()}))
+          activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
         }else{
           activity.invalidateYomiInfo()
         }
@@ -207,7 +207,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             activity.runOnUiThread(new Runnable{
                 override def run(){
                   Utils.messageDialog(activity,Left(Option(e.getMessage).getOrElse("<null>") + "... will restart app."),{
-                      _=>Utils.restartApplication(activity.getApplicationContext)
+                      ()=>Utils.restartApplication(activity.getApplicationContext)
                     })
                 }
             })
@@ -420,7 +420,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                   activity.runOnUiThread(new Runnable{
                       override def run(){
                         val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
-                        Utils.messageDialog(activity,Left(msg),{_=>throw new AlreadyReportedException(e.getMessage)})
+                        Utils.messageDialog(activity,Left(msg),{()=>throw new AlreadyReportedException(e.getMessage)})
                       }
                   })
                   return Right(new OggDecodeFailException("ogg decode failed with IOException: "+e.getMessage))

@@ -21,7 +21,7 @@ class MovePositionDialog extends DialogFragment{
     current_index = Math.min(Math.max(n,1),total_s) + offset
     setTitleWithNum()
   }
-  def setOnClick(view:View,id:Int,func:Unit=>Unit){
+  def setOnClick(view:View,id:Int,func:()=>Unit){
     view.findViewById(id).asInstanceOf[Button].setOnClickListener(
       new View.OnClickListener(){
         override def onClick(v:View){
@@ -52,10 +52,10 @@ class MovePositionDialog extends DialogFragment{
         }
       })
     .setNegativeButton(getActivity.getString(android.R.string.cancel),null)
-    setOnClick(view,R.id.move_button_prev, _ => onPrev )
-    setOnClick(view,R.id.move_button_prev_ten, _ => onPrevTen )
-    setOnClick(view,R.id.move_button_next, _ => onNext )
-    setOnClick(view,R.id.move_button_next_ten, _ => onNextTen )
+    setOnClick(view,R.id.move_button_prev, {() => onPrev()} )
+    setOnClick(view,R.id.move_button_prev_ten, {() => onPrevTen()} )
+    setOnClick(view,R.id.move_button_next, {() => onNext()} )
+    setOnClick(view,R.id.move_button_next_ten, {() => onNextTen()} )
     val dialog = builder.create
     setTitleWithNum(Some(dialog))
     return dialog
