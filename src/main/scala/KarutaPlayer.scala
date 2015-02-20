@@ -41,7 +41,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therefore, we execute it here
   val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
-  val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask] // calling execute() with no argument raises AbstractMethodError "abstract method not implemented" in doInBackground
+  val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask]
 
   def audioQueueInfo():String = {
     if(audio_queue.isEmpty){
@@ -348,7 +348,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
       })
     }
-    override def doInBackground(unused:AnyRef*):Either[AudioQueue,Exception] = {
+    // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
+    // otherwise it raises AbstractMethodError "abstract method not implemented"
+    override def doInBackground(unused:AnyRef*):AnyRef = {
       this.synchronized{
       try{
         Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG,Globals.CACHE_SUFFIX_WAV).exists{s=>path.endsWith(s)})

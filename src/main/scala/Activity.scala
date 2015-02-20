@@ -261,7 +261,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
 
-    //try loading 'libvorbis.so'
+    //try loading 'libstbvorbis.so'
     val decoder = new OggVorbisDecoder()
     if(!OggVorbisDecoder.library_loaded){
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), {() => finish()})
@@ -468,26 +468,28 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   def setLongClickButtonOnResume(){
     val btn = findViewById(R.id.read_button).asInstanceOf[Button]
-    btn.setOnLongClickListener(
-      if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
-        new View.OnLongClickListener(){
-          override def onLongClick(v:View):Boolean = {
-            Globals.global_lock.synchronized{
-              if(Globals.is_playing){
-                Globals.player.foreach{p=>
-                  p.stop()
-                  moveToNextFuda()
-                  doPlay(false)
+    if(btn != null){
+      btn.setOnLongClickListener(
+        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+          new View.OnLongClickListener(){
+            override def onLongClick(v:View):Boolean = {
+              Globals.global_lock.synchronized{
+                if(Globals.is_playing){
+                  Globals.player.foreach{p=>
+                    p.stop()
+                    moveToNextFuda()
+                    doPlay(false)
+                  }
                 }
               }
+              return true
             }
-            return true
           }
+        }else{
+          null
         }
-      }else{
-        null
-      }
-    )
+      )
+    }
   }
 }
 

@@ -74,7 +74,10 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
           })
       }
     }
-    override def doInBackground(unused:AnyRef*):Boolean = {
+
+    // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
+    // otherwise it raises AbstractMethodError "abstract method not implemented"
+    override def doInBackground(unused:AnyRef*):AnyRef = {
       val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom()
       for(path <- paths){
         Utils.walkDir(path,Globals.READER_SCAN_DEPTH_MAX, f =>{
@@ -109,8 +112,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
           }}
         )
       }
-
-      true
+      true.asInstanceOf[AnyRef]
     }
   }
 

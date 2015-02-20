@@ -1,5 +1,7 @@
 package karuta.hpnpwd.audio;
 
+import android.util.Log;
+
 public class OggVorbisDecoder {
   public static boolean library_loaded = false;
   public int channels = 0;
@@ -7,10 +9,10 @@ public class OggVorbisDecoder {
   public int bit_depth = 0;
   static{
     try{
-      System.loadLibrary("vorbis");
+      System.loadLibrary("stbvorbis");
       library_loaded = true;
     }catch(UnsatisfiedLinkError e){
-
+      Log.e("wasuramoti", "cannot load stbvorbis", e);
     }
   }
   // returns true for success

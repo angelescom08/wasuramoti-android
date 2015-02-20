@@ -73,6 +73,10 @@ object AudioHelper{
     track.write(buf,0,buf.length)
   }
   // note: modifying the following ShortBuffer is reflected to tho original file because it is casted from MappedByteBuffer
+  // TODO: In old days, the Android process could use only little amount of memory (e.g. 32MB). 
+  //       Therefore, in order to avoid copying the decoded PCM to memory, we decoded ogg file to temporary file, and used MappedByteBuffer to mmap() it.
+  //       However, recent device can use more memory. so maybe we may now decode the ogg file directly to memory.
+  //       See `stb_vorbis_decode_memory()` in `src/main/jni/stb_vorbis.c`
   def withMappedShortsFromFile(f:File,func:ShortBuffer=>Unit){
     val raf = new RandomAccessFile(f,"rw")
     func(raf.getChannel().map(FileChannel.MapMode.READ_WRITE,0,f.length()).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer())
