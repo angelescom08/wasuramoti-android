@@ -17,9 +17,6 @@ __BEGIN_CREDITS__
 
 [謝辞]
   このソフトウェアは下記のライブラリ，音声データ，フォントを使っています．それぞれ素晴らしい素材を提供して頂きありがとうございました．著作権情報は下記の通りになっています．
-  <libogg/libvorbis>
-    %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
-    ライセンス条文はapkファイルの中の `COPYING-OGGVORBIS` にあります．
   <音声データ>
     __WRITE_AUDIO_LICENSE_HERE__
   <Tフォント>
@@ -30,8 +27,9 @@ __BEGIN_CREDITS__
     %% Copyright (c) 2010, Igino Marini. (www.ikern.com|mail@iginomarini.com),
     %% with Reserved Font Name Dancing Script.
     ライセンス条文はapkファイルの中の `DANCING-SCRIPT-OFL.txt` にあります．
-  ---
-  下記のフォントはパブリックドメインですがともあれ感謝です．
+  下記のライブラリおよびフォントはパブリックドメインですがともあれ感謝です．
+  <stb_vorbis>
+    http://github.com/nothings/stb
   <Kouzan Font>
     衡山毛筆フォント, http://opentype.jp/freemouhitufont.htm
   <Black Chancery>

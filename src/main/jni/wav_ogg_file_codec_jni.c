@@ -1,6 +1,4 @@
-#include <string.h>
 #include <jni.h>
-#include <vorbis/codec.h>
 #include "wav_ogg_file_codec_jni.h"
 
 // Returns zero for success, non-zero for failure

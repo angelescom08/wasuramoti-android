@@ -19,10 +19,7 @@
   __BEGIN_CREDITS__
 
 [Credits]
-  This software uses the following libaries, audio datas, and fonts. I appreciate the provider of those wonderful materials. The copyright is as follows:
-  <libogg/libvorbis>
-     %% Ogg Vorbis is Copyright (c) 2002-2008 Xiph.org Foundation
-    The body text of license is included in apk with file name of `COPYING-OGGVORBIS`
+  This software uses following libaries, audio datas, and fonts. I appreciate the provider of those wonderful materials. The copyright is as follows:
   <Audio Data>
     __WRITE_AUDIO_LICENSE_HERE__
   <T-Font>
@@ -34,7 +31,9 @@
     %% with Reserved Font Name Dancing Script.
     The body text of license is incuded in apk with file name of `DANCING-SCRIPT-OFL.txt`
   ---
-  Also the following fonts are public domain but thanks anyway:
+  The following libraries and fonts are public domain but thanks anyway:
+  <stb_vorbis>
+    http://github.com/nothings/stb
   <Kouzan Font>
     Kouzan Mouhitu Font, http://opentype.jp/freemouhitufont.htm
   <Black Chancery>

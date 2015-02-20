@@ -26,7 +26,6 @@ function copy_license(){
     }" > "${TARGET_DIR}/../$fn"
   done
   cp "${ROOT}/license/"* "${TARGET_DIR}"
-  cp "${ROOT}/src/main/jni/libvorbis-"*"/COPYING" "${TARGET_DIR}/COPYING-OGGVORBIS"
 }
 
 if [ $# -eq 0 ];then
