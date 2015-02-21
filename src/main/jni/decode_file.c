@@ -3,8 +3,6 @@
 #define STB_VORBIS_HEADER_ONLY
 #include "stb_vorbis.c"
 
-#define APP_NAME "wasuramoti"
-
 #ifdef __ANDROID__
 #include <android/log.h>
 #include <jni.h>
@@ -42,6 +40,9 @@
   if(buffer != NULL){ free(buffer);}; \
   close_jni(); \
 }
+
+#define APP_NAME "wasuramoti"
+
 // Returns zero for success, non-zero for failure
 int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, stb_vorbis_info * return_info){
 
@@ -85,12 +86,14 @@ int decode_file(JNIEnv *env, const char* fin_path, const char * fout_path, stb_v
   if (buffer == NULL) {
     abort_task("buffer malloc failed.\n")
   }
-  for (;;) {
+  int i;
+  for (i=0;;i++) {
      int n = stb_vorbis_get_frame_short_interleaved(vin, channels, buffer, buf_size);
      if (n == 0) break;
-     // __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Ogg Decode: %d.\n",n);
      fwrite(buffer, sizeof(*buffer), n * channels, fout);
-     abort_if_interrupted(); 
+     if(i%16 == 0){
+       abort_if_interrupted(); 
+     }
   }
   // __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Ogg Decode Done.\n");
   close_all();

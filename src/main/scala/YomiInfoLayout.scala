@@ -3,7 +3,7 @@ import _root_.android.content.Context
 import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.Typeface
-import _root_.android.util.AttributeSet
+import _root_.android.util.{AttributeSet,Log}
 import _root_.android.os.CountDownTimer
 
 import scala.collection.mutable
@@ -160,5 +160,20 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
       getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
     }
   }
-
+  
+  def getCurNum():Option[Int] = {
+    cur_view.flatMap(findViewById(_).asInstanceOf[YomiInfoView].cur_num)
+  }
+  def getNextNum():Option[Int] = {
+    cur_view.flatMap(id => {
+      val nid = id match {
+        case R.id.yomi_info_view_prev => Some(R.id.yomi_info_view_cur)
+        case R.id.yomi_info_view_cur => Some(R.id.yomi_info_view_next)
+        case _ => None
+      }
+      nid.flatMap( x =>
+          Option(findViewById(x).asInstanceOf[YomiInfoView]).flatMap{_.cur_num}
+      )
+    })
+  }
 }

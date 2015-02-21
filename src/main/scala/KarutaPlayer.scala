@@ -4,6 +4,7 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.os.{AsyncTask,Bundle}
 import _root_.android.media.audiofx.Equalizer
+import _root_.android.widget.Toast
 import _root_.android.util.Log
 
 import scala.collection.mutable
@@ -230,6 +231,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         }
       }
+      // TODO: can we safely assume that .distinct() returns the list in original order ?
+      val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
+      activity.runOnUiThread(new Runnable(){
+        override def run(){
+          if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
+            Toast.makeText(activity.getApplicationContext,"TextAudioConsistencyError",Toast.LENGTH_LONG)
+          }
+        }
+      })
+
       var r_write = audio_track.get.write(buf,0,buf.length)
 
       // The following exception is throwed if AudioTrack.getState != STATE_INITIALIZED when AudioTrack.play() is called

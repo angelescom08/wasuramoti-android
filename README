@@ -54,8 +54,8 @@ __END_CREDITS__
 [How to build apk file]
   Requirements:
     # general installment from package manager in linux
-      IcedTea JDK 7 (or some other Java JDK compatible to it)
-      scala 2.10.4
+      IcedTea JDK 7 (or some other Java JDK )
+      scala 2.11.5
       sbt 0.13.6 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
       android-sdk-plugin 1.3.6 (https://github.com/pfn/android-sdk-plugin)

@@ -4,7 +4,7 @@ import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context}
 import _root_.android.content.{Intent,Context}
-import _root_.android.util.{Base64,TypedValue}
+import _root_.android.util.{Base64,TypedValue,Log}
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
@@ -354,8 +354,22 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     if(yomi_info != null){
       yomi_info.scrollToView(id,smooth,false,do_after_done)
     }
-
   }
+
+  def checkConsintencyForYomiInfoAndAudioQueue(read_nums:List[Option[Int]]):Boolean = {
+    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(yomi_info != null){
+      val yomi_nums = if(Utils.readCurNext(getApplicationContext)){
+        List(yomi_info.getCurNum,yomi_info.getNextNum)
+      }else{
+        List(yomi_info.getCurNum)
+      }
+      yomi_nums == read_nums
+    }else{
+      true
+    }
+  }
+
   override def onStart(){
     super.onStart()
     if( Globals.prefs.isEmpty ){

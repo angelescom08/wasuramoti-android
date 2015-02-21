@@ -183,7 +183,7 @@ abstract class Reader(context:Context,val path:String){
       rval = decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
       if(rval){
         AudioHelper.withMappedShortsFromFile(wav_file,buffer => {
-          val wav = new WavBuffer(buffer,wav_file,decoder)
+          val wav = new WavBuffer(buffer,wav_file,decoder,num,kamisimo)
           func(wav)
         })
       }else{

@@ -84,7 +84,7 @@ object AudioHelper{
   }
 }
 
-class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder) extends WavBufferDebugTrait with BugReportable{
+class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder, val num:Int, val kamisimo:Int) extends WavBufferDebugTrait with BugReportable{
   val SHORT_BYTE = java.lang.Short.SIZE/java.lang.Byte.SIZE
   val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
@@ -92,6 +92,8 @@ class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbi
 
   override def toBugReport():String = {
     val bld = new mutable.StringBuilder
+    bld ++= s"num->$num;"
+    bld ++= s"kamisimo->$kamisimo;"
     bld ++= s"index_begin->$index_begin;"
     bld ++= s"index_end->$index_end;"
     bld ++= s"orig_file->${orig_file.getName};"
