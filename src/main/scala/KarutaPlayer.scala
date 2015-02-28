@@ -231,15 +231,40 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         }
       }
+
+      val decode_and_play_again = () => {
+        // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
+        audio_track = None
+        activity.runOnUiThread(new Runnable(){
+            override def run(){
+              Globals.player = AudioHelper.refreshKarutaPlayer(activity,Globals.player,true)
+              // we won't wait playing for second time
+              bundle.remove("wait_time")
+              Globals.player.foreach{_.play(bundle)}
+            }
+        })
+      }
+
+      // I could not found any test case that inconsistency between audio and text occurs.
+      // However there was a report from user that it occurs.
+      // It might be just mistake of user, but I would check consistency for sure.
       // TODO: can we safely assume that .distinct() returns the list in original order ?
       val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
-      activity.runOnUiThread(new Runnable(){
-        override def run(){
-          if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
-            Toast.makeText(activity.getApplicationContext,"TextAudioConsistencyError",Toast.LENGTH_LONG)
+      if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
+        activity.runOnUiThread(new Runnable(){
+          override def run(){
+            val msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
+            Toast.makeText(activity.getApplicationContext,msg,Toast.LENGTH_LONG)
+            Globals.text_audio_inconsistent_count += 1
+            if(Globals.text_audio_inconsistent_count >= 5){
+              //TODO: show report debug dialog here
+              throw new Exception("text audio inconsintent count >= 5")
+            }
           }
-        }
-      })
+        })
+        decode_and_play_again()
+        return
+      }
 
       var r_write = audio_track.get.write(buf,0,buf.length)
 
@@ -253,16 +278,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           Log.v("wasuramoti",message)
           if(Globals.audio_track_failed_count == 0){
             Globals.audio_track_failed_count += 1
-            // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
-            activity.runOnUiThread(new Runnable(){
-                override def run(){
-                  doWhenStop()
-                  Globals.player = AudioHelper.refreshKarutaPlayer(activity,Globals.player,true)
-                  // we won't wait playing for second time
-                  bundle.remove("wait_time")
-                  Globals.player.foreach{_.play(bundle)}
-                }
-            })
+            decode_and_play_again()
           }else{
             throw new Exception(message)
           }

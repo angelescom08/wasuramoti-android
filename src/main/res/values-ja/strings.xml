@@ -389,4 +389,7 @@
       </html>
     ]]>
   </string>
+  <string name="text_audio_consistency_error">
+    詠み句と音声の整合性エラー
+  </string>
 </resources>

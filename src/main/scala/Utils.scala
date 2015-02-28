@@ -45,6 +45,7 @@ object Globals {
   var forceRestart = false
   var audio_volume_bkup = None:Option[Int]
   var audio_track_failed_count = 0
+  var text_audio_inconsistent_count = 0
   // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
   var alert_dialog = None:Option[AlertDialog]
 
