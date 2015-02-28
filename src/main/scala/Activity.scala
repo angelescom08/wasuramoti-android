@@ -320,7 +320,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
       yomi_info.invalidateAndScroll()
-
     }
   }
 

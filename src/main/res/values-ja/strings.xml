@@ -375,11 +375,7 @@
           <form method="post" action="%1$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
             <div>
               <div>バグの症状を書いて下さい:</div>
-              <textarea name="bug_detail"></textarea>
-            </div>
-            <div>
-              <div>その他コメントあったらどうぞ:</div>
-              <textarea name="bug_comment"></textarea>
+              <textarea name="bug_detail">%3$s</textarea>
             </div>
             <div>「送信する」をクリックすると機種名やAndroidのバージョンなどデバッグに必要な情報が送信されますが，個人情報は送ってないので信じて下さい．</div>
             <input type="submit" value="送信する">

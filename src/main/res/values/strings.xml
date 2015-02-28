@@ -402,11 +402,7 @@
           <form method="post" action="%1$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
             <div>
               <div>Write the detail of the bug here:</div>
-              <textarea name="bug_detail"></textarea>
-            </div>
-            <div>
-              <div>If you have any comments write here:</div>
-              <textarea name="bug_comment" ></textarea>
+              <textarea name="bug_detail">%3$s</textarea>
             </div>
             <div>Clicking the following button will send some device informations which is useful for debugging. However we do not send any personal information so please trust us.</div>
             <input type="hidden" name="bug_device_info" value="%2$s">

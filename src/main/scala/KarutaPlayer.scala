@@ -255,11 +255,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
       if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
         val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= 5)
+        val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
         activity.runOnUiThread(new Runnable(){
           override def run(){
             if(fallback_to_dialog){
               val on_yes = () => {
-                //TODO
+                Utils.showBugReport(activity,err_msg)
               }
               val custom = (builder:AlertDialog.Builder) => {
                 val checkbox = new CheckBox(activity)
@@ -279,9 +280,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
               }
               Globals.text_audio_inconsistent_count = 0
             }else{
-              val msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
               if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
-                Toast.makeText(activity.getApplicationContext,msg,Toast.LENGTH_LONG).show()
+                Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_LONG).show()
               }
               Globals.text_audio_inconsistent_count += 1
             }
