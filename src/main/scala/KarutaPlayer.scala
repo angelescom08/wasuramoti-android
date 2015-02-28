@@ -4,8 +4,11 @@ import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.os.{AsyncTask,Bundle}
 import _root_.android.media.audiofx.Equalizer
-import _root_.android.widget.Toast
+import _root_.android.widget.{Toast,CheckBox,CompoundButton}
 import _root_.android.util.Log
+import _root_.android.app.AlertDialog
+import _root_.android.content.DialogInterface
+import _root_.android.view.LayoutInflater
 
 import scala.collection.mutable
 
@@ -245,25 +248,49 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         })
       }
 
-      // I could not found any test case that inconsistency between audio and text occurs.
-      // However there was a report from user that it occurs.
-      // It might be just mistake of user, but I would check consistency for sure.
+      // There was a bug report that inconsistency between audio and text occurs.
+      // I could not found any test case that reproduces the inconsistency. 
+      // It might be just misconception of the user, but I would check consistency for sure.
       // TODO: can we safely assume that .distinct() returns the list in original order ?
       val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
       if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
+        val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= 5)
         activity.runOnUiThread(new Runnable(){
           override def run(){
-            val msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
-            Toast.makeText(activity.getApplicationContext,msg,Toast.LENGTH_LONG)
-            Globals.text_audio_inconsistent_count += 1
-            if(Globals.text_audio_inconsistent_count >= 5){
-              //TODO: show report debug dialog here
-              throw new Exception("text audio inconsintent count >= 5")
+            if(fallback_to_dialog){
+              val on_yes = () => {
+                //TODO
+              }
+              val custom = (builder:AlertDialog.Builder) => {
+                val checkbox = new CheckBox(activity)
+                val choice = activity.getApplicationContext.getResources.getString(R.string.never_show_again)
+                checkbox.setText(choice)
+                checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                  override def onCheckedChanged(buttonView:CompoundButton, isChecked:Boolean){
+                    val edit = Globals.prefs.get.edit
+                    edit.putBoolean("show_text_audio_consintency_dialog", !isChecked)
+                    edit.commit()
+                  }
+                })
+                builder.setView(checkbox)
+              }
+              if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
+                Utils.confirmDialog(activity,Right(R.string.internal_error_dialog),on_yes,custom=custom)
+              }
+              Globals.text_audio_inconsistent_count = 0
+            }else{
+              val msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
+              if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
+                Toast.makeText(activity.getApplicationContext,msg,Toast.LENGTH_LONG).show()
+              }
+              Globals.text_audio_inconsistent_count += 1
             }
           }
         })
-        decode_and_play_again()
-        return
+        if(!fallback_to_dialog){
+          decode_and_play_again()
+          return
+        }
       }
 
       var r_write = audio_track.get.write(buf,0,buf.length)

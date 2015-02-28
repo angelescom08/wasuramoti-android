@@ -374,7 +374,7 @@
           <h3>わすらもちバグ報告フォーム</h3>
           <form method="post" action="%1$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
             <div>
-              <div>バグの症状を詳しく書いて下さい:</div>
+              <div>バグの症状を書いて下さい:</div>
               <textarea name="bug_detail"></textarea>
             </div>
             <div>
@@ -391,5 +391,11 @@
   </string>
   <string name="text_audio_consistency_error">
     詠み句と音声の整合性エラー
+  </string>
+  <string name="internal_error_dialog">
+    内部エラーが5回以上発生しました．無視しても問題ないのですが，バグ報告してくれると次のバージョンで頑張って修正します．バグ報告しますか？
+  </string>
+  <string name="never_show_again">
+    二度と表示しない 
   </string>
 </resources>

@@ -253,13 +253,19 @@ object Utils {
     dialog.show()
     Globals.alert_dialog = Some(dialog)
   }
-  def confirmDialog(context:Context,arg:Either[String,Int],func_yes:()=>Unit,func_no:()=>Unit={()=>Unit}){
+  def confirmDialog(
+    context:Context,
+    arg:Either[String,Int],
+    func_yes:()=>Unit,
+    func_no:()=>Unit={()=>Unit},
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+  ){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    val dialog = builder.setMessage(str)
+    val dialog = custom(builder).setMessage(str)
     .setPositiveButton(context.getResources.getString(android.R.string.yes),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
@@ -273,13 +279,18 @@ object Utils {
     .create
     showDialogAndSetGlobalRef(dialog)
   }
-  def messageDialog(context:Context,arg:Either[String,Int],func_done:()=>Unit={()=>Unit}){
+  def messageDialog(
+    context:Context,
+    arg:Either[String,Int],
+    func_done:()=>Unit = {()=>Unit},
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+  ){
     val builder = new AlertDialog.Builder(context)
     val str = arg match {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    val dialog = builder.setMessage(str)
+    val dialog = custom(builder).setMessage(str)
     .setPositiveButton(context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_done()
