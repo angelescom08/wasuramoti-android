@@ -421,4 +421,22 @@
   <string name="never_show_again">
     Never show this again
   </string>
+  <string name="init_config_title">
+    Default Config
+  </string>
+  <string name="init_config_desc">
+    Choose your intended use:
+  </string>
+  <string name="init_config_competitive">
+    Competitive Karuta
+  </string>
+  <string name="init_config_study">
+    Study 100 Poems
+  </string>
+  <string name="init_config_recreation">
+    Just for Fun
+  </string>
+  <string name="init_config_result">
+    Settings changed as follows. You can reconfigure it from Quick/Advansed Config.
+  </string>
 </resources>

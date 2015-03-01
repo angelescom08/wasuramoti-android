@@ -239,30 +239,22 @@ class QuickConfigDialog extends DialogFragment{
         val edit = Globals.prefs.get.edit
         which match{
           case 0 =>
-            YomiInfoUtils.setPoemTextVisibility(edit,false) 
+            // Hide Poem Text
+            YomiInfoUtils.hidePoemText(edit)
           case 1 =>
-            YomiInfoUtils.setPoemTextVisibility(edit,true)
-            edit.putBoolean("yomi_info_torifuda_mode",false)
-            edit.putBoolean("yomi_info_show_bar_kimari",true)
-            edit.putBoolean("yomi_info_kami",true)
-            edit.putBoolean("yomi_info_simo",true)
-            edit.putBoolean("yomi_info_author",true)
-            edit.putBoolean("yomi_info_furigana_show",true)
-            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+            // Full Poem Text
+            YomiInfoUtils.showFull(edit)
           case 2 =>
+            // Fuda Nagashi
             YomiInfoUtils.setPoemTextVisibility(edit,true)
             edit.putBoolean("yomi_info_torifuda_mode",true)
             edit.putBoolean("yomi_info_show_bar_kimari",false)
             edit.putBoolean("yomi_info_default_lang_is_jpn",true)
           case 3 =>
-            YomiInfoUtils.setPoemTextVisibility(edit,true)
-            edit.putBoolean("yomi_info_torifuda_mode",false)
-            edit.putBoolean("yomi_info_show_bar_kimari",true)
-            edit.putBoolean("yomi_info_kami",true)
-            edit.putBoolean("yomi_info_simo",false)
-            edit.putBoolean("yomi_info_author",false)
-            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+            // Only 1st Half
+            YomiInfoUtils.showOnlyFirst(edit)
           case 4 =>
+            // English Mode
             YomiInfoUtils.setPoemTextVisibility(edit,true)
             edit.putBoolean("yomi_info_kami",true)
             edit.putBoolean("yomi_info_simo",true)
@@ -307,5 +299,28 @@ object YomiInfoUtils{
       ("None",ar.head)
     }
     edit.putString("show_yomi_info",n + ";" + old)
+  }
+  def hidePoemText(edit:SharedPreferences.Editor){
+    setPoemTextVisibility(edit,false) 
+  }
+  def showFull(edit:SharedPreferences.Editor){
+    setPoemTextVisibility(edit,true)
+    edit.putBoolean("yomi_info_torifuda_mode",false)
+    edit.putBoolean("yomi_info_show_bar_kimari",true)
+    edit.putBoolean("yomi_info_kami",true)
+    edit.putBoolean("yomi_info_simo",true)
+    edit.putBoolean("yomi_info_author",true)
+    edit.putBoolean("yomi_info_furigana_show",true)
+    edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+  }
+  def showOnlyFirst(edit:SharedPreferences.Editor){
+    setPoemTextVisibility(edit,true)
+    edit.putBoolean("yomi_info_torifuda_mode",false)
+    edit.putBoolean("yomi_info_show_bar_kimari",true)
+    edit.putBoolean("yomi_info_kami",true)
+    edit.putBoolean("yomi_info_simo",false)
+    edit.putBoolean("yomi_info_author",false)
+    edit.putBoolean("yomi_info_furigana_show",true)
+    edit.putBoolean("yomi_info_default_lang_is_jpn",true)
   }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true"
+  >
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:layout_marginBottom="18dip"
+              >
+    <RadioGroup
+      android:id="@+id/init_config_group"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:checkedButton="@+id/init_config_competitive"
+      >
+      <RadioButton
+        android:id="@+id/init_config_competitive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/init_config_competitive"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+      <RadioButton
+        android:id="@+id/init_config_study"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/init_config_study"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+      <RadioButton
+        android:id="@+id/init_config_recreation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/init_config_recreation"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    </RadioGroup>
+  </LinearLayout>
+
+</ScrollView>

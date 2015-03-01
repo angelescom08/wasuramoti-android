@@ -394,4 +394,22 @@
   <string name="never_show_again">
     二度と表示しない 
   </string>
+  <string name="init_config_title">
+    初期設定
+  </string>
+  <string name="init_config_desc">
+    主な使用目的を選んで下さい:
+  </string>
+  <string name="init_config_competitive">
+    競技かるた
+  </string>
+  <string name="init_config_study">
+    百人一首の学習
+  </string>
+  <string name="init_config_recreation">
+    正月のかるた遊び
+  </string>
+  <string name="init_config_result">
+    下記のように設定を変更しました．簡易設定/詳細設定からいつでも再設定できます．
+  </string>
 </resources>

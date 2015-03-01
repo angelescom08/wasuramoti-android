@@ -8,7 +8,7 @@ import _root_.android.util.{Base64,TypedValue,Log}
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
-import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout}
+import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
@@ -363,7 +363,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }else{
         List(yomi_info.getCurNum)
       }
-      yomi_nums == read_nums
+      val r = (yomi_nums == read_nums)
+      if(!r){
+        Log.v("wasuramoti",s"text audio inconsistent: text=${yomi_nums}, audio=${read_nums}")
+      }
+      r
     }else{
       true
     }
@@ -406,6 +410,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     setLongClickButtonOnResume()
     setLongClickYomiInfoOnResume()
     handleActionView()
+    Globals.prefs.foreach{ p =>
+      val init_config_done = p.getBoolean("init_config_done",false)
+      if(!init_config_done){
+        startInitConfig()
+      }
+    }
   }
   override def onPause(){
     super.onPause()
@@ -503,6 +513,39 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         }
       )
     }
+  }
+  def startInitConfig(){
+    val view = getLayoutInflater.inflate(R.layout.init_config_dialog,null)
+    val on_yes = () => {
+      val edit = Globals.prefs.get.edit
+      val id = view.findViewById(R.id.init_config_group).asInstanceOf[RadioGroup].getCheckedRadioButtonId
+      id match {
+        case R.id.init_config_competitive => {
+          edit.putString("read_order_each","CUR2_NEXT1")
+          YomiInfoUtils.hidePoemText(edit)
+        }
+        case R.id.init_config_study => {
+          edit.putString("read_order_each","CUR1_CUR2")
+          YomiInfoUtils.showFull(edit)
+        }
+        case R.id.init_config_recreation => {
+          edit.putString("read_order_each","CUR1_CUR2_CUR2")
+          YomiInfoUtils.showOnlyFirst(edit)
+        }
+        case _ => return
+      }
+      edit.putBoolean("init_config_done",true)
+      edit.commit()
+      Utils.messageDialog(this,Right(R.string.init_config_result),()=>{
+        //TODO: show text that which option has been changed
+        Utils.restartActivity(this)
+      })
+      ()
+    }
+    val custom = (builder:AlertDialog.Builder) => {
+      builder.setView(view).setTitle(R.string.init_config_title)
+    }
+    Utils.messageDialog(this,Right(R.string.init_config_desc),on_yes,custom = custom)
   }
 }
 

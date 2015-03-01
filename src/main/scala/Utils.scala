@@ -30,7 +30,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 3
-  val PREFERENCE_VERSION = 3
+  val PREFERENCE_VERSION = 4
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -146,6 +146,9 @@ object Utils {
           if(roe != new_roe){
             edit.putString("read_order_each",new_roe)
           }
+        }
+        if(prev_version != 0){
+          edit.putBoolean("init_config_done",true)
         }
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()
@@ -266,6 +269,7 @@ object Utils {
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
     val builder = new AlertDialog.Builder(context)
+    // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
     val str = arg match {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
@@ -295,9 +299,8 @@ object Utils {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    val dialog = custom(builder)
+    val dialog = custom(builder).setMessage(str)
       .setPositiveButton(android.R.string.ok,null)
-      .setMessage(str)
       .create
     showDialogAndSetGlobalRef(dialog, func_done)
   }
