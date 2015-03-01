@@ -416,7 +416,7 @@
     Text Audio Consistency Error
   </string>
   <string name="internal_error_dialog">
-    Internal error occured more than five times. You may ignore it, but if you give me bug report, I would try to fiix it in next version. Would you give me bug report ?
+    Internal error occured more than %1$d times. You may ignore it, but if you give me bug report, I would try to fiix it in next version. Would you give me bug report ?
   </string>
   <string name="never_show_again">
     Never show this again

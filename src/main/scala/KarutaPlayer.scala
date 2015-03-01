@@ -254,7 +254,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // TODO: can we safely assume that .distinct() returns the list in original order ?
       val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
       if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
-        val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= 5)
+        val INCONSISTENCY_THRESHOLD = new java.lang.Integer(5)
+        val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= INCONSISTENCY_THRESHOLD)
         val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
         activity.runOnUiThread(new Runnable(){
           override def run(){
@@ -276,7 +277,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                 builder.setView(checkbox)
               }
               if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
-                Utils.confirmDialog(activity,Right(R.string.internal_error_dialog),on_yes,custom=custom)
+                val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, INCONSISTENCY_THRESHOLD)
+                Utils.confirmDialog(activity,Left(dlg_txt),on_yes,custom=custom)
               }
               Globals.text_audio_inconsistent_count = 0
             }else{
