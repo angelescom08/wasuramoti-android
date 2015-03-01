@@ -245,10 +245,13 @@ object Utils {
     db.setTransactionSuccessful()
     db.endTransaction
   }
-  def showDialogAndSetGlobalRef(dialog:AlertDialog){
+
+  // save dialog instance to variable so that it can be dismissed by dismissAlertDialog()
+  def showDialogAndSetGlobalRef(dialog:AlertDialog, func_done:()=>Unit = {()=>Unit}){
     // AlaertDialog.Builder.setOnDismissListener() was added on API >= 17 so we use Dialog.setOnDismissListener() instead
     dialog.setOnDismissListener(new DialogInterface.OnDismissListener(){
         override def onDismiss(interface:DialogInterface){
+          func_done()
           Globals.alert_dialog = None
         }
       })
@@ -268,12 +271,12 @@ object Utils {
       case Right(x) => context.getResources().getString(x)
     }
     val dialog = custom(builder).setMessage(str)
-    .setPositiveButton(context.getResources.getString(android.R.string.yes),new DialogInterface.OnClickListener(){
+    .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
         }
       })
-    .setNegativeButton(context.getResources.getString(android.R.string.no),new DialogInterface.OnClickListener(){
+    .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_no()
         }
@@ -292,24 +295,22 @@ object Utils {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    val dialog = custom(builder).setMessage(str)
-    .setPositiveButton(context.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
-        override def onClick(interface:DialogInterface,which:Int){
-          func_done()
-        }
-      }).create
-    showDialogAndSetGlobalRef(dialog)
+    val dialog = custom(builder)
+      .setPositiveButton(android.R.string.ok,null)
+      .setMessage(str)
+      .create
+    showDialogAndSetGlobalRef(dialog, func_done)
   }
 
-  def dismissAlertDialog(){
-    Globals.alert_dialog.foreach{_.dismiss}
-    Globals.alert_dialog = None
-  }
-
-  def generalHtmlDialog(context:Context,html_id:Either[String,Int],func_done:()=>Unit={()=>Unit}){
+  def generalHtmlDialog(
+    context:Context,
+    arg:Either[String,Int],
+    func_done:()=>Unit={()=>Unit},
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+  ){
     val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = html_id match {
+    val html = arg match {
       case Left(txt) => txt
       case Right(id) => context.getResources.getString(id)
     }
@@ -319,13 +320,16 @@ object Utils {
     // this makes "<a href='...'></a>" clickable
     txtview.setMovementMethod(LinkMovementMethod.getInstance)
     
-    builder.setView(view)
-    builder.setPositiveButton(context.getResources.getString(android.R.string.ok), new DialogInterface.OnClickListener(){
-        override def onClick(interface:DialogInterface,which:Int){
-          func_done()
-        }
-      });
-    builder.create.show()
+    val dialog = custom(builder)
+      .setPositiveButton(android.R.string.ok,null)
+      .setView(view)
+      .create
+    showDialogAndSetGlobalRef(dialog, func_done)
+  }
+
+  def dismissAlertDialog(){
+    Globals.alert_dialog.foreach{_.dismiss}
+    Globals.alert_dialog = None
   }
   // Android's Environment.getExternalStorageDirectory does not actually return external SD card's path.
   // Thus we have to explore where the mount point of SD card is by our own.

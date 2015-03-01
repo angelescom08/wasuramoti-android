@@ -528,7 +528,8 @@ trait MainButtonTrait{
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
-          Utils.messageDialog(self,Right(R.string.all_read_done),{()=>openOptionsMenu()})
+          // TODO: Open submenu after dialog was closed so that user can choose `Shuffle`.
+          Utils.messageDialog(self,Right(R.string.all_read_done))
         }else{
           Utils.messageDialog(self,Right(R.string.reader_not_found))
         }

@@ -156,7 +156,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
               d.dismiss()
             }
           })
-        builder.setNeutralButton(context.getResources().getString(R.string.button_cancel),new DialogInterface.OnClickListener(){
+        builder.setNeutralButton(R.string.button_cancel,new DialogInterface.OnClickListener(){
             override def onClick(d:DialogInterface,position:Int){
               d.dismiss()
             }

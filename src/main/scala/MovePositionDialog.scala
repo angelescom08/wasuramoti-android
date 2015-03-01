@@ -46,12 +46,12 @@ class MovePositionDialog extends DialogFragment{
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.move_position,null)
     builder.setView(view)
-    .setPositiveButton(getActivity.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
+    .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           onOk()
         }
       })
-    .setNegativeButton(getActivity.getString(android.R.string.cancel),null)
+    .setNegativeButton(android.R.string.cancel,null)
     setOnClick(view,R.id.move_button_prev, {() => onPrev()} )
     setOnClick(view,R.id.move_button_prev_ten, {() => onPrevTen()} )
     setOnClick(view,R.id.move_button_next, {() => onNext()} )
