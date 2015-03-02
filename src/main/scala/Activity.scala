@@ -519,12 +519,21 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   def changeIntendedUse(first_config:Boolean = true){
     val view = getLayoutInflater.inflate(R.layout.init_config_dialog,null)
+    val radio_group = view.findViewById(R.id.init_config_group).asInstanceOf[RadioGroup]
+    val check_id = Globals.prefs.get.getString("intended_use","competitive") match {
+      case "study" => R.id.init_config_study
+      case "recreation" => R.id.init_config_recreation
+      case _ => R.id.init_config_competitive
+    }
+    radio_group.check(check_id)
+
     val on_yes = () => {
       val edit = Globals.prefs.get.edit
-      val id = view.findViewById(R.id.init_config_group).asInstanceOf[RadioGroup].getCheckedRadioButtonId
+      val id = radio_group.getCheckedRadioButtonId
       val changes = id match {
         case R.id.init_config_competitive => {
           edit.putString("read_order_each","CUR2_NEXT1")
+          edit.putString("intended_use","competitive")
           YomiInfoUtils.hidePoemText(edit)
           Array(
             (R.string.conf_show_yomi_info_title,R.string.quick_conf_hide),
@@ -533,6 +542,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         }
         case R.id.init_config_study => {
           edit.putString("read_order_each","CUR1_CUR2")
+          edit.putString("intended_use","study")
           YomiInfoUtils.showFull(edit)
            Array(
             (R.string.conf_show_yomi_info_title,R.string.quick_conf_full),
@@ -541,6 +551,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         }
         case R.id.init_config_recreation => {
           edit.putString("read_order_each","CUR1_CUR2_CUR2")
+          edit.putString("intended_use","recreation")
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
             (R.string.conf_show_yomi_info_title,R.string.quick_conf_only_first),

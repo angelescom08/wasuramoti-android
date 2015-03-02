@@ -429,7 +429,7 @@
     ]]>
   </string>
   <string name="text_audio_consistency_error">
-    Text Audio Consistency Error
+    Repairing Text Audio Inconsistency
   </string>
   <string name="internal_error_dialog">
     Internal error occured more than %1$d times. You may ignore it, but if you give me bug report, I would try to fiix it in next version. Would you give me bug report ?

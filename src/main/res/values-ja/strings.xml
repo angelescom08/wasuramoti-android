@@ -383,7 +383,7 @@
     ]]>
   </string>
   <string name="text_audio_consistency_error">
-    詠み句と音声の整合性エラー
+    詠み句と音声の不整合を修復します
   </string>
   <string name="internal_error_dialog">
     内部エラーが %1$d 回以上発生しました．無視しても問題ないのですが，バグ報告してくれると次のバージョンで頑張って修正します．バグ報告しますか？
