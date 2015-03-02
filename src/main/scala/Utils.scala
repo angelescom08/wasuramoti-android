@@ -491,8 +491,9 @@ object Utils {
       activity.startActivity(activity.getIntent)
     }catch{
       case _:android.content.ActivityNotFoundException =>
-        // When wasuramoti is started from browser's "wasuramoti://" link,
-        // the activity's Intent would be empty, so we create a new one.
+        // Some device might set the empty intent ?
+        // This code is just for sure so you may remove it if you can convince that
+        // all device's activity.getIntent returns valid intent
         activity.startActivity(new Intent(activity,activity.getClass))
     }
   }

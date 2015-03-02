@@ -40,8 +40,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     ){
       return
     }
-    // we dont need the current intent anymore so replace it with empty one.
-    setIntent(new Intent())
+    // we dont need the current intent anymore so replace it with default intent
+    // Note: this intent will be used in Utils.restartActivity()
+    setIntent(new Intent(this,this.getClass))
 
     if(android.os.Build.VERSION.SDK_INT < 8){
       // Base64 was added in API >= 8
