@@ -355,7 +355,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def checkConsintencyForYomiInfoAndAudioQueue(read_nums:List[Option[Int]]):Boolean = {
+  def checkConsintencyForYomiInfoAndAudioQueue(audio_queue:Utils.AudioQueue):Boolean = {
+    // TODO: can we safely assume that .distinct() returns the list in original order ?
+    val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
       val yomi_nums = if(Utils.readCurNext(getApplicationContext)){
@@ -366,6 +368,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       val r = (yomi_nums == read_nums)
       if(!r){
         Log.v("wasuramoti",s"text audio inconsistent: text=${yomi_nums}, audio=${read_nums}")
+        Log.v("wasuramoti",s"karuta_player=${Globals.player.map(_.toBugReport)}")
       }
       r
     }else{
@@ -548,10 +551,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
       edit.putBoolean("init_config_done",true)
       edit.commit()
+      Globals.forceRefresh = true
+
       val html = "<big>" + getResources.getString(R.string.init_config_result) + "<br>-------<br>" + changes.map({case(k,v)=>
         val kk = getResources.getString(k)
         val vv = getResources.getString(v)
-        s"""${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
+        s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
       }).mkString("<br>") + "</big>"
 
       Utils.generalHtmlDialog(this,Left(html),()=>{

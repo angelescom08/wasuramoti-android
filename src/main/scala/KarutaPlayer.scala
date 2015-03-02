@@ -33,7 +33,7 @@ object KarutaPlayerDebug{
 }
 
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
-  type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
+  type AudioQueue = Utils.AudioQueue
   var cur_millisec = 0:Long
   var audio_track = None:Option[AudioTrack]
   var equalizer = None:Option[Equalizer]
@@ -251,9 +251,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // There was a bug report that inconsistency between audio and text occurs.
       // I could not found any test case that reproduces the inconsistency. 
       // It might be just misconception of the user, but I would check consistency for sure.
-      // TODO: can we safely assume that .distinct() returns the list in original order ?
-      val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
-      if(!activity.checkConsintencyForYomiInfoAndAudioQueue(read_nums)){
+      if(!activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
         val INCONSISTENCY_THRESHOLD = new java.lang.Integer(5)
         val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= INCONSISTENCY_THRESHOLD)
         val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
