@@ -236,6 +236,12 @@ class QuickConfigDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val listener = new DialogInterface.OnClickListener{
       override def onClick(dialog:DialogInterface,which:Int){
+        if(which == 5){
+          // Change Intended Use
+          dismiss
+          getActivity.asInstanceOf[WasuramotiActivity].changeIntendedUse(false)
+          return
+        }
         val edit = Globals.prefs.get.edit
         which match{
           case 0 =>

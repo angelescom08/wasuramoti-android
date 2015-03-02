@@ -23,13 +23,12 @@
   <string name="menu_quick_conf">簡易設定</string>
   <string name="menu_conf">詳細設定</string>
 
-  <string-array name="quick_conf_list">
-    <item>詠み句非表示</item>
-    <item>詠み句全表示</item>
-    <item>札流し</item>
-    <item>上の句のみ</item>
-    <item>英語モード</item>
-  </string-array>
+  <string name="quick_conf_hide">詠み句非表示</string>
+  <string name="quick_conf_full">詠み句全表示</string>
+  <string name="quick_conf_nagashi">札流し</string>
+  <string name="quick_conf_only_first">上の句のみ</string>
+  <string name="quick_conf_english">英語モード</string>
+  <string name="quick_conf_intended_use">使用目的変更</string>
 
   <string name="conf_unit_minute">分</string>
   <string name="conf_unit_second">秒</string>
@@ -177,14 +176,12 @@
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
-  <string-array name="conf_read_order_each_entries">
-    <item>下の句 - 上の句</item>
-    <item>下の句 - 上の句 - 下の句</item>
-    <item>上の句 - 下の句</item>
-    <item>上の句 - 下の句 - 下の句</item>
-    <item>下の句 - 下の句</item>
-    <item>上の句のみ</item>
-  </string-array>
+  <string name="conf_read_order_each_cur2_next1">下の句 - 上の句</string>
+  <string name="conf_read_order_each_cur2_next1_next2">下の句 - 上の句 - 下の句</string>
+  <string name="conf_read_order_each_cur1_cur2">上の句 - 下の句</string>
+  <string name="conf_read_order_each_cur1_cur2_cur2">上の句 - 下の句 - 下の句</string>
+  <string name="conf_read_order_each_cur2_next2">下の句 - 下の句</string>
+  <string name="conf_read_order_each_cur1">上の句のみ</string>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>下-上</item>
     <item>下-上-下</item>

@@ -23,12 +23,20 @@
   <string name="menu_conf">Advanced Config</string>
 
   <string-array name="quick_conf_list">
-    <item>Hide Poem Text</item>
-    <item>Full Poem Text</item>
-    <item>Fuda Nagashi</item>
-    <item>Only 1st Half</item>
-    <item>English Mode</item>
+    <item>@string/quick_conf_hide</item>
+    <item>@string/quick_conf_full</item>
+    <item>@string/quick_conf_nagashi</item>
+    <item>@string/quick_conf_only_first</item>
+    <item>@string/quick_conf_english</item>
+    <item>@string/quick_conf_intended_use</item>
   </string-array>
+
+  <string name="quick_conf_hide">Hide Poem Text</string>
+  <string name="quick_conf_full">Full Poem Text</string>
+  <string name="quick_conf_nagashi">Fuda Nagashi</string>
+  <string name="quick_conf_only_first">Only 1st Half</string>
+  <string name="quick_conf_english">English Mode</string>
+  <string name="quick_conf_intended_use">Change Inteded Use</string>
 
   <string name="conf_unit_minute">&#160;min</string>
   <string name="conf_unit_second">&#160;sec</string>
@@ -190,13 +198,21 @@
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">Change where to stop playing at each half of the poem.</string>
+  
+  <string name="conf_read_order_each_cur2_next1">2nd - 1st</string>
+  <string name="conf_read_order_each_cur2_next1_next2">2nd - 1st - 2nd</string>
+  <string name="conf_read_order_each_cur1_cur2">1st - 2nd</string>
+  <string name="conf_read_order_each_cur1_cur2_cur2">1st - 2nd - 2nd</string>
+  <string name="conf_read_order_each_cur2_next2">2nd - 2nd</string>
+  <string name="conf_read_order_each_cur1">1st Only</string>
+
   <string-array name="conf_read_order_each_entries">
-    <item>2nd - 1st</item>
-    <item>2nd - 1st - 2nd</item>
-    <item>1st - 2nd</item>
-    <item>1st - 2nd - 2nd</item>
-    <item>2nd - 2nd</item>
-    <item>1st Only</item>
+    <item>@string/conf_read_order_each_cur2_next1</item>
+    <item>@string/conf_read_order_each_cur2_next1_next2</item>
+    <item>@string/conf_read_order_each_cur1_cur2</item>
+    <item>@string/conf_read_order_each_cur1_cur2_cur2</item>
+    <item>@string/conf_read_order_each_cur2_next2</item>
+    <item>@string/conf_read_order_each_cur1</item>
   </string-array>
   <string-array name="conf_read_order_each_entries_abbr">
     <item>2-1</item>

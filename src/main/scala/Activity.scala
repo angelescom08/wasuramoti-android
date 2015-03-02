@@ -413,7 +413,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     Globals.prefs.foreach{ p =>
       val init_config_done = p.getBoolean("init_config_done",false)
       if(!init_config_done){
-        startInitConfig()
+        changeIntendedUse(true)
       }
     }
   }
@@ -514,36 +514,53 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       )
     }
   }
-  def startInitConfig(){
+  def changeIntendedUse(first_config:Boolean = true){
     val view = getLayoutInflater.inflate(R.layout.init_config_dialog,null)
     val on_yes = () => {
       val edit = Globals.prefs.get.edit
       val id = view.findViewById(R.id.init_config_group).asInstanceOf[RadioGroup].getCheckedRadioButtonId
-      id match {
+      val changes = id match {
         case R.id.init_config_competitive => {
           edit.putString("read_order_each","CUR2_NEXT1")
           YomiInfoUtils.hidePoemText(edit)
+          Array(
+            (R.string.conf_show_yomi_info_title,R.string.quick_conf_hide),
+            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur2_next1)
+          )
         }
         case R.id.init_config_study => {
           edit.putString("read_order_each","CUR1_CUR2")
           YomiInfoUtils.showFull(edit)
+           Array(
+            (R.string.conf_show_yomi_info_title,R.string.quick_conf_full),
+            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur1_cur2)
+          )
         }
         case R.id.init_config_recreation => {
           edit.putString("read_order_each","CUR1_CUR2_CUR2")
           YomiInfoUtils.showOnlyFirst(edit)
+          Array(
+            (R.string.conf_show_yomi_info_title,R.string.quick_conf_only_first),
+            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur1_cur2_cur2)
+          )
         }
         case _ => return
       }
       edit.putBoolean("init_config_done",true)
       edit.commit()
-      Utils.messageDialog(this,Right(R.string.init_config_result),()=>{
-        //TODO: show text that which option has been changed
+      val html = "<big>" + getResources.getString(R.string.init_config_result) + "<br>-------<br>" + changes.map({case(k,v)=>
+        val kk = getResources.getString(k)
+        val vv = getResources.getString(v)
+        s"""${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
+      }).mkString("<br>") + "</big>"
+
+      Utils.generalHtmlDialog(this,Left(html),()=>{
         Utils.restartActivity(this)
       })
       ()
     }
     val custom = (builder:AlertDialog.Builder) => {
-      builder.setView(view).setTitle(R.string.init_config_title)
+      builder.setView(view).setTitle(if(first_config){R.string.init_config_title}else{R.string.quick_conf_intended_use})
     }
     Utils.messageDialog(this,Right(R.string.init_config_desc),on_yes,custom = custom)
   }
