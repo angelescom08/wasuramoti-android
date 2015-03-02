@@ -441,7 +441,7 @@
     Default Config
   </string>
   <string name="init_config_desc">
-    Choose your intended use:
+    Select your intended use:
   </string>
   <string name="init_config_competitive">
     Competitive Karuta
@@ -454,5 +454,11 @@
   </string>
   <string name="init_config_result">
     Settings changed as follows. You can reconfigure it from Quick/Advansed Config.
+  </string>
+  <string name="init_config_poem_text">
+    Poem Text
+  </string>
+  <string name="init_config_read_order">
+    Read Order
   </string>
 </resources>

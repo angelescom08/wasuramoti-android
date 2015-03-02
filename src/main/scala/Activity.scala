@@ -2,8 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
-import _root_.android.content.{Intent,Context}
-import _root_.android.content.{Intent,Context}
+import _root_.android.content.{Intent,Context,DialogInterface}
 import _root_.android.util.{Base64,TypedValue,Log}
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
@@ -131,15 +130,20 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     getMenuInflater.inflate(R.menu.main, menu)
     super.onCreateOptionsMenu(menu)
   }
+
+  def showShuffleDialog(){
+    Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm), ()=>{
+        FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
+        refreshAndInvalidate()
+    })
+  }
+
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
     cancelAllPlay()
     Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
-        Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm), ()=>{
-            FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
-            refreshAndInvalidate()
-        })
+        showShuffleDialog()
       }
       case R.id.menu_move => {
         val dlg = new MovePositionDialog()
@@ -536,8 +540,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           edit.putString("intended_use","competitive")
           YomiInfoUtils.hidePoemText(edit)
           Array(
-            (R.string.conf_show_yomi_info_title,R.string.quick_conf_hide),
-            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur2_next1)
+            (R.string.init_config_poem_text,R.string.quick_conf_hide),
+            (R.string.init_config_read_order,R.string.conf_read_order_each_cur2_next1)
           )
         }
         case R.id.init_config_study => {
@@ -545,8 +549,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           edit.putString("intended_use","study")
           YomiInfoUtils.showFull(edit)
            Array(
-            (R.string.conf_show_yomi_info_title,R.string.quick_conf_full),
-            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur1_cur2)
+            (R.string.init_config_poem_text,R.string.quick_conf_full),
+            (R.string.init_config_read_order,R.string.conf_read_order_each_cur1_cur2)
           )
         }
         case R.id.init_config_recreation => {
@@ -554,8 +558,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           edit.putString("intended_use","recreation")
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
-            (R.string.conf_show_yomi_info_title,R.string.quick_conf_only_first),
-            (R.string.conf_read_order_each_title,R.string.conf_read_order_each_cur1_cur2_cur2)
+            (R.string.init_config_poem_text,R.string.quick_conf_only_first),
+            (R.string.init_config_read_order,R.string.conf_read_order_each_cur1_cur2_cur2)
           )
         }
         case _ => return
@@ -610,8 +614,14 @@ trait MainButtonTrait{
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
-          // TODO: Open submenu after dialog was closed so that user can choose `Shuffle`.
-          Utils.messageDialog(self,Right(R.string.all_read_done))
+          val custom = (builder:AlertDialog.Builder) => {
+            builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
+              override def onClick(dialog:DialogInterface, which:Int){
+                showShuffleDialog()
+              }
+            })
+          }
+          Utils.messageDialog(self,Right(R.string.all_read_done),custom=custom)
         }else{
           Utils.messageDialog(self,Right(R.string.reader_not_found))
         }

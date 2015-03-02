@@ -14,7 +14,6 @@
   <string name="now_stopped">停止</string>
   <string name="now_searching">検索中</string>
 
-
   <string name="menu_settings">メニュー</string>
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
@@ -408,5 +407,11 @@
   </string>
   <string name="init_config_result">
     下記のように設定を変更しました．簡易設定/詳細設定からいつでも再設定できます．
+  </string>
+  <string name="init_config_poem_text">
+    詠み句
+  </string>
+  <string name="init_config_read_order">
+    詠み順
   </string>
 </resources>
