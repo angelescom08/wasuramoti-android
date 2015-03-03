@@ -30,7 +30,7 @@ object TypefaceManager{
 
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
 
-  var SCROLL_THREASHOLD = 0.15
+  var SCROLL_THREASHOLD = 0.17
   var SCROLL_THREASHOLD_DIP = 70f
   val SCROLL_SPEED = 200 // in millisec
   var cur_view = None:Option[Int]

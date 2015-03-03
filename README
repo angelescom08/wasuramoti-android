@@ -56,9 +56,9 @@ __END_CREDITS__
     # general installment from package manager in linux
       IcedTea JDK 7 (or some other Java JDK )
       scala 2.11.5
-      sbt 0.13.6 (A Scala-Based Simple Build Tool)
+      sbt 0.13.7 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
-      android-sdk-plugin 1.3.6 (https://github.com/pfn/android-sdk-plugin)
+      android-sdk-plugin 1.3.17 (https://github.com/pfn/android-sdk-plugin)
     # downloaded from official Android SDK/NDK site and Android SDK manager
       Android SDK v19 (https://developer.android.com/sdk/index.html#download)
       Android NDK v9 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)
@@ -66,16 +66,5 @@ __END_CREDITS__
   Where to place keystore:
     copy `local.properties.example` to `local.properties` and edit it
   How to build:
-    1. set environment variable ANDROID_SDK_HOME,ANDROID_NDK_HOME to path where you installed Android SDK/NDK.
-    2. execute $ cd src/main/jni/libogg-1.3.0 && configure ( this will generate config.h )
-    3. execute $ ./scripts/make_package.sh <reader>
-
-[How to Install apk file]
-  You can install apk file by running a command `adb install wasuramoti-*.apk'.
-  Browse following URL for further information:
-  http://developer.android.com/tools/device.html#setting-up
-
-[Using ENSIME as Scala IDE]
-  ENSIME brings IDE-like features to your favourite text editor.
-  See https://github.com/ensime/ensime-server/wiki/Quick-Start-Guide
-
+    1. set environment variable ANDROID_HOME,ANDROID_NDK_HOME to path where you installed Android SDK/NDK.
+    2. execute $ ./scripts/make_package.sh <reader>
