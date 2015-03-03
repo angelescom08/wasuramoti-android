@@ -286,7 +286,7 @@ object KarutaPlayUtils{
     }
     val pendingIntent = getPendingIntent(context,action,task)
     val limit_millis = System.currentTimeMillis + millisec
-    alarm_manager.set(AlarmManager.RTC_WAKEUP, limit_millis,pendingIntent)
+    Utils.alarmManagerSetExact(alarm_manager, AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
   }
   def setAudioPlayButton(view:View,context:Context,before_play:Option[KarutaPlayer=>Unit]=None){
     val btn = view.findViewById(R.id.audio_play).asInstanceOf[Button]

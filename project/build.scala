@@ -8,6 +8,7 @@ object Build extends android.AutoBuild {
     versionCode := Some(57),
     scalaVersion := "2.11.5",
     platformTarget in Android := "android-19",
+    buildToolsVersion in Android := Some("19.1.0"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88
     sourceGenerators in Compile <<= (sourceGenerators in Compile) (g => Seq(g.last)),
     // Support library 21.0.3 has a bug, https://code.google.com/p/android/issues/detail?id=91424

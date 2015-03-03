@@ -1,33 +1,16 @@
 Priority High:
+  * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Do not fade in/out if fade length is too short.
-  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
-  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
-    (Need to use fragment first since we have to call setTargetFragment to get the result).
-
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Use AlarmManager.setExact() instead of AlarmManager.set() if targetSdkVersion >= 19. See document of AlarmManager for more details.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.
-  * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Full Screen Mode
   * Change Color Theme
   * Customize Quick Config
   * When in english mode, show Furigana in Roma-ji
     - We have to enable switching Tate-Gaki and Yoko-Gaki
   * Able To Add Current Fuda to Fuda-Set
-  * Able to attach file to bug report
-  * Support multi window for Samsung devices
-    - add following to <application> ( maybe you can use android:resource="@dimen/app_defaultsize_w" instead of android:value ? )
-      <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
-      <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
-      <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:value="632.0dip" />
-      <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:value="598.0dip" />
-      <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:value="632.0dip" />
-      <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:value="598.0dip" />
-    - add following to <intent-filter>
-      <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-
 
 Priority Middle:
   * Add Option: play in arbitrary order
@@ -37,6 +20,7 @@ Priority Middle:
   * Able to customize notify timer (add new, set icons)
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Create Fuda List from camera photo
+  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
 
 Priority Low:
   * Able to change style / theme
@@ -44,3 +28,5 @@ Priority Low:
   * Able to read .wav file in case cannot load libvorbis.so
   * Able to record the voice of the player and use it as reader
   * Score the recoded voice (whether it is as good as the official karuta reader). 
+  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
+    (Need to use fragment first since we have to call setTargetFragment to get the result).

@@ -237,8 +237,8 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
         intent.putExtra("limit_millis",limit_millis)
         intent.putExtra("timer_icon",timer_icon)
         val pendingIntent = PendingIntent.getBroadcast(this, timer_id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        NotifyTimerUtils.alarm_manager.foreach{ x =>
-          x.set(AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
+        NotifyTimerUtils.alarm_manager.foreach{ manager =>
+          Utils.alarmManagerSetExact(manager, AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
           NotifyTimerUtils.notify_timers.update(timer_id,intent)
         }
         (limit,uri,play_sound,do_vibrate)
