@@ -34,7 +34,6 @@ object Globals {
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
-  val CACHE_SUFFIX_WAV = "_decoded.wav"
   val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
   val db_lock = new Object()

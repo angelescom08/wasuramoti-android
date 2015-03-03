@@ -72,23 +72,13 @@ object AudioHelper{
     val buf = new Array[Short](track.getSampleRate()*millisec/1000)
     track.write(buf,0,buf.length)
   }
-  // note: modifying the following ShortBuffer is reflected to tho original file because it is casted from MappedByteBuffer
-  // TODO: In old days, the Android process could use only little amount of memory (e.g. 32MB). 
-  //       Therefore, in order to avoid copying the decoded PCM to memory, we decoded ogg file to temporary file, and used MappedByteBuffer to mmap() it.
-  //       However, recent device can use more memory. so maybe we may now decode the ogg file directly to memory.
-  //       See `stb_vorbis_decode_memory()` in `src/main/jni/stb_vorbis.c`
-  def withMappedShortsFromFile(f:File,func:ShortBuffer=>Unit){
-    val raf = new RandomAccessFile(f,"rw")
-    func(raf.getChannel().map(FileChannel.MapMode.READ_WRITE,0,f.length()).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer())
-    raf.close()
-  }
 }
 
-class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbisDecoder, val num:Int, val kamisimo:Int) extends WavBufferDebugTrait with BugReportable{
+class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:Int, val kamisimo:Int) extends WavBufferDebugTrait with BugReportable{
   val SHORT_BYTE = java.lang.Short.SIZE/java.lang.Byte.SIZE
   val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
-  var index_end = orig_file.length().toInt / SHORT_BYTE
+  var index_end = decoder.data_length
 
   override def toBugReport():String = {
     val bld = new mutable.StringBuilder
@@ -96,12 +86,12 @@ class WavBuffer(val buffer:ShortBuffer, val orig_file:File, val decoder:OggVorbi
     bld ++= s"kamisimo->$kamisimo;"
     bld ++= s"index_begin->$index_begin;"
     bld ++= s"index_end->$index_end;"
-    bld ++= s"orig_file->${orig_file.getName};"
     val crc = shortBufferCRC(buffer)
     bld ++= s"buffer->capacity[${buffer.capacity}].crc[${crc}];"
     bld ++= s"channels->${decoder.channels};"
     bld ++= s"rate->${decoder.rate};"
     bld ++= s"bit_depth->${decoder.bit_depth};"
+    bld ++= s"data_length->${decoder.data_length};"
     bld.toString
   }
 

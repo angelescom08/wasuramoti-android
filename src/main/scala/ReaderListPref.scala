@@ -176,16 +176,13 @@ abstract class Reader(context:Context,val path:String){
   }
   def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
-    val wav_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_WAV,context.getCacheDir())
     val decoder = new OggVorbisDecoder()
     var rval = true
     withFile(num,kamisimo,temp_file => {
-      rval = decoder.decode(temp_file.getAbsolutePath(),wav_file.getAbsolutePath())
-      if(rval){
-        AudioHelper.withMappedShortsFromFile(wav_file,buffer => {
-          val wav = new WavBuffer(buffer,wav_file,decoder,num,kamisimo)
-          func(wav)
-        })
+      val buffer = decoder.decodeFileToShortBuffer(temp_file.getAbsolutePath())
+      if(buffer != null){
+        val wav = new WavBuffer(buffer,decoder,num,kamisimo)
+        func(wav)
       }else{
         throw new OggDecodeFailException("ogg decode failed: "+temp_file.getName)
       }
