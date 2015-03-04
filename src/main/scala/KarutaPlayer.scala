@@ -295,6 +295,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       var r_write = audio_track.get.write(buf,0,buf.length)
 
+      if(Globals.IS_DEBUG){
+        val temp_file = java.io.File.createTempFile("wasuramoti_","_decoded.wav",activity.getApplicationContext.getCacheDir)
+        val out = (new java.io.FileOutputStream(temp_file)).getChannel
+        val bb = java.nio.ByteBuffer.allocate(buf.length*2)
+        bb.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+        val sb = bb.asShortBuffer
+        sb.put(buf)
+        out.write(bb)
+        out.close
+      }
+
       // The following exception is throwed if AudioTrack.getState != STATE_INITIALIZED when AudioTrack.play() is called
       // `java.lang.IllegalStateException: play() called on uninitialized AudioTrack.`
       // It is occasionally reported from customer, but I could not figure out the cause.
