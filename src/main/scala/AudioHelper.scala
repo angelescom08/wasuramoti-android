@@ -18,6 +18,8 @@ import scala.collection.mutable
 
 object AudioHelper{
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
+  val SHORT_SIZE = java.lang.Short.SIZE/java.lang.Byte.SIZE
+
   def calcTotalMillisec(audio_queue:AudioQueue):Long = {
     audio_queue.map{ arg =>{
       arg match {
@@ -29,7 +31,7 @@ object AudioHelper{
   }
 
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
-    ((java.lang.Short.SIZE/java.lang.Byte.SIZE) *millisec * decoder.rate.toInt / 1000)*decoder.channels
+    (SHORT_SIZE * millisec * decoder.rate.toInt / 1000) * decoder.channels
   }
   def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
@@ -75,7 +77,6 @@ object AudioHelper{
 }
 
 class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:Int, val kamisimo:Int) extends WavBufferDebugTrait with BugReportable{
-  val SHORT_BYTE = java.lang.Short.SIZE/java.lang.Byte.SIZE
   val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
   var index_begin = 0
   var index_end = decoder.data_length
@@ -112,7 +113,7 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     ((1000.0 * ((index_end - index_begin).toDouble / decoder.rate.toDouble)).toLong)/decoder.channels
   }
   def bufferSizeInBytes():Int = {
-    SHORT_BYTE * (index_end - index_begin)
+    AudioHelper.SHORT_SIZE * (index_end - index_begin)
   }
 
   def boundIndex(x:Int) = {
@@ -182,7 +183,13 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     return i
   }
 
+  // index must be multiple of decoder.channels
+  def fitIndex(i:Int):Int = {
+    (i / decoder.channels) * decoder.channels
+  }
+
   // if begin < end then fade-in else fade-out
+  // TODO: strictly speaking, this fade does not fade stereo wav correctly since left and right amplitudes are amplified differently.
   def fade(i_begin:Int, i_end:Int){
     val begin = indexInBuffer(i_begin)
     val end = indexInBuffer(i_end)
@@ -203,14 +210,19 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
       case _:IndexOutOfBoundsException => None
     }
   }
+
+  def secToIndex(sec:Double):Int = {
+    (sec * decoder.rate).toInt * decoder.channels
+  }
+
   // fadein
   def trimFadeIn(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 9999.0) * decoder.rate * decoder.channels ).toInt
-    val beg = threasholdIndex(threashold,false)
-    val fadebegin = if ( beg - fadelen < 0 ) { 0 } else { beg - fadelen }
+    val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 10.0))
+    val beg = fitIndex(threasholdIndex(threashold,false))
+    val fadebegin = Math.max( beg - fadelen, 0)
     fade(fadebegin,beg)
-    index_begin = ( fadebegin / decoder.channels ) * decoder.channels
+    index_begin = fitIndex(fadebegin)
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_begin >= index_end){
       index_begin = index_end - decoder.channels
@@ -219,11 +231,11 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   // fadeout
   def trimFadeOut(){
     val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
-    val fadelen = (Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 9999.0) * decoder.rate * decoder.channels).toInt
-    val end = threasholdIndex(threashold,true)
-    val fadeend = if ( end - fadelen < 0) { 0 } else { end - fadelen }
+    val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 10.0))
+    val end = fitIndex(threasholdIndex(threashold,true))
+    val fadeend = Math.max( end - fadelen, 0)
     fade(end,fadeend)
-    index_end = ( end / decoder.channels ) * decoder.channels
+    index_end = fitIndex(end / decoder.channels)
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_end <= index_begin){
       index_end = index_begin + decoder.channels

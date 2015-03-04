@@ -225,12 +225,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
     
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
-      val buf = new Array[Short](calcBufferSize()/(java.lang.Short.SIZE/java.lang.Byte.SIZE))
+      val buf = new Array[Short](calcBufferSize/AudioHelper.SHORT_SIZE)
       var offset = 0
       audio_queue.foreach{ arg => {
           arg match {
             case Left(w) => offset += w.writeToShortBuffer(buf,offset)
-            case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / (java.lang.Short.SIZE/java.lang.Byte.SIZE)
+            case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / AudioHelper.SHORT_SIZE
             }
         }
       }
