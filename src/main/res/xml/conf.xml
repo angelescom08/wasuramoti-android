@@ -110,11 +110,11 @@
           android:summary="@string/conf_equalizer_summary"
           />
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_threashold"
+          android:key="wav_threshold"
           android:title="@string/conf_wav_threshold"
           android:summary="@string/conf_wav_threshold_summary"
           android:numeric="decimal"
-          android:defaultValue="0.01"
+          android:defaultValue="0.003"
           android:widgetLayout="@layout/conf_current_value"
           />
 

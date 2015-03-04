@@ -189,8 +189,9 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   }
 
   // if begin < end then fade-in else fade-out
+  // center_amp must be between 0.0 and 1.0
   // TODO: strictly speaking, this fade does not fade stereo wav correctly since left and right amplitudes are amplified differently.
-  def fade(i_begin:Int, i_end:Int){
+  def fade(i_begin:Int, i_end:Int, center_amp:Double = 0.5){
     val begin = indexInBuffer(i_begin)
     val end = indexInBuffer(i_end)
     if(begin == end){
@@ -200,8 +201,12 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     val step = if( begin < end ){ 1 } else { -1 }
     try{
       for( i <- begin to (end,step) ){
-        val len = scala.math.abs(i - begin).toDouble
-        val amp = len / width
+        val x = (scala.math.abs(i - begin).toDouble)/width
+        val amp = if(x <= 0.5){
+          center_amp * x * 2.0
+        }else{
+          (1.0 - center_amp) * 2.0 * x + (2.0 * center_amp - 1.0)
+        }
         buffer.put(i,(buffer.get(i)*amp).toShort)
       }
     }catch{
@@ -217,11 +222,12 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
 
   // fadein
   def trimFadeIn(){
-    val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
+    val threashold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
     val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 10.0))
     val beg = fitIndex(threasholdIndex(threashold,false))
     val fadebegin = Math.max( beg - fadelen, 0)
-    fade(fadebegin,beg)
+    // Log.v("wasuramoti_fadein", s"num=${num}, kamisimo=${kamisimo}, fadebegin=${fadebegin}, beg=${beg}, len=${beg-fadebegin}")
+    fade(fadebegin, beg, 0.75)
     index_begin = fitIndex(fadebegin)
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_begin >= index_end){
@@ -230,10 +236,11 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   }
   // fadeout
   def trimFadeOut(){
-    val threashold = Utils.getPrefAs[Double]("wav_threashold", 0.01, 1.0)
+    val threashold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
     val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 10.0))
     val end = fitIndex(threasholdIndex(threashold,true))
     val fadeend = Math.max( end - fadelen, 0)
+    // Log.v("wasuramoti_fadeout", s"num=${num}, kamisimo=${kamisimo}, fadeend=${decoder.data_length-fadeend}, end=${decoder.data_length-end}, len=${end-fadeend}")
     fade(end,fadeend)
     index_end = fitIndex(end / decoder.channels)
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
