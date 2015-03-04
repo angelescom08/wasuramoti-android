@@ -77,7 +77,7 @@ object AudioHelper{
 }
 
 class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:Int, val kamisimo:Int) extends WavBufferDebugTrait with BugReportable{
-  val MAX_AMP = (1 << (decoder.bit_depth-1)).toDouble
+  val MAX_AMP = (1 << (decoder.bit_depth-1))
   var index_begin = 0
   var index_end = decoder.data_length
 
@@ -151,7 +151,10 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     // TODO: which should we return: b_base or b_size ?
     return(b_size)
   }
-  def threasholdIndex(threashold:Double, fromEnd:Boolean):Int = {
+  def thresholdIndex(threshold:Double, fromEnd:Boolean):Int = {
+    val threshold_amp = (MAX_AMP *
+      (if(threshold > 0.0001){ threshold }else{ 0 })
+     ).toShort
     var (bg,ed,step) = if(fromEnd){
       (index_end-1,index_begin,-1)
     }else{
@@ -161,7 +164,8 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     ed = indexInBuffer(ed)
     try{
       for( i <- bg to (ed,step) ){
-        if( scala.math.abs(buffer.get(i)) / MAX_AMP > threashold ){
+        // TODO: check by block of signal instead of single signal
+        if( math.abs(buffer.get(i)) > threshold_amp ){
           return i
         }
       }
@@ -194,14 +198,14 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   def fade(i_begin:Int, i_end:Int, center_amp:Double = 0.5){
     val begin = indexInBuffer(i_begin)
     val end = indexInBuffer(i_end)
-    if(begin == end){
+    val width = math.abs(begin - end)
+    if(width < secToIndex(0.01) ){
       return
     }
-    val width = scala.math.abs(begin - end).toDouble
     val step = if( begin < end ){ 1 } else { -1 }
     try{
       for( i <- begin to (end,step) ){
-        val x = (scala.math.abs(i - begin).toDouble)/width
+        val x = (math.abs(i - begin).toDouble)/width.toDouble
         val amp = if(x <= 0.5){
           center_amp * x * 2.0
         }else{
@@ -222,9 +226,9 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
 
   // fadein
   def trimFadeIn(){
-    val threashold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
+    val threshold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
     val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 10.0))
-    val beg = fitIndex(threasholdIndex(threashold,false))
+    val beg = fitIndex(thresholdIndex(threshold,false))
     val fadebegin = Math.max( beg - fadelen, 0)
     // Log.v("wasuramoti_fadein", s"num=${num}, kamisimo=${kamisimo}, fadebegin=${fadebegin}, beg=${beg}, len=${beg-fadebegin}")
     fade(fadebegin, beg, 0.75)
@@ -236,9 +240,9 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   }
   // fadeout
   def trimFadeOut(){
-    val threashold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
+    val threshold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 1.0)
     val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 10.0))
-    val end = fitIndex(threasholdIndex(threashold,true))
+    val end = fitIndex(thresholdIndex(threshold,true))
     val fadeend = Math.max( end - fadelen, 0)
     // Log.v("wasuramoti_fadeout", s"num=${num}, kamisimo=${kamisimo}, fadeend=${decoder.data_length-fadeend}, end=${decoder.data_length-end}, len=${end-fadeend}")
     fade(end,fadeend)
