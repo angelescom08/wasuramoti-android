@@ -6,7 +6,7 @@ import _root_.android.view.{View,ViewGroup}
 import _root_.android.widget.{TextView,CheckBox,CompoundButton,LinearLayout}
 import _root_.android.util.{AttributeSet}
 import _root_.android.text.TextUtils
-import _root_.android.content.{Context,SharedPreferences,Intent}
+import _root_.android.content.{Context,SharedPreferences}
 import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
 
 import java.util.regex.Pattern
@@ -153,7 +153,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
         .replaceAll("\n","<br>\n")
         .replaceAll(" ","\u00A0")
         .replaceAll("(&lt;.*?&gt;)","<b>$1</b>")
-        .replaceAll("%%(.*)","<font color='#CCCCFF'><i>$1</i></font>")
+        .replaceAll("%%(.*)","<font color='#00FFFF'><i>$1</i></font>")
         .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<a href='$1'>$1</a>")
         fp.close
         val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")

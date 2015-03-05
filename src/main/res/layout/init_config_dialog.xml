@@ -23,17 +23,17 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <RadioButton
-        android:id="@+id/init_config_study"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/init_config_study"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
-      <RadioButton
         android:id="@+id/init_config_recreation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/init_config_recreation"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+      <RadioButton
+        android:id="@+id/init_config_study"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/init_config_study"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
     </RadioGroup>

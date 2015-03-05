@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
-import _root_.android.util.{TypedValue,Base64}
+import _root_.android.util.Base64
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues,ComponentName}
 import _root_.android.content.res.{Configuration,Resources}
 import _root_.android.database.sqlite.SQLiteDatabase

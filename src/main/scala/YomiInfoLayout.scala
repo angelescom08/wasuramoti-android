@@ -3,7 +3,7 @@ import _root_.android.content.Context
 import _root_.android.view.{View,MotionEvent,ViewTreeObserver}
 import _root_.android.widget.HorizontalScrollView
 import _root_.android.graphics.Typeface
-import _root_.android.util.{AttributeSet,Log}
+import _root_.android.util.AttributeSet
 import _root_.android.os.CountDownTimer
 
 import scala.collection.mutable

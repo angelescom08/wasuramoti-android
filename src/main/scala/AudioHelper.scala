@@ -10,9 +10,7 @@ import _root_.android.net.Uri
 import _root_.android.util.Log
 import _root_.android.view.View
 
-import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.{ByteOrder,ShortBuffer,ByteBuffer}
-import _root_.java.nio.channels.FileChannel
 
 import scala.collection.mutable
 

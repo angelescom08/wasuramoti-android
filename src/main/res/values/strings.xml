@@ -329,25 +329,27 @@
   <string name="how_to_add_reader_html">
     <![CDATA[
     <h3>Audio Format</h3>
-    Only Ogg Vorbis is supported．Monaural audio is recommended.
-    <h3>Name Convention</h3>
     <p>
-    (1) Create 202 ogg files which 1st and 2nd half of the poem is recorded separately from 101 poems (+1 is for Joka).
+      Only Ogg Vorbis is supported．Monaural audio is recommended.<br/>
+      You have to somehow get 202 ogg files which 1st and 2nd half of the poem is recorded separately from 101 poems (+1 is for Joka).
     </p>
+    <h3>File Name Convention</h3>
     <p>
-    (2) Rename each file to <tt><font color="#FFFF00">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
-    If poem number is less than 100, zero must be padded to fit three digits. Poem number of Joka is 000.<br/>
-    (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+      Rename each file to <tt><font color="#FFFF00">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
+      , where some zeros must be padded to fit three digits. Poem number of Joka is 000.<br/>
+      (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>Where to Place</h3>
     <p>
-    (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
+      (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
     </p>
     <p>
-    (2) Make folder named <tt><font color="#FFFF00">[Reciter]</font></tt>, and place 202 ogg files in it.
+      (2) Make folder named <tt><font color="#FFFF00">[Reciter]</font></tt>, and place 202 ogg files in it.
     </p>
-    (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
-    Now you can choose new reader from reader choices.
+    <p>
+      (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      Now new reader should be added to choices in this app.
+    </p>
     ]]>
   </string>
   <string name="reader_not_found">No audio file for current reader.</string>

@@ -282,27 +282,31 @@
   <string name="how_to_add_reader_html">
     <![CDATA[
     <h3>注意</h3>
-    下記の説明は必要最低限のみです．詳しくは「わすらもち用読み音声データの作成」でネット検索して下さい．
-    <h3>音声形式</h3>
-    Ogg Vorbisのみ対応．モノラル音声推奨．
-    <h3>命名規則</h3>
     <p>
-    (1) 序歌を含む全101首をそれぞれ上の句と下の句に分割して録音された202個のoggファイルを用意する．
+      下記の説明は必要最低限のみです．詳しくは「<font color="#00FFFF">わすらもち用読み音声データの作成</font>」でネット検索して下さい．
     </p>
+    <h3>音声形式</h3>
     <p>
-    (2) 各ファイルを <tt><font color="#FFFF00">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前にする．<br/>
-    ただし歌番号は3桁になるように0を先頭に付ける．また序歌は000番とする．<br/>
-    (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+      Ogg Vorbisのみ対応．モノラル音声推奨．<br/>
+      あらかじめ序歌を含む全101首をそれぞれ上の句と下の句に分割されたoggファイル202個を入手しておく．
+    </p>
+    <h3>ファイル名</h3>
+    <p>
+      各ファイルを <tt><font color="#FFFF00">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前に変更する．<br/>
+      ただし歌番号は3桁になるように0を先頭に付ける．また序歌は000番とする．<br/>
+      (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>配置方法</h3>
     <p>
-    (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
+      (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
     </p>
     <p>
-    (2) そのフォルダの下に <tt><font color="#FFFF00">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
+      (2) そのフォルダの下に <tt><font color="#FFFF00">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
     </p>
-    (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
-    以上でわすらもちの詠み手の選択肢に追加される．
+    <p>
+      (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      以上でわすらもちの詠み手の選択肢に追加される．
+    </p>
     ]]>
   </string>
   <string name="reader_not_found">詠み手の音声ファイルがありません</string>

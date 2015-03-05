@@ -7,8 +7,6 @@ import _root_.android.media.audiofx.Equalizer
 import _root_.android.widget.{Toast,CheckBox,CompoundButton}
 import _root_.android.util.Log
 import _root_.android.app.AlertDialog
-import _root_.android.content.DialogInterface
-import _root_.android.view.LayoutInflater
 
 import scala.collection.mutable
 
