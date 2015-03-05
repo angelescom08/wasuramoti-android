@@ -3,7 +3,7 @@
   App Version: 0.8.19
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.1
-  Required CPU: ARM, ARM-v7a, x86
+  Required CPU: ARM, ARM-v7a, x86, MIPS
   Description: Hyakunin-Isshu audio player specialized for training Kyogi-Karuta (Competitive Karuta).
                `Hyakunin-Isshu' is a set of classic Japanese poetry, and `Kyogi-Karuta' is a Japanese sport which uses the set.
 
