@@ -103,7 +103,7 @@ int decode_file(JNIEnv *env, const char* fin_path, short ** out_data, int * out_
     }
   }
   *out_data = data;  
-  *out_data_len = data_len;
+  *out_data_len = offset;
   // __android_log_print(ANDROID_LOG_INFO,APP_NAME,"Ogg Decode Done.\n");
   close_all();
   return(0);

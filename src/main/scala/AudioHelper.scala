@@ -29,7 +29,8 @@ object AudioHelper{
   }
 
   def millisecToBufferSizeInBytes(decoder:OggVorbisDecoder,millisec:Int):Int = {
-    (SHORT_SIZE * millisec * decoder.rate.toInt / 1000) * decoder.channels
+    // must be multiple of channels * sizeof(Short)
+    (millisec * decoder.rate.toInt / 1000) * decoder.channels * SHORT_SIZE
   }
   def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
@@ -244,7 +245,7 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     val fadeend = Math.max( end - fadelen, 0)
     // Log.v("wasuramoti_fadeout", s"num=${num}, kamisimo=${kamisimo}, fadeend=${decoder.data_length-fadeend}, end=${decoder.data_length-end}, len=${end-fadeend}")
     fade(end,fadeend)
-    index_end = fitIndex(end / decoder.channels)
+    index_end = fitIndex(end)
     //TODO: more strict way to ensure 0 <= index_begin < index_end <= buffer_size
     if(index_end <= index_begin){
       index_end = index_begin + decoder.channels

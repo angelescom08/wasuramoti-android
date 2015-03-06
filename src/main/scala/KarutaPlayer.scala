@@ -294,7 +294,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       var r_write = audio_track.get.write(buf,0,buf.length)
 
       if(Globals.IS_DEBUG){
-        val temp_file = java.io.File.createTempFile("wasuramoti_","_decoded.wav",activity.getApplicationContext.getCacheDir)
+        // you can add wav header to pcm file by following command
+        //   $ sox -t raw -e signed -b 16 -r <sample_rate> -c <channels> IN_PCM_FILE OUT_WAV_FILE
+        val temp_file = java.io.File.createTempFile("wasuramoti_","_decoded.pcm",activity.getApplicationContext.getCacheDir)
         val out = (new java.io.FileOutputStream(temp_file)).getChannel
         val bb = java.nio.ByteBuffer.allocate(buf.length*2)
         bb.order(java.nio.ByteOrder.LITTLE_ENDIAN)
