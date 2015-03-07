@@ -34,6 +34,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   var SCROLL_THRESHOLD_DIP = 70f
   val SCROLL_SPEED = 200 // in millisec
   var cur_view = None:Option[Int]
+  var should_be_played_list = List[Option[Int]]()
+
   def scrollAnimation(endx:Int,on_finish:()=>Unit={()=>Unit}){
     val startx = getScrollX
     new CountDownTimer(SCROLL_SPEED,10){
@@ -152,12 +154,26 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
             }
           })
       if(smooth){
-        scrollAnimation(x,func)
+        scrollAnimation(x,
+          () =>{
+            func()
+            // TODO: shold we check v.cur_num instead of cur_view.cur_num ?
+            updateShouldBePlayedList()
+          })
       }else{
         scrollTo(x,0)
+        updateShouldBePlayedList()
       }
       cur_view = Some(id)
       getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
+    }
+  }
+
+  def updateShouldBePlayedList(){
+    should_be_played_list = if(Utils.readCurNext(context)){
+      List(getCurNum,getNextNum)
+    }else{
+      List(getCurNum)
     }
   }
   

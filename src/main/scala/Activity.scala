@@ -365,11 +365,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
     val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
     if(yomi_info != null){
-      val yomi_nums = if(Utils.readCurNext(getApplicationContext)){
-        List(yomi_info.getCurNum,yomi_info.getNextNum)
-      }else{
-        List(yomi_info.getCurNum)
-      }
+      val yomi_nums = yomi_info.should_be_played_list
       val r = (yomi_nums == read_nums)
       if(!r){
         Log.v("wasuramoti",s"text audio inconsistent: text=${yomi_nums}, audio=${read_nums}")
