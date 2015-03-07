@@ -2,6 +2,7 @@ Priority High:
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
   * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
+  * Remove duplicate path (same inode number or device id ?) which is returned by getAllExternalStorageDirectories and getAllExternalStorageDirectoriesWithUserCustom
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.

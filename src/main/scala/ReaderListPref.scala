@@ -78,7 +78,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
     // otherwise it raises AbstractMethodError "abstract method not implemented"
     override def doInBackground(unused:AnyRef*):AnyRef = {
-      val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom()
+      val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom(context)
       for(path <- paths){
         Utils.walkDir(path,Globals.READER_SCAN_DEPTH_MAX, f =>{
           if(f.getName == Globals.READER_DIR){

@@ -18,7 +18,7 @@ class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
     setTitle(R.string.scan_reader_title)
     val desc = context.getResources.getString(R.string.scan_reader_description,Globals.READER_SCAN_DEPTH_MAX.toString)
     view.findViewById(R.id.scan_reader_description).asInstanceOf[TextView].setText(desc)
-    val list = Utils.getAllExternalStorageDirectories.map{_.toString}.mkString("\n")
+    val list = Utils.getAllExternalStorageDirectories(context).map{_.toString}.mkString("\n")
     val tv = view.findViewById(R.id.scan_reader_list).asInstanceOf[TextView]
     tv.setText(list)
     tv.setTextColor(Color.YELLOW)

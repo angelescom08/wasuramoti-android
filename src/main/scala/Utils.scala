@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import scala.io.Source
 import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
-import _root_.android.util.Base64
+import _root_.android.util.{Base64,Log}
 import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues,ComponentName}
 import _root_.android.content.res.{Configuration,Resources}
 import _root_.android.database.sqlite.SQLiteDatabase
@@ -15,6 +15,8 @@ import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button}
 import _root_.android.content.pm.{ResolveInfo,PackageManager}
 import _root_.android.net.Uri
+
+import _root_.android.support.v4.content.ContextCompat
 
 import _root_.java.io.File
 import _root_.java.util.Locale
@@ -346,7 +348,16 @@ object Utils {
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0
   //   https://code.google.com/p/wagic/source/browse/trunk/projects/mtg/Android/src/net/wagic/utils/StorageOptions.java
-  def getAllExternalStorageDirectories():Set[File] = {
+  // [Updated]
+  // As for KitKat (API >= 19), we can use Context.getExternalFilesDirs instead.
+  // It is backported to android.support.v4.content.ContextCompat in support-v4 library.
+  // However some devices return only internal storages even using this method.
+  //
+  // Another option I found is using StorageManager.getVolumeList, which is hidden API.
+  // You can access hidden API using reflection. see following URL.
+  //   http://qiita.com/aMasatoYui/items/e13664455af45123a66e
+  //   http://buchi.hatenablog.com/entry/2014/10/28/000842
+  def getAllExternalStorageDirectories(context:Context):Set[File] = {
     val ret = mutable.Set[File]()
     val state = Environment.getExternalStorageState
     if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
@@ -363,11 +374,31 @@ object Utils {
     }catch{
       case _:java.io.FileNotFoundException => None
     }
+    
+    try{
+      val sm = context.getSystemService(Context.STORAGE_SERVICE)
+      val getVolumeList = sm.getClass.getDeclaredMethod("getVolumeList")
+      val volumeList = getVolumeList.invoke(sm).asInstanceOf[Array[java.lang.Object]]
+      for(volume <- volumeList){
+        val getPath = volume.getClass.getDeclaredMethod("getPath")
+        val isRemovable = volume.getClass.getDeclaredMethod("isRemovable")
+        val path = getPath.invoke(volume).asInstanceOf[String]
+        val removable = isRemovable.invoke(volume).asInstanceOf[Boolean]
+        if(removable){
+          ret += new File(path)
+        }
+      }
+    }catch{
+      case e:Exception => {
+        Log.v("wasuramoti","getAllExternalStorageDirectories",e)
+      }
+    }
+
     ret.toSet
   }
 
-  def getAllExternalStorageDirectoriesWithUserCustom():Set[File] = {
-    val dirs = mutable.Set(getAllExternalStorageDirectories.toArray:_*)
+  def getAllExternalStorageDirectoriesWithUserCustom(context:Context):Set[File] = {
+    val dirs = mutable.Set(getAllExternalStorageDirectories(context).toArray:_*)
     val user_path = Globals.prefs.get.getString("scan_reader_additional","")
     if(!TextUtils.isEmpty(user_path)){
       dirs += new File(user_path).getCanonicalFile
