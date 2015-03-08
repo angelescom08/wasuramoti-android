@@ -134,6 +134,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[()=>Unit]=None){
     val v = findViewById(id).asInstanceOf[YomiInfoView]
     if(v!=null){
+      cur_view = Some(id)
+      getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
       val x = v.getLeft
       val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
       val func = do_after_done.getOrElse(
@@ -166,8 +168,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
         scrollTo(x,0)
         updateShouldBePlayedList()
       }
-      cur_view = Some(id)
-      getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
     }
   }
 
