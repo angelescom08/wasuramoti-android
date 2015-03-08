@@ -146,12 +146,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
-      val wait_time = bundle.getLong("wait_time",100)
+      var wait_time = bundle.getLong("wait_time",100)
       if(YomiInfoUtils.showPoemText){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
         }else if(auto_play && !from_swipe){
           activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
+          // to avoid inconsistency error, we wait untill scroll ends
+          wait_time += YomiInfoConf.SCROLL_SPEED
         }else{
           activity.invalidateYomiInfo()
         }

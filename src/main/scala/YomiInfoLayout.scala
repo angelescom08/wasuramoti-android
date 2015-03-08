@@ -28,19 +28,22 @@ object TypefaceManager{
   }
 }
 
-class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
-
+object YomiInfoConf{
   var SCROLL_THRESHOLD = 0.17
   var SCROLL_THRESHOLD_DIP = 70f
   val SCROLL_SPEED = 200 // in millisec
+}
+
+class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
+
   var cur_view = None:Option[Int]
   var should_be_played_list = List[Option[Int]]()
 
   def scrollAnimation(endx:Int,on_finish:()=>Unit={()=>Unit}){
     val startx = getScrollX
-    new CountDownTimer(SCROLL_SPEED,10){
+    new CountDownTimer(YomiInfoConf.SCROLL_SPEED,10){
       override def onTick(millisUntilFinished:Long){
-        val r = millisUntilFinished / SCROLL_SPEED.toFloat
+        val r = millisUntilFinished / YomiInfoConf.SCROLL_SPEED.toFloat
         val pos = (startx * r + endx * (1-r)).toInt
         smoothScrollTo(pos,0)
       }
@@ -63,7 +66,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
           val v = findViewById(vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
-            val threshold = Math.min((v.getWidth * SCROLL_THRESHOLD).toInt, Utils.dpToPx(SCROLL_THRESHOLD_DIP).toInt)
+            val threshold = Math.min((v.getWidth * YomiInfoConf.SCROLL_THRESHOLD).toInt, Utils.dpToPx(YomiInfoConf.SCROLL_THRESHOLD_DIP).toInt)
             val nvid = if(Math.abs(dx) > threshold){
               if(dx > 0){
                 vid match{
@@ -157,7 +160,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
         scrollAnimation(x,
           () =>{
             func()
-            // TODO: shold we check v.cur_num instead of cur_view.cur_num ?
             updateShouldBePlayedList()
           })
       }else{
