@@ -85,8 +85,10 @@ object FudaListHelper{
       }
     }
     val body = if(Utils.isRandom){
+      // we have to show result of getOrQueryNumbersToRead instead of getOrQueryNumbersToReadAlt when random mode,
+      // however, quering DB again takes some cost, so we just decrease incTotalRead
       context.getResources.getString(R.string.message_readindex_random,
-        new java.lang.Integer(num_to_read)
+        new java.lang.Integer(num_to_read - Utils.incTotalRead)
       )
     }else{
       val current_index = getOrQueryCurrentIndexWithSkip(context)
