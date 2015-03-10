@@ -201,11 +201,11 @@
   <string name="conf_read_order_each_description">The word before `/` indicates current poem, and the word after `/` indicates next poem.\n
     To change the read order of Joka, refer to another option.
   </string>
-  <string name="conf_read_order_each_custom_edit">Edit Custom</string>
   <string name="conf_read_order_each_custom_description">
     `1` indicates 1st half of the poem, `2` indicates 2nd half of the poem. `/` indicates the border of current poem and next poem.\n
     For example, if you want to play 1st half of current poem, 2nd half of current poem and 1st half of next poem, input `12/1`.
   </string>
+  <string name="conf_read_order_each_custom_must_include_cur">the result must include at lease one current poem</string>
   
   <string name="conf_read_order_each_cur2_next1">2nd / 1st</string>
   <string name="conf_read_order_each_cur2_next1_next2">2nd / 1st - 2nd</string>

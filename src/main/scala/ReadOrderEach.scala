@@ -1,8 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 import _root_.android.preference.DialogPreference
-import _root_.android.content.{Context,SharedPreferences}
+import _root_.android.content.{Context,SharedPreferences,DialogInterface}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
+import _root_.android.os.Bundle
 import _root_.android.widget.{RadioGroup,RadioButton,Button,EditText}
 import _root_.android.app.AlertDialog
 class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
@@ -10,24 +11,14 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
   val DEFAULT_VALUE = "CUR2_NEXT1"
   var root_view = None:Option[View]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  def parseCustomOrder(str:String):Option[String] = {
-    val s = str.split("/").zip(Array("CUR","NEXT")).map{case (s,t) => s.filter(x => x =='1' || x == '2').map(t+_)}.flatten.mkString("_")
-    if(s.startsWith("CUR")){
-      Some(s)
-    }else{
-      None
-    }
-  }
+
+
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       val group = root_view.get.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
       val bid = group.getCheckedRadioButtonId()
       if(bid == R.id.conf_read_order_each_custom){
-        if(!Globals.prefs.get.contains("read_order_each_custom")){
-          //TODO: show alert dialog
-        }else{
-          persistString(Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE))
-        }
+        persistString(Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE))
       }else{
         val vw = group.findViewById(bid)
         val idx = group.indexOfChild(vw)
@@ -37,6 +28,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     }
     super.onDialogClosed(positiveResult)
   }
+
   override def onCreateDialogView():View = {
     super.onCreateDialogView()
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each,null)
@@ -53,31 +45,10 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
       group.check(vw.getId())
     }
 
-    val custom =  (builder:AlertDialog.Builder) => {
-      val edit_text = new EditText(context)
-      edit_text.setRawInputType(android.text.InputType.TYPE_CLASS_PHONE)
-      edit_text.setFilters(Array(new android.text.InputFilter.LengthFilter(7)))
-      edit_text.setId(R.id.conf_read_order_each_custom_text)
-      builder.setView(edit_text)
-    }
-    val on_yes = (dialog:AlertDialog) => {
-      val edit_text = dialog.findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
-      parseCustomOrder(edit_text.getText.toString) match {
-        case None => {
-          // TODO: warn that text is invalid
-        }
-        case Some(txt:String) => {
-          val edit = Globals.prefs.get.edit
-          edit.putString("read_order_each_custom",txt)
-          edit.commit()
-        }
-      }
-      ()
-    }
-
-    view.findViewById(R.id.conf_read_order_each_custom_edit).asInstanceOf[Button].setOnClickListener(new View.OnClickListener(){
+    val custom = view.findViewById(R.id.conf_read_order_each_custom)
+    custom.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        Utils.confirmDialogAlt(context,Right(R.string.conf_read_order_each_custom_description),on_yes,custom = custom)
+        new ReadOrderEachCustomDialog(context).show()
       }
     })
 
@@ -89,7 +60,6 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
             }})
     updateCustomCurrent()
     Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)
-
     return view
   }
 
@@ -118,5 +88,50 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
   override def getAbbrValue():String = {
     val value = getPersistedString(DEFAULT_VALUE)
     toAbbrValue(value)
+  }
+}
+
+
+class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
+  def parseCustomOrder(str:String):Either[String,Int] = {
+    val s = str.split("/").zip(Array("CUR","NEXT")).map{case (s,t) => s.filter(x => x =='1' || x == '2').map(t+_)}.flatten.mkString("_")
+    if(s.startsWith("CUR")){
+      Left(s)
+    }else{
+      Right(R.string.conf_read_order_each_custom_must_include_cur)
+    }
+  }
+  def toOrigValue(value:String):String = {
+    value.replaceFirst("NEXT","/").filter("12/".contains(_))
+  }
+  override def onCreate(bundle:Bundle){
+    val view = LayoutInflater.from(context).inflate(R.layout.read_order_each_custom,null)
+    setView(view)
+    val edit_text = view.findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
+    edit_text.setText(toOrigValue(Globals.prefs.get.getString("read_order_each_custom","")))
+    val listener_ok = new DialogInterface.OnClickListener(){
+        override def onClick(dialog:DialogInterface,which:Int){
+          parseCustomOrder(edit_text.getText.toString) match {
+            case Left(txt:String) => {
+              val edit = Globals.prefs.get.edit
+              edit.putString("read_order_each_custom",txt)
+              edit.commit()
+              dismiss()
+            }
+            case Right(msg_id) => {
+              // we have to re-show this dialog since BUTTON_{POSITIVE,NEGATIVE,NEUTRAL} closes the dialog
+              Utils.messageDialog(context,Right(msg_id),{()=>show()})
+            }
+          }
+        }
+    }
+    val listener_cancel = new DialogInterface.OnClickListener(){
+        override def onClick(dialog:DialogInterface,which:Int){
+          dismiss()
+        }
+    }
+    setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),listener_ok)
+    setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),listener_cancel)
+    super.onCreate(bundle)
   }
 }

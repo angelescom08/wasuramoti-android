@@ -4,7 +4,9 @@
   android:fillViewport="true" >
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" android:layout_height="fill_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingBottom="12dip"
+              >
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -52,11 +54,6 @@
         android:text="@string/conf_read_order_each_custom" />
     </RadioGroup>
 
-    <Button
-      android:id="@+id/conf_read_order_each_custom_edit"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/conf_read_order_each_custom_edit" />
   </LinearLayout>
 
 </ScrollView>
