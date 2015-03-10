@@ -175,8 +175,13 @@
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
-  <string name="conf_read_order_each_description">`/` より前の文字は現在の歌を示し，`/`より後の文字は次の歌を示します．</string>
+  <string name="conf_read_order_each_description">`/` より前の文字は現在の歌を示し，`/`より後の文字は次の歌を示します．\n
+    序歌の詠み順は「序歌の詠み方」で別途指定して下さい．
+  </string>
   <string name="conf_read_order_each_custom_edit">カスタムを編集</string>
+  <string name="conf_read_order_each_custom_description">`1` という文字は上の句, `2`という文字は下の句を示します．`/` は現在の句と次の句の区切り目です．\n
+    例えば「現在の上の句」→「現在の下の句」→「次の上の句」の順に詠ませたい場合は`12/1` と入力して下さい．
+  </string>
 
   <string name="conf_read_order_each_cur2_next1">下の句 / 上の句</string>
   <string name="conf_read_order_each_cur2_next1_next2">下の句 / 上の句 - 下の句</string>
@@ -185,6 +190,7 @@
   <string name="conf_read_order_each_cur2_next2">下の句 / 下の句</string>
   <string name="conf_read_order_each_cur1">上の句のみ</string>
   <string name="conf_read_order_each_custom">カスタム</string>
+  <string name="conf_read_order_each_custom_undefined">未設定</string>
 
   <string name="read_order_abbr_1st">上</string>
   <string name="read_order_abbr_2nd">下</string>

@@ -2,4 +2,5 @@
 <resources>
   <integer name="yomi_info_furigana_width_max">8</integer>
   <integer name="yomi_info_furigana_width_default">4</integer>
+  <item type="id" name="conf_read_order_each_custom_text" />
 </resources>

@@ -268,16 +268,25 @@ object Utils {
     func_no:()=>Unit={()=>Unit},
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
+    confirmDialogAlt(context,arg,(_:AlertDialog)=>{func_yes()},func_no,custom)
+  }
+  def confirmDialogAlt(
+    context:Context,
+    arg:Either[String,Int],
+    func_yes:(AlertDialog)=>Unit,
+    func_no:()=>Unit={()=>Unit},
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+  ){
     val builder = new AlertDialog.Builder(context)
     // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
     val str = arg match {
       case Left(x) => x
       case Right(x) => context.getResources().getString(x)
     }
-    val dialog = custom(builder).setMessage(str)
+    val dialog:AlertDialog = custom(builder).setMessage(str)
     .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
-          func_yes()
+          func_yes(interface.asInstanceOf[AlertDialog])
         }
       })
     .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
