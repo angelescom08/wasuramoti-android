@@ -10,9 +10,7 @@ import _root_.android.text.TextUtils
 import _root_.java.io.File
 
 class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
-  var have_to_reshow = false
   override def onCreate(bundle:Bundle){
-    have_to_reshow = false
     val view = LayoutInflater.from(context).inflate(R.layout.scan_reader_conf,null)
     setView(view)
     setTitle(R.string.scan_reader_title)
