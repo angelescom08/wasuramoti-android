@@ -16,8 +16,6 @@ import _root_.android.widget.{TextView,Button}
 import _root_.android.content.pm.{ResolveInfo,PackageManager}
 import _root_.android.net.Uri
 
-import _root_.android.support.v4.content.ContextCompat
-
 import _root_.java.io.File
 import _root_.java.util.Locale
 import _root_.java.text.NumberFormat
@@ -336,64 +334,73 @@ object Utils {
     Globals.alert_dialog.foreach{_.dismiss}
     Globals.alert_dialog = None
   }
+  // Getting internal and external storage path is a big mess in android.
   // Android's Environment.getExternalStorageDirectory does not actually return external SD card's path.
+  // Instead, it returns internal storage path for most devices.
   // Thus we have to explore where the mount point of SD card is by our own.
   // There are several ways to do this , and there seems no best way
   // (1) Read environment variables such SECONDARY_STORAGE -> not useful since the name of variable varies between devices.
-  // (2) Parse /system/etc/vold.fstab -> cannot use since Android 4.3 because it is removed.
-  // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> maybe good.
-  // We use third method
+  // (2) Parse /system/etc/vold.fstab -> cannot use since Android >= 4.3 because it is removed.
+  // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> works until Android <= 4.4 (?)
   // see following for more infos:
   //   http://source.android.com/devices/tech/storage/
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0
   //   https://code.google.com/p/wagic/source/browse/trunk/projects/mtg/Android/src/net/wagic/utils/StorageOptions.java
+  // We use third method for Android < 4.0 (see following Updated)
   // [Updated]
-  // As for KitKat (API >= 19), we can use Context.getExternalFilesDirs instead.
-  // It is backported to android.support.v4.content.ContextCompat in support-v4 library.
-  // However some devices return only internal storages even using this method.
-  //
+  // As for Android >= 4.4 (?) it seems that parsing /proc/mounts does not work anymore since row containing vfat returns invalid path.
   // Another option I found is using StorageManager.getVolumeList, which is hidden API.
   // You can access hidden API using reflection. see following URL.
   //   http://qiita.com/aMasatoYui/items/e13664455af45123a66e
   //   http://buchi.hatenablog.com/entry/2014/10/28/000842
+  //
+  // This API seems to added since Android >= 4.0 (or 3.2.4 ?) and works valid until at least Android 5.0.2
+  // see
+  //   core/java/android/os/storage/StorageManager.java
+  //    in https://github.com/android/platform_frameworks_base.git
   def getAllExternalStorageDirectories(context:Context):Set[File] = {
     val ret = mutable.Set[File]()
     val state = Environment.getExternalStorageState
     if(state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY){
       ret += Environment.getExternalStorageDirectory
+      Log.d("wasuramoti",s"Environment.getExternalStorageDirectory=${Environment.getExternalStorageDirectory}")
     }
-    try{
-      for(line <- Source.fromFile("/proc/mounts").getLines){
-        val buf = line.split(" ")
-        // currently we assume that SD card is vfat
-        if(buf.length >= 3 && buf(2) == "vfat"){
-          ret += new File(buf(1))
+    if(android.os.Build.VERSION.SDK_INT >= 14){
+      try{
+        val sm = context.getSystemService(Context.STORAGE_SERVICE)
+        val getVolumeList = sm.getClass.getDeclaredMethod("getVolumeList")
+        val volumeList = getVolumeList.invoke(sm).asInstanceOf[Array[java.lang.Object]]
+        for(volume <- volumeList){
+          val getPath = volume.getClass.getDeclaredMethod("getPath")
+          val isRemovable = volume.getClass.getDeclaredMethod("isRemovable")
+          val path = getPath.invoke(volume).asInstanceOf[String]
+          val removable = isRemovable.invoke(volume).asInstanceOf[Boolean]
+          Log.d("wasuramoti",s"StorageManager.getVolumeList,path=${path},removable=${removable}")
+          // we search both removable and non-removable path
+          if(path != null){
+            ret += new File(path)
+          }
+        }
+      }catch{
+        case e:Exception => {
+          Log.v("wasuramoti","getAllExternalStorageDirectories",e)
         }
       }
-    }catch{
-      case _:java.io.FileNotFoundException => None
-    }
-    
-    try{
-      val sm = context.getSystemService(Context.STORAGE_SERVICE)
-      val getVolumeList = sm.getClass.getDeclaredMethod("getVolumeList")
-      val volumeList = getVolumeList.invoke(sm).asInstanceOf[Array[java.lang.Object]]
-      for(volume <- volumeList){
-        val getPath = volume.getClass.getDeclaredMethod("getPath")
-        val isRemovable = volume.getClass.getDeclaredMethod("isRemovable")
-        val path = getPath.invoke(volume).asInstanceOf[String]
-        val removable = isRemovable.invoke(volume).asInstanceOf[Boolean]
-        if(removable){
-          ret += new File(path)
+    }else{
+      try{
+        for(line <- Source.fromFile("/proc/mounts").getLines){
+          val buf = line.split(" ")
+          // currently we assume that SD card is vfat
+          if(buf.length >= 3 && buf(2) == "vfat"){
+            Log.d("wasuramoti",s"proc_mounts=${buf(1)}")
+            ret += new File(buf(1))
+          }
         }
-      }
-    }catch{
-      case e:Exception => {
-        Log.v("wasuramoti","getAllExternalStorageDirectories",e)
+      }catch{
+        case _:Exception => None
       }
     }
-
     ret.toSet
   }
 

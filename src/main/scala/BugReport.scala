@@ -112,6 +112,7 @@ object BugReport{
         bld ++=  s"flags=${ai.flags}\n"
         bld ++=  s"source_dir=${ai.sourceDir}\n"
         bld ++=  s"data_dir=${ai.dataDir}\n"
+        bld ++=  s"external_storage=${Utils.getAllExternalStorageDirectories(context)}\n"
       }catch{
         case e:Exception => doWhenError(e) 
       }

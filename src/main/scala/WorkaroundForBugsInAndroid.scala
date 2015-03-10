@@ -13,6 +13,8 @@ import _root_.android.util.AttributeSet
 //   http://code.google.com/p/android/issues/detail?id=35466
 //   http://code.google.com/p/android/issues/detail?id=35412
 //   http://code.google.com/p/android/issues/detail?id=34872
+//
+// Therefore, *ALL* the TextView which uses Html.fromHtml() have to use this class.
 
 class PatchedTextView(context:Context, attrs:AttributeSet) extends TextView(context, attrs) {
   def this(context:Context, attrs:AttributeSet, def_style:Int) = this(context, attrs)
