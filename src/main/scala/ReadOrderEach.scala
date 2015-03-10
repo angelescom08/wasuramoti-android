@@ -39,6 +39,12 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     val value = getPersistedString(DEFAULT_VALUE)
     val idx = ar.indexOf(value)
     if(idx == -1){
+      if(value != Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE)){
+        // migrate from abolished option 
+        val edit = Globals.prefs.get.edit
+        edit.putString("read_order_each_custom",value)
+        edit.commit()
+      }
       group.check(R.id.conf_read_order_each_custom)
     }else{
       val vw = group.getChildAt(idx)

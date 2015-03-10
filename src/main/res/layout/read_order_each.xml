@@ -38,11 +38,6 @@
         android:layout_height="wrap_content"
         android:text="@string/conf_read_order_each_cur1_cur2_cur2" />
       <RadioButton 
-        android:id="@+id/conf_read_order_each_cur2_next2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur2_next2" />
-      <RadioButton 
         android:id="@+id/conf_read_order_each_cur1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

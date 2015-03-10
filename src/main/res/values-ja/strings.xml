@@ -174,7 +174,7 @@
   <string name="yomi_info_english_fonts_desc">英語フォント:</string>
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
-  <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
+  <string name="conf_read_order_each_summary">一回の詠みで上の句と下の句をどの順番で詠むか</string>
   <string name="conf_read_order_each_description">`/` より前の文字は現在の歌を示し，`/`より後の文字は次の歌を示します．\n
     序歌の詠み順は「序歌の詠み方」で別途指定して下さい．
   </string>
@@ -187,7 +187,6 @@
   <string name="conf_read_order_each_cur2_next1_next2">下の句 / 上の句 - 下の句</string>
   <string name="conf_read_order_each_cur1_cur2">上の句 - 下の句</string>
   <string name="conf_read_order_each_cur1_cur2_cur2">上の句 - 下の句 - 下の句</string>
-  <string name="conf_read_order_each_cur2_next2">下の句 / 下の句</string>
   <string name="conf_read_order_each_cur1">上の句のみ</string>
   <string name="conf_read_order_each_custom">カスタム</string>
   <string name="conf_read_order_each_custom_undefined">未設定</string>

@@ -211,7 +211,6 @@
   <string name="conf_read_order_each_cur2_next1_next2">2nd / 1st - 2nd</string>
   <string name="conf_read_order_each_cur1_cur2">1st - 2nd</string>
   <string name="conf_read_order_each_cur1_cur2_cur2">1st - 2nd - 2nd</string>
-  <string name="conf_read_order_each_cur2_next2">2nd / 2nd</string>
   <string name="conf_read_order_each_cur1">1st Only</string>
   <string name="conf_read_order_each_custom">Custom</string>
   <string name="conf_read_order_each_custom_undefined">Undefined</string>
@@ -224,7 +223,6 @@
     <item>CUR2_NEXT1_NEXT2</item>
     <item>CUR1_CUR2</item>
     <item>CUR1_CUR2_CUR2</item>
-    <item>CUR2_NEXT2</item>
     <item>CUR1</item>
   </string-array>
 
