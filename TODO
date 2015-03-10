@@ -1,12 +1,12 @@
 Priority High:
+  * reuse decoded PCM data if we have to play same audio more than twice.
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
-  * Bugfix: In Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
+    - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Remove duplicate path (same inode number or device id ?) which is returned by getAllExternalStorageDirectories and getAllExternalStorageDirectoriesWithUserCustom
+    - maybe we have to use JNI and stat()?
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
-    - Add Volume Boost.
   * Full Screen Mode
   * Change Color Theme
   * Customize Quick Config
@@ -15,6 +15,8 @@ Priority High:
   * Able To Add Current Fuda to Fuda-Set
 
 Priority Middle:
+  * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
+    - Add Volume Boost.
   * Add Option: play in arbitrary order
     -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
        (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)

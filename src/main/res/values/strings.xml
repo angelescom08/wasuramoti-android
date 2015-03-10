@@ -198,30 +198,20 @@
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
   <string name="conf_read_order_each_summary">Change where to stop playing at each half of the poem.</string>
+  <string name="conf_read_order_each_description">The word before `/` indicates current poem, and the word after `/` indicates next poem.</string>
+  <string name="conf_read_order_each_custom_edit">Edit Custom</string>
   
-  <string name="conf_read_order_each_cur2_next1">2nd - 1st</string>
-  <string name="conf_read_order_each_cur2_next1_next2">2nd - 1st - 2nd</string>
+  <string name="conf_read_order_each_cur2_next1">2nd / 1st</string>
+  <string name="conf_read_order_each_cur2_next1_next2">2nd / 1st - 2nd</string>
   <string name="conf_read_order_each_cur1_cur2">1st - 2nd</string>
   <string name="conf_read_order_each_cur1_cur2_cur2">1st - 2nd - 2nd</string>
-  <string name="conf_read_order_each_cur2_next2">2nd - 2nd</string>
+  <string name="conf_read_order_each_cur2_next2">2nd / 2nd</string>
   <string name="conf_read_order_each_cur1">1st Only</string>
+  <string name="conf_read_order_each_custom">Custom</string>
 
-  <string-array name="conf_read_order_each_entries">
-    <item>@string/conf_read_order_each_cur2_next1</item>
-    <item>@string/conf_read_order_each_cur2_next1_next2</item>
-    <item>@string/conf_read_order_each_cur1_cur2</item>
-    <item>@string/conf_read_order_each_cur1_cur2_cur2</item>
-    <item>@string/conf_read_order_each_cur2_next2</item>
-    <item>@string/conf_read_order_each_cur1</item>
-  </string-array>
-  <string-array name="conf_read_order_each_entries_abbr">
-    <item>2-1</item>
-    <item>2-1-2</item>
-    <item>1-2</item>
-    <item>1-2-2</item>
-    <item>2-2</item>
-    <item>1</item>
-  </string-array>
+  <string name="read_order_abbr_1st">1</string>
+  <string name="read_order_abbr_2nd">2</string>
+
   <string-array name="conf_read_order_each_entryValues">
     <item>CUR2_NEXT1</item>
     <item>CUR2_NEXT1_NEXT2</item>

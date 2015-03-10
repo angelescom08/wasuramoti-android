@@ -175,21 +175,20 @@
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">競技かるた用，下の句2回，上の句-&gt;下の句，下の句かるた用</string>
-  <string name="conf_read_order_each_cur2_next1">下の句 - 上の句</string>
-  <string name="conf_read_order_each_cur2_next1_next2">下の句 - 上の句 - 下の句</string>
+  <string name="conf_read_order_each_description">`/` より前の文字は現在の歌を示し，`/`より後の文字は次の歌を示します．</string>
+  <string name="conf_read_order_each_custom_edit">カスタムを編集</string>
+
+  <string name="conf_read_order_each_cur2_next1">下の句 / 上の句</string>
+  <string name="conf_read_order_each_cur2_next1_next2">下の句 / 上の句 - 下の句</string>
   <string name="conf_read_order_each_cur1_cur2">上の句 - 下の句</string>
   <string name="conf_read_order_each_cur1_cur2_cur2">上の句 - 下の句 - 下の句</string>
-  <string name="conf_read_order_each_cur2_next2">下の句 - 下の句</string>
+  <string name="conf_read_order_each_cur2_next2">下の句 / 下の句</string>
   <string name="conf_read_order_each_cur1">上の句のみ</string>
-  <string-array name="conf_read_order_each_entries_abbr">
-    <item>下-上</item>
-    <item>下-上-下</item>
-    <item>上-下</item>
-    <item>上-下-下</item>
-    <item>下-下</item>
-    <item>上</item>
-  </string-array>
+  <string name="conf_read_order_each_custom">カスタム</string>
 
+  <string name="read_order_abbr_1st">上</string>
+  <string name="read_order_abbr_2nd">下</string>
+  
   <string name="conf_read_order_joka">序歌の詠み方</string>
   <string name="conf_read_order_joka_summary">序歌の上の句/下の句をそれぞれ何回詠むか</string>
 

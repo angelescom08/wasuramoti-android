@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true" >
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:orientation="vertical">
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/conf_read_order_each_description"
+                />
+    <RadioGroup
+      android:id="@+id/conf_read_order_each_group"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur2_next1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur2_next1" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur2_next1_next2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur2_next1_next2" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur1_cur2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur1_cur2" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur1_cur2_cur2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur1_cur2_cur2" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur2_next2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur2_next2" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_cur1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_cur1" />
+      <RadioButton 
+        android:id="@+id/conf_read_order_each_custom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conf_read_order_each_custom" />
+    </RadioGroup>
+
+    <Button
+      android:id="@+id/conf_read_order_each_custom_edit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/conf_read_order_each_custom_edit" />
+  </LinearLayout>
+
+</ScrollView>
