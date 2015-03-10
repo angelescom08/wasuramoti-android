@@ -9,31 +9,31 @@
               android:layout_marginBottom="18dip"
               >
     <RadioGroup
-      android:id="@+id/init_config_group"
+      android:id="@+id/intended_use_group"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:checkedButton="@+id/init_config_competitive"
+      android:checkedButton="@+id/intended_use_competitive"
       >
       <RadioButton
-        android:id="@+id/init_config_competitive"
+        android:id="@+id/intended_use_competitive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/init_config_competitive"
+        android:text="@string/intended_use_competitive"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <RadioButton
-        android:id="@+id/init_config_recreation"
+        android:id="@+id/intended_use_recreation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/init_config_recreation"
+        android:text="@string/intended_use_recreation"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <RadioButton
-        android:id="@+id/init_config_study"
+        android:id="@+id/intended_use_study"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/init_config_study"
+        android:text="@string/intended_use_study"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
     </RadioGroup>

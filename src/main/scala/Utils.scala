@@ -148,7 +148,7 @@ object Utils {
           }
         }
         if(prev_version != 0){
-          edit.putBoolean("init_config_done",true)
+          edit.putString("intended_use","competitive")
         }
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()

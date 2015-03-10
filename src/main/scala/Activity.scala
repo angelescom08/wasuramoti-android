@@ -415,8 +415,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     setLongClickYomiInfoOnResume()
     handleActionView()
     Globals.prefs.foreach{ p =>
-      val init_config_done = p.getBoolean("init_config_done",false)
-      if(!init_config_done){
+      if(!p.contains("intended_use")){
         changeIntendedUse(true)
       }
     }
@@ -519,12 +518,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
   def changeIntendedUse(first_config:Boolean = true){
-    val view = getLayoutInflater.inflate(R.layout.init_config_dialog,null)
-    val radio_group = view.findViewById(R.id.init_config_group).asInstanceOf[RadioGroup]
+    val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)
+    val radio_group = view.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
     val check_id = Globals.prefs.get.getString("intended_use","competitive") match {
-      case "study" => R.id.init_config_study
-      case "recreation" => R.id.init_config_recreation
-      case _ => R.id.init_config_competitive
+      case "study" => R.id.intended_use_study
+      case "recreation" => R.id.intended_use_recreation
+      case _ => R.id.intended_use_competitive
     }
     radio_group.check(check_id)
 
@@ -532,40 +531,39 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       val edit = Globals.prefs.get.edit
       val id = radio_group.getCheckedRadioButtonId
       val changes = id match {
-        case R.id.init_config_competitive => {
+        case R.id.intended_use_competitive => {
           edit.putString("read_order_each","CUR2_NEXT1")
           edit.putString("intended_use","competitive")
           YomiInfoUtils.hidePoemText(edit)
           Array(
-            (R.string.init_config_poem_text,R.string.quick_conf_hide),
-            (R.string.init_config_read_order,R.string.conf_read_order_each_cur2_next1)
+            (R.string.intended_use_poem_text,R.string.quick_conf_hide),
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur2_next1)
           )
         }
-        case R.id.init_config_study => {
+        case R.id.intended_use_study => {
           edit.putString("read_order_each","CUR1_CUR2")
           edit.putString("intended_use","study")
           YomiInfoUtils.showFull(edit)
            Array(
-            (R.string.init_config_poem_text,R.string.quick_conf_full),
-            (R.string.init_config_read_order,R.string.conf_read_order_each_cur1_cur2)
+            (R.string.intended_use_poem_text,R.string.quick_conf_full),
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2)
           )
         }
-        case R.id.init_config_recreation => {
+        case R.id.intended_use_recreation => {
           edit.putString("read_order_each","CUR1_CUR2_CUR2")
           edit.putString("intended_use","recreation")
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
-            (R.string.init_config_poem_text,R.string.quick_conf_only_first),
-            (R.string.init_config_read_order,R.string.conf_read_order_each_cur1_cur2_cur2)
+            (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2_cur2)
           )
         }
         case _ => return
       }
-      edit.putBoolean("init_config_done",true)
       edit.commit()
       Globals.forceRefresh = true
 
-      val html = "<big>" + getResources.getString(R.string.init_config_result) + "<br>-------<br>" + changes.map({case(k,v)=>
+      val html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
         val kk = getResources.getString(k)
         val vv = getResources.getString(v)
         s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
@@ -577,15 +575,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       ()
     }
     val custom = (builder:AlertDialog.Builder) => {
-      builder.setView(view).setTitle(if(first_config){R.string.init_config_title}else{R.string.quick_conf_intended_use})
+      builder.setView(view).setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
     }
-    if(first_config){
-      // not cacellable if first_config
-      Utils.messageDialog(this,Right(R.string.init_config_desc),on_yes,custom = custom)
-    }else{
-      // cancellable if not first_config
-      Utils.confirmDialog(this,Right(R.string.init_config_desc),on_yes,custom = custom)
-    }
+    Utils.confirmDialog(this,Right(R.string.intended_use_desc),on_yes,custom = custom)
   }
 }
 
