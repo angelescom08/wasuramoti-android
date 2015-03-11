@@ -456,6 +456,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if(is_last_fuda && read_order_each.endsWith("NEXT1")){
           ss ++= Array("NEXT2")
         }
+        // reuse decoded wav
+        val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()
         for (i <- 0 until ss.length ){
           if(isCancelled){
             // TODO: what should we return ?
@@ -474,14 +476,21 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }
           if(reader.exists(read_num,kami_simo)){
             try{
-              reader.withDecodedWav(read_num, kami_simo, wav => {
-                 wav.trimFadeIn()
-                 wav.trimFadeOut()
-                 add_to_audio_queue(Left(wav),s.startsWith("CUR"))
-                 if(Globals.IS_DEBUG){
-                   KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
-                 }
-              })
+              val key = (read_num,kami_simo)
+              val is_cur = s.startsWith("CUR")
+              if(decoded_wavs.contains(key)){
+                add_to_audio_queue(Left(decoded_wavs(key)),is_cur)
+              }else{
+                reader.withDecodedWav(read_num, kami_simo, wav => {
+                   wav.trimFadeIn()
+                   wav.trimFadeOut()
+                   add_to_audio_queue(Left(wav),is_cur)
+                   decoded_wavs.put(key,wav)
+                   if(Globals.IS_DEBUG){
+                     KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
+                   }
+                })
+              }
             }catch{
               // Some device throws 'No space left on device' here
               case e:java.io.IOException => {

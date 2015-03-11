@@ -1,5 +1,4 @@
 Priority High:
-  * reuse decoded PCM data if we have to play same audio more than twice.
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.

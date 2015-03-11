@@ -177,7 +177,6 @@ abstract class Reader(context:Context,val path:String){
   def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
     val decoder = new OggVorbisDecoder()
-    var rval = true
     withFile(num,kamisimo,temp_file => {
       val buffer = decoder.decodeFileToShortBuffer(temp_file.getAbsolutePath())
       if(buffer != null){
