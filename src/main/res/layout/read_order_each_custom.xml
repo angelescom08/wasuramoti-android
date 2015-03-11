@@ -15,7 +15,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/conf_read_order_each_custom_text"
-    android:inputType="phone"
+    android:inputType="numberDecimal"
+    android:digits="12.,/"
     android:maxLength="7"
     />
 </LinearLayout>

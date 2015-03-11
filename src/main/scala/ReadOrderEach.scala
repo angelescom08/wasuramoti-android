@@ -100,7 +100,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
 
 class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
   def parseCustomOrder(str:String):Either[String,Int] = {
-    val s = str.split("/").zip(Array("CUR","NEXT")).map{case (s,t) => s.filter(x => x =='1' || x == '2').map(t+_)}.flatten.mkString("_")
+    val s = str.split(Array('/','.',',')).zip(Array("CUR","NEXT")).map{case (s,t) => s.filter("12".contains(_)).map(t+_)}.flatten.mkString("_")
     if(s.startsWith("CUR")){
       Left(s)
     }else{
