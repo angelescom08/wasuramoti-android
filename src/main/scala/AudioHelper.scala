@@ -272,7 +272,7 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val Auto,Start,Border,End = Value
+    val Auto,Start,Border,End,WakeUp = Value
   }
   // Scalaのバージョンが悪いのか何なのかなぜかEnumrationをBundle.putSerializableすると
   // getSerializableした時にnullになっているので文字列で代替する
@@ -385,6 +385,16 @@ object KarutaPlayUtils{
   }
 }
 
+// Canonical way to keep CPU awake on auto play, in battery mode, is adding WAKE_LOCK permission and
+// to use WakefulBroadcastReceiver or PowerManager.
+// see: 
+//   http://stackoverflow.com/questions/8713361/keep-a-service-running-even-when-phone-is-asleep
+// 
+// However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
+// As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
+// However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immidiately before calling next timer.
+// So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
+// This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on. 
 class KarutaPlayReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent){
     KarutaPlayUtils.Action.withName(intent.getAction) match{
@@ -392,12 +402,24 @@ class KarutaPlayReceiver extends BroadcastReceiver {
         Globals.player.foreach{_.activity.doPlay(true)}
       case KarutaPlayUtils.Action.Start =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
+        if(bundle != null && bundle.getBoolean("auto_play",false)){
+          // try to wake up CPU three times
+          for(x <- Array(1000,2000,3000)){
+            KarutaPlayUtils.startKarutaPlayTimer(
+              context,
+              KarutaPlayUtils.Action.WakeUp,
+              x
+            )
+          }
+        }
         Globals.player.foreach{_.onReallyStart(bundle)}
       case KarutaPlayUtils.Action.Border =>
         Globals.player.foreach{_.doWhenBorder()}
       case KarutaPlayUtils.Action.End =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
+      case KarutaPlayUtils.Action.WakeUp =>
+        () // Do Nothing
     }
   }
 }

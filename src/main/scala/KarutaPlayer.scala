@@ -158,6 +158,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.invalidateYomiInfo()
         }
       }
+      bundle.putBoolean("auto_play",auto_play)
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
         KarutaPlayUtils.Action.Start,

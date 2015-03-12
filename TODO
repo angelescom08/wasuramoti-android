@@ -6,7 +6,6 @@ Priority High:
     - maybe we have to use JNI and stat()?
   * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Full Screen Mode
   * Change Color Theme
   * Customize Quick Config
   * When in english mode, show Furigana in Roma-ji
