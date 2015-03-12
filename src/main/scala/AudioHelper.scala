@@ -272,7 +272,7 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val Auto,Start,Border,End,WakeUp = Value
+    val Auto,Start,Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
   }
   // Scalaのバージョンが悪いのか何なのかなぜかEnumrationをBundle.putSerializableすると
   // getSerializableした時にnullになっているので文字列で代替する
@@ -396,29 +396,26 @@ object KarutaPlayUtils{
 // So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
 // This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on. 
 class KarutaPlayReceiver extends BroadcastReceiver {
+  import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){
-    KarutaPlayUtils.Action.withName(intent.getAction) match{
-      case KarutaPlayUtils.Action.Auto =>
+    withName(intent.getAction) match{
+      case Auto =>
         Globals.player.foreach{_.activity.doPlay(true)}
-      case KarutaPlayUtils.Action.Start =>
+      case Start =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         if(bundle != null && bundle.getBoolean("auto_play",false)){
           // try to wake up CPU three times
-          for(x <- Array(1000,2000,3000)){
-            KarutaPlayUtils.startKarutaPlayTimer(
-              context,
-              KarutaPlayUtils.Action.WakeUp,
-              x
-            )
+          for((t,a) <- Array((1000,WakeUp1),(2000,WakeUp2),(3000,WakeUp3))){
+            KarutaPlayUtils.startKarutaPlayTimer(context,a,t)
           }
         }
         Globals.player.foreach{_.onReallyStart(bundle)}
-      case KarutaPlayUtils.Action.Border =>
+      case Border =>
         Globals.player.foreach{_.doWhenBorder()}
-      case KarutaPlayUtils.Action.End =>
+      case End =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
-      case KarutaPlayUtils.Action.WakeUp =>
+      case WakeUp1 | WakeUp2 | WakeUp3 =>
         () // Do Nothing
     }
   }
