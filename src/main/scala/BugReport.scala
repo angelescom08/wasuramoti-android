@@ -120,11 +120,16 @@ object BugReport{
 
     try{
       bld ++= "[memory_info]\n"
+      val rt = Runtime.getRuntime
+      bld ++= s"max_memory=${rt.maxMemory/MEGA}\n"
+      bld ++= s"total_memory=${rt.totalMemory/MEGA.toFloat}\n"
+      bld ++= s"free_memory=${rt.freeMemory/MEGA.toFloat}\n"
       val am = context.getSystemService(Context.ACTIVITY_SERVICE).asInstanceOf[ActivityManager]
+      bld ++= s"memory_class=${am.getMemoryClass}\n"
       val mi = new ActivityManager.MemoryInfo
       am.getMemoryInfo(mi)
-      bld ++= s"avail_mem_mega=${mi.availMem/MEGA.toFloat}\n"
-      bld ++= s"threshold_mega=${mi.threshold/MEGA.toFloat}\n"
+      bld ++= s"avail_mem=${mi.availMem/MEGA.toFloat}\n"
+      bld ++= s"threshold=${mi.threshold/MEGA.toFloat}\n"
       bld ++= s"low_memory=${mi.lowMemory}\n"
 
     }catch{
@@ -133,8 +138,8 @@ object BugReport{
     try{
       bld ++= "[disk_usage]\n"
       val (avail,tot) = megabytesAvailable(context.getCacheDir.getPath)
-      bld ++= s"total_mega=${tot}\n"
-      bld ++= s"available_mega=${avail}\n"
+      bld ++= s"total=${tot}\n"
+      bld ++= s"available=${avail}\n"
     }catch{
       case e:Exception => doWhenError(e) 
     }

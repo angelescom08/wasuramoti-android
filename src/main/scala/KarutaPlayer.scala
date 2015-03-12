@@ -17,12 +17,12 @@ object KarutaPlayerDebug{
       val cs = w.checkSum
       val reader = Globals.prefs.get.getString("reader_path",null)
       val key = (reader,read_num,kami_simo)
-      println("wasuramoti_debug: key="+key+" , checksum="+cs)
+      Log.d("wasuramoti_debug",s"key=${key}, checksum=${cs}")
       checksum_table.get(key) match{
         case None => checksum_table += {(key,cs)}
         case Some(x) => if( x != cs ){ 
                           val message = "checksum mismatch for " + key + ": " + x + " != " + cs
-                          println("wasuramoti_debug: " + message)
+                          Log.d("wasuramoti_debug",message)
                           throw new Exception(message)
                         }
       }
@@ -202,7 +202,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def onReallyStart(bundle:Bundle){
     // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread.
-    new Thread(new Runnable(){override def run(){
+    val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
       try{
         makeAudioTrack()
@@ -360,7 +360,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       )
       audio_track.get.play()
       Globals.audio_track_failed_count = 0
-    }}}).start()
+    }}})
+    thread.setUncaughtExceptionHandler(
+      new Thread.UncaughtExceptionHandler(){
+        override def uncaughtException(th:Thread,ex:Throwable){
+          ex match{
+            case e:java.lang.OutOfMemoryError => Utils.restartApplication(activity.getApplicationContext,true)
+            case _ => throw(ex)
+          }
+        }
+    })
+    thread.start()
   }
 
   def stop(){

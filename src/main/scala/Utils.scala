@@ -535,9 +535,13 @@ object Utils {
     }
   }
 
-  def restartApplication(context:Context){
+  def restartApplication(context:Context,from_oom:Boolean=false){
     // This way totally exits application using System.exit()
-    val start_activity = new Intent(context,classOf[WasuramotiActivity])
+    val start_activity = if(!from_oom){
+      new Intent(context,classOf[WasuramotiActivity])
+    }else{
+      new Intent(Intent.ACTION_VIEW,Uri.parse("wasuramoti://from_oom"))
+    }
     val pending_id = 271828
     val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
     val mgr = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]

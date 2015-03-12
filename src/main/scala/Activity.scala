@@ -40,17 +40,26 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     ){
       return
     }
+    val dataString = intent.getDataString
     // we dont need the current intent anymore so replace it with default intent
     // Note: this intent will be used in Utils.restartActivity()
     setIntent(new Intent(this,this.getClass))
+    dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
+      case "fudaset" => importFudaset(dataString)
+      case "from_oom" => Utils.messageDialog(this,Right(R.string.from_oom_message))
+      case m => Utils.messageDialog(this,Left(s"'${m}' is not correct intent data for ACTION_VIEW for wasuramoti"))
+    }
+  }
 
+
+  def importFudaset(dataString:String){
     if(android.os.Build.VERSION.SDK_INT < 8){
       // Base64 was added in API >= 8
       Utils.messageDialog(this,Left("Sorry. Importing group of poem sets is supported in Android >= 2.2"))
       return
     }
     try{
-      val data = intent.getDataString.split("/").last
+      val data = dataString.split("/").last
       val bytes = Base64.decode(data,Base64.URL_SAFE)
       val str = new String(bytes,"UTF-8")
       val obj = new JSONTokener(str).nextValue.asInstanceOf[JSONObject]

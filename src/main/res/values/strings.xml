@@ -197,7 +197,7 @@
   </string-array>
 
   <string name="conf_read_order_each_title">Play Order of Each Poem</string>
-  <string name="conf_read_order_each_summary">Change where to stop playing at each half of the poem.</string>
+  <string name="conf_read_order_each_summary">How to play each half of the poem in one section.</string>
   <string name="conf_read_order_each_description">The word before `/` indicates current poem, and the word after `/` indicates next poem.\n
     To change the read order of Joka, refer to another option.
   </string>
@@ -325,7 +325,7 @@
     <![CDATA[
     <h3>Audio Format</h3>
     <p>
-      Only Ogg Vorbis is supported．Monaural audio is recommended.<br/>
+      Only Ogg Vorbis is supported．mono audio with 22050 Hz is recommended.<br/>
       You have to somehow get 202 ogg files which 1st and 2nd half of the poem is recorded separately from 101 poems (+1 is for Joka).
     </p>
     <h3>File Name Convention</h3>
@@ -457,5 +457,12 @@
   </string>
   <string name="intended_use_read_order">
     Read Order
+  </string>
+  <string name="from_oom_message">
+    Sorry, Wasuramoti halted because of out of memory error.\n
+    If this occurs frequently, please send `Bug Report` from `Advanced Config`.\n
+    [Note]: \n
+    * Using stereo or 44100 Hz audio file uses lot of memory. Mono, 22050 Hz is recommended.\n
+    * In `Play Order of Each Poem`, setting long sequence for `Custom` uses a lot of memory, so make it short.
   </string>
 </resources>
