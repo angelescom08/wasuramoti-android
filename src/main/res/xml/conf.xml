@@ -140,6 +140,13 @@
           android:key="skip_on_longclick"
           android:title="@string/conf_skip_on_longclick"
           android:summary="@string/conf_skip_on_longclick_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
+          android:key="move_after_first_phrase"
+          android:title="@string/conf_move_after_first_phrase"
+          android:summary="@string/conf_move_after_first_phrase_summary"
+          android:defaultValue="true"
           />
         <CheckBoxPreference
           android:key="hardware_accelerate"
