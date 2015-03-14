@@ -7,7 +7,7 @@ import _root_.android.util.{Base64,TypedValue,Log}
 import _root_.android.os.{Bundle,Handler,Build}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
-import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup}
+import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
@@ -513,7 +513,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
                   Globals.player.foreach{p=>
                     p.stop()
                     moveToNextFuda()
-                    doPlay(false)
+                    doPlay()
                   }
                 }
               }
@@ -593,7 +593,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 trait MainButtonTrait{
   self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
-    doPlay(false)
+    doPlay(from_main_button=true)
   }
   def moveToNextFuda(){
     val is_shuffle = ! Utils.isRandom
@@ -608,7 +608,7 @@ trait MainButtonTrait{
       invalidateYomiInfo()
     }
   }
-  def doPlay(auto_play:Boolean, from_swipe:Boolean = false){
+  def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
@@ -631,8 +631,17 @@ trait MainButtonTrait{
         KarutaPlayUtils.Action.Auto
       )
       if(Globals.is_playing){
+        val have_to_go_next = (
+          from_main_button &&
+          Globals.prefs.get.getBoolean("move_after_first_phrase",true) &&
+          player.isAfterFirstPoem)
         player.stop()
-        Utils.setButtonTextByState(self.getApplicationContext())
+        if(have_to_go_next){
+          moveToNextFuda()
+          Toast.makeText(getApplicationContext,R.string.move_after_first_phrase_done,Toast.LENGTH_SHORT).show()
+        }else{
+          Utils.setButtonTextByState(self.getApplicationContext())
+        }
       }else{
         // TODO: if auto_play then turn off display
         if(!auto_play){

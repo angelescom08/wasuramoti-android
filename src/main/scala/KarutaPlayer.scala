@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.os.{AsyncTask,Bundle}
+import _root_.android.os.{AsyncTask,Bundle,SystemClock}
 import _root_.android.media.audiofx.Equalizer
 import _root_.android.widget.{Toast,CheckBox,CompoundButton}
 import _root_.android.util.Log
@@ -38,6 +38,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
   var current_yomi_info = None:Option[Int]
   var set_audio_volume = true
+  var play_started = None:Option[Long]
 
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
@@ -68,6 +69,28 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     val audio_queue_info = audioQueueInfo()
     bld ++= s"audio_queue:${audio_queue_info}"
     bld.toString
+  }
+
+  def isAfterFirstPoem():Boolean = {
+    play_started.exists{ x =>
+      val elapsed = SystemClock.elapsedRealtime - x
+      var counter = 0 // TODO: can we do the following without counter ?
+      var joka_counter = 0 // Joka is treated as only one phrase in total
+      val first_poem_length = audio_queue.takeWhile{
+        case Left(wav_buffer) =>
+          if(wav_buffer.num > 0){
+            counter += 1
+          }else if(joka_counter == 0){
+            joka_counter = 1
+          }
+          (counter + joka_counter) < 2
+        case Right(_) => true
+      }.map{
+        case Left(wav_buffer) => wav_buffer.audioLength
+        case Right(length) => length
+      }.sum
+      elapsed > first_poem_length
+    }
   }
 
   def calcBufferSize():Int = {
@@ -359,8 +382,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         buffer_length_millisec+200,
         {_.putExtra("bundle",bundle)}
       )
-      audio_track.get.play()
       Globals.audio_track_failed_count = 0
+      play_started = Some(SystemClock.elapsedRealtime)
+      audio_track.get.play()
     }}})
     thread.setUncaughtExceptionHandler(
       new Thread.UncaughtExceptionHandler(){
@@ -391,6 +415,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           track.release()
         })
       audio_track = None
+      play_started = None
       doWhenStop()
     }
   }

@@ -400,7 +400,7 @@ class KarutaPlayReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent){
     withName(intent.getAction) match{
       case Auto =>
-        Globals.player.foreach{_.activity.doPlay(true)}
+        Globals.player.foreach{_.activity.doPlay(auto_play=true)}
       case Start =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         if(bundle != null && bundle.getBoolean("auto_play",false)){

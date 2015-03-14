@@ -264,6 +264,7 @@
   <string name="conf_hardware_accelerate_restart_confirm">To reflect the change to Hardware Acceleration, We need to restart this app. Do you want to restart it now?</string>
   <string name="conf_move_after_first_phrase">Move Next when Stopped</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
+  <string name="move_after_first_phrase_done">Moved to next poem</string>
   <!-- CATEGORY_PROCESSING -->
   <string name="category_processing">Speech Processing</string>
   <string name="conf_wav_threshold">Threshold</string>
