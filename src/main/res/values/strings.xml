@@ -461,6 +461,15 @@
   <string name="intended_use_read_order">
     Read Order
   </string>
+  <string name="intended_use_joka">
+    Joka
+  </string>
+  <string name="intended_use_joka_on">
+    ON
+  </string>
+  <string name="intended_use_joka_off">
+    OFF
+  </string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
     If this occurs frequently, please send `Bug Report` from `Advanced Config`.\n

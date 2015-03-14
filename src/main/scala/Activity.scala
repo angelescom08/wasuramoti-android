@@ -541,30 +541,36 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       val id = radio_group.getCheckedRadioButtonId
       val changes = id match {
         case R.id.intended_use_competitive => {
-          edit.putString("read_order_each","CUR2_NEXT1")
           edit.putString("intended_use","competitive")
+          edit.putString("read_order_each","CUR2_NEXT1")
+          edit.putString("read_order_joka","upper_1,lower_1")
           YomiInfoUtils.hidePoemText(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_hide),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur2_next1)
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur2_next1),
+            (R.string.intended_use_joka,R.string.intended_use_joka_on)
           )
         }
         case R.id.intended_use_study => {
-          edit.putString("read_order_each","CUR1_CUR2")
           edit.putString("intended_use","study")
+          edit.putString("read_order_each","CUR1_CUR2")
+          edit.putString("read_order_joka","upper_0,lower_0")
           YomiInfoUtils.showFull(edit)
            Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_full),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2)
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2),
+            (R.string.intended_use_joka,R.string.intended_use_joka_off)
           )
         }
         case R.id.intended_use_recreation => {
-          edit.putString("read_order_each","CUR1_CUR2_CUR2")
           edit.putString("intended_use","recreation")
+          edit.putString("read_order_each","CUR1_CUR2_CUR2")
+          edit.putString("read_order_joka","upper_0,lower_0")
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2_cur2)
+            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2_cur2),
+            (R.string.intended_use_joka,R.string.intended_use_joka_off)
           )
         }
         case _ => return
