@@ -6,6 +6,7 @@ import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
 import _root_.android.util.{Log,AttributeSet}
 
 import scala.collection.mutable
+import scala.util.hashing.MurmurHash3
 
 class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait{
   val RENDER_WITH_PATH_THRESHOLD = 496
@@ -14,11 +15,13 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   var cur_num = None:Option[Int]
+  var marker = None:Option[String]
   var torifuda_mode = false:Boolean
   var english_mode = false:Boolean
   var render_with_path = false
 
   def updateCurNum(){
+    // do all the heavy task here
     val fn = getId match {
       case R.id.yomi_info_view_prev => -1
       case R.id.yomi_info_view_next => 1
@@ -35,6 +38,9 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     show_furigana = Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)
     torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
     english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+    if(!show_author && !show_kami && !show_simo){
+      updateMarker(cur_num)
+    }
     initDrawing()
   }
   def initDrawing(){
@@ -146,7 +152,8 @@ trait YomiInfoYomifudaTrait{
 
   var MARGIN_TOP = MARGIN_TOP_BASE
   var MARGIN_AUTHOR = MARGIN_AUTHOR_BASE
-  var MARGIN_BOTTOM = MARGIN_BOTTOM_BASE
+  var MARGIN_BOTTOM_ORIG = MARGIN_BOTTOM_BASE
+  var MARGIN_BOTTOM = MARGIN_BOTTOM_ORIG
   var MARGIN_LR = MARGIN_LR_BASE
 
   val SPACE_V = 0.15 // rate of text size
@@ -170,7 +177,8 @@ trait YomiInfoYomifudaTrait{
     val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
     MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
     MARGIN_AUTHOR = MARGIN_AUTHOR_BASE.map{_*margin_boost}
-    MARGIN_BOTTOM = MARGIN_BOTTOM_BASE*margin_boost
+    MARGIN_BOTTOM_ORIG = MARGIN_BOTTOM_BASE*margin_boost
+    MARGIN_BOTTOM = MARGIN_BOTTOM_ORIG
     MARGIN_LR = MARGIN_LR_BASE*margin_boost
 
     val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
@@ -262,6 +270,23 @@ trait YomiInfoYomifudaTrait{
     (y,width,y-starty-span)
   }
 
+  def updateMarker(num:Option[Int]){
+    marker = num.map{ n =>
+      // Black Spade Suit, Red Heart Suit, Red Diamond Suit, Black Club Suit,
+      // White Spade Suit, White Heart Suit, White Diamond Suit, White Club Suit
+      // see http://en.wikipedia.org/wiki/Playing_cards_in_Unicode
+      val symbols = Array("\u2660","\u2661","\u2662","\u2663","\u2664","\u2665","\u2666","\u2667")
+      val seed = System.currentTimeMillis / (1800 * 1000) // preserve same marker for thirty minutes
+      // TODO: is this a correct usage of MurmurHash3 ?
+      val hash = MurmurHash3.finalizeHash(MurmurHash3.mix(seed.toInt,n),2)
+      var index = hash % symbols.length
+      if(index < 0){
+        index += symbols.length
+      }
+      symbols(index)
+    }
+  }
+
   def onDrawYomifuda(canvas:Canvas){
 
     if(Globals.IS_DEBUG){
@@ -285,7 +310,10 @@ trait YomiInfoYomifudaTrait{
 
       var text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",true,MARGIN_TOP,MARGIN_AUTHOR)
       if(text_array_with_margin.isEmpty){
-        return
+        text_array_with_margin = Array((marker.getOrElse("\u2022"),0.4))
+        MARGIN_BOTTOM = 0.4
+      }else{
+        MARGIN_BOTTOM = MARGIN_BOTTOM_ORIG
       }
 
       if(show_author && ! show_kami && ! show_simo){

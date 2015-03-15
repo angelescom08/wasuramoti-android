@@ -465,10 +465,10 @@
     Joka
   </string>
   <string name="intended_use_joka_on">
-    ON
+    Enabled
   </string>
   <string name="intended_use_joka_off">
-    OFF
+    Disabled
   </string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
