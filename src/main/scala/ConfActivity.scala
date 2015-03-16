@@ -103,10 +103,6 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
             Globals.forceRefresh = true
-          case "hardware_accelerate" =>
-            // Since there is no way to disable hardware acceleration,
-            // we have to restart application.
-            Utils.confirmDialog(context,Right(R.string.conf_hardware_accelerate_restart_confirm),{ () => Utils.restartApplication(context) })
           case _ => 
         }
         val pref = findPreference(key)

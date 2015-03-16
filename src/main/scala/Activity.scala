@@ -280,7 +280,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), {() => finish()})
       return
     }
-    if(YomiInfoUtils.showPoemText && Globals.prefs.get.getBoolean("hardware_accelerate",true) && android.os.Build.VERSION.SDK_INT >= 11){
+    if(YomiInfoUtils.showPoemText && android.os.Build.VERSION.SDK_INT >= 11){
          getWindow.setFlags(
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)

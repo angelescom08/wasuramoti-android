@@ -148,12 +148,6 @@
           android:summary="@string/conf_move_after_first_phrase_summary"
           android:defaultValue="true"
           />
-        <CheckBoxPreference
-          android:key="hardware_accelerate"
-          android:title="@string/conf_hardware_accelerate"
-          android:summary="@string/conf_hardware_accelerate_summary"
-          android:defaultValue="true"
-          />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_init">
         <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
