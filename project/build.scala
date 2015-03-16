@@ -17,7 +17,18 @@ object Build extends android.AutoBuild {
       "com.android.support" % "support-v4" % "19.1.0",
       android.Dependencies.aar("com.android.support" % "appcompat-v7" % "19.1.0")
     ),
-    scalacOptions in Compile ++= Seq("-unchecked","-deprecation"),
+    scalacOptions in Compile ++= Seq(
+        "-unchecked",
+        "-deprecation",
+        "-feature",
+        "-Xlint",
+        // "-Xfatal-warnings", // treat warning as error
+        "-Ywarn-dead-code",
+        //"-Ywarn-numeric-widen",
+        //"-Ywarn-value-discard",
+        "-Ywarn-unused",
+        "-Ywarn-unused-import"
+        ),
     proguardOptions in Android ++= Seq(
     "-dontwarn scala.collection.**", // see http://blog.scaloid.org/2014_10_01_archive.html
     "-keepattributes Signature",

@@ -42,14 +42,14 @@ object AudioHelper{
     val num = if(Utils.isRandom){
       val cur_num = Globals.player.map{_.next_num}.getOrElse(0)
       val next_num = FudaListHelper.queryRandom(app_context)
-      Some(cur_num,next_num)
+      Some((cur_num,next_num))
     }else{
       FudaListHelper.queryNext(app_context,current_index).map{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
     num.flatMap{case(cur_num,next_num) =>{
-        val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != (cur_num, next_num) }
+        val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != ((cur_num, next_num)) }
         if(!maybe_reader.get.bothExists(cur_num,next_num)){
           None
         }else if(force || Globals.forceRefresh || num_changed){

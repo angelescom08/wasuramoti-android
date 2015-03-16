@@ -271,12 +271,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   override def onCreate(savedInstanceState: Bundle) {
-    val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
 
     //try loading 'libstbvorbis.so'
-    val decoder = new OggVorbisDecoder()
+    new OggVorbisDecoder()
     if(!OggVorbisDecoder.library_loaded){
       Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), {() => finish()})
       return
@@ -671,7 +670,6 @@ trait ActivityDebugTrait{
   def showBottomInfo(key:String,value:String){
     if(Globals.IS_DEBUG){
       val btn = getWindow.getDecorView.findViewWithTag("main_debug_info").asInstanceOf[TextView]
-      var found = false
       val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
         case Array(k,v)=>(k,v)
       }.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")

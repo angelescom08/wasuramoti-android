@@ -343,7 +343,7 @@ object FudaListHelper{
       title
     }
     val dbr = Globals.database.get.getReadableDatabase
-    var cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
+    val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
     val have_to_read = if( cursor.getCount > 0 ){
       cursor.moveToFirst()
       val body = cursor.getString(1)
@@ -354,7 +354,7 @@ object FudaListHelper{
     cursor.close()
     //dbr.close()
 
-    var skip_temp = AllFuda.list.toSet -- have_to_read
+    val skip_temp = AllFuda.list.toSet -- have_to_read
     val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
       TrieUtils.makeKarafuda(have_to_read,skip_temp,kara_num)

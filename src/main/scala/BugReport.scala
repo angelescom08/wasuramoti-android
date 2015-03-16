@@ -146,7 +146,6 @@ object BugReport{
 
     try{
       bld ++= "[cache_dir_info]\n"
-      val (avail,tot) = megabytesAvailable(context.getCacheDir.getPath)
       bld ++= s"cache_dir=${context.getCacheDir}\n"
       val filelist = listFileCRC(context.getCacheDir).mkString("|")
       bld ++= s"list_file=${filelist}\n"
