@@ -355,7 +355,11 @@ object KarutaPlayUtils{
       }
       val activity = Globals.player.get.activity
       val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
-      activity.moveToNextFuda(!auto)
+      if(auto || Globals.prefs.get.getBoolean("move_next_after_done",true)){
+        activity.moveToNextFuda(!auto)
+      }else{
+        activity.refreshAndInvalidate()
+      }
       if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
         FudaListHelper.allReadDone(activity.getApplicationContext())
       ){

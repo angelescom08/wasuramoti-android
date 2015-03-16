@@ -86,6 +86,12 @@
           android:defaultValue="false"
           />
         <CheckBoxPreference
+          android:key="move_next_after_done"
+          android:title="@string/conf_move_next_after_done"
+          android:summary="@string/conf_move_next_after_done_summary"
+          android:defaultValue="true"
+          />
+        <CheckBoxPreference
           android:key="move_after_first_phrase"
           android:title="@string/conf_move_after_first_phrase"
           android:summary="@string/conf_move_after_first_phrase_summary"

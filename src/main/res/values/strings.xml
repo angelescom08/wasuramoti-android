@@ -262,6 +262,8 @@
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
   <string name="conf_move_after_first_phrase">Move Next if Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
+  <string name="conf_move_next_after_done">Move Next After Done</string>
+  <string name="conf_move_next_after_done_summary">Move to next poem after playing done.</string>
   <string name="conf_show_message_when_moved">Show Message when Moved</string>
   <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message</string>
   <string name="message_when_moved">Moved to next poem</string>

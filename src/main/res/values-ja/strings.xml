@@ -222,8 +222,10 @@
   <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
-  <string name="conf_move_after_first_phrase">中断時に次の札へ進む</string>
+  <string name="conf_move_after_first_phrase">中断時に次の札へ</string>
   <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
+  <string name="conf_move_next_after_done">終了時に次の札へ</string>
+  <string name="conf_move_next_after_done_summary">詠みが終了したら次の札へ進む</string>
   <string name="conf_show_message_when_moved">進んだ時にその旨を表示</string>
   <string name="conf_show_message_when_moved_summary">「次の札へ進みました」を表示する</string>
   <string name="message_when_moved">次の札へ進みました</string>
