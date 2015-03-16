@@ -600,7 +600,7 @@ trait MainButtonTrait{
   def onMainButtonClick(v:View) {
     doPlay(from_main_button=true)
   }
-  def moveToNextFuda(){
+  def moveToNextFuda(showToast:Boolean = true){
     val is_shuffle = ! Utils.isRandom
     if(is_shuffle){
       FudaListHelper.moveNext(self.getApplicationContext())
@@ -611,6 +611,9 @@ trait MainButtonTrait{
     self.refreshAndSetButton(!is_shuffle)
     if(Utils.readCurNext(self.getApplicationContext)){
       invalidateYomiInfo()
+    }
+    if(showToast && Globals.prefs.get.getBoolean("show_message_when_moved",true)){
+      Toast.makeText(getApplicationContext,R.string.message_when_moved,Toast.LENGTH_SHORT).show()
     }
   }
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
@@ -643,7 +646,6 @@ trait MainButtonTrait{
         player.stop()
         if(have_to_go_next){
           moveToNextFuda()
-          Toast.makeText(getApplicationContext,R.string.move_after_first_phrase_done,Toast.LENGTH_SHORT).show()
         }else{
           Utils.setButtonTextByState(self.getApplicationContext())
         }

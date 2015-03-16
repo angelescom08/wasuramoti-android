@@ -91,6 +91,12 @@
           android:summary="@string/conf_move_after_first_phrase_summary"
           android:defaultValue="true"
           />
+        <CheckBoxPreference
+          android:key="show_message_when_moved"
+          android:title="@string/conf_show_message_when_moved"
+          android:summary="@string/conf_show_message_when_moved_summary"
+          android:defaultValue="true"
+          />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_time">
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
