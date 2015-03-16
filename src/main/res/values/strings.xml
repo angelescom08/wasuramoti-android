@@ -241,11 +241,12 @@
   <string name="conf_joka_caveat">Note: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.</string>
 
   <string name="conf_autoplay">Auto Play</string>
-  <string name="conf_autoplay_summary">Play next poem when finished. / Start playing when swiped.</string>
+  <string name="conf_autoplay_summary">Start playing next poem when finished.</string>
   <string name="autoplay_enable">Start playing next poem when finished.</string>
   <string name="autoplay_span">Span:</string>
   <string name="autoplay_repeat">After finishing all, go to beginning and continue.</string>
-  <string name="play_after_swipe">Start playing when poem text was swiped.</string>
+  <string name="conf_play_after_swipe">Play After Swipe</string>
+  <string name="conf_play_after_swipe_summary">Start playing when poem text was swiped left or right.</string>
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>

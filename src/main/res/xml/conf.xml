@@ -143,6 +143,12 @@
           android:defaultValue="false"
           />
         <CheckBoxPreference
+          android:key="play_after_swipe"
+          android:title="@string/conf_play_after_swipe"
+          android:summary="@string/conf_play_after_swipe_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
           android:key="move_after_first_phrase"
           android:title="@string/conf_move_after_first_phrase"
           android:summary="@string/conf_move_after_first_phrase_summary"
