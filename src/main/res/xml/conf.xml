@@ -72,6 +72,26 @@
       android:persistent="false"
       android:summary="@string/subscreen_others"
       >
+      <PreferenceCategory android:title="@string/category_misc">
+        <CheckBoxPreference
+          android:key="skip_on_longclick"
+          android:title="@string/conf_skip_on_longclick"
+          android:summary="@string/conf_skip_on_longclick_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
+          android:key="play_after_swipe"
+          android:title="@string/conf_play_after_swipe"
+          android:summary="@string/conf_play_after_swipe_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
+          android:key="move_after_first_phrase"
+          android:title="@string/conf_move_after_first_phrase"
+          android:summary="@string/conf_move_after_first_phrase_summary"
+          android:defaultValue="true"
+          />
+      </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_time">
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
           android:key="wav_begin_read"
@@ -133,26 +153,6 @@
           android:defaultValue="0.1"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
-          />
-      </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_misc">
-        <CheckBoxPreference
-          android:key="skip_on_longclick"
-          android:title="@string/conf_skip_on_longclick"
-          android:summary="@string/conf_skip_on_longclick_summary"
-          android:defaultValue="false"
-          />
-        <CheckBoxPreference
-          android:key="play_after_swipe"
-          android:title="@string/conf_play_after_swipe"
-          android:summary="@string/conf_play_after_swipe_summary"
-          android:defaultValue="false"
-          />
-        <CheckBoxPreference
-          android:key="move_after_first_phrase"
-          android:title="@string/conf_move_after_first_phrase"
-          android:summary="@string/conf_move_after_first_phrase_summary"
-          android:defaultValue="true"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_init">

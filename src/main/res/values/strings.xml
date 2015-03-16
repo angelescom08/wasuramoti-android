@@ -244,7 +244,7 @@
   <string name="conf_autoplay_summary">Start playing next poem when finished.</string>
   <string name="autoplay_enable">Start playing next poem when finished.</string>
   <string name="autoplay_span">Span:</string>
-  <string name="autoplay_repeat">After finishing all, go to beginning and continue.</string>
+  <string name="autoplay_repeat">After finishing all, shuffle and continue.</string>
   <string name="conf_play_after_swipe">Play After Swipe</string>
   <string name="conf_play_after_swipe_summary">Start playing when poem text was swiped left or right.</string>
 
@@ -260,7 +260,7 @@
   <string name="conf_wav_span_simokami_summary">Interval between 1st and 2nd half of the poem.</string>
   <string name="conf_dimlock_minutes">Lock Screen</string>
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
-  <string name="conf_move_after_first_phrase">Move Next when Stopped</string>
+  <string name="conf_move_after_first_phrase">Move Next if Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
   <string name="move_after_first_phrase_done">Moved to next poem</string>
   <!-- CATEGORY_PROCESSING -->

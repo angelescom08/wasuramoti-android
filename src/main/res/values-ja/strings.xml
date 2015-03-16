@@ -79,7 +79,7 @@
   <string name="conf_autoplay_summary">前の札が詠み終わったら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
-  <string name="autoplay_repeat">終了後に最初に戻り詠み続ける</string>
+  <string name="autoplay_repeat">全部詠み終えるとシャッフルして最初から続ける</string>
   <string name="conf_play_after_swipe">スワイプ後に詠む</string>
   <string name="conf_play_after_swipe_summary">詠み句を左右にスワイプしたら自動的に詠み始める</string>
 
@@ -222,8 +222,8 @@
   <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>
   <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
-  <string name="conf_move_after_first_phrase">停止後に次の札へ進む</string>
-  <string name="conf_move_after_first_phrase_summary">1つ目の句を詠み終えた後にボタンを押したら次の札へ</string>
+  <string name="conf_move_after_first_phrase">中断時に次の札へ進む</string>
+  <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
   <string name="move_after_first_phrase_done">次の札へ進みました</string>
   <!-- CATEGORY_PROCESSINNG -->
   <string name="category_processing">音声処理</string>
