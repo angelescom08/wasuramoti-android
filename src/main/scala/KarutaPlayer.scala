@@ -284,13 +284,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // There was a bug report that inconsistency between audio and text occurs.
       // I could not found any test case that reproduces the inconsistency. 
       // It might be just misconception of the user, but I would check consistency for sure.
-      if(!activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
+      val show_dlg = Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)
+      if(show_dlg && !activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
         val INCONSISTENCY_THRESHOLD = new java.lang.Integer(5)
-        val fallback_to_dialog = (Globals.text_audio_inconsistent_count >= INCONSISTENCY_THRESHOLD)
+        val count_exceed = (Globals.text_audio_inconsistent_count >= INCONSISTENCY_THRESHOLD)
         val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
         activity.runOnUiThread(new Runnable(){
           override def run(){
-            if(fallback_to_dialog){
+            if(count_exceed){
               val on_yes = () => {
                 Utils.showBugReport(activity,err_msg)
               }
@@ -307,20 +308,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                 })
                 builder.setView(checkbox)
               }
-              if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
-                val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, INCONSISTENCY_THRESHOLD)
-                Utils.confirmDialog(activity,Left(dlg_txt),on_yes,custom=custom)
-              }
+              val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, INCONSISTENCY_THRESHOLD)
+              Utils.confirmDialog(activity,Left(dlg_txt),on_yes,custom=custom)
               Globals.text_audio_inconsistent_count = 0
             }else{
-              if(Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)){
-                Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_LONG).show()
-              }
+              Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_LONG).show()
               Globals.text_audio_inconsistent_count += 1
             }
           }
         })
-        if(!fallback_to_dialog){
+        // we give up re-decoding if count exceeded
+        if(!count_exceed){
           decode_and_play_again()
           return
         }
