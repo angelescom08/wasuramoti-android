@@ -212,7 +212,7 @@
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>
-  <string name="category_misc">色々</string>
+  <string name="category_move">進んだり 詠んだり</string>
   <string name="category_time">時間</string>
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
   <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
@@ -237,6 +237,9 @@
   <string name="conf_wav_fadout_simo_summary">末尾のフェードアウト秒数</string>
   <string name="conf_wav_fadein_kami">フェードイン</string>
   <string name="conf_wav_fadein_kami_summary">先頭のフェードイン秒数</string>
+  <string name="category_misc">色々</string>
+  <string name="conf_text_audio_consistency_check">詠み句と音声の整合性チェック</string>
+  <string name="conf_text_audio_consistency_check_summary">詠み句と詠み音声が同一かどうかチェックして異なっている場合は修復を試みる</string>
 
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">新規</string>

@@ -250,10 +250,10 @@
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>
-  <string name="category_misc">Misc</string>
+  <string name="category_move">Move</string>
   <string name="category_time">Time</string>
   <string name="conf_skip_on_longclick">Skip On Long Click</string>
-  <string name="conf_skip_on_longclick_summary">Play next poem when long pressed during play.</string>
+  <string name="conf_skip_on_longclick_summary">Play next poem when button was long pressed.</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
@@ -275,6 +275,9 @@
   <string name="conf_wav_fadout_simo_summary">How many seconds to fade out.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
+  <string name="category_misc">Misc</string>
+  <string name="conf_text_audio_consistency_check">Text Audio Consistency Check</string>
+  <string name="conf_text_audio_consistency_check_summary">Check that poem text and audio are same, and try to repair if it differs.</string>
 
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">New</string>

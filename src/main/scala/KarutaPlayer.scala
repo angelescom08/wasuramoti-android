@@ -284,8 +284,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // There was a bug report that inconsistency between audio and text occurs.
       // I could not found any test case that reproduces the inconsistency. 
       // It might be just misconception of the user, but I would check consistency for sure.
-      val show_dlg = Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)
-      if(show_dlg && !activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
+      if( Globals.prefs.get.getBoolean("text_audio_consistency_check",true)
+          && !activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
         Globals.text_audio_inconsistent_count_session += 1
         val threshold = Globals.text_audio_inconsistent_count_threshold
         val count_exceed = (Globals.text_audio_inconsistent_count >= threshold)
@@ -303,7 +303,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                 checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                   override def onCheckedChanged(buttonView:CompoundButton, isChecked:Boolean){
                     val edit = Globals.prefs.get.edit
-                    edit.putBoolean("show_text_audio_consintency_dialog", !isChecked)
+                    edit.putBoolean("text_audio_consistency_check", !isChecked)
                     edit.commit()
                   }
                 })
