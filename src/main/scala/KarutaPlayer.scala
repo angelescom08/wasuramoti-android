@@ -175,8 +175,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
         }else if(auto_play && !from_swipe){
           activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
-          // to avoid inconsistency error, we wait untill scroll ends
-          wait_time += YomiInfoConf.SCROLL_SPEED
         }else{
           activity.invalidateYomiInfo()
         }
@@ -224,8 +222,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
+  def waitUntilScrollEnded(){
+    val yomi_info = activity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    if(yomi_info != null){
+      yomi_info.scrolling_latch.foreach{_.await()}
+    }
+  }
+
   def onReallyStart(bundle:Bundle){
-    // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread.
+    // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
+    // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
     val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
       try{
@@ -271,6 +277,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         })
       }
+      
+      // we have to wait scroll before consistency check
+      waitUntilScrollEnded()
 
       // There was a bug report that inconsistency between audio and text occurs.
       // I could not found any test case that reproduces the inconsistency. 

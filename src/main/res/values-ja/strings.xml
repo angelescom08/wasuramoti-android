@@ -75,7 +75,7 @@
   <string name="player_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
 
-  <string name="conf_autoplay">連続詠み上げ</string>
+  <string name="conf_autoplay">自動詠み上げ</string>
   <string name="conf_autoplay_summary">前の札が詠み終わったら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
