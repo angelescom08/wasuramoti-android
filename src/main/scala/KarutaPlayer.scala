@@ -286,8 +286,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // It might be just misconception of the user, but I would check consistency for sure.
       val show_dlg = Globals.prefs.get.getBoolean("show_text_audio_consintency_dialog",true)
       if(show_dlg && !activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
-        val INCONSISTENCY_THRESHOLD = new java.lang.Integer(5)
-        val count_exceed = (Globals.text_audio_inconsistent_count >= INCONSISTENCY_THRESHOLD)
+        Globals.text_audio_inconsistent_count_session += 1
+        val threshold = Globals.text_audio_inconsistent_count_threshold
+        val count_exceed = (Globals.text_audio_inconsistent_count >= threshold)
         val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
         activity.runOnUiThread(new Runnable(){
           override def run(){
@@ -308,21 +309,26 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                 })
                 builder.setView(checkbox)
               }
-              val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, INCONSISTENCY_THRESHOLD)
+              val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, new java.lang.Integer(threshold))
               Utils.confirmDialog(activity,Left(dlg_txt),on_yes,custom=custom)
-              Globals.text_audio_inconsistent_count = 0
-            }else{
-              Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_LONG).show()
+              Globals.text_audio_inconsistent_count_threshold *= 3
+              if(Globals.text_audio_inconsistent_count_threshold > 100){
+                Globals.text_audio_inconsistent_count_threshold = 100
+              }
+            }else if(Globals.text_audio_inconsistent_count_session == 1){
               Globals.text_audio_inconsistent_count += 1
+              // show toast only for first inconsistent per session
+              Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_SHORT).show()
             }
           }
         })
-        // we give up re-decoding if count exceeded
-        if(!count_exceed){
+        // we give up re-decoding if count per session exceeded
+        if(Globals.text_audio_inconsistent_count_session < 3){
           decode_and_play_again()
           return
         }
       }
+      Globals.text_audio_inconsistent_count_session = 0
 
       var r_write = audio_track.get.write(buf,0,buf.length)
 

@@ -51,6 +51,8 @@ object Globals {
 
   var current_config_dialog = None:Option[DialogPreference]
   var text_audio_inconsistent_count = 0
+  var text_audio_inconsistent_count_session = 0
+  var text_audio_inconsistent_count_threshold = 5
   var text_audio_inconsistent_log = None:Option[mutable.Queue[(Long,String)]]
 }
 
