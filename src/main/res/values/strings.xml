@@ -245,28 +245,31 @@
   <string name="autoplay_enable">Start playing next poem when finished.</string>
   <string name="autoplay_span">Span:</string>
   <string name="autoplay_repeat">After finishing all, shuffle and continue.</string>
-  <string name="conf_play_after_swipe">Play After Swipe</string>
-  <string name="conf_play_after_swipe_summary">Start playing when poem text was swiped left or right.</string>
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>
   <string name="category_move">Move</string>
+  <string name="conf_play_after_swipe">Play after Swipe</string>
+  <string name="conf_play_after_swipe_summary">Start playing when swiping poem text left or right.</string>
+  <string name="conf_skip_on_longclick">Skip on Long Click</string>
+  <string name="conf_skip_on_longclick_summary">Play next poem when holding down the button.</string>
+  <string name="conf_move_after_first_phrase">Go Next if Interrupted</string>
+  <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
+  <string name="conf_move_next_after_done">Go Next after Done</string>
+  <string name="conf_move_next_after_done_summary">Go to next poem after playing done.</string>
+  <string name="conf_show_message_when_moved">Show Msg when Moved</string>
+  <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message</string>
+  <string name="message_when_moved">Moved to next poem</string>
+
+  <!-- CATEGORY_TIME -->
   <string name="category_time">Time</string>
-  <string name="conf_skip_on_longclick">Skip On Long Click</string>
-  <string name="conf_skip_on_longclick_summary">Play next poem when button was long pressed.</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
   <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
   <string name="conf_wav_span_simokami">Interval</string>
-  <string name="conf_wav_span_simokami_summary">Interval between 1st and 2nd half of the poem.</string>
+  <string name="conf_wav_span_simokami_summary">Interval between each half of the poem.</string>
   <string name="conf_dimlock_minutes">Lock Screen</string>
   <string name="conf_dimlock_minutes_summary">How many minutes until lock screen.</string>
-  <string name="conf_move_after_first_phrase">Move Next if Interrupted</string>
-  <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
-  <string name="conf_move_next_after_done">Move Next After Done</string>
-  <string name="conf_move_next_after_done_summary">Move to next poem after playing done.</string>
-  <string name="conf_show_message_when_moved">Show Message when Moved</string>
-  <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message</string>
-  <string name="message_when_moved">Moved to next poem</string>
+
   <!-- CATEGORY_PROCESSING -->
   <string name="category_processing">Speech Processing</string>
   <string name="conf_wav_threshold">Threshold</string>
@@ -275,8 +278,10 @@
   <string name="conf_wav_fadout_simo_summary">How many seconds to fade out.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
+
+  <!-- CATEGORY_MISC -->
   <string name="category_misc">Misc</string>
-  <string name="conf_text_audio_consistency_check">Text Audio Consistency Check</string>
+  <string name="conf_text_audio_consistency_check">Consistency Check</string>
   <string name="conf_text_audio_consistency_check_summary">Check that poem text and audio are same, and try to repair if it differs.</string>
 
   <!-- FUDASET_EDIT -->

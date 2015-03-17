@@ -80,8 +80,6 @@
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
   <string name="autoplay_repeat">全部詠み終えるとシャッフルして最初から続ける</string>
-  <string name="conf_play_after_swipe">スワイプ後に詠む</string>
-  <string name="conf_play_after_swipe_summary">詠み句を左右にスワイプしたら自動的に詠み始める</string>
 
   <!-- CATEGORY_ORDER -->
   <string name="category_order">順番</string>
@@ -196,7 +194,7 @@
   <string name="read_order_abbr_2nd">下</string>
   
   <string name="conf_read_order_joka">序歌の詠み方</string>
-  <string name="conf_read_order_joka_summary">序歌の上の句/下の句をそれぞれ何回詠むか</string>
+  <string name="conf_read_order_joka_summary">序歌の上の句と下の句をそれぞれ何回詠むか</string>
 
   <string name="conf_joka_upper_phrase">上の句 (000_1.ogg)</string>
   <string name="conf_joka_lower_phrase">下の句 (000_2.ogg)</string>
@@ -213,15 +211,10 @@
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>
   <string name="category_move">進んだり 詠んだり</string>
-  <string name="category_time">時間</string>
+  <string name="conf_play_after_swipe">スワイプ後に詠む</string>
+  <string name="conf_play_after_swipe_summary">詠み句を左右にスワイプしたら詠み始める</string>
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
   <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
-  <string name="conf_wav_begin_read">詠み始め</string>
-  <string name="conf_wav_begin_read_summary">ボタンを押してから詠み始めるまでの秒数</string>
-  <string name="conf_wav_span_simokami">間</string>
-  <string name="conf_wav_span_simokami_summary">下の句と上の句の間の秒数</string>
-  <string name="conf_dimlock_minutes">画面ロック</string>
-  <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
   <string name="conf_move_after_first_phrase">中断時に次の札へ</string>
   <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
   <string name="conf_move_next_after_done">終了時に次の札へ</string>
@@ -229,6 +222,16 @@
   <string name="conf_show_message_when_moved">進んだ時にその旨を表示</string>
   <string name="conf_show_message_when_moved_summary">「次の札へ進みました」を表示する</string>
   <string name="message_when_moved">次の札へ進みました</string>
+
+  <!-- CATEGORY_TIME -->
+  <string name="category_time">時間</string>
+  <string name="conf_wav_begin_read">詠み始め</string>
+  <string name="conf_wav_begin_read_summary">ボタンを押してから詠み始めるまでの秒数</string>
+  <string name="conf_wav_span_simokami">間</string>
+  <string name="conf_wav_span_simokami_summary">句と句の間の秒数</string>
+  <string name="conf_dimlock_minutes">画面ロック</string>
+  <string name="conf_dimlock_minutes_summary">何分経過したら画面ロックするか</string>
+
   <!-- CATEGORY_PROCESSINNG -->
   <string name="category_processing">音声処理</string>
   <string name="conf_wav_threshold">閾値</string>
@@ -237,6 +240,8 @@
   <string name="conf_wav_fadout_simo_summary">末尾のフェードアウト秒数</string>
   <string name="conf_wav_fadein_kami">フェードイン</string>
   <string name="conf_wav_fadein_kami_summary">先頭のフェードイン秒数</string>
+
+  <!-- CATEGORY_MISC -->
   <string name="category_misc">色々</string>
   <string name="conf_text_audio_consistency_check">詠み句と音声の整合性チェック</string>
   <string name="conf_text_audio_consistency_check_summary">詠み句と詠み音声が同一かどうかチェックして異なっている場合は修復を試みる</string>
