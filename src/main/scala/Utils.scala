@@ -9,7 +9,7 @@ import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
 import _root_.android.text.method.LinkMovementMethod
-import _root_.android.os.Environment
+import _root_.android.os.{Environment,SystemClock}
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button}
@@ -46,11 +46,12 @@ object Globals {
   var forceRestart = false
   var audio_volume_bkup = None:Option[Int]
   var audio_track_failed_count = 0
-  var text_audio_inconsistent_count = 0
   // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
   var alert_dialog = None:Option[AlertDialog]
 
   var current_config_dialog = None:Option[DialogPreference]
+  var text_audio_inconsistent_count = 0
+  var text_audio_inconsistent_log = None:Option[mutable.Queue[(Long,String)]]
 }
 
 object Utils {
@@ -86,12 +87,24 @@ object Utils {
     }
   }
 
+  def appendToTextAudioInconsistentLog(str:String){
+    if(Globals.text_audio_inconsistent_log.isEmpty){
+      Globals.text_audio_inconsistent_log = Some(new mutable.Queue[(Long,String)]())
+    }
+    Globals.text_audio_inconsistent_log.foreach{ log =>
+      log += ((SystemClock.elapsedRealtime,str))
+      if(log.length > 8){
+        log.dequeue()
+      }
+    }
+  }
+
   object ReadOrder extends Enumeration{
     type ReadOrder = Value
     val Shuffle, Random, PoemNum = Value
   }
 
-  // Never use StringOps.format since the output varies with locale.
+  // Caution: Never use StringOps.format since the output varies with locale.
   // Instead, use this funciton.
   def formatFloat(fmt:String, x:Float):String = {
     fmt.formatLocal(Locale.US, x) // some country uses comma instead of dot !
@@ -103,7 +116,7 @@ object Utils {
       val nf = NumberFormat.getInstance(Locale.US)
       nf.parse(s.replaceAll(",",".")).floatValue
     }catch{
-      case e:java.text.ParseException => throw new NumberFormatException(e.getMessage) // .toFloat() と同じ例外を出すようにする
+      case e:java.text.ParseException => throw new NumberFormatException(e.getMessage) // same exception as .toFloat()
     }
   }
 

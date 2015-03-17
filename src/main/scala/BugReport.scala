@@ -180,22 +180,25 @@ object BugReport{
         if(c.moveToFirst){
           while(!c.isAfterLast){
             val table = c.getString(0)
-            val c2 = db.rawQuery(s"SELECT * from $table",null)
-            if(c2.moveToFirst){
-              bld ++= s"cols_${table}=${c2.getColumnNames.toList.mkString(",")}\n"
-              var rowcount = 0
-              while(!c2.isAfterLast){
-                rowcount += 1
-                val cols = mutable.Buffer[String]()
-                for(i <- 0 until c2.getColumnCount){
-                  cols += c2.getString(i)
-                }
-                bld ++= s"  ${cols.mkString(",")}\n"
-                c2.moveToNext
-              }
-            }
-            c2.close
             c.moveToNext
+            // fudalist is large so we don't bugreport (in order to avoid exceeding browser's url length limit)
+            if(table != "fudalist"){ 
+              val c2 = db.rawQuery(s"SELECT * from $table",null)
+              if(c2.moveToFirst){
+                bld ++= s"cols_${table}=${c2.getColumnNames.toList.mkString(",")}\n"
+                var rowcount = 0
+                while(!c2.isAfterLast){
+                  rowcount += 1
+                  val cols = mutable.Buffer[String]()
+                  for(i <- 0 until c2.getColumnCount){
+                    cols += c2.getString(i)
+                  }
+                  bld ++= s"  ${cols.mkString(",")}\n"
+                  c2.moveToNext
+                }
+              }
+              c2.close
+            }
           }
         }
         c.close
@@ -203,6 +206,17 @@ object BugReport{
         case e:Exception => doWhenError(e) 
       } 
     }
+
+    try{
+      bld ++= "[text_audio_inconsistent]\n"
+      Globals.text_audio_inconsistent_log.foreach{ log =>
+        for((tm,str) <- log){
+          bld ++= s"${tm}: ${str}\n"
+        }
+      }
+    }catch{
+      case e:Exception => doWhenError(e) 
+    } 
 
     try{
       bld ++= "[variables]\n"
