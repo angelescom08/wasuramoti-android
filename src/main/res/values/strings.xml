@@ -275,14 +275,6 @@
   <string name="conf_wav_fadout_simo_summary">How many seconds to fade out.</string>
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
-  <!-- CATEGORY_CLEAR -->
-  <string name="category_init">Initialize</string>
-  <string name="conf_init_fudaset">Initialize Poem Sets</string>
-  <string name="conf_init_fudaset_summary">Initialize all the poem sets.</string>
-  <string name="confirm_init_fudaset">Really Initialize all the poem sets?</string>
-  <string name="conf_init_preference">Initialize Config</string>
-  <string name="conf_init_preference_summary">Initialize all the config except poem sets.</string>
-  <string name="confirm_init_preference">Really Initialize all the config except poem sets?</string>
 
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">New</string>

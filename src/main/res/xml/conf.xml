@@ -167,10 +167,6 @@
           unit="@string/conf_unit_second"
           />
       </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_init">
-        <Preference android:title="@string/conf_init_fudaset" android:summary="@string/conf_init_fudaset_summary" android:key="init_fudaset"/>
-        <Preference android:title="@string/conf_init_preference" android:summary="@string/conf_init_preference_summary" android:key="init_preference" />
-      </PreferenceCategory>
     </PreferenceScreen>
     <Preference android:title="@string/conf_show_credits" android:summary="@string/conf_show_credits_summary" android:key="show_credits"/>
     <Preference android:title="@string/conf_bug_report" android:summary="@string/conf_bug_report_summary" android:key="bug_report"/>

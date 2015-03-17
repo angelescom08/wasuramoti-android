@@ -112,32 +112,6 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
       }
     })
     Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)
-    findPreference("init_fudaset").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-      override def onPreferenceClick(pref:Preference):Boolean = {
-        Utils.confirmDialog(context,Right(R.string.confirm_init_fudaset), () => {
-          Globals.database.foreach{ db =>
-            DbUtils.initializeFudaSets(getApplicationContext,db.getWritableDatabase,true)
-          }
-          Utils.restartApplication(context)
-        })
-        return false
-      }
-    })
-    findPreference("init_preference").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-      override def onPreferenceClick(pref:Preference):Boolean = {
-        Utils.confirmDialog(context,Right(R.string.confirm_init_preference), () => {
-          Globals.prefs.foreach{ p =>
-            val ed = p.edit
-            ed.clear
-            ed.commit
-          }
-          PreferenceManager.setDefaultValues(getApplicationContext(),R.xml.conf,true)
-          ReaderList.setDefaultReader(getApplicationContext())
-          Utils.restartApplication(context)
-        })
-        return false
-      }
-    })
     findPreference("show_credits").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {
         val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
