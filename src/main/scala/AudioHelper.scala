@@ -365,7 +365,7 @@ object KarutaPlayUtils{
       ){
         FudaListHelper.shuffle(activity.getApplicationContext())
         FudaListHelper.moveToFirst(activity.getApplicationContext())
-        activity.refreshAndInvalidate()
+        activity.refreshAndInvalidate(auto)
       }
       if(auto && !Globals.player.isEmpty){
         KarutaPlayUtils.startKarutaPlayTimer(

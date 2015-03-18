@@ -131,8 +131,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def refreshAndInvalidate(){
-    refreshAndSetButton()
+  def refreshAndInvalidate(fromAuto:Boolean = false){
+    refreshAndSetButton(fromAuto = fromAuto)
     invalidateYomiInfo()
   }
 
