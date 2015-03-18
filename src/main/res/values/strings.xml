@@ -12,6 +12,7 @@
   <string name="now_playing">Playing</string>
   <string name="now_auto_playing">Auto Playing</string>
   <string name="now_stopped">Stopped</string>
+  <string name="now_stopped_auto">Stopped: %d sec</string>
   <string name="now_searching">Searching</string>
 
   <string name="menu_settings">Menu</string>

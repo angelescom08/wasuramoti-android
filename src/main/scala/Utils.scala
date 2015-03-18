@@ -449,22 +449,28 @@ object Utils {
       }
     }
   }
-  def setButtonTextByState(context:Context){
+  def setButtonTextByState(context:Context, fromAuto:Boolean = false){
     Globals.setButtonText.foreach{
       _(
         if(!NotifyTimerUtils.notify_timers.isEmpty){
           NotifyTimerUtils.makeTimerText(context)
         }else{
+          val res = context.getResources
           FudaListHelper.makeReadIndexMessage(context) + "\n" +
-          context.getResources.getString(
+          (
             if(Globals.is_playing){
               if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
-                R.string.now_auto_playing
+                res.getString(R.string.now_auto_playing)
               }else{
-                R.string.now_playing
+                res.getString(R.string.now_playing)
               }
             }else{
-              R.string.now_stopped
+              if(fromAuto && !Globals.player.isEmpty){
+                val sec = Globals.prefs.get.getLong("autoplay_span",5).toInt
+                res.getString(R.string.now_stopped_auto,new java.lang.Integer(sec))
+              }else{
+                res.getString(R.string.now_stopped)
+              }
             }
           )
         }

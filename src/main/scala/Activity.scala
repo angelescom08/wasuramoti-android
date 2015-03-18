@@ -124,10 +124,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     )
   }
 
-  def refreshAndSetButton(force:Boolean = false){
+  def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
-      Utils.setButtonTextByState(getApplicationContext())
+      Utils.setButtonTextByState(getApplicationContext(), fromAuto)
     }
   }
 
@@ -602,7 +602,7 @@ trait MainButtonTrait{
   def onMainButtonClick(v:View) {
     doPlay(from_main_button=true)
   }
-  def moveToNextFuda(showToast:Boolean = true){
+  def moveToNextFuda(showToast:Boolean = true, fromAuto:Boolean = false){
     val is_shuffle = ! Utils.isRandom
     if(is_shuffle){
       FudaListHelper.moveNext(self.getApplicationContext())
@@ -610,7 +610,7 @@ trait MainButtonTrait{
     // In random mode, there is a possibility that same pairs of fuda are read in a row.
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
-    self.refreshAndSetButton(!is_shuffle)
+    self.refreshAndSetButton(!is_shuffle,fromAuto)
     if(Utils.readCurNext(self.getApplicationContext)){
       invalidateYomiInfo()
     }
