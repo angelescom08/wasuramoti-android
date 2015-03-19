@@ -39,7 +39,6 @@ object YomiInfoConf{
 class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScrollView(context, attrs){
 
   var cur_view = None:Option[Int]
-  var should_be_played_list = List[Option[Int]]()
 
   var scrolling_latch = None:Option[CountDownLatch]
 
@@ -171,27 +170,14 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
               }
             })
         if(smooth){
-          scrollAnimation(x,
-            () =>{
-              func()
-              updateShouldBePlayedList()
-            })
+          scrollAnimation(x,func)
         }else{
           scrollTo(x,0)
-          updateShouldBePlayedList()
         }
       }
     }
   }
 
-  def updateShouldBePlayedList(){
-    should_be_played_list = if(Utils.readCurNext(context)){
-      List(getCurNum,getNextNum)
-    }else{
-      List(getCurNum)
-    }
-  }
-  
   def getCurNum():Option[Int] = {
     cur_view.flatMap(findViewById(_).asInstanceOf[YomiInfoView].cur_num)
   }

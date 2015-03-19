@@ -50,10 +50,6 @@ object Globals {
   var alert_dialog = None:Option[AlertDialog]
 
   var current_config_dialog = None:Option[DialogPreference]
-  var text_audio_inconsistent_count = 0
-  var text_audio_inconsistent_count_session = 0
-  var text_audio_inconsistent_count_threshold = 5
-  var text_audio_inconsistent_log = None:Option[mutable.Queue[(Long,String)]]
 }
 
 object Utils {
@@ -86,18 +82,6 @@ object Utils {
       maxValue
     }else{
       r
-    }
-  }
-
-  def appendToTextAudioInconsistentLog(str:String){
-    if(Globals.text_audio_inconsistent_log.isEmpty){
-      Globals.text_audio_inconsistent_log = Some(new mutable.Queue[(Long,String)]())
-    }
-    Globals.text_audio_inconsistent_log.foreach{ log =>
-      log += ((SystemClock.elapsedRealtime,str))
-      if(log.length > 8){
-        log.dequeue()
-      }
     }
   }
 

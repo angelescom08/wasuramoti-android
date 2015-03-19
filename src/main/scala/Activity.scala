@@ -368,25 +368,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def checkConsintencyForYomiInfoAndAudioQueue(audio_queue:Utils.AudioQueue):Boolean = {
-    // TODO: can we safely assume that .distinct() returns the list in original order ?
-    val read_nums = audio_queue.collect{ case Left(w) => Some(w.num) }.distinct.toList
-    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-    if(yomi_info != null){
-      val yomi_nums = yomi_info.should_be_played_list
-      val r = (yomi_nums == read_nums)
-      if(!r || !Globals.text_audio_inconsistent_log.isEmpty){
-        val log = s"text=${yomi_nums}, audio=${read_nums}"
-        Log.v("wasuramoti",s"text audio consistency: ${log}")
-        Utils.appendToTextAudioInconsistentLog(log)
-        // Log.v("wasuramoti",s"karuta_player=${Globals.player.map(_.toBugReport)}")
-      }
-      r
-    }else{
-      true
-    }
-  }
-
   override def onStart(){
     super.onStart()
     if( Globals.prefs.isEmpty ){

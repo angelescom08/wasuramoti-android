@@ -278,57 +278,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         })
       }
       
-      // we have to wait scroll before consistency check
       waitUntilScrollEnded()
-
-      // There was a bug report that inconsistency between audio and text occurs.
-      // I could not found any test case that reproduces the inconsistency. 
-      // It might be just misconception of the user, but I would check consistency for sure.
-      if( Globals.prefs.get.getBoolean("text_audio_consistency_check",true)
-          && !activity.checkConsintencyForYomiInfoAndAudioQueue(audio_queue)){
-        Globals.text_audio_inconsistent_count_session += 1
-        val threshold = Globals.text_audio_inconsistent_count_threshold
-        val count_exceed = (Globals.text_audio_inconsistent_count >= threshold)
-        val err_msg = activity.getApplicationContext.getResources.getString(R.string.text_audio_consistency_error);
-        activity.runOnUiThread(new Runnable(){
-          override def run(){
-            if(count_exceed){
-              val on_yes = () => {
-                Utils.showBugReport(activity,err_msg)
-              }
-              val custom = (builder:AlertDialog.Builder) => {
-                val checkbox = new CheckBox(activity)
-                val choice = activity.getApplicationContext.getResources.getString(R.string.never_show_again)
-                checkbox.setText(choice)
-                checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-                  override def onCheckedChanged(buttonView:CompoundButton, isChecked:Boolean){
-                    val edit = Globals.prefs.get.edit
-                    edit.putBoolean("text_audio_consistency_check", !isChecked)
-                    edit.commit()
-                  }
-                })
-                builder.setView(checkbox)
-              }
-              val dlg_txt = activity.getApplicationContext.getResources.getString(R.string.internal_error_dialog, new java.lang.Integer(threshold))
-              Utils.confirmDialog(activity,Left(dlg_txt),on_yes,custom=custom)
-              Globals.text_audio_inconsistent_count_threshold *= 3
-              if(Globals.text_audio_inconsistent_count_threshold > 100){
-                Globals.text_audio_inconsistent_count_threshold = 100
-              }
-            }else if(Globals.text_audio_inconsistent_count_session == 1){
-              Globals.text_audio_inconsistent_count += 1
-              // show toast only for first inconsistent per session
-              Toast.makeText(activity.getApplicationContext,err_msg,Toast.LENGTH_SHORT).show()
-            }
-          }
-        })
-        // we give up re-decoding if count per session exceeded
-        if(Globals.text_audio_inconsistent_count_session < 3){
-          decode_and_play_again()
-          return
-        }
-      }
-      Globals.text_audio_inconsistent_count_session = 0
 
       var r_write = audio_track.get.write(buf,0,buf.length)
 

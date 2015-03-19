@@ -242,11 +242,6 @@
   <string name="conf_wav_fadein_kami">フェードイン</string>
   <string name="conf_wav_fadein_kami_summary">先頭のフェードイン秒数</string>
 
-  <!-- CATEGORY_MISC -->
-  <string name="category_misc">色々</string>
-  <string name="conf_text_audio_consistency_check">詠み句と音声の整合性チェック</string>
-  <string name="conf_text_audio_consistency_check_summary">詠み句と詠み音声が同一かどうかチェックして異なっている場合は修復を試みる</string>
-
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">新規</string>
   <string name="fudaset_delete">削除</string>
@@ -397,15 +392,6 @@
         </body>
       </html>
     ]]>
-  </string>
-  <string name="text_audio_consistency_error">
-    詠み句と音声の不整合を修復します
-  </string>
-  <string name="internal_error_dialog">
-    内部エラーが %1$d 回以上発生しました．無視しても問題ないのですが，バグ報告してくれると次のバージョンで頑張って修正します．バグ報告しますか？
-  </string>
-  <string name="never_show_again">
-    二度と表示しない 
   </string>
   <string name="intended_use_title">
     初期設定

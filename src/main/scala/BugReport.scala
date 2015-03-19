@@ -208,17 +208,6 @@ object BugReport{
     }
 
     try{
-      bld ++= "[text_audio_inconsistent]\n"
-      Globals.text_audio_inconsistent_log.foreach{ log =>
-        for((tm,str) <- log){
-          bld ++= s"${tm}: ${str}\n"
-        }
-      }
-    }catch{
-      case e:Exception => doWhenError(e) 
-    } 
-
-    try{
       bld ++= "[variables]\n"
       bld ++= s"karuta_player=${Globals.player.map{_.toBugReport}.getOrElse("None")}\n"
     }catch{

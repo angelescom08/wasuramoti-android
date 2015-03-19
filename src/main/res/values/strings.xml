@@ -280,11 +280,6 @@
   <string name="conf_wav_fadein_kami">Fade In</string>
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
 
-  <!-- CATEGORY_MISC -->
-  <string name="category_misc">Misc</string>
-  <string name="conf_text_audio_consistency_check">Consistency Check</string>
-  <string name="conf_text_audio_consistency_check_summary">Check that poem text and audio are same, and try to repair if it differs.</string>
-
   <!-- FUDASET_EDIT -->
   <string name="fudaset_new">New</string>
   <string name="fudaset_delete">Delete</string>
@@ -430,15 +425,6 @@
         </body>
       </html>
     ]]>
-  </string>
-  <string name="text_audio_consistency_error">
-    Repairing Text Audio Inconsistency
-  </string>
-  <string name="internal_error_dialog">
-    Internal error occured more than %1$d times. You may ignore it, but if you give me bug report, I would try to fiix it in next version. Would you give me bug report ?
-  </string>
-  <string name="never_show_again">
-    Never show this again
   </string>
   <string name="intended_use_title">
     Default Config
