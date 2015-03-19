@@ -4,7 +4,7 @@ import _root_.android.app.{Activity,AlertDialog}
 import _root_.android.media.AudioManager
 import _root_.android.content.{Intent,Context,DialogInterface}
 import _root_.android.util.{Base64,TypedValue,Log}
-import _root_.android.os.{Bundle,Handler,Build}
+import _root_.android.os.{Bundle,Handler,Build,SystemClock}
 import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import _root_.android.view.animation.{AnimationUtils,Interpolator}
 import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
@@ -599,7 +599,17 @@ trait MainButtonTrait{
       Toast.makeText(getApplicationContext,R.string.message_when_moved,Toast.LENGTH_SHORT).show()
     }
   }
+
+  var last_play_begin = 0:Long
+
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
+    // avoid double click, and other weird behaviors
+    val cur = SystemClock.elapsedRealtime
+    if(math.abs(cur - last_play_begin) < 500){
+      return
+    }
+    last_play_begin = cur
+
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){
