@@ -336,6 +336,46 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
+  // There was user report that "Poem text differs with actually played audio".
+  // Therfore we periodically check whether poem text and audio queue are same,
+  // and set poem text if differs.
+  def checkConsistencyBetweenPoemTextAndAudio(){
+    Globals.player.foreach{ player =>
+      val aq = player.audio_queue.collect{ case Left(w) => Some(w.num) }.flatten.distinct.toList
+      if(aq.isEmpty){
+        return
+      }
+      val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+      if(yomi_info == null){
+        return
+      }
+      val sx = yomi_info.getScrollX
+      val cur_view = Array(R.id.yomi_info_view_cur,R.id.yomi_info_view_next,R.id.yomi_info_view_prev).view
+        .flatMap{ x => Option(yomi_info.findViewById(x).asInstanceOf[YomiInfoView]) }
+        .find( _.getLeft == sx ) // only get current displayed YomiInfoView, which scroll ended
+      if(cur_view.isEmpty){
+        return
+      }
+      lazy val next_view = 
+        yomi_info.getNextViewId(cur_view.get.getId).flatMap{
+          vid => Option(yomi_info.findViewById(vid).asInstanceOf[YomiInfoView])
+        }
+      val vq = List(cur_view.flatMap{_.rendered_num},
+        if(aq.length > 1){
+          next_view.flatMap{_.rendered_num}
+        }else{
+          None
+        }
+      ).flatten
+      if(vq != aq){
+        aq.zip(List(cur_view,next_view).flatten).foreach{ case (num,vw) =>
+          vw.updateCurNum(Some(num))
+          vw.invalidate()
+        }
+      }
+    }
+  }
+
   def updatePoemInfo(cur_view:Int){
     val yomi_cur = findViewById(cur_view).asInstanceOf[YomiInfoView]
     if(yomi_cur != null){

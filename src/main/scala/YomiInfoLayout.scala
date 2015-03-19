@@ -134,8 +134,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
       val v = findViewById(i).asInstanceOf[YomiInfoView]
       if(v!=null){
-        v.updateCurNum
-        v.invalidate
+        v.updateCurNum()
+        v.invalidate()
       }
     }
     scrollToView(R.id.yomi_info_view_cur,false)
@@ -178,19 +178,11 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     }
   }
 
-  def getCurNum():Option[Int] = {
-    cur_view.flatMap(findViewById(_).asInstanceOf[YomiInfoView].cur_num)
-  }
-  def getNextNum():Option[Int] = {
-    cur_view.flatMap(id => {
-      val nid = id match {
-        case R.id.yomi_info_view_prev => Some(R.id.yomi_info_view_cur)
-        case R.id.yomi_info_view_cur => Some(R.id.yomi_info_view_next)
-        case _ => None
-      }
-      nid.flatMap( x =>
-          Option(findViewById(x).asInstanceOf[YomiInfoView]).flatMap{_.cur_num}
-      )
-    })
+  def getNextViewId(cur_view:Int):Option[Int] = {
+    cur_view match {
+      case R.id.yomi_info_view_prev => Some(R.id.yomi_info_view_cur)
+      case R.id.yomi_info_view_cur => Some(R.id.yomi_info_view_next)
+      case _ => None
+    }
   }
 }

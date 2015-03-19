@@ -20,24 +20,31 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   var english_mode = false:Boolean
   var render_with_path = false
 
-  def updateCurNum(){
+  var rendered_num = None:Option[Int] // for consistency check
+
+  def updateCurNum(num:Option[Int] = None){
     // do all the heavy task here
     val fn = getId match {
       case R.id.yomi_info_view_prev => -1
       case R.id.yomi_info_view_next => 1
       case _ => 0
     }
-    cur_num = if(Utils.isRandom && fn == -1){
+    cur_num = if(!num.isEmpty){
+      num
+    }else if(Utils.isRandom && fn == -1){
       None
     }else{
       FudaListHelper.getOrQueryFudaNumToRead(context,fn)
     }
-    show_author = Globals.prefs.get.getBoolean("yomi_info_author",false)
-    show_kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
-    show_simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
-    show_furigana = Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)
-    torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+    rendered_num = None
+    Globals.prefs.foreach{ prefs =>
+      show_author = prefs.getBoolean("yomi_info_author",false)
+      show_kami = prefs.getBoolean("yomi_info_kami",true)
+      show_simo = prefs.getBoolean("yomi_info_simo",true)
+      show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
+      torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
+      english_mode = ! prefs.getBoolean("yomi_info_default_lang_is_jpn",true)
+    }
     if(!show_author && !show_kami && !show_simo){
       updateMarker(cur_num)
     }
@@ -61,6 +68,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }else{
       onDrawYomifuda(canvas)
     }
+    rendered_num = cur_num
   }
 
   // This does not include span height

@@ -366,7 +366,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       for(action <- Array(
         KarutaPlayUtils.Action.Start,
         KarutaPlayUtils.Action.Border,
-        KarutaPlayUtils.Action.End)
+        KarutaPlayUtils.Action.End,
+        KarutaPlayUtils.Action.WakeUp1,
+        KarutaPlayUtils.Action.WakeUp2,
+        KarutaPlayUtils.Action.WakeUp3
+      )
       ){
         KarutaPlayUtils.cancelKarutaPlayTimer(
           activity.getApplicationContext,action

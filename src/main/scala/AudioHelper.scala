@@ -407,9 +407,9 @@ class KarutaPlayReceiver extends BroadcastReceiver {
         Globals.player.foreach{_.activity.doPlay(auto_play=true)}
       case Start =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
-        if(bundle != null && bundle.getBoolean("auto_play",false)){
-          // try to wake up CPU three times
-          for((t,a) <- Array((1000,WakeUp1),(2000,WakeUp2),(3000,WakeUp3))){
+        // try to wake up CPU three times, also this serves as text audio consistency check
+        if( (bundle != null && bundle.getBoolean("auto_play",false)) || YomiInfoUtils.showPoemText ){
+          for((t,a) <- Array((800,WakeUp1),(1600,WakeUp2),(2400,WakeUp3))){
             KarutaPlayUtils.startKarutaPlayTimer(context,a,t)
           }
         }
@@ -420,7 +420,7 @@ class KarutaPlayReceiver extends BroadcastReceiver {
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
       case WakeUp1 | WakeUp2 | WakeUp3 =>
-        () // Do Nothing
+        Globals.player.foreach{_.activity.checkConsistencyBetweenPoemTextAndAudio()}
     }
   }
 }
