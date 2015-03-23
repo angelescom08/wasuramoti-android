@@ -6,8 +6,6 @@ import _root_.android.graphics.Typeface
 import _root_.android.util.AttributeSet
 import _root_.android.os.CountDownTimer
 
-import java.util.concurrent.CountDownLatch
-
 import scala.collection.mutable
 
 object TypefaceManager{
@@ -40,12 +38,8 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
 
   var cur_view = None:Option[Int]
 
-  var scrolling_latch = None:Option[CountDownLatch]
-
   def scrollAnimation(endx:Int,on_finish:()=>Unit={()=>Unit}){
     val startx = getScrollX
-    scrolling_latch.foreach{_.await()}
-    scrolling_latch = Some(new CountDownLatch(1))
     new CountDownTimer(YomiInfoConf.SCROLL_SPEED,10){
       override def onTick(millisUntilFinished:Long){
         val r = millisUntilFinished / YomiInfoConf.SCROLL_SPEED.toFloat
@@ -59,8 +53,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
         postDelayed(new Runnable(){
             override def run(){
               on_finish()
-              scrolling_latch.foreach{_.countDown()}
-              scrolling_latch = None
             }},30)
       }
     }.start
@@ -69,9 +61,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     super.onTouchEvent(ev)
     ev.getAction match{
       case MotionEvent.ACTION_UP =>
-        if(!scrolling_latch.isEmpty){
-          return true
-        }
         cur_view.foreach{ vid=>
           val v = findViewById(vid)
           if(v != null){
@@ -142,38 +131,36 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
 
   def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[()=>Unit]=None){
-    synchronized{
-      val v = findViewById(id).asInstanceOf[YomiInfoView]
-      if(v!=null){
-        cur_view = Some(id)
-        getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
-        val x = v.getLeft
-        val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
-        val func = do_after_done.getOrElse(
-            {()=>
-              if(have_to_move){
-                val wa = context.asInstanceOf[WasuramotiActivity]
-                wa.cancelAllPlay()
-                v.cur_num.foreach{ cn =>
-                  FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
-                    FudaListHelper.putCurrentIndex(context,index)
-                  }
-                }
-                wa.refreshAndSetButton()
-                wa.invalidateYomiInfo()
-
-                val play_after_swipe = Globals.prefs.get.getBoolean("play_after_swipe",false)
-                if(play_after_swipe && !Globals.player.isEmpty){
-                  val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
-                  wa.doPlay(auto_play=auto,from_swipe=true)
+    val v = findViewById(id).asInstanceOf[YomiInfoView]
+    if(v!=null){
+      cur_view = Some(id)
+      getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)
+      val x = v.getLeft
+      val have_to_move = from_touch_event && Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_next).contains(id)
+      val func = do_after_done.getOrElse(
+          {()=>
+            if(have_to_move){
+              val wa = context.asInstanceOf[WasuramotiActivity]
+              wa.cancelAllPlay()
+              v.cur_num.foreach{ cn =>
+                FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
+                  FudaListHelper.putCurrentIndex(context,index)
                 }
               }
-            })
-        if(smooth){
-          scrollAnimation(x,func)
-        }else{
-          scrollTo(x,0)
-        }
+              wa.refreshAndSetButton()
+              wa.invalidateYomiInfo()
+
+              val play_after_swipe = Globals.prefs.get.getBoolean("play_after_swipe",false)
+              if(play_after_swipe && !Globals.player.isEmpty){
+                val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
+                wa.doPlay(auto_play=auto,from_swipe=true)
+              }
+            }
+          })
+      if(smooth){
+        scrollAnimation(x,func)
+      }else{
+        scrollTo(x,0)
       }
     }
   }

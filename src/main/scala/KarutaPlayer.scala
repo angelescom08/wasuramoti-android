@@ -222,13 +222,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def waitUntilScrollEnded(){
-    val yomi_info = activity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
-    if(yomi_info != null){
-      yomi_info.scrolling_latch.foreach{_.await()}
-    }
-  }
-
   def onReallyStart(bundle:Bundle){
     // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
@@ -278,8 +271,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         })
       }
       
-      waitUntilScrollEnded()
-
       var r_write = audio_track.get.write(buf,0,buf.length)
 
       if(Globals.IS_DEBUG){
