@@ -274,10 +274,10 @@ object KarutaPlayUtils{
     type Action = Value
     val Auto,Start,Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
   }
-  // Scalaのバージョンが悪いのか何なのかなぜかEnumrationをBundle.putSerializableすると
-  // getSerializableした時にnullになっているので文字列で代替する
-  // 昔はできてたのだけど…
-  // TODO 原因調査
+  // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
+  // it returns null when getting it by getSerializable. Therefore we use String instead.
+  // In the previous version of Scala, there was no problem, so what's wrong?
+  // TODO: Why we cannot use Enumaration here
   val SENDER_MAIN = "SENDER_MAIN"
   val SENDER_CONF = "SENDER_CONF"
 
@@ -396,7 +396,7 @@ object KarutaPlayUtils{
 // 
 // However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
 // As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
-// However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immidiately before calling next timer.
+// However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immediately before calling next timer.
 // So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
 // This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on. 
 class KarutaPlayReceiver extends BroadcastReceiver {

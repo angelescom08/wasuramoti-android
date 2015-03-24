@@ -289,7 +289,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // The following exception is throwed if AudioTrack.getState != STATE_INITIALIZED when AudioTrack.play() is called
       // `java.lang.IllegalStateException: play() called on uninitialized AudioTrack.`
       // It is occasionally reported from customer, but I could not figure out the cause.
-      // Thus I will just retry again, and throw exeception if it occurs second time.
+      // Thus I will just retry again, and throw exception if it occurs second time.
       if( Array(AudioTrack.ERROR_INVALID_OPERATION,AudioTrack.ERROR_BAD_VALUE).contains(r_write) ||
           audio_track.get.getState != AudioTrack.STATE_INITIALIZED ){
           val message = "AudioTrack.write failed: rval=" + r_write + ", state=" + audio_track.get.getState + ", blen=" + buf.length
@@ -430,7 +430,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
         // Since android.media.audiofx.AudioEffect takes a little bit time to apply the effect,
         // we insert additional silence as wave data.
-        // Additionally, playing silence as wave file can avoid some wierd effect        // which occurs at beginning of wav when using bluetooth speaker.
+        // Additionally, playing silence as wave file can avoid some weird effect
+        // which occurs at beginning of wav when using bluetooth speaker.
         val (silence_time,_) = Utils.calcSilenceAndWaitLength
         add_to_audio_queue(Right(silence_time),true)
         val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")

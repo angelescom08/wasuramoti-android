@@ -91,12 +91,12 @@ object Utils {
   }
 
   // Caution: Never use StringOps.format since the output varies with locale.
-  // Instead, use this funciton.
+  // Instead, use this function.
   def formatFloat(fmt:String, x:Float):String = {
     fmt.formatLocal(Locale.US, x) // some country uses comma instead of dot !
   }
   def parseFloat(s:String):Float = {
-    // old version of wasuramot forgot to use .formatLocal() ,
+    // old version of wasuramoti forgot to use .formatLocal() ,
     // so there may be something like "0,12" in setting file
     try{
       val nf = NumberFormat.getInstance(Locale.US)
@@ -341,7 +341,7 @@ object Utils {
   // (1) Read environment variables such SECONDARY_STORAGE -> not useful since the name of variable varies between devices.
   // (2) Parse /system/etc/vold.fstab -> cannot use since Android >= 4.3 because it is removed.
   // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> works until Android <= 4.4 (?)
-  // see following for more infos:
+  // see following for more info:
   //   http://source.android.com/devices/tech/storage/
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0

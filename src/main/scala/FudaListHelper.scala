@@ -86,7 +86,7 @@ object FudaListHelper{
     }
     val body = if(Utils.isRandom){
       // we have to show result of getOrQueryNumbersToRead instead of getOrQueryNumbersToReadAlt when random mode,
-      // however, quering DB again takes some cost, so we just decrease incTotalRead
+      // however, querying DB again takes some cost, so we just decrease incTotalRead
       context.getResources.getString(R.string.message_readindex_random,
         new java.lang.Integer(num_to_read - Utils.incTotalRead)
       )
@@ -221,7 +221,7 @@ object FudaListHelper{
     val db = Globals.database.get.getReadableDatabase
     val cond = if(getOrQueryNumbersOfKarafuda(context) > 0){
       // When Karafuda is enabled, we treat all the fuda is supposed to be read
-      // since the Kimariji will be the hint to which Karafuda is choosed.
+      // since the Kimariji will be the hint to which Karafuda was chosen.
       "OR (read_order < "+index+" AND skip = 1)"
     }else{
       "AND skip = 0" 

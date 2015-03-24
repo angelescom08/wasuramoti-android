@@ -109,7 +109,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     //  glyph.fHeight + TEXTURE_BORDER_SIZE * 2 > DEFAULT_TEXT_LARGE_CACHE_HEIGHT
     //    where TEXTURE_BORDER_SIZE = 1 and DEFAULT_TEXT_LARGE_CACHE_HEIGHT = 512
     // so we use getTextPath and drawPath instead of drawText when this equation holds.
-    // Note: since height_char_max is not accurate, we consider the threshold a litte bit smaller.
+    // Note: since height_char_max is not accurate, we consider the threshold a little bit smaller.
     val (_,height_char_max,_) = measureBoundMax(texts,paint)
     render_with_path = height_char_max >= RENDER_WITH_PATH_THRESHOLD
   }
@@ -467,7 +467,7 @@ trait YomiInfoTorifudaTrait{
     val htext = (1.0-FUDA_PADDING_TB*2-FUDA_SPAN_V*(FUDA_CHARS_PER_ROW-1))*hmax/FUDA_CHARS_PER_ROW
     val estimate_size = hmax / FUDA_CHARS_PER_ROW
     paint.setTextSize(estimate_size)
-    // we set same text tize for all fuda
+    // we set same text size for all fuda
     val (w_ave,h_ave,hh_ave) = measureBoundAve(AllFuda.get(context,R.array.list_torifuda).head.replace(" ","").toArray.map{_.toString},paint)
     (Math.min(wtext.toDouble/w_ave.toDouble,htext.toDouble/h_ave.toDouble)*estimate_size).toFloat
   }

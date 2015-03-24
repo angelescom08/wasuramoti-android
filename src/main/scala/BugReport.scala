@@ -25,7 +25,7 @@ object BugReport{
   }
 
   def getCRC(f:File):String = {
-    // we don't use java.nio.file.Files.readAllBytes() nor java.io.RandomAccessFile.readFully() ssince it fully read file to memory.
+    // we don't use java.nio.file.Files.readAllBytes() nor java.io.RandomAccessFile.readFully() since it fully read file to memory.
     var raf = null:RandomAccessFile
     var channel = null:FileChannel
     try{

@@ -56,7 +56,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   override def onCreateDialogView():View = Globals.db_lock.synchronized{
     super.onCreateDialogView()
     // Using XML Attribute ``android:dialogLayout="@layout/fudaset"'' with ``android:onClick="..."'' does not work in Android 3.x.
-    // That is because it creates each button with context instanciated from ContextThemeWrapper, and causes
+    // That is because it creates each button with context instantiated from ContextThemeWrapper, and causes
     // ``java.lang.IllegalStateException: Could not find a method ... for onClick handler on view class android.widget.Button''
     // Therefore we set the layout here.
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)

@@ -41,7 +41,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       return
     }
     val dataString = intent.getDataString
-    // we dont need the current intent anymore so replace it with default intent
+    // we don't need the current intent anymore so replace it with default intent
     // Note: this intent will be used in Utils.restartActivity()
     setIntent(new Intent(this,this.getClass))
     dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
@@ -337,7 +337,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   // There was user report that "Poem text differs with actually played audio".
-  // Therfore we periodically check whether poem text and audio queue are same,
+  // Therefore we periodically check whether poem text and audio queue are same,
   // and set poem text if differs.
   def checkConsistencyBetweenPoemTextAndAudio(){
     Globals.player.foreach{ player =>
