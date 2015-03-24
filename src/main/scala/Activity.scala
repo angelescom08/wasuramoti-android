@@ -22,6 +22,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   var run_dimlock = None:Option[Runnable]
   var run_refresh_text = None:Option[Runnable]
   val handler = new Handler()
+  var bar_poem_info_num = None:Option[Int]
 
   override def onNewIntent(intent:Intent){
     super.onNewIntent(intent)
@@ -367,11 +368,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           None
         }
       ).flatten
-      if(vq != aq){
+      if(vq != aq || bar_poem_info_num.exists(_ != aq(0)) ){
         aq.zip(List(cur_view,next_view).flatten).foreach{ case (num,vw) =>
           vw.updateCurNum(Some(num))
           vw.invalidate()
         }
+        cur_view.foreach{ c => updatePoemInfo(c.getId) }
       }
     }
   }
@@ -380,6 +382,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val yomi_cur = findViewById(cur_view).asInstanceOf[YomiInfoView]
     if(yomi_cur != null){
       yomi_cur.cur_num.foreach{fudanum =>
+        bar_poem_info_num = Some(fudanum)
         val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
         if(yomi_dlg != null && Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
           yomi_dlg.setFudanum(fudanum)
