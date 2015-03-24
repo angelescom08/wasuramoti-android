@@ -1,34 +1,36 @@
 Priority High:
+  * Memorization Mode
+    - Swiping poem text upwards will mark poem as "Memorized"
+    - After shuffling, the "Memorized" poem would be excluded from list.
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
-  * Remove duplicate path (same inode number or device id ?) which is returned by getAllExternalStorageDirectories and getAllExternalStorageDirectoriesWithUserCustom
-    - maybe we have to use JNI and stat()?
-  * Change the color of author.
   * Show "Wasuramoti Timer Started" on notification area.
-  * Change Color Theme
-  * Customize Quick Config
-  * When in english mode, show Furigana in Roma-ji
-    - We have to enable switching Tate-Gaki and Yoko-Gaki
-  * Able To Add Current Fuda to Fuda-Set
+  * Change the color of author.
 
 Priority Middle:
+  * Support MP3 audio.
+  * When in english mode, show Furigana in Roma-ji
+    - We have to enable switching Tate-Gaki and Yoko-Gaki
+  * Customize Quick Config
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.
   * Add Option: play in arbitrary order
-    -> Use val lp=getWindow.getAttributes; lp.screenBrightness = 0.1f; getWindow.setAttributes(l) to turn screen off
-       (NOTE: some device locks screen and go to sleep if brightness set to 0.0f)
   * Split strings.xml since it is too long.
   * Able to customize notify timer (add new, set icons)
-  * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Create Fuda List from camera photo
-  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable.
 
 Priority Low:
   * Able to change style / theme
-  * Show detail of CPU from Android.os.Build when cannot load libvorbis.so
-  * Able to read .wav file in case cannot load libvorbis.so
-  * Able to record the voice of the player and use it as reader
+  * Able to record the voice of the player and use it as reader.
   * Score the recoded voice (whether it is as good as the official karuta reader). 
-  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog
+  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog.
     (Need to use fragment first since we have to call setTargetFragment to get the result).
+  * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
+
+Don't fix
+  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable (It's already stable).
+  * Able to read .wav file in case cannot load libstbvorbis.so.
+  * Show detail of CPU from Android.os.Build when cannot load libstbvorbis.so.
+  * Remove duplicate path (same inode number or device id ?) which is returned by getAllExternalStorageDirectories and getAllExternalStorageDirectoriesWithUserCustom
+    - maybe we have to use JNI and stat()?
