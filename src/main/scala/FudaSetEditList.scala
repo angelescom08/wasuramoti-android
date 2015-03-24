@@ -143,6 +143,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
         val items = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems)
         val values = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems_values)
         val builder = new AlertDialog.Builder(context)
+        builder.setTitle(R.string.fudaseteditlist_menutitle)
         builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
             override def onClick(d:DialogInterface,position:Int){
               if(position > values.length){

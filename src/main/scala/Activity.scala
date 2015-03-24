@@ -605,10 +605,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         val vv = getResources.getString(v)
         s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
       }).mkString("<br>") + "</big>"
-
+      val hcustom = (builder:AlertDialog.Builder) => {
+        builder.setTitle(R.string.intended_use_result_title)
+      }
       Utils.generalHtmlDialog(this,Left(html),()=>{
         Utils.restartActivity(this)
-      })
+      },custom = hcustom)
       ()
     }
     val custom = (builder:AlertDialog.Builder) => {
@@ -640,16 +642,7 @@ trait MainButtonTrait{
     }
   }
 
-  var last_play_begin = 0:Long
-
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
-    // avoid double click, and other weird behaviors
-    val cur = SystemClock.elapsedRealtime
-    if(math.abs(cur - last_play_begin) < 500){
-      return
-    }
-    last_play_begin = cur
-
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(FudaListHelper.allReadDone(self.getApplicationContext())){

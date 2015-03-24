@@ -215,6 +215,7 @@
   <string name="conf_read_order_each_cur1">1st Only</string>
   <string name="conf_read_order_each_custom">Custom</string>
   <string name="conf_read_order_each_custom_undefined">Undefined</string>
+  <string name="conf_read_order_each_custom_title">Custom Edit</string>
 
   <string name="read_order_abbr_1st">1</string>
   <string name="read_order_abbr_2nd">2</string>
@@ -251,7 +252,7 @@
   <string name="subscreen_others">Other Settings</string>
   <string name="category_move">Move</string>
   <string name="conf_play_after_swipe">Play after Swipe</string>
-  <string name="conf_play_after_swipe_summary">Start playing when swiping poem text left or right.</string>
+  <string name="conf_play_after_swipe_summary">Start playing when swiping poem text to left or right.</string>
   <string name="conf_skip_on_longclick">Skip on Long Click</string>
   <string name="conf_skip_on_longclick_summary">Play next poem when holding down the button.</string>
   <string name="conf_move_after_first_phrase">Go Next if Interrupted</string>
@@ -315,6 +316,7 @@
     <item>SHOW_FULL</item>
     <item>SORT_ORDER</item>
   </string-array>
+  <string name="fudaseteditlist_menutitle">Menu</string>
   <string name="fudasetedit_confirm">The set will contain %d poems. Is it ok?</string>
   <string name="fudasetedit_titleempty">The title is empty.</string>
   <string name="fudasetedit_titleduplicated">Poem set with same name already exists.</string>
@@ -426,39 +428,18 @@
       </html>
     ]]>
   </string>
-  <string name="intended_use_title">
-    Default Config
-  </string>
-  <string name="intended_use_desc">
-    Select your intended use:
-  </string>
-  <string name="intended_use_competitive">
-    Competitive Karuta
-  </string>
-  <string name="intended_use_study">
-    Study 100 Poems
-  </string>
-  <string name="intended_use_recreation">
-    Just for Fun
-  </string>
-  <string name="intended_use_result">
-    Settings changed as follows. You can reconfigure it from Quick/Advansed Config.
-  </string>
-  <string name="intended_use_poem_text">
-    Poem Text
-  </string>
-  <string name="intended_use_read_order">
-    Read Order
-  </string>
-  <string name="intended_use_joka">
-    Joka
-  </string>
-  <string name="intended_use_joka_on">
-    Enabled
-  </string>
-  <string name="intended_use_joka_off">
-    Disabled
-  </string>
+  <string name="intended_use_title">Default Config</string>
+  <string name="intended_use_desc">Select your intended use:</string>
+  <string name="intended_use_competitive">Competitive Karuta</string>
+  <string name="intended_use_study">Study 100 Poems</string>
+  <string name="intended_use_recreation">Just for Fun</string>
+  <string name="intended_use_result">Settings changed as follows. You can reconfigure it from Quick/Advansed Config. </string>
+  <string name="intended_use_result_title">Config Done</string>
+  <string name="intended_use_poem_text">Poem Text</string>
+  <string name="intended_use_read_order">Read Order</string>
+  <string name="intended_use_joka">Joka</string>
+  <string name="intended_use_joka_on">Enabled</string>
+  <string name="intended_use_joka_off">Disabled</string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
     If this occurs frequently, please send `Bug Report` from `Advanced Config`.\n

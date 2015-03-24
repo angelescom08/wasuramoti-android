@@ -190,6 +190,7 @@
   <string name="conf_read_order_each_cur1">上の句のみ</string>
   <string name="conf_read_order_each_custom">カスタム</string>
   <string name="conf_read_order_each_custom_undefined">未設定</string>
+  <string name="conf_read_order_each_custom_title">カスタムの編集</string>
 
   <string name="read_order_abbr_1st">上</string>
   <string name="read_order_abbr_2nd">下</string>
@@ -272,11 +273,7 @@
     <item>表示の切り替え (決まり字/歌と歌人)</item>
     <item>順序の並び替え (五十音/歌番号)</item>
   </string-array>
-  <string-array name="fudaseteditlist_menuitems_values">
-    <item>INVERT_SELECT</item>
-    <item>SHOW_FULL</item>
-    <item>SORT_ORDER</item>
-  </string-array>
+  <string name="fudaseteditlist_menutitle">メニュー</string>
 
   <string name="fudasetedit_confirm">全部で %d 首の札セットになります．よろしいですか？</string>
   <string name="fudasetedit_titleempty">名前が空です</string>
@@ -393,39 +390,18 @@
       </html>
     ]]>
   </string>
-  <string name="intended_use_title">
-    初期設定
-  </string>
-  <string name="intended_use_desc">
-    主な使用目的を選んで下さい:
-  </string>
-  <string name="intended_use_competitive">
-    競技かるた
-  </string>
-  <string name="intended_use_study">
-    百人一首の学習
-  </string>
-  <string name="intended_use_recreation">
-    正月のかるた遊び
-  </string>
-  <string name="intended_use_result">
-    下記のように設定を変更しました．簡易設定/詳細設定からいつでも再設定できます．
-  </string>
-  <string name="intended_use_poem_text">
-    詠み句
-  </string>
-  <string name="intended_use_read_order">
-    詠み順
-  </string>
-  <string name="intended_use_joka">
-    序歌
-  </string>
-  <string name="intended_use_joka_on">
-    詠む
-  </string>
-  <string name="intended_use_joka_off">
-    詠まない
-  </string>
+  <string name="intended_use_title">初期設定</string>
+  <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
+  <string name="intended_use_competitive">競技かるた</string>
+  <string name="intended_use_study">百人一首の学習</string>
+  <string name="intended_use_recreation">正月のかるた遊び</string>
+  <string name="intended_use_result">下記のように設定を変更しました．簡易設定/詳細設定からいつでも変更できます．</string>
+  <string name="intended_use_result_title">設定完了</string>
+  <string name="intended_use_poem_text">詠み句</string>
+  <string name="intended_use_read_order">詠み順</string>
+  <string name="intended_use_joka">序歌</string>
+  <string name="intended_use_joka_on">詠む</string>
+  <string name="intended_use_joka_off">詠まない</string>
   <string name="from_oom_message">
     ごめんなさい．わすらもちはメモリ不足により強制終了しました．\n
     これが頻繁に起こるようでしたら「詳細設定」→「バグ報告」を送ってみて下さい．\n

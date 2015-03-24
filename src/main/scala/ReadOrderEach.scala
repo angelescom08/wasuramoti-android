@@ -113,6 +113,7 @@ class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each_custom,null)
     setView(view)
+    setTitle(context.getString(R.string.conf_read_order_each_custom_title))
     val edit_text = view.findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
     edit_text.setText(toOrigValue(Globals.prefs.get.getString("read_order_each_custom","")))
     val listener_ok = new DialogInterface.OnClickListener(){

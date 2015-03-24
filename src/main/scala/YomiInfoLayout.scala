@@ -29,8 +29,8 @@ object TypefaceManager{
 }
 
 object YomiInfoConf{
-  var SCROLL_THRESHOLD = 0.17
-  var SCROLL_THRESHOLD_DIP = 70f
+  var SCROLL_THRESHOLD = 0.1618
+  var SCROLL_THRESHOLD_DIP = 64f
   val SCROLL_SPEED = 200 // in millisec
 }
 

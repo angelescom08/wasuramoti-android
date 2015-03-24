@@ -27,6 +27,7 @@ __BEGIN_CREDITS__
     %% Copyright (c) 2010, Igino Marini. (www.ikern.com|mail@iginomarini.com),
     %% with Reserved Font Name Dancing Script.
     ライセンス条文はapkファイルの中の `DANCING-SCRIPT-OFL.txt` にあります．
+  ---
   下記のライブラリおよびフォントはパブリックドメインですがともあれ感謝です．
   <stb_vorbis>
     http://github.com/nothings/stb
