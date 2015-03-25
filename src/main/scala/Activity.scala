@@ -368,12 +368,17 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           None
         }
       ).flatten
-      if(vq != aq || bar_poem_info_num.exists(_ != aq(0)) ){
+      if(vq != aq){
         aq.zip(List(cur_view,next_view).flatten).foreach{ case (num,vw) =>
           vw.updateCurNum(Some(num))
           vw.invalidate()
         }
-        cur_view.foreach{ c => updatePoemInfo(c.getId) }
+      }
+      if(bar_poem_info_num.exists(_ != aq.head)){
+        cur_view.foreach{ c =>
+          c.updateCurNum(Some(aq.head))
+          updatePoemInfo(c.getId)
+        }
       }
     }
   }
