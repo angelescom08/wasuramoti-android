@@ -5,7 +5,7 @@ import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{SeekBar,CheckBox,Spinner,AdapterView,ArrayAdapter,Button}
 import _root_.android.os.Bundle
-import _root_.android.app.{AlertDialog,Dialog}
+import _root_.android.app.{AlertDialog,Dialog,Activity}
 import _root_.android.support.v4.app.DialogFragment
 
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
@@ -115,8 +115,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val btn_trans = view.findViewById(R.id.yomi_info_conf_button_translation).asInstanceOf[Button]
     btn_trans.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
-          val dlg = new YomiInfoConfigTranslateDialog(context)
-          dlg.show
+          new YomiInfoConfigTranslateDialog(context).show()
         }
     })
 
@@ -169,7 +168,7 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   }
 }
 
-class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
+class YomiInfoConfigTranslateDialog(context:Context,fromQuickConfig:Boolean=false) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
   def getWidgets(view:View) = {
     val english_font =  view.findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
@@ -183,8 +182,14 @@ class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context
     edit.putString("yomi_info_english_font",ar(english_font.getSelectedItemPosition))
     edit.putBoolean("yomi_info_show_translate_button",show_button.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
-    edit.commit
-    Globals.forceRestart = true
+    if(fromQuickConfig){
+      edit.putBoolean("yomi_info_torifuda_mode",false)
+      edit.commit
+      Utils.restartActivity(context.asInstanceOf[Activity])
+    }else{
+      edit.commit
+      Globals.forceRestart = true
+    }
   }
     
   override def onCreate(state:Bundle){
@@ -237,11 +242,19 @@ class QuickConfigDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val listener = new DialogInterface.OnClickListener{
       override def onClick(dialog:DialogInterface,which:Int){
-        if(which == 5){
-          // Change Intended Use
-          dismiss
-          getActivity.asInstanceOf[WasuramotiActivity].changeIntendedUse(false)
-          return
+        which match{
+          case 5 =>
+            // Change Intended Use
+            dismiss
+            getActivity.asInstanceOf[WasuramotiActivity].changeIntendedUse(false)
+            return
+          case 4 =>
+            // Translation
+            dismiss
+            new YomiInfoConfigTranslateDialog(getActivity,true).show()
+            return
+          case _ =>
+            None
         }
         val edit = Globals.prefs.get.edit
         which match{
@@ -259,12 +272,6 @@ class QuickConfigDialog extends DialogFragment{
           case 3 =>
             // Only 1st Half
             YomiInfoUtils.showOnlyFirst(edit)
-          case 4 =>
-            // English Mode
-            YomiInfoUtils.setPoemTextVisibility(edit,true)
-            edit.putBoolean("yomi_info_kami",true)
-            edit.putBoolean("yomi_info_simo",true)
-            edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.English.toString)
         }
         edit.commit
         dismiss

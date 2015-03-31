@@ -27,7 +27,7 @@
   <string name="quick_conf_full">詠み句全表示</string>
   <string name="quick_conf_nagashi">札流し</string>
   <string name="quick_conf_only_first">上の句のみ</string>
-  <string name="quick_conf_english">英語モード</string>
+  <string name="quick_conf_english">翻訳設定</string>
   <string name="quick_conf_intended_use">使用目的変更</string>
 
   <string name="conf_unit_minute">分</string>
