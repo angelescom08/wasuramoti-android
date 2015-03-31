@@ -16,8 +16,8 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   paint.setColor(Color.WHITE)
   var cur_num = None:Option[Int]
   var marker = None:Option[String]
-  var torifuda_mode = false:Boolean
-  var english_mode = false:Boolean
+  var torifuda_mode = false
+  var info_lang = Utils.YomiInfoLang.Japanese
   var render_with_path = false
 
   var rendered_num = None:Option[Int] // for consistency check
@@ -43,7 +43,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
-      english_mode = ! prefs.getBoolean("yomi_info_default_lang_is_jpn",true)
+      info_lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     }
     if(!show_author && !show_kami && !show_simo){
       updateMarker(cur_num)
@@ -51,20 +51,26 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     initDrawing()
   }
   def initDrawing(){
-    if(english_mode){
-      initEnglish()
-    }else if(torifuda_mode){
+    if(torifuda_mode){
       initTorifuda()
+    }else if(info_lang == Utils.YomiInfoLang.English){
+      initEnglish()
+    }else if(info_lang == Utils.YomiInfoLang.Romaji){
+      // TODO: implement this
+      // initRomaji()
     }else{
       initYomifuda()
     }
   }
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
-    if(english_mode){
-      onDrawEnglish(canvas)
-    }else if(torifuda_mode){
+    if(torifuda_mode){
       onDrawTorifuda(canvas)
+    }else if(info_lang == Utils.YomiInfoLang.English){
+      onDrawEnglish(canvas)
+    }else if(info_lang == Utils.YomiInfoLang.Romaji){
+      // TODO: implement this
+      // onDrawRomaji(canvas)
     }else{
       onDrawYomifuda(canvas)
     }

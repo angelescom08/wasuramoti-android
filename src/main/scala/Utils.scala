@@ -30,7 +30,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 3
-  val PREFERENCE_VERSION = 4
+  val PREFERENCE_VERSION = 5
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -89,6 +89,10 @@ object Utils {
     type ReadOrder = Value
     val Shuffle, Random, PoemNum = Value
   }
+  object YomiInfoLang extends Enumeration{
+    type YomiInfoLang = Value
+    val Japanese,Romaji,English = Value
+  }
 
   // Caution: Never use StringOps.format since the output varies with locale.
   // Instead, use this function.
@@ -144,6 +148,12 @@ object Utils {
           }
           if(roe != new_roe){
             edit.putString("read_order_each",new_roe)
+          }
+        }
+        if(prev_version <= 4){
+          val english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+          if(english_mode){
+            edit.putString("yomi_info_default_lang",YomiInfoLang.English.toString)
           }
         }
         if(prev_version != 0){

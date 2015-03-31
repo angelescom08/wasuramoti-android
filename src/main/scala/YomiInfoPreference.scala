@@ -182,7 +182,7 @@ class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context
     val ar = context.getResources.getStringArray(R.array.yomi_info_english_fonts_values)
     edit.putString("yomi_info_english_font",ar(english_font.getSelectedItemPosition))
     edit.putBoolean("yomi_info_show_translate_button",show_button.isChecked)
-    edit.putBoolean("yomi_info_default_lang_is_jpn",default_lang.getSelectedItemPosition == 0)
+    edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
     edit.commit
     Globals.forceRestart = true
   }
@@ -195,7 +195,8 @@ class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context
 
     show_button.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
     english_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_english_font","Serif"),R.array.yomi_info_english_fonts_values))
-    default_lang.setSelection(if(prefs.getBoolean("yomi_info_default_lang_is_jpn",true)){0}else{1})
+    val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
+    default_lang.setSelection(lang.id)
 
     setTitle(R.string.yomi_info_conf_translation_title)
     setViewAndButton(view)
@@ -255,7 +256,6 @@ class QuickConfigDialog extends DialogFragment{
             YomiInfoUtils.setPoemTextVisibility(edit,true)
             edit.putBoolean("yomi_info_torifuda_mode",true)
             edit.putBoolean("yomi_info_show_bar_kimari",false)
-            edit.putBoolean("yomi_info_default_lang_is_jpn",true)
           case 3 =>
             // Only 1st Half
             YomiInfoUtils.showOnlyFirst(edit)
@@ -264,7 +264,7 @@ class QuickConfigDialog extends DialogFragment{
             YomiInfoUtils.setPoemTextVisibility(edit,true)
             edit.putBoolean("yomi_info_kami",true)
             edit.putBoolean("yomi_info_simo",true)
-            edit.putBoolean("yomi_info_default_lang_is_jpn",false)
+            edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.English.toString)
         }
         edit.commit
         dismiss
@@ -317,7 +317,7 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_simo",true)
     edit.putBoolean("yomi_info_author",true)
     edit.putBoolean("yomi_info_furigana_show",true)
-    edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+    edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString)
   }
   def showOnlyFirst(edit:SharedPreferences.Editor){
     setPoemTextVisibility(edit,true)
@@ -327,6 +327,6 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_simo",false)
     edit.putBoolean("yomi_info_author",false)
     edit.putBoolean("yomi_info_furigana_show",true)
-    edit.putBoolean("yomi_info_default_lang_is_jpn",true)
+    edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString)
   }
 }

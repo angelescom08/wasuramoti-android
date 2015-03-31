@@ -60,8 +60,8 @@ class YomiInfoSearchDialog extends DialogFragment{
   def setFudanum(fudanum:Int){
     getArguments.putInt("fudanum",fudanum)
     val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    val english_mode = !Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
-    if(english_mode){
+    val info_lang = Utils.YomiInfoLang.withName(Globals.prefs.get.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
+    if(info_lang != Utils.YomiInfoLang.Japanese){
       enableDisplayButton(true,Map("FURIGANA"->false))
     }else if(torifuda_mode){
       enableDisplayButton(false)
@@ -155,7 +155,7 @@ class YomiInfoSearchDialog extends DialogFragment{
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableButton(tag)
-      }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_LANG"){
+      }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
         Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
       }else{
         true
@@ -167,19 +167,32 @@ class YomiInfoSearchDialog extends DialogFragment{
             showYomiInfoDetailDialog()
           }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
-              vw.english_mode = false
               vw.torifuda_mode ^= true
               vw.initDrawing
               vw.invalidate
               btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
               enableDisplayButton(!vw.torifuda_mode)
             }
-          }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_LANG"){
+          }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag)){
             getCurYomiInfoView.foreach{vw =>
-              vw.english_mode ^= true
+              vw.torifuda_mode = false
+              vw.info_lang = if(tag.endsWith("ROMAJI")){
+                if(vw.info_lang != Utils.YomiInfoLang.Romaji){
+                  Utils.YomiInfoLang.Romaji
+                }else{
+                  Utils.YomiInfoLang.Japanese
+                }
+              }else{
+                if(vw.info_lang != Utils.YomiInfoLang.English){
+                  Utils.YomiInfoLang.English
+                }else{
+                  Utils.YomiInfoLang.Japanese
+                }
+              }
+              
               vw.initDrawing
               vw.invalidate
-              enableDisplayButton(vw.english_mode || !vw.torifuda_mode)
+              enableDisplayButton(true)
             }
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             val fudanum = getArguments.getInt("fudanum",0)
@@ -202,12 +215,12 @@ class YomiInfoSearchDialog extends DialogFragment{
           }
         }
       })
-    val (init_torifuda_mode,init_english_mode) =
+    val (init_torifuda_mode,init_info_lang) =
       getCurYomiInfoView.map{x=>
-        (x.torifuda_mode,x.english_mode)
+        (x.torifuda_mode,x.info_lang)
       }.getOrElse((
         Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false),
-        !Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+        Utils.YomiInfoLang.withName(Globals.prefs.get.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
       ))
     val text_convert= {(s:String,label:String) =>
       if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){
@@ -221,7 +234,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     }
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
-      val r = if(init_english_mode){
+      val r = if(init_info_lang != Utils.YomiInfoLang.Japanese){
         label != YomiInfoSearchDialog.PREFIX_DISPLAY+"_FURIGANA"
       }else{
         !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")

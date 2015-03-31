@@ -136,6 +136,7 @@
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>
     <item>A.DISPLAY_FURIGANA|ふりがな</item>
+    <item>B.SWITCH_ROMAJI|ローマ字</item>
     <item>B.SWITCH_LANG|翻訳</item>
     <item>B.SWITCH_MODE|取り札;詠み札</item>
     <item>B.KIMARIJI_LOG|決まり字</item>
@@ -168,9 +169,10 @@
   <string name="yomi_info_default_language_desc">既定の言語:</string>
   <string-array name="yomi_info_default_languages">
     <item>日本語</item>
+    <item>ローマ字</item>
     <item>英語</item>
   </string-array>
-  <string name="yomi_info_show_translate_button">翻訳ボタンを表示する</string>
+  <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示する</string>
   <string name="yomi_info_english_fonts_desc">英語フォント:</string>
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
