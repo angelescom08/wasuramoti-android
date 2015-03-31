@@ -61,14 +61,14 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     // Therefore we set the layout here.
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
 
-    var persisted = getPersistedString("")
+    val persisted = getPersistedString("")
     adapter = Some(new ArrayAdapter[FudaSetWithSize](context,android.R.layout.simple_spinner_item,listItems))
     // adapter.get.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
     val db = Globals.database.get.getReadableDatabase
-    var cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
     cursor.moveToFirst()
     listItems.clear()
     for( i <- 0 until cursor.getCount){
@@ -114,7 +114,7 @@ trait FudaSetTrait{
     if(!is_add){
       title_view.setText(orig_title)
       val db = Globals.database.get.getReadableDatabase
-      var cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title","body"),"title = ?",Array(orig_title),null,null,null,null)
+      val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title","body"),"title = ?",Array(orig_title),null,null,null,null)
       cursor.moveToFirst()
       data_id = cursor.getLong(0)
       val body = cursor.getString(2)
@@ -137,7 +137,7 @@ trait FudaSetTrait{
           return()
         }
         val db = Globals.database.get.getReadableDatabase
-        var cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title"),"title = ?",Array(title),null,null,null,null)
+        val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title"),"title = ?",Array(title),null,null,null,null)
         val count = cursor.getCount()
         cursor.moveToFirst()
         val is_duplicate =
@@ -152,7 +152,6 @@ trait FudaSetTrait{
           Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
           return()
         }
-        val body =
         makeKimarijiSetFromBodyView(body_view) match {
         case None =>
           Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )

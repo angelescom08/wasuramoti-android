@@ -56,7 +56,7 @@ object NotifyTimerUtils {
     .commit
   }
   def makeTimerText(context:Context):String = {
-     var title = context.getResources.getString(R.string.timers_remaining)
+     val title = context.getResources.getString(R.string.timers_remaining)
      notify_timers.toList.sortWith{case ((k1,v1),(k2,v2)) => v1.getExtras.getLong("limit_millis") < v2.getExtras.getLong("limit_millis")}.map{case (k,v) =>
        val millis = v.getExtras.getLong("limit_millis")
        val minutes_left = scala.math.ceil((millis - System.currentTimeMillis()) / (1000 * 60.0)).toInt
@@ -81,7 +81,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   val timer_iter = timer_icons.zipWithIndex.map{ case ((icon,_),i) => (icon,i+1,Map("timer_id"->(i+1)))}
 
   def getRingtoneFromUri(uri:Uri):Option[Ringtone] = {
-    var u = if(uri == null){ Settings.System.DEFAULT_NOTIFICATION_URI }else{uri}
+    val u = if(uri == null){ Settings.System.DEFAULT_NOTIFICATION_URI }else{uri}
     current_ringtone.foreach{_.stop} // we have to release MediaPlayer inside Ringtone (See source of android.media.Ringtone)
     val rt = RingtoneManager.getRingtone(this,u)
     current_ringtone = Option(rt)

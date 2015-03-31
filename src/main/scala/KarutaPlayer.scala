@@ -146,7 +146,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         val Array(min_eq,max_eq) = dest.getBandLevelRange
         for( i <- 0 until dest.getNumberOfBands){
           try{
-            var r = ar.seq(i).getOrElse(0.5f)
+            val r = ar.seq(i).getOrElse(0.5f)
             dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
           }catch{
             case _:Exception => Unit
@@ -169,7 +169,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
-      var wait_time = bundle.getLong("wait_time",100)
+      val wait_time = bundle.getLong("wait_time",100)
       if(YomiInfoUtils.showPoemText){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
@@ -271,7 +271,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         })
       }
       
-      var r_write = audio_track.get.write(buf,0,buf.length)
+      val r_write = audio_track.get.write(buf,0,buf.length)
 
       if(Globals.IS_DEBUG){
         // you can add wav header to pcm file by following command

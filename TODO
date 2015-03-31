@@ -7,6 +7,7 @@ Priority High:
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Show "Wasuramoti Timer Started" on notification area.
   * Change the color of author.
+  * Solve the warnings caused by -Xlint
 
 Priority Middle:
   * Support MP3 audio.
@@ -27,10 +28,3 @@ Priority Low:
   * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog.
     (Need to use fragment first since we have to call setTargetFragment to get the result).
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
-
-Don't fix
-  * Use ViewPager & Fragment instead of HorizontalScrollView which displays poem text when ViewPager becomes stable (It's already stable).
-  * Able to read .wav file in case cannot load libstbvorbis.so.
-  * Show detail of CPU from Android.os.Build when cannot load libstbvorbis.so.
-  * Remove duplicate path (same inode number or device id ?) which is returned by getAllExternalStorageDirectories and getAllExternalStorageDirectoriesWithUserCustom
-    - maybe we have to use JNI and stat()?

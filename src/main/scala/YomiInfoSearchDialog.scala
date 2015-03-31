@@ -54,7 +54,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     }
   }
   def getOrigText(tag:String):String ={
-    var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
+    val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
     items.find{_.startsWith(tag+"|")}.get.split("\\|")(1)
   }
   def setFudanum(fudanum:Int){

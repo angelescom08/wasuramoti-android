@@ -367,7 +367,7 @@ trait YomiInfoYomifudaTrait{
 
       val (actual_width_ave,_,_) = measureBoundAve(no_furigana.map{case(t,m)=>t},paint)
       val span_h = space_h*getWidth
-      var rowspan = (span_h+actual_width_ave).toInt
+      val rowspan = (span_h+actual_width_ave).toInt
       var startx = (getWidth/2 + (rowspan*(text_array_with_margin.length-1))/2).toInt
       var margin_left_furigana = 0.0
       if(show_furigana){
@@ -468,7 +468,7 @@ trait YomiInfoTorifudaTrait{
     val estimate_size = hmax / FUDA_CHARS_PER_ROW
     paint.setTextSize(estimate_size)
     // we set same text size for all fuda
-    val (w_ave,h_ave,hh_ave) = measureBoundAve(AllFuda.get(context,R.array.list_torifuda).head.replace(" ","").toArray.map{_.toString},paint)
+    val (w_ave,h_ave,_) = measureBoundAve(AllFuda.get(context,R.array.list_torifuda).head.replace(" ","").toArray.map{_.toString},paint)
     (Math.min(wtext.toDouble/w_ave.toDouble,htext.toDouble/h_ave.toDouble)*estimate_size).toFloat
   }
   def onDrawTorifuda(canvas:Canvas){
@@ -571,7 +571,7 @@ trait YomiInfoEnglishTrait{
     paint.setTextSize(estimated)
     val resty = (1.0 - ENG_MARGIN_TB*2 - (rows-1)*ENG_ROWSPAN)*getHeight
     val restx = (1.0 - ENG_MARGIN_LR*2)*getWidth
-    val (tsumx,tsumy,topave) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+    val (tsumx,tsumy,_) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
     val rr = Math.min(resty/tsumy,restx/tsumx)
     (rr*estimated).toInt
   }
@@ -594,7 +594,7 @@ trait YomiInfoEnglishTrait{
       }
       val textsize = calculateTextSizeEng(text_array_with_margin,paint)
       paint.setTextSize(textsize)
-      val (tsumx,tsumy,topave) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
+      val (_,tsumy,topave) = measureTextSizeEng(text_array_with_margin.map{_._1},paint)
       val rows = text_array_with_margin.length
       val rowspan = getHeight*ENG_ROWSPAN
       val charheight = tsumy / rows

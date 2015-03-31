@@ -1,6 +1,4 @@
 local.properties
-.ensime
-.ensime_cache/
 
 keystore/
 players/
@@ -8,6 +6,7 @@ target/
 project/target/
 src/main/assets/reader/
 src/main/assets/license/
+src/main/assets/font/
 src/main/assets/README*
 uitest/bin/
 

@@ -96,7 +96,7 @@ object TrieUtils{
   }
   def makeKimarijiSet(str_list:List[String]):Option[(String,Int)] = {
     val trie = CreateTrie.makeTrie(AllFuda.list)
-    var st = mutable.Set[String]()
+    val st = mutable.Set[String]()
     for( m <- str_list ){
       st ++= trie.traversePrefix(m)
     }
@@ -114,7 +114,7 @@ object TrieUtils{
     trie.traversePrefix(str).map{AllFuda.getFudaNum(_)}.toSet
   }
   def makeHaveToRead(str:String):Set[String] = {
-    var ret = mutable.Set[String]()
+    val ret = mutable.Set[String]()
     if(TextUtils.isEmpty(str)){
       return ret.toSet
     }
@@ -137,7 +137,7 @@ object TrieUtils{
   }
   def makeKarafuda(fudaset:Set[String],candidate:Set[String], num:Int):Set[String] = {
     val EPSILON = 0.00000001
-    var wlist = makeWeightedKarafuda(fudaset,candidate).toBuffer
+    val wlist = makeWeightedKarafuda(fudaset,candidate).toBuffer
     var weight_sum = wlist.map(_._1).sum
     val rand = new Random()
     ( 0 until math.min(num,candidate.size) ).map{ i =>

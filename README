@@ -51,6 +51,9 @@ __END_CREDITS__
   Read how_to_add_reader_hml in src/main/res/values/strings.xml for name conventions for *.ogg files
   Place 202 ogg files in ./players/<reader>/ and license in ./players/<reader>-license
 
+[Where to put .ttf file]
+  Place .ttf files to ./src/main/assets/font/ , and license file to ./src/main/assets/license/
+
 [How to build apk file]
   Requirements:
     # general installment from package manager in linux
