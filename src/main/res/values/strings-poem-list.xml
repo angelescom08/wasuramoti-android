@@ -539,4 +539,210 @@
     <item>Emperor Gotoba</item>
     <item>Emperor Juntoku</item>
   </string-array>
+  <string-array name="list_full_romaji">
+    <item>Naniwazu ni|Sakuya kono hana|Fuyu gomori|Ima o harube to|Sakuya kono hana</item>
+    <item>Aki no ta no|Kariho no io no|Toma o arami|Waga koromode wa|Tsuyu ni nure tsutsu</item>
+    <item>Haru sugite|Natsu ki ni kerashi|Shirotae no|Koromo hosu cho|Ama no Kaguyama</item>
+    <item>Ashibiki no|Yamadori no o no|Shidari o no|Naganagashi yo o|Hitori ka mo nen</item>
+    <item>Tago no Ura ni|Uchi idete mireba|Shirotae no|Fuji no takane ni|Yuki wa furi tsutsu</item>
+    <item>Okuyama ni|Momiji fumiwake|Naku shika no|Koe kiku toki zo|Aki wa kanashiki</item>
+    <item>Kasasagi no|Wataseru hashi ni|Oku shimo no|Shiroki o mireba|Yo zo fuke ni keru</item>
+    <item>Ama no hara|Furisake mireba|Kasuga naru|Mikasa no yama ni|Ideshi tsuki kamo</item>
+    <item>Waga io wa|Miyako no tatsumi|Shika zo sumu|Yo o Ujiyama to|Hito wa iu nari</item>
+    <item>Hana no iro wa|Utsuri ni keri na|Itazura ni|Waga mi yo ni furu|Nagame seshi ma ni</item>
+    <item>Kore ya kono|Yuku mo kaeru mo|Wakarete wa|Shiru mo shiranu mo| Osaka no seki</item>
+    <item>Wata no hara|Yasoshima kakete|Kogi idenu to|Hito ni wa tsugeyo|Ama no tsuri bune</item>
+    <item>Ama tsu kaze|Kumo no kayoiji|Fuki toji yo|Otome no sugata|Shibashi todomen</item>
+    <item>Tsukuba ne no|Mine yori otsuru|Minano-gawa|Koi zo tsumorite|Fuchi to nari nuru</item>
+    <item>Michinoku no|Shinobu moji-zuri|Tare yue ni|Midare some ni shi|Ware naranaku ni</item>
+    <item>Kimi ga tame|Haru no no ni idete|Wakana tsumu|Waga koromode ni|Yuki wa furi tsutsu</item>
+    <item>Tachi wakare|Inaba no yama no|Mine ni &#333;ru|Matsu to shi kikaba|Ima kaeri kon</item>
+    <item>Chihayaburu|Kamiyo mo kikazu |Tatsuta-gawa|Kara kurenai ni|Mizu kukuru to wa</item>
+    <item>Sumi no e no|Kishi ni yoru nami|Yoru sae ya|Yume no kayoi ji|Hito me yoku ran</item>
+    <item>Naniwa gata|Mijikaki ashi no|Fushi no ma mo|Awade kono yo o|Sugushite yo to ya</item>
+    <item>Wabi nureba|Ima hata onaji|Naniwa naru|Mi o tsukushite mo|Awan to zo omou</item>
+    <item>Ima kon to|Iishi bakari ni|Nagatsuki no|Ariake no tsuki o|Machi idetsuru kana</item>
+    <item>Fuku kara ni|Aki no kusaki no|Shiorureba|Mube yama kaze o|Arashi to iuran</item>
+    <item>Tsuki mireba|Chiji ni mono koso|Kanashi kere|Waga mi hitotsu no|Aki ni wa aranedo</item>
+    <item>Kono tabi wa|Nusa mo toriaezu|Tamukeyama|Momiji no nishiki|Kami no mani mani</item>
+    <item>Na ni shi owaba|Osakayama no|Sanekazura |Hito ni shirarede|Kuru yoshi mo gana</item>
+    <item>Ogurayama|Mine no momijiba|Kokoro araba|Ima hitotabi no|Miyuki matanan</item>
+    <item>Mika no Hara|Wakite nagaruru|Izumi-gawa|Itsu mi kitote ka|Koishi karuran</item>
+    <item>Yama-zato wa|Fuyu zo sabishisa|Masari keru|Hitome mo kusa mo|Karenu to omoeba</item>
+    <item>Kokoroate ni|Orabaya oran|Hatsushimo no|Oki madowaseru|Shiragiku no hana</item>
+    <item>Ariake no|Tsurenaku mieshi|Wakare yori|Akatsuki bakari|Uki mono wa nashi</item>
+    <item>Asaborake|Ariake no tsuki to|Miru made ni|Yoshino no sato ni|Fureru shirayuki</item>
+    <item>Yama kawa ni|Kaze no kaketaru|Shigarami wa|Nagare mo aenu |Momiji nari keri</item>
+    <item>Hisakata no|Hikari nodokeki|Haru no hi ni|Shizu-gokoro naku|Hana no chiruran</item>
+    <item>Tare o ka mo|Shiru hito ni sen|Takasago no|Matsu mo mukashi no|Tomo nara naku ni</item>
+    <item>Hito wa isa|Kokoro mo shirazu|Furusato wa|Hana zo mukashi no|Ka ni nioi keru</item>
+    <item>Natsu no yo wa|Mada yoi nagara|Akenuru o|Kumo no izuko ni|Tsuki yadoruran</item>
+    <item>Shiratsuyu o|Kaze no fukishiku|Aki no no wa|Tsuranuki tomenu|Tama zo chiri keru</item>
+    <item>Wasuraruru |Mi o ba omowazu|Chikaite shi|Hito no inochi no|Oshiku mo aru kana</item>
+    <item>Asaj&#363; no|Ono no shinohara|Shinoburedo|Amarite nado ka|Hito no koishiki</item>
+    <item>Shinoburedo|Iro ni ide ni keri|Waga koi wa|Mono ya omou to|Hito no tou made</item>
+    <item>Koisu cho|Waga na wa madaki|Tachi ni keri|Hito shirezu koso|Omoi someshi ka</item>
+    <item>Chigiriki na|Katami ni sode o|Shibori tsutsu|Sue no Matsuyama|Nami kosaji to wa</item>
+    <item>Ai mite no|Nochi no kokoro ni|Kurabureba|Mukashi wa mono o|Omowazari keri</item>
+    <item>&#332;koto no|Taete shi nakuwa|Nakanaka ni|Hito o mo mi o mo|Urami zaramashi</item>
+    <item>Aware to mo|Iu beki hito wa|Omooede|Mi no itazura ni|Narinu beki kana</item>
+    <item>Yura no to o|Wataru funabito|Kaji o tae|Yukue mo shiranu|Koi no michi kana</item>
+    <item>Yaemugura|Shigereru yado no|Sabishiki ni|Hito koso miene|Aki wa ki ni keri</item>
+    <item>Kaze o itami|Iwa utsu nami no|Onore nomi|Kudakete mono o|Omou koro kana</item>
+    <item>Mikakimori|Eji no taku hi no|Yoru wa moe|Hiru wa kie tsutsu|Mono o koso omoe</item>
+    <item>Kimi ga tame|Oshi karazarishi|Inochi sae|Nagaku mo gana to|Omoi keru kana</item>
+    <item>Kaku to dani|Eyawa ibuki no|Sashimogusa|Sashimo shiraji na|Moyuru omoi o</item>
+    <item>Akenureba|Kururu mono to wa|Shiri nagara|Nao urameshiki|Asaborake kana</item>
+    <item>Nageki tsutsu|Hitori nuru yo no|Akuru ma wa|Ikani hisashiki|Mono to ka wa shiru</item>
+    <item>Wasureji no|Yukusue made wa|Katakereba|Ky&#333; o kagiri no|Inochi to mo gana</item>
+    <item>Taki no oto wa|Taete hisashiku|Narinuredo|Na koso nagarete|Nao kikoe kere</item>
+    <item>Arazaran|Kono yo no hoka no|Omoide ni|Ima hitotabi no|Au koto mo gana</item>
+    <item>Meguri aite|Mishi ya sore to mo|Wakanu ma ni|Kumo-gakure ni shi|Yowa no tsuki kage</item>
+    <item>Arimayama|Ina no sasawara|Kaze fukeba|Ide soyo hito o|Wasure ya wa suru</item>
+    <item>Yasurawade|Nenamashi mono o|Sayo fukete|Katabuku made no|Tsuki o mishi kana</item>
+    <item>&#332;eyama|Ikuno no michi no|To kereba|Mada fumi mo mizu|Ama no Hashidate</item>
+    <item>Inishie no|Nara no miyako no|Yae-zakura|Ky&#333; kokonoe ni|Nioi nuru kana</item>
+    <item>Yo o komete |Tori no sorane wa|Hakaru tomo|Yo ni Osaka no|Seki wa yurusaji</item>
+    <item>Ima wa tada|Omoi taenan|To bakari wo|Hito-zute nara de|Iu yoshi mo gana</item>
+    <item>Asaborake|Uji no kawagiri |Tae-dae ni |Araware wataru|Zeze no ajirogi</item>
+    <item>Urami wabi|Hosanu sode da ni|Aru mono o|Koi ni kuchinan |Na koso oshi kere</item>
+    <item>Morotomo ni|Aware to omoe|Yama-zakura|Hana yori hoka ni|Shiru hito mo nashi</item>
+    <item>Haru no yo no|Yume bakari naru|Tamakura ni|Kainaku tatan|Na koso oshi kere</item>
+    <item>Kokoro ni mo|Arade ukiyo ni|Nagaraeba|Koishikaru beki|Yowa no tsuki kana</item>
+    <item>Arashi fuku|Mimuro no yama no|Momijiba wa|Tatsuta no kawa no|Nishiki nari keri</item>
+    <item>Sabishisa ni|Yado o tachi idete|Nagamureba|Izuko mo onaji|Aki no y&#363;gure</item>
+    <item>Y&#363; sareba|Kadota no inaba|Otozurete|Ashi no maroya ni|Akikaze zo fuku</item>
+    <item>Oto ni kiku|Takashi no hama no|Adanami wa|Kakeji ya sode no|Nure mo koso sure</item>
+    <item>Takasago no|Onoe no sakura|Saki ni keri|Toyama no kasumi|Tatazu mo aranan</item>
+    <item>Ukari keru|Hito o Hatsuse no|Yama oroshiyo|Hageshikare to wa|Inoranu mono o</item>
+    <item>Chigiri okishi|Sasemo ga tsuyu o|Inochi ni te|Aware kotoshi no|Aki mo inumeri</item>
+    <item>Wata no hara|Kogi idete mireba|Hisakata no|Kumoi ni mayoo|Okitsu shiranami</item>
+    <item>Se o hayami|Iwa ni sekaruru|Takigawa no|Warete mo sue ni|Awan to zo omou</item>
+    <item>Awaji shima|Kayou chidori no|Naku koe ni|Ikuyo nezamenu|Suma no sekimori</item>
+    <item>Akikaze ni|Tanabiku kumo no|Taema yori|More izuru tsuki no|Kage no sayakesa</item>
+    <item>Nagakaran|Kokoro mo shirazu|Kurokami no|Midarete kesa wa|Mono o koso omoe</item>
+    <item>Hototogisu|Nakitsuru kata o|Nagamureba|Tada ariake no|Tsuki zo nokoreru</item>
+    <item>Omoi wabi|Satemo inochi wa|Aru mono o|Uki ni taenu wa|Namida nari keri</item>
+    <item>Yo no naka yo|Michi koso nakere|Omoi iru|Yama no oku ni mo|Shika zo naku naru</item>
+    <item>Nagaraeba|Mata konogoro ya|Shinobaren|Ushi to mishi yo zo|Ima wa koishiki</item>
+    <item>Yo mo sugara|Mono omou koro wa|Ake yaranu|Neya no hima sae|Tsure nakari keri</item>
+    <item>Nageke tote|Tsuki ya wa mono o|Omowasuru|Kakochi gao naru|Waga namida kana</item>
+    <item>Murasame no|Tsuyu mo mada hinu|Maki no ha ni|Kiri tachinoboru|Aki no y&#363;gure</item>
+    <item>Naniwae no|Ashi no karine no|Hitoyo yue|Mi o tsukushite ya|Koi wataru beki</item>
+    <item>Tama no o yo|Taenaba taene|Nagaraeba|Shinoburu koto no|Yowari mo zo suru</item>
+    <item>Misebaya na|Ojima no ama no|Sode dani mo|Nure ni zo nureshi|Iro wa kawarazu</item>
+    <item>Kirigirisu|Naku ya shimo yo no|Samushiro ni|Koromo katashiki|Hitori kamo nen</item>
+    <item>Waga sode wa|Shiohi ni mienu|Oki no ishi no|Hito koso shirane|Kawaku ma mo nashi</item>
+    <item>Yo no naka wa|Tsune ni mo ga mo na|Nagisa kogu|Ama no obune no|Tsuna de kanashi mo</item>
+    <item>Miyoshino no|Yama no akikaze|Sayo fukete|Furusato samuku|Koromo utsu nari</item>
+    <item>&#332;kenaku|Ukiyo no tami ni|&#332;u kana|Waga tatsu soma ni|Sumizome no sode</item>
+    <item>Hana sasou|Arashi no niwa no|Yuki nara de|Furi yuku mono wa|Waga mi nari keri</item>
+    <item>Konu hito o|Matsuho no ura no|Y&#363;nagi ni|Yaku ya moshio no|Mi mo kogare tsutsu</item>
+    <item>Kaze soyogu |Nara no ogawa no|Y&#363;gure wa|Misogi zo natsu no|Shirushi nari keru</item>
+    <item>Hito mo oshi|Hito mo urameshi |Ajiki naku |Yo o omou yue ni|Mono omou mi wa</item>
+    <item>Momoshiki ya|Furuki nokiba no|Shinobu ni mo|Nao amari aru|Mukashi nari keri</item>
+  </string-array>
+  <string-array name="author_romaji">
+    <item>Wani</item>
+    <item>Tenchi Tenn&#333;</item>
+    <item>Jit&#333; Tenn&#333;</item>
+    <item>Kakinomoto no Hitomaro</item>
+    <item>Yamabe no Akahito</item>
+    <item>Sarumaru Dayu</item>
+    <item>Ch&#363;nagon Yakamochi</item>
+    <item>Abe no Nakamaro</item>
+    <item>Kisen H&#333;shi</item>
+    <item>Ono no Komachi</item>
+    <item>Semimaru</item>
+    <item>Sangi Takamura</item>
+    <item>S&#333;j&#333; Henj&#333;</item>
+    <item>Y&#333;zei In</item>
+    <item>Kawara no Sadaijin</item>
+    <item>K&#333;k&#333; Tenn&#333;</item>
+    <item>Ch&#363;nagon Yukihira</item>
+    <item>Ariwara no Narihira Ason</item>
+    <item>Fujiwara no Toshiyuki Ason</item>
+    <item>Ise</item>
+    <item>Motoyoshi Shinn&#333;</item>
+    <item>Sosei H&#333;shi</item>
+    <item>Fun\'ya no Yasuhide</item>
+    <item>&#332;e no Chisato</item>
+    <item>Kan Ke</item>
+    <item>Sanj&#333; Udaijin</item>
+    <item>Teishin K&#333;</item>
+    <item>Ch&#363;nagon Kanesuke</item>
+    <item>Minamoto no Muneyuki Ason</item>
+    <item>&#332;shik&#333;chi no Mitsune</item>
+    <item>Mibu no Tadamine</item>
+    <item>Sakanoue no Korenori</item>
+    <item>Harumichi no Tsuraki</item>
+    <item>Ki no Tomonori</item>
+    <item>Fujiwara no Okikaze</item>
+    <item>Ki no Tsurayuki</item>
+    <item>Kiyohara no Fukayabu</item>
+    <item>Fun\'ya no Asayasu</item>
+    <item>Ukon</item>
+    <item>Sangi Hitoshi</item>
+    <item>Taira no Kanemori</item>
+    <item>Mibu no Tadami</item>
+    <item>Kiyohara no Motosuke</item>
+    <item>Gon Ch&#363;nagon Atsutada</item>
+    <item>Ch&#363;nagon Asatada</item>
+    <item>Kentoku K&#333;</item>
+    <item>Sone no Yoshitada</item>
+    <item>Egy&#333; H&#333;shi</item>
+    <item>Minamoto no Shigeyuki</item>
+    <item>&#332;nakatomi no Yoshinobu Ason</item>
+    <item>Fujiwara no Yoshitaka</item>
+    <item>Fujiwara no Sanekata Ason</item>
+    <item>Fujiwara no Michinobu Ason</item>
+    <item>Udaish&#333; Michitsuna no Haha</item>
+    <item>Gid&#333; Sanshi no Haha</item>
+    <item>Dainagon Kint&#333;</item>
+    <item>Izumi Shikibu</item>
+    <item>Murasaki Shikibu</item>
+    <item>Daini no Sanmi</item>
+    <item>Akazome Emon</item>
+    <item>Koshikibu no Naishi</item>
+    <item>Ise no Osuke</item>
+    <item>Sei Sh&#333;nagon</item>
+    <item>Saky&#333; no Daibu Michimasa</item>
+    <item>GonCh&#363;nagon Sadayori</item>
+    <item>Sagami</item>
+    <item>Dais&#333;j&#333; Gy&#333;son</item>
+    <item>Su&#333; no Naishi</item>
+    <item>Sanj&#333; In</item>
+    <item>N&#333;in H&#333;shi</item>
+    <item>Ry&#333;sen H&#333;shi</item>
+    <item>Dainagon Tsunenobu</item>
+    <item>Y&#363;shi Naishinn&#333;-ke no Kii</item>
+    <item>GonCh&#363;nagon Masafusa</item>
+    <item>Minamoto no Toshiyori Ason</item>
+    <item>Fujiwara no Mototoshi</item>
+    <item>H&#333;sh&#333;ji no Ny&#363;d&#333; Kanpaku Daj&#333;daijin</item>
+    <item>Sutoku In</item>
+    <item>Minamoto no Kanemasa</item>
+    <item>Saky&#333; no Daibu Akisuke</item>
+    <item>Taiken Moin no Horikawa</item>
+    <item>Go Tokudaiji no Sadaijin</item>
+    <item>D&#333;in Hoshi</item>
+    <item>K&#333;taig&#333;g&#363; no Daibu Toshinari</item>
+    <item>Fujiwara no Kiyosuke Ason</item>
+    <item>Shun\'e H&#333;shi</item>
+    <item>Saigy&#333; H&#333;shi</item>
+    <item>Jakuren H&#333;shi</item>
+    <item>K&#333;ka Moin no Betto</item>
+    <item>Shokushi Naishinn&#333;</item>
+    <item>Inpu Moin no Taifu</item>
+    <item>Go Ky&#333;goku no Sessh&#333; Daj&#333;daijin</item>
+    <item>Nij&#333; In no Sanuki</item>
+    <item>Kamakura no Udaijin</item>
+    <item>Sangi Masatsune</item>
+    <item>Saki no Dais&#333;j&#333; Jien</item>
+    <item>Ny&#363;d&#333; Saki no Daj&#333;daijin</item>
+    <item>GonCh&#363;nagon Sadaie</item>
+    <item>Junii Ietaka</item>
+    <item>Gotoba In</item>
+    <item>Juntoku In</item>
+  </string-array>
 </resources>
