@@ -630,6 +630,7 @@ trait YomiInfoRomajiTrait{
   val ROMAJI_TB_BASE = 0.06 // rate of view height
   val ROMAJI_ROWSPAN = 0.03 // rate of view height
   val ROMAJI_WORDSPAN = 0.04 // rate of view width
+  val ROMAJI_ROMA_HIRA_SPAN = 0.01 // rate of view height
 
   var ROMAJI_LR = ROMAJI_LR_BASE
   var ROMAJI_TB = ROMAJI_TB_BASE
@@ -640,6 +641,7 @@ trait YomiInfoRomajiTrait{
 
     val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
     paint.setTypeface(main_font)
+    //TODO
     //val furigana_font = if(furigana_tmp == "None"){
     //  main_font
     //}else{
@@ -647,26 +649,52 @@ trait YomiInfoRomajiTrait{
     //}
     //paint_furigana.setTypeface(furigana_font)
   }
-  def measureTextSizeRomaji(ar:Array[String],paint:Paint):(Int,Int) = {
-    (10,10) // TODO
+
+  def getRomajiBounds(hira:String,roma:String,paint:Paint,paint_furigana:Paint):(Int,(Int,Int),(Int,Int)) = {
+    val r_hira = new Rect
+    val r_roma = new Rect
+    paint.getTextBounds(hira,0,hira.length,r_hira)
+    paint_furigana.getTextBounds(roma,0,roma.length,r_roma)
+    val w_hira = r_hira.right - r_hira.left
+    val w_roma = r_roma.right - r_roma.left
+    val h_hira = r_hira.bottom - r_hira.top
+    val h_roma = r_roma.bottom - r_roma.top
+    val width = Math.max(w_hira,w_roma)
+    (width,(w_hira,h_hira),(w_roma,h_roma))
   }
-  def calculateTextSizeRomaji(ar:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
-    // TODO: implement this
-    (50,30) // TODO
+
+  def measureTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int,Int) = {
+    var max_roma = 0
+    var max_hira = 0
+    val w_max = all_array.map{ ar =>
+      ar.map{case (roma,hira) =>
+        val (width,(w_hira,h_hira),(w_roma,h_roma)) = getRomajiBounds(hira,roma,paint,paint_furigana)
+        max_roma = Math.max(max_roma,h_roma)
+        max_hira = Math.max(max_hira,h_hira)
+        width
+      }.sum
+    }.max
+    (w_max,max_hira,max_roma)
   }
-  def renderRomaji(canvas:Canvas,ar:Array[(String,String)],dy:Int){
+  def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
+    val estimated_roma = ((getHeight / all_array.length) / 1.5).toInt
+    val estimated_hira = (getHeight / all_array.length)
+    paint.setTextSize(estimated_hira)
+    paint_furigana.setTextSize(estimated_roma)
+    val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
+    val h_screen = (1 - ROMAJI_TB*2 - (ROMAJI_ROWSPAN*(all_array.length-1))) * getHeight 
+    val w_screen = (1 - ROMAJI_LR*2 - ROMAJI_WORDSPAN*(all_array.map{_.length-1}.max)) * getWidth
+    val rate_h = h_screen / ((max_roma + max_hira)*all_array.length)
+    val rate_w = w_screen / w_max
+    val r = Math.min(rate_h,rate_w)
+    ((estimated_hira*r).toInt,(estimated_roma*r).toInt)
+  }
+  def renderRomaji(canvas:Canvas,ar:Array[(String,String)],dy:Int,hira_height:Int){
     var dx = (getWidth * ROMAJI_LR).toInt
-    var row_height = 50 // TODO
     for((roma,hira) <- ar){
-      val r_hira = new Rect
-      val r_roma = new Rect
-      paint.getTextBounds(hira,0,hira.length,r_hira)
-      paint_furigana.getTextBounds(roma,0,roma.length,r_roma)
-      val w_hira = r_hira.right - r_hira.left
-      val w_roma = r_roma.right - r_roma.left
-      val width = Math.max(w_hira,w_roma)
+      val (width,(w_hira,h_hira),(w_roma,h_roma)) = getRomajiBounds(hira,roma,paint,paint_furigana)
       drawTextOrPath(canvas,paint_furigana,roma,dx+width/2-w_roma/2,dy)
-      drawTextOrPath(canvas,paint,hira,dx+width/2-w_hira/2,dy+row_height)
+      drawTextOrPath(canvas,paint,hira,dx+width/2-w_hira/2,dy+hira_height)
       dx += width + (getWidth * ROMAJI_WORDSPAN).toInt
     }
   }
@@ -675,18 +703,30 @@ trait YomiInfoRomajiTrait{
       val margin = Array.fill[Double](5)(0) // dummy
       val text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",false,margin,margin)
       val romaji_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full_romaji,R.array.author_romaji,"\\|","",false,margin,margin)
+
+      if(text_array_with_margin.isEmpty || romaji_array_with_margin.isEmpty){
+        return
+      }
       val all_array = text_array_with_margin.zip(romaji_array_with_margin).map{ case ((txt,margin),(roma,_)) =>
         val hira = AllFuda.getOnlyHiragana(txt)
         AllFuda.splitToCorrespondingRomaji(roma,hira)
       }
 
-      val (size_h,size_r) = calculateTextSizeRomaji(all_array,paint,paint_furigana)
+      var (size_h,size_r) = calculateTextSizeRomaji(all_array,paint,paint_furigana)
+      val roma_hira_span = (ROMAJI_ROMA_HIRA_SPAN * getHeight).toInt
+      size_r -= roma_hira_span
+      if(size_h >= RENDER_WITH_PATH_THRESHOLD || size_r >= RENDER_WITH_PATH_THRESHOLD){
+        render_with_path = true
+      }
       paint.setTextSize(size_h)
       paint_furigana.setTextSize(size_r)
-      var dy = (getHeight * ROMAJI_TB).toInt
+      val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
+      val hira_height = roma_hira_span + max_hira
+      val row_span = hira_height + max_roma + (ROMAJI_ROWSPAN*getHeight).toInt
+      var dy = max_roma + (getHeight * ROMAJI_TB).toInt
       for(ar <- all_array){
-        renderRomaji(canvas,ar,dy)
-        dy += 100 // TODO
+        renderRomaji(canvas,ar,dy,hira_height)
+        dy += row_span
       }
     }
   }
