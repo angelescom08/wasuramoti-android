@@ -15,6 +15,8 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   // `Don't create render objects in draw methods`
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
+  val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
+  paint_furigana.setColor(Color.rgb(199,239,251))
   var cur_num = None:Option[Int]
   var marker = None:Option[String]
   var torifuda_mode = false
@@ -38,6 +40,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       FudaListHelper.getOrQueryFudaNumToRead(context,fn)
     }
     rendered_num = None
+    render_with_path = false
     Globals.prefs.foreach{ prefs =>
       show_author = prefs.getBoolean("yomi_info_author",false)
       show_kami = prefs.getBoolean("yomi_info_kami",true)
@@ -176,9 +179,6 @@ trait YomiInfoYomifudaTrait{
   val FURIGANA_BOTTOM_LIMIT = 0.03 // rate of view height
   val FURIGANA_RATIO_DEFAULT = 0.70 // rate of span_h
   val FURIGANA_MARGIN_LEFT_MIN = 2 // in pixels
-
-  val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_furigana.setColor(Color.rgb(199,239,251))
 
   var show_furigana = true
   var show_author = true
@@ -626,20 +626,68 @@ trait YomiInfoEnglishTrait{
 }
 trait YomiInfoRomajiTrait{
   self:YomiInfoView =>
-    def initRomaji(){
-      // 
-      if(Globals.IS_DEBUG){
-        for(num <- 0 to 100){
-          var text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",false,MARGIN_TOP,MARGIN_AUTHOR)
-          var romaji_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full_romaji,R.array.author_romaji,"\\|","",false,MARGIN_TOP,MARGIN_AUTHOR)
-          for(((txt,_),(roma,_)) <- text_array_with_margin.zip(romaji_array_with_margin)){
-            val hira = AllFuda.getOnlyHiragana(txt)
-            val ar = AllFuda.splitToCorrespondingRomaji(roma,hira)
-            Log.v("wasuramoti_debug",ar.toList.toString)
-          }
-        }
+  val ROMAJI_LR_BASE = 0.06 // rate of view width
+  val ROMAJI_TB_BASE = 0.06 // rate of view height
+  val ROMAJI_ROWSPAN = 0.03 // rate of view height
+  val ROMAJI_WORDSPAN = 0.04 // rate of view width
+
+  var ROMAJI_LR = ROMAJI_LR_BASE
+  var ROMAJI_TB = ROMAJI_TB_BASE
+  def initRomaji(){
+    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    ROMAJI_LR = ROMAJI_LR_BASE * margin_boost
+    ROMAJI_TB = ROMAJI_TB_BASE * margin_boost
+
+    val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
+    paint.setTypeface(main_font)
+    //val furigana_font = if(furigana_tmp == "None"){
+    //  main_font
+    //}else{
+    //  TypefaceManager.get(context,furigana_tmp)
+    //}
+    //paint_furigana.setTypeface(furigana_font)
+  }
+  def measureTextSizeRomaji(ar:Array[String],paint:Paint):(Int,Int) = {
+    (10,10) // TODO
+  }
+  def calculateTextSizeRomaji(ar:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
+    // TODO: implement this
+    (50,30) // TODO
+  }
+  def renderRomaji(canvas:Canvas,ar:Array[(String,String)],dy:Int){
+    var dx = (getWidth * ROMAJI_LR).toInt
+    var row_height = 50 // TODO
+    for((roma,hira) <- ar){
+      val r_hira = new Rect
+      val r_roma = new Rect
+      paint.getTextBounds(hira,0,hira.length,r_hira)
+      paint_furigana.getTextBounds(roma,0,roma.length,r_roma)
+      val w_hira = r_hira.right - r_hira.left
+      val w_roma = r_roma.right - r_roma.left
+      val width = Math.max(w_hira,w_roma)
+      drawTextOrPath(canvas,paint_furigana,roma,dx+width/2-w_roma/2,dy)
+      drawTextOrPath(canvas,paint,hira,dx+width/2-w_hira/2,dy+row_height)
+      dx += width + (getWidth * ROMAJI_WORDSPAN).toInt
+    }
+  }
+  def onDrawRomaji(canvas:Canvas){
+    cur_num.foreach{ num =>
+      val margin = Array.fill[Double](5)(0) // dummy
+      val text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",false,margin,margin)
+      val romaji_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full_romaji,R.array.author_romaji,"\\|","",false,margin,margin)
+      val all_array = text_array_with_margin.zip(romaji_array_with_margin).map{ case ((txt,margin),(roma,_)) =>
+        val hira = AllFuda.getOnlyHiragana(txt)
+        AllFuda.splitToCorrespondingRomaji(roma,hira)
+      }
+
+      val (size_h,size_r) = calculateTextSizeRomaji(all_array,paint,paint_furigana)
+      paint.setTextSize(size_h)
+      paint_furigana.setTextSize(size_r)
+      var dy = (getHeight * ROMAJI_TB).toInt
+      for(ar <- all_array){
+        renderRomaji(canvas,ar,dy)
+        dy += 100 // TODO
       }
     }
-    def onDrawRomaji(canvas:Canvas){
-    }
+  }
 }
