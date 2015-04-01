@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.java.util.regex.PatternSyntaxException
 import _root_.android.content.Context
+import _root_.android.text.TextUtils
 import scala.collection.mutable
 
 object AllFuda{
@@ -13,6 +14,7 @@ object AllFuda{
   }
 
   var cache = new mutable.HashMap[Int,Array[String]]
+  // TODO: do we really have to cache resource ? does'nt Android do the job ?
   def get(context:Context,id:Int):Array[String] ={
     cache.getOrElseUpdate(id,context.getResources.getStringArray(id))
   }
@@ -40,6 +42,67 @@ object AllFuda{
       r+=((str.substring(prev),""))
     }
     r.toArray
+  }
+
+  // romaji -> "Taki No Oto Wa Taete"
+  // hiragana -> "たきのおとはたえて"
+  // result -> Array((Taki,たき),(No,の),(Oto,おと),(Wa,わ),(Taete,たえて))
+  def splitToCorrespondingRomaji(romaji:String,hiragana:String):Array[(String,String)] = {
+    var buf = hiragana
+    romaji.split("\\s+").map{ s =>
+      val c = countRomaji(s)
+      val h = takeIgnoringSmallLetters(buf,c)
+      buf = buf.drop(h.length)
+      (s,h)
+    }
+  }
+
+  // Akinota -> 4, Chihayaburu -> 5, Tenchi -> 3
+  def countRomaji(str:String):Int = {
+    var buf = new mutable.Queue[Char]
+    var count = 0
+    str.toLowerCase.foreach{ c =>
+      buf += c
+      if("aiueo".contains(buf.last)){
+        count += 1
+        buf.clear
+      }else if("\u016b\u014d".contains(buf.last)){
+        // latin small letter {u,o} with macron
+        count += 2
+        buf.clear
+      }else if(buf.head == 'n' && buf.length >= 2 && buf(1) != 'y'){
+        count += 1
+        buf = buf.tail
+      }
+    }
+    if(!buf.isEmpty){
+      count += 1
+    }
+    count
+  }
+
+  // str -> しょうちゅうこう
+  // count -> 4
+  // result -> しょうちゅう
+  def takeIgnoringSmallLetters(str:String, count:Int):String = {
+    var i = 0
+    str.takeWhile{ c =>
+      // hiragana letter small {tu,ya,yu,yo}
+      if(!"\u3063\u3083\u3085\u3087".contains(c)){
+        i += 1
+      }
+      i <= count
+    }
+  }
+
+  def getOnlyHiragana(str:String):String = {
+    parseFurigana(str).map{ case (s,t) =>
+      if(TextUtils.isEmpty(t)){
+        s
+      }else{
+        t
+      }
+    }.mkString("")
   }
 
   val goshoku =List((R.string.fudaset_five_color_blue,List(3,5,6,12,14,24,30,31,50,57,61,62,69,70,74,75,76,82,91,100)),

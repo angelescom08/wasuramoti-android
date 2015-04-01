@@ -8,7 +8,8 @@ import _root_.android.util.{Log,AttributeSet}
 import scala.collection.mutable
 import scala.util.hashing.MurmurHash3
 
-class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs) with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait{
+class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs)
+  with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait with YomiInfoRomajiTrait{
   val RENDER_WITH_PATH_THRESHOLD = 496
   // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
@@ -56,8 +57,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }else if(info_lang == Utils.YomiInfoLang.English){
       initEnglish()
     }else if(info_lang == Utils.YomiInfoLang.Romaji){
-      // TODO: implement this
-      // initRomaji()
+      initRomaji()
     }else{
       initYomifuda()
     }
@@ -69,8 +69,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }else if(info_lang == Utils.YomiInfoLang.English){
       onDrawEnglish(canvas)
     }else if(info_lang == Utils.YomiInfoLang.Romaji){
-      // TODO: implement this
-      // onDrawRomaji(canvas)
+      onDrawRomaji(canvas)
     }else{
       onDrawYomifuda(canvas)
     }
@@ -624,4 +623,23 @@ trait YomiInfoEnglishTrait{
       }
     }
   }
+}
+trait YomiInfoRomajiTrait{
+  self:YomiInfoView =>
+    def initRomaji(){
+      // 
+      if(Globals.IS_DEBUG){
+        for(num <- 0 to 100){
+          var text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",false,MARGIN_TOP,MARGIN_AUTHOR)
+          var romaji_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full_romaji,R.array.author_romaji,"\\|","",false,MARGIN_TOP,MARGIN_AUTHOR)
+          for(((txt,_),(roma,_)) <- text_array_with_margin.zip(romaji_array_with_margin)){
+            val hira = AllFuda.getOnlyHiragana(txt)
+            val ar = AllFuda.splitToCorrespondingRomaji(roma,hira)
+            Log.v("wasuramoti_debug",ar.toList.toString)
+          }
+        }
+      }
+    }
+    def onDrawRomaji(canvas:Canvas){
+    }
 }
