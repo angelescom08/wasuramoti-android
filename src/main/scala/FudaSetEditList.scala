@@ -140,29 +140,10 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
 
     findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val items = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems)
-        val values = context.getResources().getStringArray(R.array.fudaseteditlist_menuitems_values)
-        val builder = new AlertDialog.Builder(context)
-        builder.setTitle(R.string.fudaseteditlist_menutitle)
-        builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
-            override def onClick(d:DialogInterface,position:Int){
-              if(position > values.length){
-                return
-              }
-              values(position) match{
-                case "INVERT_SELECT" => invert_select()
-                case "SHOW_FULL" => show_full()
-                case "SORT_ORDER" => sort_order()
-              }
-              d.dismiss()
-            }
-          })
-        builder.setNeutralButton(R.string.button_cancel,new DialogInterface.OnClickListener(){
-            override def onClick(d:DialogInterface,position:Int){
-              d.dismiss()
-            }
-          })
-        builder.create.show()
+        Utils.listDialog(context,
+          R.string.fudaseteditlist_menutitle,
+          R.array.fudaseteditlist_menuitems,
+          Array(invert_select,show_full,sort_order))
       }
     })
     findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){

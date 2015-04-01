@@ -168,7 +168,7 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   }
 }
 
-class YomiInfoConfigTranslateDialog(context:Context,fromQuickConfig:Boolean=false) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
+class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
   def getWidgets(view:View) = {
     val english_font =  view.findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
@@ -182,14 +182,8 @@ class YomiInfoConfigTranslateDialog(context:Context,fromQuickConfig:Boolean=fals
     edit.putString("yomi_info_english_font",ar(english_font.getSelectedItemPosition))
     edit.putBoolean("yomi_info_show_translate_button",show_button.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
-    if(fromQuickConfig){
-      edit.putBoolean("yomi_info_torifuda_mode",false)
-      edit.commit
-      Utils.restartActivity(context.asInstanceOf[Activity])
-    }else{
-      edit.commit
-      Globals.forceRestart = true
-    }
+    edit.commit
+    Globals.forceRestart = true
   }
     
   override def onCreate(state:Bundle){
@@ -250,8 +244,20 @@ class QuickConfigDialog extends DialogFragment{
             return
           case 4 =>
             // Translation
+            val activity = getActivity // calling getActivity() inside switch_lang raises NullPointerException
+            val switch_lang = (lang:Utils.YomiInfoLang.YomiInfoLang) => {
+              () => {
+                val edit = Globals.prefs.get.edit
+                edit.putString("yomi_info_default_lang",lang.toString)
+                edit.commit
+                Utils.restartActivity(activity)
+              }
+            }
             dismiss
-            new YomiInfoConfigTranslateDialog(getActivity,true).show()
+            Utils.listDialog(getActivity,
+              R.string.quicklang_title,
+              R.array.yomi_info_default_languages,
+              Utils.YomiInfoLang.values.toArray.map(switch_lang(_)))
             return
           case _ =>
             None
@@ -324,7 +330,6 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_simo",true)
     edit.putBoolean("yomi_info_author",true)
     edit.putBoolean("yomi_info_furigana_show",true)
-    edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString)
   }
   def showOnlyFirst(edit:SharedPreferences.Editor){
     setPoemTextVisibility(edit,true)
@@ -334,6 +339,5 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_simo",false)
     edit.putBoolean("yomi_info_author",false)
     edit.putBoolean("yomi_info_furigana_show",true)
-    edit.putString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString)
   }
 }

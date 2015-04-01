@@ -39,6 +39,8 @@
   <string name="quick_conf_english">Translation</string>
   <string name="quick_conf_intended_use">Change Inteded Use</string>
 
+  <string name="quicklang_title">Default Language</string>
+
   <string name="conf_unit_minute">&#160;min</string>
   <string name="conf_unit_second">&#160;sec</string>
 
@@ -181,11 +183,16 @@
 
   <string name="yomi_info_button_config_translation">Translation</string>
   <string name="yomi_info_default_language_desc">Default Language:</string>
+
   <string-array name="yomi_info_default_languages">
-    <item>Japanese</item>
-    <item>Romaji</item>
-    <item>English</item>
+    <item>@string/yomi_info_lang_jpn</item>
+    <item>@string/yomi_info_lang_roma</item>
+    <item>@string/yomi_info_lang_eng</item>
   </string-array>
+  
+  <string name="yomi_info_lang_jpn">Japanese</string>
+  <string name="yomi_info_lang_roma">Romaji</string>
+  <string name="yomi_info_lang_eng">English</string>
   <string name="yomi_info_show_translate_button">Show Translate / Romaji Button</string>
   <string name="yomi_info_english_fonts_desc">English Font:</string>
   <string-array name="yomi_info_english_fonts">
@@ -312,11 +319,6 @@
     <item>Invert Selection</item>
     <item>Switch Text ( Kimariji / Full )</item>
     <item>Change Order ( AIUEO / Poem No. )</item>
-  </string-array>
-  <string-array name="fudaseteditlist_menuitems_values">
-    <item>INVERT_SELECT</item>
-    <item>SHOW_FULL</item>
-    <item>SORT_ORDER</item>
   </string-array>
   <string name="fudaseteditlist_menutitle">Menu</string>
   <string name="fudasetedit_confirm">The set will contain %d poems. Is it ok?</string>

@@ -29,6 +29,7 @@
   <string name="quick_conf_only_first">上の句のみ</string>
   <string name="quick_conf_english">翻訳設定</string>
   <string name="quick_conf_intended_use">使用目的変更</string>
+  <string name="quicklang_title">デフォルトの言語</string>
 
   <string name="conf_unit_minute">分</string>
   <string name="conf_unit_second">秒</string>
@@ -167,11 +168,9 @@
 
   <string name="yomi_info_button_config_translation">翻訳設定</string>
   <string name="yomi_info_default_language_desc">既定の言語:</string>
-  <string-array name="yomi_info_default_languages">
-    <item>日本語</item>
-    <item>ローマ字</item>
-    <item>英語</item>
-  </string-array>
+  <string name="yomi_info_lang_jpn">日本語</string>
+  <string name="yomi_info_lang_roma">ローマ字</string>
+  <string name="yomi_info_lang_eng">英語</string>
   <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示する</string>
   <string name="yomi_info_english_fonts_desc">英語フォント:</string>
 

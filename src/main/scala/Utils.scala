@@ -339,6 +339,31 @@ object Utils {
     showDialogAndSetGlobalRef(dialog, func_done)
   }
 
+  def listDialog(
+    context:Context,
+    title_id:Int,
+    items_id:Int,
+    funcs:Array[()=>Unit]){
+      val items = context.getResources().getStringArray(items_id)
+      val builder = new AlertDialog.Builder(context)
+      builder.setTitle(title_id)
+      builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
+          override def onClick(d:DialogInterface,position:Int){
+            if(position > funcs.length){
+              return
+            }
+            funcs(position)()
+            d.dismiss()
+          }
+        })
+      builder.setNegativeButton(R.string.button_cancel,new DialogInterface.OnClickListener(){
+          override def onClick(d:DialogInterface,position:Int){
+            d.dismiss()
+          }
+        })
+      showDialogAndSetGlobalRef(builder.create)
+  }
+
   def dismissAlertDialog(){
     Globals.alert_dialog.foreach{_.dismiss}
     Globals.alert_dialog = None
