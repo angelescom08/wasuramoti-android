@@ -4,9 +4,9 @@ import android.Keys._
 object Build extends android.AutoBuild {
   lazy val mySettings = super.settings ++ android.Plugin.androidBuild ++ Seq (
     name := "wasuramoti",
-    version := "0.8.21",
-    versionCode := Some(59),
-    scalaVersion := "2.11.5",
+    version := "0.8.22",
+    versionCode := Some(60),
+    scalaVersion := "2.11.6",
     platformTarget in Android := "android-19",
     buildToolsVersion in Android := Some("19.1.0"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88
