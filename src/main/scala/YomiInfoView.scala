@@ -647,13 +647,8 @@ trait YomiInfoRomajiTrait{
 
     val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
     paint.setTypeface(main_font)
-    //TODO
-    //val furigana_font = if(furigana_tmp == "None"){
-    //  main_font
-    //}else{
-    //  TypefaceManager.get(context,furigana_tmp)
-    //}
-    //paint_furigana.setTypeface(furigana_font)
+    val furigana_font = TypefaceManager.get(context,"asset:roboto-slab.ttf")
+    paint_furigana.setTypeface(furigana_font)
   }
 
   def getRomajiBounds(hira:String,roma:String,paint:Paint,paint_furigana:Paint):(Int,(Int,Int),(Int,Int)) = {
@@ -684,8 +679,17 @@ trait YomiInfoRomajiTrait{
   }
   def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
     val (furigana_boost,_) = calcBootRatioFurigana()
-    val estimated_roma = ((getHeight / 2 / all_array.length) / 1.5 * furigana_boost).toInt
-    val estimated_hira = (getHeight / 2 / all_array.length)
+    val row_chars = all_array.map{ ar => ar.map{_._2.length}.sum + ar.length - 1}.max
+    val roma_rate = if(row_chars >= 16){
+      1.2
+    }else if(all_array.length <= 5){
+      0.7
+    }else{
+      1.0
+    }
+    val base_rate = Math.min( 0.5 / all_array.length, 1.0 / row_chars)
+    val estimated_roma = (getHeight * base_rate * roma_rate * furigana_boost).toInt
+    val estimated_hira = (getHeight * base_rate).toInt
     paint.setTextSize(estimated_hira)
     paint_furigana.setTextSize(estimated_roma)
     val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
