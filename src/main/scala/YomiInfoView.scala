@@ -298,6 +298,23 @@ trait YomiInfoYomifudaTrait{
     }
   }
 
+  def calcBootRatioFurigana():(Double,Double) = {
+    val furigana_width_conf_default = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
+    val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
+    val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
+    val boost = if(furigana_width_conf_cur > furigana_width_conf_default){
+      1.0 + 0.4*(furigana_width_conf_cur - furigana_width_conf_default)/(furigana_width_conf_max - furigana_width_conf_default).toDouble
+    }else{
+      1.0
+    }
+    val ratio = if(furigana_width_conf_cur < furigana_width_conf_default){
+      1.0 - 0.4*(1.0 - (furigana_width_conf_cur/furigana_width_conf_default.toDouble))
+    }else{
+      1.0
+    }
+    (boost,ratio)
+  }
+
   def onDrawYomifuda(canvas:Canvas){
 
     if(Globals.IS_DEBUG){
@@ -317,9 +334,6 @@ trait YomiInfoYomifudaTrait{
     cur_num.foreach{num =>
       paint.setTextAlign(Paint.Align.CENTER)
       paint_furigana.setTextAlign(Paint.Align.CENTER)
-      val furigana_width_conf_default = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
-      val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
-      val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
 
       var text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",true,MARGIN_TOP,MARGIN_AUTHOR)
       if(text_array_with_margin.isEmpty){
@@ -340,13 +354,8 @@ trait YomiInfoYomifudaTrait{
       }else{
         1.0
       }
-      val space_boost2 = if(show_furigana && furigana_width_conf_cur > furigana_width_conf_default){
-        1.0 + 0.4*(furigana_width_conf_cur - furigana_width_conf_default)/(furigana_width_conf_max - furigana_width_conf_default).toDouble
-      }else{
-        1.0
-      }
 
-      val space_boost3 = text_array_with_margin.length match {
+      val space_boost2 = text_array_with_margin.length match {
         case 1 => 1.4
         case 2 => 1.3
         case 3 => 1.2
@@ -357,11 +366,8 @@ trait YomiInfoYomifudaTrait{
         case _ => 0.8
       }
 
-      val furigana_ratio = if(show_furigana && furigana_width_conf_cur < furigana_width_conf_default){
-        1.0 - 0.4*(1.0 - (furigana_width_conf_cur/furigana_width_conf_default.toDouble))
-      }else{
-        1.0
-      }
+      val (space_boost3,furigana_ratio) = if(show_furigana){calcBootRatioFurigana()}else{(1.0,1.0)}
+
       val space_h = SPACE_H * space_boost1 * space_boost2 * space_boost3
 
       val no_furigana = text_array_with_margin.map{case(t,m)=>(AllFuda.removeInsideParens(t),m)}
@@ -677,8 +683,9 @@ trait YomiInfoRomajiTrait{
     (w_max,max_hira,max_roma)
   }
   def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
-    val estimated_roma = ((getHeight / all_array.length) / 1.5).toInt
-    val estimated_hira = (getHeight / all_array.length)
+    val (furigana_boost,_) = calcBootRatioFurigana()
+    val estimated_roma = ((getHeight / 2 / all_array.length) / 1.5 * furigana_boost).toInt
+    val estimated_hira = (getHeight / 2 / all_array.length)
     paint.setTextSize(estimated_hira)
     paint_furigana.setTextSize(estimated_roma)
     val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
