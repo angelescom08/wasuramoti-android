@@ -186,7 +186,6 @@ trait YomiInfoYomifudaTrait{
   var show_simo = true
   
   def initYomifuda(){
-    
     val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
     MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
     MARGIN_AUTHOR = MARGIN_AUTHOR_BASE.map{_*margin_boost}
@@ -254,7 +253,6 @@ trait YomiInfoYomifudaTrait{
   }
   def drawVertical(paint:Paint,canvas:Canvas,startx:Int,starty:Int,text:String,span:Int) = {
     var y = starty
-    paint.setTextAlign(Paint.Align.CENTER)
     var width = Int.MinValue
     for(t <- text){
       val r = new Rect()
@@ -317,6 +315,8 @@ trait YomiInfoYomifudaTrait{
       screen_range_furi = ni()
     }
     cur_num.foreach{num =>
+      paint.setTextAlign(Paint.Align.CENTER)
+      paint_furigana.setTextAlign(Paint.Align.CENTER)
       val furigana_width_conf_default = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
       val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
       val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
@@ -478,6 +478,7 @@ trait YomiInfoTorifudaTrait{
   }
   def onDrawTorifuda(canvas:Canvas){
     cur_num.foreach{ num=>
+      paint.setTextAlign(Paint.Align.CENTER)
       val margin_boost = if(Utils.isScreenLarge(context)){
         2.0
       }else{
@@ -517,7 +518,6 @@ trait YomiInfoTorifudaTrait{
         for(j <- 0 until row.length){
           val s = row(j)
           val y = center_y - height/2.0 + dy/2.0 + dy*j
-          paint.setTextAlign(Paint.Align.CENTER)
           val r = new Rect()
           paint.getTextBounds(s,0,1,r)
           val ch = r.bottom - r.top
@@ -700,6 +700,8 @@ trait YomiInfoRomajiTrait{
   }
   def onDrawRomaji(canvas:Canvas){
     cur_num.foreach{ num =>
+      paint.setTextAlign(Paint.Align.LEFT)
+      paint_furigana.setTextAlign(Paint.Align.LEFT)
       val margin = Array.fill[Double](5)(0) // dummy
       val text_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full,R.array.author," ","",false,margin,margin)
       val romaji_array_with_margin:Array[(String,Double)] = getTextArrayWithMargin[Double](num,R.array.list_full_romaji,R.array.author_romaji,"\\|","",false,margin,margin)
