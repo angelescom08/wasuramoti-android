@@ -647,6 +647,10 @@ trait YomiInfoRomajiTrait{
 
     val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
     paint.setTypeface(main_font)
+    // Roboto is default font for android >= 4.0, so most of the devices should already have it.
+    // However, there might be a possibility that the vender removes the font
+    // and replace it to which that does not have letter with macron.
+    // Therefore, we include this font in this app.
     val furigana_font = TypefaceManager.get(context,"asset:roboto-slab.ttf")
     paint_furigana.setTypeface(furigana_font)
   }

@@ -8,11 +8,13 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Change the color of author.
   * Solve the warnings caused by -Xlint
+  * Generate wasuramoti://fudaset/ uri
+  * Display license of fonts in browser.
+    - Maybe using android.content.ContentProvider or android.support.v4.content.FileProvider ?
+  * Can we use ContentProvider instead of data-uri for bug reporting ?
 
 Priority Middle:
   * Support MP3 audio.
-  * When in english mode, show Furigana in Roma-ji
-    - We have to enable switching Tate-Gaki and Yoko-Gaki
   * Customize Quick Config
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
     - Add Volume Boost.

@@ -11,9 +11,9 @@ src/main/assets/README*
 uitest/bin/
 
 *.class
-*.so
 *.apk
 *.o
+*.so
 
 wasuramoti-android-*/
 wasuramoti-android-*.zip
