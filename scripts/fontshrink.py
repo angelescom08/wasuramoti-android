@@ -2,40 +2,50 @@
 # -*- coding: utf-8 -*-
 # create ttf font which contains only subset of characters
 
-HIRA = u'''あいうえおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬね
-のはばぱひびふぶへべほぼまみむめもゃやゅゆょよらりるれろわゐゑをん'''
-KANJI = u'''々三上世中丸久之九乱乾二于京人仁今代仲任伊位住侍俊信倉倍僧儀元光入八公具兼内円冬
-冲凡出分列初別則前勢匂匡十千半原参友右司吉同名后向君吹呂告周命和咲問喜嘆嘉因在坂
-基堀士壬声変夏夕外夜夢大天太夫奈契奥好妙姿子孝宇守安宗定実宣室宮宵家宿寂富寒寝寺
-将尊小少尾屋山岐岑岩岸峰島崇嵐嶺川左師帰干平年幾庭庵康式弐弱当待後従徳心忍忘忠思
-性恋恒恨恵悲惜慈慶憂成我房手折持摂撰政敏散敦敷文方日昌明昔春昭是昼時智暁暮暹更曾
-月有朝木末本村条杣来松枕染柿桜業極模権樹橋正残殷母民水江沖河治泉法波津流浅浜浦消
-涙淡深淵清渚渡源滝漕潟潮濡瀬火焼燃父物猿玉王生田由町白百皇盛相知石砂磨祈祐神禰秀
-秋稲立竜端笠笹等篁篠紀紅納素紫経統絶綱網義羽聞能臣興舟良色花若苫茅草菅菊菜落葉葦
-蓮藤蝉行衛衣袖西見親言誓誰謙議讃貞貫賢赤越路踏身躬軒輔近通逢遍過道遠部都里重野錦
-鎌長門間関閨防降院陸陽隆雄雅難雨雪雲霜霧露音順須頼顔顕風養香高髪鳥鳴鹿麻麿黒'''
+import os, sys, argparse, fontforge
+import xml.etree.ElementTree as ET
 
-ASCII = u''' !"'(),-.:;?ABCDEFGHIJKLMNOPRSTUWYabcdefghijklmnopqrstuvwxyz'''
+POEM_LIST = os.path.join(os.path.dirname(__file__),"..","src","main","res","values","strings-poem-list.xml")
+tree = ET.parse(POEM_LIST)
+root = tree.getroot()
 
-import sys, argparse, fontforge
+def get_charset(root, names):
+  res = set()
+  for name in names:
+    ar = root.find("./string-array[@name='%s']" % name)
+    if ar is None:
+      raise Exception('string-array "' + name + '" not found in "' + POEM_LIST + '"')
+    for item in ar.findall('./item'):
+      res |= set(item.text)
+  return res
+  
+def get_jpn_chars(root):
+  return get_charset(root, ["list_torifuda","list_full","author"]) - set(' ()')
+    
+def get_eng_chars(root):
+  return get_charset(root, ["list_full_en","author_en","list_full_romaji","author_romaji"]) - set('|')
 
 parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options] [input.ttf] [output.ttf]',description='remove characters not in Hyakunin-Isshu from TTF file.')
 parser.add_argument('--jpn',action="store_true",help='process japanese font')
 parser.add_argument('--eng',action="store_true",help='process english font')
 parser.add_argument("rest",nargs=argparse.REMAINDER)
 args = parser.parse_args()
-WORDS = None
+chars_ascii = None
 if len(args.rest) != 2 or (not args.jpn and not args.eng):
   parser.print_help()
+  print("[English Characters]")
+  print("".join(sorted(get_eng_chars(root))))
+  print("[Japanese Characters]")
+  print("".join(sorted(get_jpn_chars(root))))
   sys.exit(0)
 elif args.jpn:
-  WORDS = HIRA+KANJI
+  chars_ascii = get_jpn_chars(root)
 elif args.eng:
-  WORDS = ASCII
+  chars_ascii = get_eng_chars(root)
 
+chars = list(map(ord,chars_ascii))
 (in_file,out_file) = args.rest
 font = fontforge.open(in_file)
-chars = set(ord(i) for i in WORDS if i != "\n")
 lst = [-1] + sorted(chars) + [0x10000]
 for (x,y) in zip(lst,lst[1:]):
   if y - x <= 1:
@@ -45,9 +55,9 @@ for (x,y) in zip(lst,lst[1:]):
   try:
     font.selection.select(("ranges",),a,b)
     font.clear()
-  except ValueError,e:
-    print e
-    print "start =",a,"end =",b
+  except ValueError as e:
+    print(e)
+    print("start =",a,"end =",b)
 
 for g in font.glyphs():
   if g.encoding <= 0xFFFF:
@@ -61,7 +71,7 @@ for g in font.glyphs():
     font.clear()
 
 if chars:
-  print "Warning, %d glypths missing: '%s'"%(len(chars), "','".join(unichr(i).encode('utf-8') for i in chars))
+  print("Warning, %d glypths missing: '%s'"%(len(chars), "','".join(unichr(i).encode('utf-8') for i in chars)))
 
 font.generate(out_file,flags=("TeX-table",))
 
