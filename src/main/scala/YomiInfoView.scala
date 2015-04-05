@@ -668,7 +668,7 @@ trait YomiInfoRomajiTrait{
     (width,(w_hira,h_hira),(w_roma,h_roma))
   }
 
-  def measureTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int,Int) = {
+  def measureTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint,space:Int):(Int,Int,Int) = {
     var max_roma = 0
     var max_hira = 0
     val w_max = all_array.map{ ar =>
@@ -677,40 +677,44 @@ trait YomiInfoRomajiTrait{
         max_roma = Math.max(max_roma,h_roma)
         max_hira = Math.max(max_hira,h_hira)
         width
-      }.sum
+      }.sum + space * (ar.length - 1)
     }.max
     (w_max,max_hira,max_roma)
   }
-  def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int) ={
+  def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int,Int) ={
     val (furigana_boost,_) = calcBootRatioFurigana()
     val row_chars = all_array.map{ ar => ar.map{_._2.length}.sum + ar.length - 1}.max
-    val roma_rate = if(row_chars >= 16){
-      1.2
+    val roma_rate =
+    if(row_chars >= 14){
+      0.8
     }else if(all_array.length <= 5){
+      0.6
+    }else if(all_array.length == 6){
       0.7
     }else{
-      1.0
+      0.8
     }
     val base_rate = Math.min( 0.5 / all_array.length, 1.0 / row_chars)
     val estimated_roma = (getHeight * base_rate * roma_rate * furigana_boost).toInt
     val estimated_hira = (getHeight * base_rate).toInt
+    val estimated_space = (Math.max(estimated_roma,estimated_hira)/2.0).toInt
     paint.setTextSize(estimated_hira)
     paint_furigana.setTextSize(estimated_roma)
-    val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
-    val h_screen = (1 - ROMAJI_TB*2 - (ROMAJI_ROWSPAN*(all_array.length-1))) * getHeight 
-    val w_screen = (1 - ROMAJI_LR*2 - ROMAJI_WORDSPAN*(all_array.map{_.length-1}.max)) * getWidth
+    val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana,estimated_space)
+    val h_screen = (1 - ROMAJI_TB*2 - ROMAJI_ROWSPAN*(all_array.length-1) - ROMAJI_ROMA_HIRA_SPAN*all_array.length) * getHeight 
+    val w_screen = (1 - ROMAJI_LR*2) * getWidth
     val rate_h = h_screen / ((max_roma + max_hira)*all_array.length)
     val rate_w = w_screen / w_max
     val r = Math.min(rate_h,rate_w)
-    ((estimated_hira*r).toInt,(estimated_roma*r).toInt)
+    ((estimated_hira*r).toInt,(estimated_roma*r).toInt,(estimated_space*r).toInt)
   }
-  def renderRomaji(canvas:Canvas,ar:Array[(String,String)],dy:Int,hira_height:Int){
+  def renderRomaji(canvas:Canvas,ar:Array[(String,String)],dy:Int,hira_height:Int,space:Int){
     var dx = (getWidth * ROMAJI_LR).toInt
     for((roma,hira) <- ar){
       val (width,(w_hira,h_hira),(w_roma,h_roma)) = getRomajiBounds(hira,roma,paint,paint_furigana)
       drawTextOrPath(canvas,paint_furigana,roma,dx+width/2-w_roma/2,dy)
       drawTextOrPath(canvas,paint,hira,dx+width/2-w_hira/2,dy+hira_height)
-      dx += width + (getWidth * ROMAJI_WORDSPAN).toInt
+      dx += width + space
     }
   }
   def onDrawRomaji(canvas:Canvas){
@@ -729,20 +733,19 @@ trait YomiInfoRomajiTrait{
         AllFuda.splitToCorrespondingRomaji(roma,hira)
       }
 
-      var (size_h,size_r) = calculateTextSizeRomaji(all_array,paint,paint_furigana)
+      var (size_h,size_r,space) = calculateTextSizeRomaji(all_array,paint,paint_furigana)
       val roma_hira_span = (ROMAJI_ROMA_HIRA_SPAN * getHeight).toInt
-      size_r -= roma_hira_span
       if(size_h >= RENDER_WITH_PATH_THRESHOLD || size_r >= RENDER_WITH_PATH_THRESHOLD){
         render_with_path = true
       }
       paint.setTextSize(size_h)
       paint_furigana.setTextSize(size_r)
-      val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana)
+      val (_,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana,space)
       val hira_height = roma_hira_span + max_hira
       val row_span = hira_height + max_roma + (ROMAJI_ROWSPAN*getHeight).toInt
       var dy = max_roma + (getHeight * ROMAJI_TB).toInt
       for(ar <- all_array){
-        renderRomaji(canvas,ar,dy,hira_height)
+        renderRomaji(canvas,ar,dy,hira_height,space)
         dy += row_span
       }
     }
