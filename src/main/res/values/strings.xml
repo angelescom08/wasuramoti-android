@@ -141,12 +141,16 @@
   <string name="yomi_info_furigana_size_desc">Firigana\nSize:</string>
   <string name="yomi_info_joka">Joka</string>
 
-  <string name="yomi_info_caution">The following setting is valid only when device is wide enough or in landscape mode. As for small device, you can display it by long pressing the poem text.</string>
+  <string name="yomi_info_caution">Button is displayed only when device is wide enough or in landscape mode. As for small device, you can display it by long pressing the poem text.</string>
   <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
   <string name="yomi_info_show_info_button">Show Web Search and Other Buttons. </string>
 
-  <string name="yomi_info_search_poem_num">Poem No.:</string>
+  <string name="yomi_info_search_poem_num">No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>
+  <string name="yomi_info_search_poem_num_abbrev">No.:</string>
+  <string name="yomi_info_search_kimariji_abbrev">Kmrj:</string>
+  <string name="title_bar_poem_num">@string/yomi_info_search_poem_num_abbrev</string>
+  <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
     <item>A.DISPLAY_KAMI|1st Half</item>
     <item>A.DISPLAY_SIMO|2nd Half</item>

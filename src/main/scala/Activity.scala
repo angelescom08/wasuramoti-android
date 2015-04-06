@@ -263,8 +263,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container).asInstanceOf[ViewStub]
     if(bar_kima != null &&
       YomiInfoUtils.showPoemText &&
-      Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true) &&
-      Utils.isScreenWide(this)
+      Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
     ){
       bar_kima.inflate()
       actionbar.setDisplayShowTitleEnabled(false)

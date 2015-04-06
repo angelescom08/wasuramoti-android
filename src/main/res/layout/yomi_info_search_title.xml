@@ -13,11 +13,11 @@
       android:orientation="horizontal"  >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/yomi_info_search_poem_num"
-      style="?android:attr/textAppearanceMedium"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:textColor="#00CCFF"
     />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-      style="?android:attr/textAppearanceLarge"
+      android:textAppearance="?android:attr/textAppearanceLarge"
       android:textColor="@android:color/white"
       android:id="@+id/yomi_info_search_poem_num"
       android:paddingLeft="4dip"
@@ -28,12 +28,12 @@
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/yomi_info_search_kimariji"
-      style="?android:attr/textAppearanceMedium"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:textColor="#00CCFF"
     />
     <karuta.hpnpwd.wasuramoti.PatchedTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textColor="@android:color/white"
-      style="?android:attr/textAppearanceLarge"
+      android:textAppearance="?android:attr/textAppearanceLarge"
       android:paddingLeft="4dip"
       android:id="@+id/yomi_info_search_kimariji"
     />
