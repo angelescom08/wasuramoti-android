@@ -37,11 +37,6 @@
                  />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />
-    <TextView
-              android:layout_height="wrap_content"
-              android:layout_width="wrap_content"
-              android:text="@string/yomi_info_caution"
-      />
     <CheckBox
       android:id="@+id/yomi_info_show_bar_kimari"
       android:layout_width="wrap_content" android:layout_height="wrap_content"

@@ -126,7 +126,6 @@
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
   <string name="yomi_info_joka">序歌</string>
 
-  <string name="yomi_info_caution">情報ボタンは画面が横向きか大きい端末のみ表示されます．小さい端末では詠み句を長押しすると表示されます．</string>
   <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
   <string name="yomi_info_show_info_button">Web検索などの情報ボタンを表示</string>
 

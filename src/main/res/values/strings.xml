@@ -141,7 +141,6 @@
   <string name="yomi_info_furigana_size_desc">Firigana\nSize:</string>
   <string name="yomi_info_joka">Joka</string>
 
-  <string name="yomi_info_caution">Button is displayed only when device is wide enough or in landscape mode. As for small device, you can display it by long pressing the poem text.</string>
   <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
   <string name="yomi_info_show_info_button">Show Web Search and Other Buttons. </string>
 

@@ -23,14 +23,14 @@
           android:id="@+id/yomi_info_search_stub"
           android:layout_width="0dp"
           android:layout_height="fill_parent"
-          android:layout_weight="0.5"
+          android:layout_weight="@dimen/main_left_weight"
           android:layout="@layout/yomi_info_fragment"
           android:layout_marginRight="3dp"
           />
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="@dimen/main_right_weight"
         >
       <include layout="@layout/main_button" />
     </FrameLayout>

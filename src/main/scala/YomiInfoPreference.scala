@@ -249,6 +249,11 @@ class QuickConfigDialog extends DialogFragment{
               () => {
                 val edit = Globals.prefs.get.edit
                 edit.putString("yomi_info_default_lang",lang.toString)
+                if(lang == Utils.YomiInfoLang.Japanese){
+                  edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(activity))
+                }else{
+                  edit.putBoolean("yomi_info_show_translate_button",true)
+                }
                 edit.commit
                 Utils.restartActivity(activity)
               }

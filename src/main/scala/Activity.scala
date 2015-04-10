@@ -228,8 +228,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
     if(frag_stub != null && 
       YomiInfoUtils.showPoemText &&
-      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true) &&
-      Utils.isScreenWide(this)
+      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
     ){
       frag_stub.inflate()
       val fragment = YomiInfoSearchDialog.newInstance(false,0)

@@ -5,4 +5,6 @@
   <dimen name="read_button_text_large">36dp</dimen>
   <dimen name="title_bar_small_text">14sp</dimen>
   <dimen name="title_bar_large_text">18sp</dimen>
+  <item name="main_left_weight" format="float" type="dimen">0.4</item>
+  <item name="main_right_weight" format="float" type="dimen">0.6</item>
 </resources>
