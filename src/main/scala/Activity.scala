@@ -243,11 +243,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     Globals.setButtonText = Some( txt =>
       handler.post(new Runnable(){
         override def run(){
-          val lines = txt.split("\n").length
-          if(lines >= 4 && YomiInfoUtils.showPoemText){
+          val lines = txt.split("\n")
+          val max_chars = lines.map{_.length}.max // TODO: treat japanese characters as two characters.
+          if((lines.length >= 4 || max_chars >= 16) && YomiInfoUtils.showPoemText){
             read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
           }
-          read_button.setLines(lines)
+          read_button.setMinLines(lines.length)
+          read_button.setMaxLines(lines.length+1) // We accept exceeding one row
           read_button.setText(txt)
         }
       }))

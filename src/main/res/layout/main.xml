@@ -10,14 +10,14 @@
         android:id="@+id/yomi_info_stub"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.75"
+        android:layout_weight="0.72"
         android:layout="@layout/yomi_info_triple"
         android:layout_marginBottom="3dp"
         />
   <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.25"
+        android:layout_weight="0.28"
         >
     <ViewStub
           android:id="@+id/yomi_info_search_stub"

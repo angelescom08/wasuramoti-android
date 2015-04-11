@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
-  style="?android:attr/buttonBarButtonStyle" />
+  style="?android:attr/buttonBarButtonStyle"
+  android:textSize="@dimen/yomi_info_button_text"
+  />
