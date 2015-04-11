@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="wrap_content" android:layout_height="fill_parent"
   android:gravity="center"
-  android:paddingLeft="7dip"
+  android:paddingLeft="@dimen/title_bar_margin_left"
   >
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
     android:orientation="horizontal"
-    android:paddingRight="12dip"
+    android:paddingRight="@dimen/title_bar_margin_center"
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/title_bar_poem_num"
@@ -17,7 +17,7 @@
       android:textSize="@dimen/title_bar_large_text"
       android:textColor="@android:color/white"
       android:id="@+id/yomi_info_search_poem_num"
-      android:paddingLeft="4dip"
+      android:paddingLeft="@dimen/title_bar_margin_each"
     />
   </LinearLayout>
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
@@ -31,7 +31,7 @@
     <karuta.hpnpwd.wasuramoti.PatchedTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textColor="@android:color/white"
       android:textSize="@dimen/title_bar_large_text"
-      android:paddingLeft="4dip"
+      android:paddingLeft="@dimen/title_bar_margin_each"
       android:id="@+id/yomi_info_search_kimariji"
     />
   </LinearLayout>

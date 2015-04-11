@@ -147,7 +147,7 @@
   <string name="yomi_info_search_poem_num">No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>
   <string name="yomi_info_search_poem_num_abbrev">No.:</string>
-  <string name="yomi_info_search_kimariji_abbrev">Kmrj:</string>
+  <string name="yomi_info_search_kimariji_abbrev">Kmrj.:</string>
   <string name="title_bar_poem_num">@string/yomi_info_search_poem_num_abbrev</string>
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
