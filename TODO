@@ -1,4 +1,5 @@
 Priority High:
+  * Display license text inside the app.
   * Memorization Mode
     - Swiping poem text upwards will mark poem as "Memorized"
     - After shuffling, the "Memorized" poem would be excluded from list.
@@ -9,11 +10,9 @@ Priority High:
   * Change the color of author.
   * Solve the warnings caused by -Xlint
   * Generate wasuramoti://fudaset/ uri
-  * Display license of fonts in browser.
-    - Maybe using android.content.ContentProvider or android.support.v4.content.FileProvider ?
-  * Can we use ContentProvider instead of data-uri for bug reporting ?
+  * Write my mail address to bugreport
 
-Priority Middle:
+Priority Medium:
   * Support MP3 audio.
   * Customize Quick Config
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.

@@ -46,15 +46,20 @@ object AllFuda{
 
   // romaji -> "Taki No Oto Wa Taete"
   // hiragana -> "たきのおとはたえて"
-  // result -> Array((Taki,たき),(No,の),(Oto,おと),(Wa,わ),(Taete,たえて))
+  // result -> Array((Taki,たき),(No,の),(Oto,おと),(Wa,は),(Taete,たえて))
   def splitToCorrespondingRomaji(romaji:String,hiragana:String):Array[(String,String)] = {
     var buf = hiragana
-    romaji.split("\\s+").map{ s =>
+    val res = romaji.split("\\s+").map{ s =>
       val c = countRomaji(s)
       val h = takeIgnoringSmallLetters(buf,c)
       buf = buf.drop(h.length)
       (s,h)
     }
+    if(!TextUtils.isEmpty(buf)){
+      val newlast = (res.last._1, res.last._2+buf)
+      res.update(res.length-1,newlast)
+    }
+    res
   }
 
   // Akinota -> 4, Chihayaburu -> 5, Tenchi -> 3
