@@ -369,7 +369,7 @@
         <head>
           <meta charset="utf-8">
           <meta content="width=device-width, initial-scale=1.0" name="viewport">
-          <title>わすらもちバグ報告フォーム</title>
+          <title>わすらもち匿名バグ報告フォーム</title>
           <style type="text/css">
             textarea{
               width: 24em;
@@ -378,16 +378,19 @@
           </style>
         </head>
         <body>
-          <h3>わすらもちバグ報告フォーム</h3>
-          <form method="post" action="%1$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
+          <h3>わすらもち匿名バグ報告フォーム</h3>
+          <form method="post" action="%2$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
             <div>
               <div>バグの症状を書いて下さい:</div>
-              <textarea name="bug_detail">%3$s</textarea>
+              <textarea name="bug_detail">%4$s</textarea>
             </div>
-            <div>「送信する」をクリックすると機種名やAndroidのバージョンなどデバッグに必要な情報が送信されますが，個人情報は送ってないので信じて下さい．</div>
+            <div>「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．</div>
             <input type="submit" value="送信する">
-            <input type="hidden" name="bug_device_info value="%2$s">
+            <input type="hidden" name="bug_device_info value="%3$s">
           </form>
+          <hr />
+          <div>匿名のバグ報告の場合は開発者側から詳しい症状をお伺いすることができません．</div>
+          <div>もし本当に直して欲しいバグならメールで連絡して下さい &rArr; [<a href="mailto:%1$s">%1$s</a>]</div>
         </body>
       </html>
     ]]>

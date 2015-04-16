@@ -648,8 +648,9 @@ object Utils {
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setComponent(comp)
         val post_url = context.getResources.getString(R.string.bug_report_url)
+        val mail_addr = context.getResources.getString(R.string.developer_mail_addr)
         val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
-        val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report,defaultBugDetail)
+        val html = context.getResources.getString(R.string.bug_report_html,mail_addr,post_url,bug_report,defaultBugDetail)
         val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
         intent.setData(Uri.parse(dataUri))
         try{

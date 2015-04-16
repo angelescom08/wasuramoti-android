@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Wasuramoti</string>
+  <string name="developer_mail_addr">pjmtdw@gmail.com</string>
 
   <string name="error_ioerror">Error: %s. Try again after deleting unnecessary files/apps. Please contact us if this occurs frequently.</string>
 
@@ -412,7 +413,7 @@
       <html>
         <head>
           <meta content="width=device-width, initial-scale=1.0" name="viewport">
-          <title>Wasuramoti Bug Report Form</title>
+          <title>Wasuramoti Anonymous Bug Report Form</title>
           <style type="text/css">
             textarea{
               width: 24em;
@@ -421,16 +422,20 @@
           </style>
         </head>
         <body>
-          <h3>Wasuramoti Bug Report Form</h3>
-          <form method="post" action="%1$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
+          <h3>Wasuramoti Anonymous Bug Report Form</h3>
+          <form method="post" action="%2$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
             <div>
               <div>Write the detail of the bug here:</div>
-              <textarea name="bug_detail">%3$s</textarea>
+              <textarea name="bug_detail">%4$s</textarea>
             </div>
-            <div>Clicking the following button will send some device informations which is useful for debugging. However we do not send any personal information so please trust us.</div>
-            <input type="hidden" name="bug_device_info" value="%2$s">
+            <div>Clicking the following button will send some device informations which is useful for debugging.</div>
+            <input type="hidden" name="bug_device_info" value="%3$s">
             <input type="submit" value="Send_Bug_Report">
           </form>
+          <hr />
+          <div>In case of anonymous bug report, we cannot ask you the detail of the bug.</div>
+          <div>If you really want us to fix the bug, please contact us by E-Mail &rArr; [<a href="mailto:%1$s">%1$s</a>]</div>
+
         </body>
       </html>
     ]]>
