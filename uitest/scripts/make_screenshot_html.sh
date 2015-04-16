@@ -1,4 +1,5 @@
 #!/bin/bash
+trap exit SIGINT SIGTERM
 DATADIR=$HOME/wasuramoti_screenshot
 for dir in $DATADIR/screenshot_*; do
   cd $dir
@@ -12,10 +13,11 @@ for dir in $DATADIR/screenshot_*; do
   echo >&3 "<!DOCTYPE html>"
   echo >&3 "<html><head><title>$(basename $dir)</title></head><body>"
   for fn in wsrmt_*.png; do
+    echo "$(dirname "$dir")/$fn"
     base="${fn#wsrmt_}"
-    crop_repage="-crop $((bottom-top))x$((right-left))+${left}+${top} +repage"
-    convert $crop_repage "$fn" PNG8:large/"$base"
-    convert $crop_repage -resize 40% "$fn" PNG8:small/"$base" 
+    crop_repage="-crop $((right-left))x$((bottom-top))+${left}+${top} +repage"
+    convert $crop_repage -resize '640x>' "$fn" PNG8:large/"$base"
+    convert $crop_repage -resize '320x' "$fn" PNG8:small/"$base" 
     echo >&3 "<a href='large/$base'><img src='small/$base' /></a>"
   done
   echo >&3 "</body></html>"
