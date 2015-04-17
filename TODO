@@ -10,7 +10,6 @@ Priority High:
   * Change the color of author.
   * Solve the warnings caused by -Xlint
   * Generate wasuramoti://fudaset/ uri
-  * Write my mail address to bugreport
 
 Priority Medium:
   * Support MP3 audio.

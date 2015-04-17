@@ -175,20 +175,20 @@ class YomiInfoSearchDialog extends DialogFragment{
             }
           }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag)){
             getCurYomiInfoView.foreach{vw =>
-              vw.torifuda_mode = false
               vw.info_lang = if(tag.endsWith("ROMAJI")){
-                if(vw.info_lang != Utils.YomiInfoLang.Romaji){
+                if(vw.torifuda_mode || vw.info_lang != Utils.YomiInfoLang.Romaji){
                   Utils.YomiInfoLang.Romaji
                 }else{
                   Utils.YomiInfoLang.Japanese
                 }
               }else{
-                if(vw.info_lang != Utils.YomiInfoLang.English){
+                if(vw.torifuda_mode || vw.info_lang != Utils.YomiInfoLang.English){
                   Utils.YomiInfoLang.English
                 }else{
                   Utils.YomiInfoLang.Japanese
                 }
               }
+              vw.torifuda_mode = false
               
               vw.initDrawing
               vw.invalidate
