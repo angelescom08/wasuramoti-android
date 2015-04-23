@@ -1,8 +1,8 @@
 Priority High:
   * Display license text inside the app.
   * Memorization Mode
-    - Swiping poem text upwards will mark poem as "Memorized"
-    - After shuffling, the "Memorized" poem would be excluded from list.
+    - show "Memorized" button
+    - "Memorized" poem would be excluded from list.
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
