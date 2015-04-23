@@ -89,12 +89,12 @@ class YomiInfoSearchDialog extends DialogFragment{
       intent.putExtra(SearchManager.QUERY,query)
       Left(intent)
     }
-    val f2 = {() => 
+    val f2 = {() =>
       val intent = new Intent(Intent.ACTION_VIEW)
       intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
       Left(intent)
     }
-    val f3 = {() => 
+    val f3 = {() =>
       Right({() =>
         Utils.messageDialog(getActivity,Right(R.string.browser_not_found))
       })
@@ -149,7 +149,7 @@ class YomiInfoSearchDialog extends DialogFragment{
   }
 
   def genContentView():View = {
-    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_dialog,null) 
+    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_dialog,null)
     val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
@@ -189,7 +189,7 @@ class YomiInfoSearchDialog extends DialogFragment{
                 }
               }
               vw.torifuda_mode = false
-              
+
               vw.initDrawing
               vw.invalidate
               enableDisplayButton(true)
@@ -263,7 +263,7 @@ class YomiInfoSearchDialog extends DialogFragment{
     val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
     val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(getActivity,fudanum)
-    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null) 
+    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null)
     title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
     title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
     val body_view = genContentView()
@@ -278,7 +278,7 @@ class YomiInfoSearchDialog extends DialogFragment{
 
 class YomiInfoDetailDialog extends DialogFragment{
   def addRow(table:LinearLayout,text:String){
-    val item = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail_row,null) 
+    val item = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail_row,null)
     val v_text = item.findViewById(R.id.kimariji_changelog_row).asInstanceOf[TextView]
     v_text.setText(Html.fromHtml(text))
     table.addView(item)
@@ -288,7 +288,7 @@ class YomiInfoDetailDialog extends DialogFragment{
       addRow(table,getActivity.getString(R.string.kimariji_changelog_joka))
       return
     }
-    val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) + 
+    val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
     getActivity.getString(R.string.kimariji_changelog_current)
     val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,fudanum)
     addRow(table,getActivity.getString(R.string.kimariji_changelog_init,kimari_all)+
@@ -322,7 +322,7 @@ class YomiInfoDetailDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
-    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail,null) 
+    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail,null)
     val table = view.findViewById(R.id.kimariji_changelog).asInstanceOf[LinearLayout]
     addKimarijiChangelog(table,fudanum)
     builder

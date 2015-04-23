@@ -86,7 +86,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     }
     setOnDismissListener(new DialogInterface.OnDismissListener(){
         override def onDismiss(di:DialogInterface){
-          Globals.prefs.foreach{ p => 
+          Globals.prefs.foreach{ p =>
             val str = Array(sort_mode.toString,list_item_mode.toString).mkString(",")
             p.edit.putString("fudaset_edit_list_dlg_mode",str).commit
           }

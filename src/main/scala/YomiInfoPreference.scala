@@ -11,7 +11,7 @@ import _root_.android.support.v4.app.DialogFragment
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
   var root_view = None:Option[View]
   override def getAbbrValue():String = {
-    val v = YomiInfoUtils.getPoemTextFont 
+    val v = YomiInfoUtils.getPoemTextFont
     val index = getIndexFromValue(context,v)
     val res = context.getResources
     var base = res.getStringArray(R.array.conf_show_yomi_info_entries_abbr)(index)
@@ -86,7 +86,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
     simo.setChecked(prefs.getBoolean("yomi_info_simo",true))
-    
+
     // switch visibility when spinner changed
     val layout = view.findViewById(R.id.yomi_info_conf_layout)
     val f = (pos:Int) => {
@@ -145,7 +145,7 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
     edit.commit
     Globals.forceRestart = true
   }
-    
+
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_detail, null)
 
@@ -185,7 +185,7 @@ class YomiInfoConfigTranslateDialog(context:Context) extends AlertDialog(context
     edit.commit
     Globals.forceRestart = true
   }
-    
+
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_translation, null)
 
@@ -332,7 +332,7 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_show_bar_kimari",true)
   }
   def hidePoemText(edit:SharedPreferences.Editor){
-    setPoemTextVisibility(edit,false) 
+    setPoemTextVisibility(edit,false)
   }
   def showFull(edit:SharedPreferences.Editor){
     showPoemTextAndTitleBar(edit)

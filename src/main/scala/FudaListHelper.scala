@@ -224,17 +224,17 @@ object FudaListHelper{
       // since the Kimariji will be the hint to which Karafuda was chosen.
       "OR (read_order < "+index+" AND skip = 1)"
     }else{
-      "AND skip = 0" 
+      "AND skip = 0"
     }
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"num > 0 AND ( read_order > ? " + cond + ")",Array(index.toString),null,null,null,null)
-    cursor.moveToFirst 
+    cursor.moveToFirst
     val notyetread = ( 0 until cursor.getCount ).map{ x=>
       val r = AllFuda.list(cursor.getInt(0)-1)
       cursor.moveToNext
       r
     }.toSet
     cursor.close()
-    //db.close 
+    //db.close
     notyetread
   }
   def getFudanumIndex(context:Context,fudanum:Int):Int = Globals.db_lock.synchronized{
@@ -259,7 +259,7 @@ object FudaListHelper{
       return new Array[(String,Int)](0)
     }
     val cursor = db.rawQuery("SELECT num,read_order FROM " + Globals.TABLE_FUDALIST + " WHERE skip <=0 AND read_order < "+current_index+" AND num IN ("+nums.mkString(",")+") ORDER BY read_order ASC",null)
-    cursor.moveToFirst 
+    cursor.moveToFirst
     val alreadyread = ( 0 until cursor.getCount ).map{ x=>
       val n = AllFuda.list(cursor.getInt(0)-1)
       val r = cursor.getInt(1)
@@ -322,7 +322,7 @@ object FudaListHelper{
       updateSkipList()
     }
     val rand = new Random()
-    val num_list = (1 to AllFuda.list.length).toList 
+    val num_list = (1 to AllFuda.list.length).toList
     val shuffled = Utils.getReadOrder match {
       case Utils.ReadOrder.PoemNum => num_list
       case _ => rand.shuffle(num_list)

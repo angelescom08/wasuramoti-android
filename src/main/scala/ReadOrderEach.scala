@@ -40,7 +40,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     val idx = ar.indexOf(value)
     if(idx == -1){
       if(value != Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE)){
-        // migrate from abolished option 
+        // migrate from abolished option
         val edit = Globals.prefs.get.edit
         edit.putString("read_order_each_custom",value)
         edit.commit()
@@ -70,7 +70,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
   }
 
   def updateCustomCurrent(){
-    root_view.foreach{ v => 
+    root_view.foreach{ v =>
       val prefs = Globals.prefs.get
       val abbr = if(prefs.contains("read_order_each_custom")){
         toAbbrValue(prefs.getString("read_order_each_custom",DEFAULT_VALUE))

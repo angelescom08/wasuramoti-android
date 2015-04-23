@@ -55,7 +55,7 @@ object AudioHelper{
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false
 
-          old_player.foreach{ p=> 
+          old_player.foreach{ p=>
             // mayInterruptIfRunning must be true to set Thread.currentThread.isInterrupted() == true for AsyncTask's thread
             p.decode_task.cancel(true)
             // TODO: do we have to wait for decode to finish since it is jni ?
@@ -391,14 +391,14 @@ object KarutaPlayUtils{
 
 // Canonical way to keep CPU awake on auto play, in battery mode, is adding WAKE_LOCK permission and
 // to use WakefulBroadcastReceiver or PowerManager.
-// see: 
+// see:
 //   http://stackoverflow.com/questions/8713361/keep-a-service-running-even-when-phone-is-asleep
-// 
+//
 // However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
 // As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
 // However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immediately before calling next timer.
 // So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
-// This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on. 
+// This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on.
 class KarutaPlayReceiver extends BroadcastReceiver {
   import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){

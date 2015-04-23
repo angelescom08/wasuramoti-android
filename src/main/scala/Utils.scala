@@ -189,7 +189,7 @@ object Utils {
       case "RANDOM" => ReadOrder.Random
       case "POEM_NUM" => ReadOrder.PoemNum
       case _ => ReadOrder.Shuffle
-    } 
+    }
   }
 
   def isScreenWide(context:Context):Boolean = {
@@ -204,7 +204,7 @@ object Utils {
     Configuration.SCREENLAYOUT_SIZE_NORMAL == getScreenLayout(context)
   }
   def isScreenLarge(context:Context):Boolean = {
-    Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains 
+    Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains
     getScreenLayout(context)
   }
   def isLandscape(context:Context):Boolean = {
@@ -223,7 +223,7 @@ object Utils {
   }
   def readJoka():Boolean = {
     val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
-    roj != "upper_0,lower_0" 
+    roj != "upper_0,lower_0"
   }
   def readFirstFuda():Boolean = {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
@@ -331,7 +331,7 @@ object Utils {
 
     // this makes "<a href='...'></a>" clickable
     txtview.setMovementMethod(LinkMovementMethod.getInstance)
-    
+
     val dialog = custom(builder)
       .setPositiveButton(android.R.string.ok,null)
       .setView(view)

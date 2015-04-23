@@ -36,7 +36,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     // Android 2.x sends same intent at onResume() even after setIntent() is called if resumed from shown list where home button is long pressed.
     // Therefore we check FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY flag to distinguish it.
     if(intent == null ||
-      intent.getAction != Intent.ACTION_VIEW || 
+      intent.getAction != Intent.ACTION_VIEW ||
       (intent.getFlags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) > 0
     ){
       return
@@ -84,7 +84,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           }
           (if(r){count+=1;"[OK]"}else{"[NG]"}) + " " + name
         }
-        val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) + 
+        val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) +
         "\n" + res.mkString("\n")
         Utils.messageDialog(this,Left(msg))
       })
@@ -226,7 +226,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
 
     val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
-    if(frag_stub != null && 
+    if(frag_stub != null &&
       YomiInfoUtils.showPoemText &&
       Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
     ){
@@ -357,7 +357,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       if(cur_view.isEmpty){
         return
       }
-      lazy val next_view = 
+      lazy val next_view =
         yomi_info.getNextViewId(cur_view.get.getId).flatMap{
           vid => Option(yomi_info.findViewById(vid).asInstanceOf[YomiInfoView])
         }

@@ -58,7 +58,7 @@ object BugReport{
       case f if f.isFile => s"(name:${f.getName},size:${f.length},crc32:${getCRC(f)})"
     }
   }
-  
+
   def createBugReport(context:Context):String = {
     val bld = new mutable.StringBuilder
     bld ++= "[build]\n"
@@ -79,7 +79,7 @@ object BugReport{
       bld ++=  s"locale=${config.locale}\n"
       bld ++=  s"screenLayout=${config.screenLayout}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
 
     try{
@@ -93,7 +93,7 @@ object BugReport{
       bld ++= s"widthPixels=${metrics.widthPixels}\n"
       bld ++= s"heightPixels=${metrics.heightPixels}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
 
     var pi = null:PackageInfo
@@ -103,7 +103,7 @@ object BugReport{
       bld ++=  s"version_code=${pi.versionCode}\n"
       bld ++=  s"version_name=${pi.versionName}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
     if(pi != null){
       try{
@@ -114,7 +114,7 @@ object BugReport{
         bld ++=  s"data_dir=${ai.dataDir}\n"
         bld ++=  s"external_storage=${Utils.getAllExternalStorageDirectories(context)}\n"
       }catch{
-        case e:Exception => doWhenError(e) 
+        case e:Exception => doWhenError(e)
       }
     }
 
@@ -133,7 +133,7 @@ object BugReport{
       bld ++= s"low_memory=${mi.lowMemory}\n"
 
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
     try{
       bld ++= "[disk_usage]\n"
@@ -141,7 +141,7 @@ object BugReport{
       bld ++= s"total=${tot}\n"
       bld ++= s"available=${avail}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
 
     try{
@@ -150,14 +150,14 @@ object BugReport{
       val filelist = listFileCRC(context.getCacheDir).mkString("|")
       bld ++= s"list_file=${filelist}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
     try{
       bld ++= "[misc]\n"
       val fd_num = new File("/proc/self/fd").listFiles.length
       bld ++= s"proc_self_fd_num=$fd_num\n"
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
     try{
       bld ++= "[shared_preference]\n"
@@ -168,7 +168,7 @@ object BugReport{
         }
       }
     }catch{
-      case e:Exception => doWhenError(e) 
+      case e:Exception => doWhenError(e)
     }
     // TODO: dump variables
 
@@ -182,7 +182,7 @@ object BugReport{
             val table = c.getString(0)
             c.moveToNext
             // fudalist is large so we don't bugreport (in order to avoid exceeding browser's url length limit)
-            if(table != "fudalist"){ 
+            if(table != "fudalist"){
               val c2 = db.rawQuery(s"SELECT * from $table",null)
               if(c2.moveToFirst){
                 bld ++= s"cols_${table}=${c2.getColumnNames.toList.mkString(",")}\n"
@@ -203,16 +203,16 @@ object BugReport{
         }
         c.close
       }catch{
-        case e:Exception => doWhenError(e) 
-      } 
+        case e:Exception => doWhenError(e)
+      }
     }
 
     try{
       bld ++= "[variables]\n"
       bld ++= s"karuta_player=${Globals.player.map{_.toBugReport}.getOrElse("None")}\n"
     }catch{
-      case e:Exception => doWhenError(e) 
-    } 
+      case e:Exception => doWhenError(e)
+    }
     return bld.toString
   }
 }

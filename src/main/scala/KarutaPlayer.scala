@@ -20,7 +20,7 @@ object KarutaPlayerDebug{
       Log.d("wasuramoti_debug",s"key=${key}, checksum=${cs}")
       checksum_table.get(key) match{
         case None => checksum_table += {(key,cs)}
-        case Some(x) => if( x != cs ){ 
+        case Some(x) => if( x != cs ){
                           val message = "checksum mismatch for " + key + ": " + x + " != " + cs
                           Log.d("wasuramoti_debug",message)
                           throw new Exception(message)
@@ -246,7 +246,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           return
         }
       }
-    
+
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
       val buf = new Array[Short](calcBufferSize/AudioHelper.SHORT_SIZE)
       var offset = 0
@@ -270,7 +270,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
         })
       }
-      
+
       val r_write = audio_track.get.write(buf,0,buf.length)
 
       if(Globals.IS_DEBUG){
@@ -325,7 +325,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // You can confirm it by either executing `adb shell dumpsys meminfo karuta.hpnpwd.wasuramoti` and see Ashmem of PSS increases continuously in Android 4.x,
       // or `adb shell su -c "ls -l /proc/<pid>/fd | grep ashmem"` and see that a lot of symbolic link to /dev/ashmem is created.
       // The application will raise exception and terminates when this number of fd exceeds Max open files in /proc/<pid>/limits.
-      // However, if we run garbage collection frequently, we can prevent the increase of fd's. 
+      // However, if we run garbage collection frequently, we can prevent the increase of fd's.
       // Thus this +200ms gives CPU free time and make DalvikVM to run GC and call the native destructor of AudioTrack.
       // Note that calling System.gc() seems to have no effect.
       // See the following for the bug info:

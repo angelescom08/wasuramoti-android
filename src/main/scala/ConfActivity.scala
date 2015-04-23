@@ -103,7 +103,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
             Globals.forceRefresh = true
-          case _ => 
+          case _ =>
         }
         val pref = findPreference(key)
         if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){

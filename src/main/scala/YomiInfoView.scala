@@ -107,7 +107,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     val w_max = ar.map{_._1}.max.toInt
     val h_max = ar.map{_._2}.max.toInt
     val hh_max = ar.map{_._3}.max.toInt
-    (w_max,h_max,hh_max) 
+    (w_max,h_max,hh_max)
   }
 
   def switchRenderWithPathWhenLarge(paint:Paint,texts:Array[String]){
@@ -134,13 +134,13 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   }
   def getTextArrayWithMargin[T](num:Int,res_id:Int,res_author:Int,delimiter:String,sub_delimiter:String,author_is_right:Boolean,
     margin_top:Array[T],margin_author:Array[T],author_prefix:String=""):Array[(String,T)] = {
-      val full = AllFuda.get(context,res_id)(num).split(delimiter).zip(margin_top) 
+      val full = AllFuda.get(context,res_id)(num).split(delimiter).zip(margin_top)
       val author = if(show_author){
         (author_prefix + AllFuda.get(context,res_author)(num)).split(delimiter).zip(margin_author)
       }else{
         new Array[(String,T)](0)
       }
-      val body = 
+      val body =
         (if(show_kami){full.take(3)}else{new Array[(String,T)](0)}) ++
         (if(show_simo){full.takeRight(2)}else{new Array[(String,T)](0)})
       val res = if(author_is_right){
@@ -184,7 +184,7 @@ trait YomiInfoYomifudaTrait{
   var show_author = true
   var show_kami = true
   var show_simo = true
-  
+
   def initYomifuda(){
     val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
     MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
@@ -447,7 +447,7 @@ trait YomiInfoTorifudaTrait{
   val FUDA_CHARS_PER_ROW = 5
   val FUDA_MAX_ROW = 3
   val FUDA_EDGE_SIZE = 0.04
-  
+
   val paint_edge = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint_edge.setColor(Color.rgb(0,42,17))
   paint_edge.setStyle(Paint.Style.STROKE)
@@ -509,7 +509,7 @@ trait YomiInfoTorifudaTrait{
       val ary = AllFuda.get(context,R.array.list_torifuda)(num).replace(" ","").toArray.map{_.toString}.grouped(FUDA_CHARS_PER_ROW).toArray
 
       switchRenderWithPathWhenLarge(paint,ary.map{_.mkString("")})
-      
+
       val width = (1.0 - 2*FUDA_PADDING_LR)*fuda_width
       val height = (1.0 - 2*FUDA_PADDING_TB)*fuda_height
       val dx = width / FUDA_MAX_ROW.toDouble
@@ -562,7 +562,7 @@ trait YomiInfoEnglishTrait{
     ENG_MARGIN_TB = ENG_MARGIN_TB_BASE*margin_boost
     ENG_MARGIN_LR = ENG_MARGIN_LR_BASE*margin_boost
   }
-  
+
   def measureTextSizeEng(ar:Array[String],paint:Paint):(Int,Int,Int) = {
     var tsumx = 0
     var tsumy = 0
@@ -701,7 +701,7 @@ trait YomiInfoRomajiTrait{
     paint.setTextSize(estimated_hira)
     paint_furigana.setTextSize(estimated_roma)
     val (w_max,max_hira,max_roma) = measureTextSizeRomaji(all_array,paint,paint_furigana,estimated_space)
-    val h_screen = (1 - ROMAJI_TB*2 - ROMAJI_ROWSPAN*(all_array.length-1) - ROMAJI_ROMA_HIRA_SPAN*all_array.length) * getHeight 
+    val h_screen = (1 - ROMAJI_TB*2 - ROMAJI_ROWSPAN*(all_array.length-1) - ROMAJI_ROMA_HIRA_SPAN*all_array.length) * getHeight
     val w_screen = (1 - ROMAJI_LR*2) * getWidth
     val rate_h = h_screen / ((max_roma + max_hira)*all_array.length)
     val rate_w = w_screen / w_max
