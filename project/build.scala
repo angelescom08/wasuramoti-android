@@ -11,9 +11,10 @@ object Build extends android.AutoBuild {
     buildToolsVersion in Android := Some("19.1.0"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88
     sourceGenerators in Compile <<= (sourceGenerators in Compile) (g => Seq(g.last)),
-    // Support library 21.0.3 has a bug that does not render ActionBar correctly: https://code.google.com/p/android/issues/detail?id=91424
-    // This bug is not fixed in 22.1.0, and also has a lot of bugs: https://code.google.com/p/android/issues/list?q=appcompat
-    // Therefore we use older version: 19.1.0 instead. TODO: use newer support library when bugs are fixed.
+    // Android support library >= 20 tries to emulate Material Design instead of Holo design.
+    // I think wasuramoti fits to Holo rather than Material Design because Holo is more darker.
+    // Therefore we use older version: 19.1.0 instead of newer support libary.
+    // TODO: use newer support library when penetration rate of android 5.x exceeds 80%
     libraryDependencies ++= Seq(
       "com.android.support" % "support-v4" % "19.1.0",
       android.Dependencies.aar("com.android.support" % "appcompat-v7" % "19.1.0")

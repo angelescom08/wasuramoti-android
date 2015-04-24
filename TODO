@@ -3,15 +3,27 @@ Priority High:
   * Memorization Mode
     - show "Memorized" button
     - "Memorized" poem would be excluded from list.
+  * Support Android 5.x
+    - Change color theme for ConfActivity and NotifyTimerActivity
+    - Change color of status bar
+      - http://stackoverflow.com/questions/27093287/how-to-change-status-bar-color-to-match-app-in-lollipop-android
+  * Show "Wasuramoti Timer Started" on notification area.
+
+Priority Medium-High:
+  * set contentDescription for all buttons
+  * Solve the warnings caused by -Xlint
+  * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%
+    - use AppCompat 22.1.0+ (this will automatically emulates Material Design for lower API version devices)
+    - ActionBarActivity -> AppCompatActivity
+    - Use PreferenceFragment instead for PreferenceActivity for API >= 11
+      - see http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
   * use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
-  * Show "Wasuramoti Timer Started" on notification area.
   * Change the color of author.
-  * Solve the warnings caused by -Xlint
-  * Generate wasuramoti://fudaset/ uri
 
 Priority Medium:
+  * Generate wasuramoti://fudaset/ uri
   * Support MP3 audio.
   * Customize Quick Config
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
