@@ -27,13 +27,12 @@
       <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/yomi_info_torifuda_desc"
-                android:layout_gravity="fill"
+                android:text="@string/yomi_info_default_language_desc"
         />
-      <Spinner android:id="@+id/yomi_info_torifuda_font"
+      <Spinner android:id="@+id/yomi_info_default_language"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:entries="@array/conf_yomi_info_japanese_fonts"
+                android:entries="@array/yomi_info_default_languages"
                  />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />
@@ -46,6 +45,11 @@
       android:id="@+id/yomi_info_show_info_button"
       android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/yomi_info_show_info_button"
+      />
+    <CheckBox
+      android:id="@+id/yomi_info_show_translate_button"
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/yomi_info_show_translate_button"
       />
 </LinearLayout>
 </ScrollView>

@@ -88,11 +88,11 @@
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
   <string name="yomi_info_conf_detail_title">詠み句の詳細設定</string>
-  <string name="yomi_info_conf_translation_title">詠み句の翻訳設定</string>
+  <string name="yomi_info_conf_font_title">詠み句のフォント</string>
   <string name="yomi_info_show_text_desc">詠み句を表示</string>
-  <string name="yomi_info_japanese_desc">詠み句の\nフォント:</string>
-  <string name="yomi_info_furigana_desc">ふりがなの\nフォント:</string>
-  <string name="yomi_info_torifuda_desc">取り札の\nフォント:</string>
+  <string name="yomi_info_japanese_desc">詠み句:</string>
+  <string name="yomi_info_furigana_desc">ふりがな:</string>
+  <string name="yomi_info_torifuda_desc">取り札:</string>
   <string name="yomi_info_torifuda_mode_desc">既定のモード:</string>
   <string-array name="yomi_info_mode">
     <item>詠み札</item>
@@ -108,6 +108,7 @@
   <string name="yomi_info_abbrev_kami">上</string>
   <string name="yomi_info_abbrev_simo">下</string>
   <string name="yomi_info_abbrev_both">両</string>
+  <string name="yomi_info_abbrev_none">なし</string>
   <string-array name="conf_yomi_info_japanese_fonts">
     <item>デフォルト</item>
     <item>Tフォント楷書</item>
@@ -164,13 +165,13 @@
   <string name="kimariji_changelog_current">これが現在の決まり字です．</string>
   <string name="kimariji_changelog_sameas">現在の札セット内での決まり字も上記と同じです．</string>
 
-  <string name="yomi_info_button_config_translation">翻訳設定</string>
+  <string name="yomi_info_button_config_font">フォント</string>
   <string name="yomi_info_default_language_desc">既定の言語:</string>
   <string name="yomi_info_lang_jpn">日本語</string>
   <string name="yomi_info_lang_roma">ローマ字</string>
   <string name="yomi_info_lang_eng">英語</string>
-  <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示する</string>
-  <string name="yomi_info_english_fonts_desc">英語フォント:</string>
+  <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示</string>
+  <string name="yomi_info_english_fonts_desc">英語:</string>
 
   <string name="conf_read_order_each_title">札ごとの詠み順</string>
   <string name="conf_read_order_each_summary">一回の詠みで上の句と下の句をどの順番で詠むか</string>

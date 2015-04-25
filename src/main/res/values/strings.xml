@@ -97,11 +97,11 @@
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show current poem text on the screen.</string>
   <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
-  <string name="yomi_info_conf_translation_title">Poem Text Translation</string>
+  <string name="yomi_info_conf_font_title">Poem Text Font</string>
   <string name="yomi_info_show_text_desc">Show Poem Text</string>
-  <string name="yomi_info_japanese_desc">Poem Text\nFont:</string>
-  <string name="yomi_info_furigana_desc">Furigana\nFont:</string>
-  <string name="yomi_info_torifuda_desc">Torifuda\nFont:</string>
+  <string name="yomi_info_japanese_desc">Poem Text:</string>
+  <string name="yomi_info_furigana_desc">Furigana:</string>
+  <string name="yomi_info_torifuda_desc">Torifuda:</string>
   <string name="yomi_info_torifuda_mode_desc">Default Mode:</string>
   <string-array name="yomi_info_mode">
     <item>Yomifuda</item>
@@ -117,6 +117,7 @@
   <string name="yomi_info_abbrev_kami">1</string>
   <string name="yomi_info_abbrev_simo">2</string>
   <string name="yomi_info_abbrev_both">12</string>
+  <string name="yomi_info_abbrev_none">None</string>
   <string-array name="conf_yomi_info_japanese_fonts">
     <item>Default</item>
     <item>T-Font Regular</item>
@@ -181,7 +182,7 @@
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>
   <string name="kimariji_changelog_sameas">The Kimariji in current poem set is as same as above.</string>
 
-  <string name="yomi_info_button_config_translation">Translation</string>
+  <string name="yomi_info_button_config_font">Font</string>
   <string name="yomi_info_default_language_desc">Default Language:</string>
 
   <string-array name="yomi_info_default_languages">
@@ -194,7 +195,7 @@
   <string name="yomi_info_lang_roma">Romaji</string>
   <string name="yomi_info_lang_eng">English</string>
   <string name="yomi_info_show_translate_button">Show Translate / Romaji Button</string>
-  <string name="yomi_info_english_fonts_desc">English Font:</string>
+  <string name="yomi_info_english_fonts_desc">English:</string>
   <string-array name="yomi_info_english_fonts">
     <item>Serif</item>
     <item>Black Chancery</item>
