@@ -8,6 +8,7 @@ Priority High:
     - Change color of status bar
       - http://stackoverflow.com/questions/27093287/how-to-change-status-bar-color-to-match-app-in-lollipop-android
   * Show "Wasuramoti Timer Started" on notification area.
+  * Show font example
 
 Priority Medium-High:
   * set contentDescription for all buttons

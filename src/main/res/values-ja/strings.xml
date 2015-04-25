@@ -89,7 +89,8 @@
   <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
   <string name="yomi_info_conf_detail_title">詠み句の詳細設定</string>
   <string name="yomi_info_conf_translation_title">詠み句の翻訳設定</string>
-  <string name="yomi_info_main_desc">詠み句:</string>
+  <string name="yomi_info_show_text_desc">詠み句を表示</string>
+  <string name="yomi_info_japanese_desc">詠み句の\nフォント:</string>
   <string name="yomi_info_furigana_desc">ふりがなの\nフォント:</string>
   <string name="yomi_info_torifuda_desc">取り札の\nフォント:</string>
   <string name="yomi_info_torifuda_mode_desc">既定のモード:</string>
@@ -107,17 +108,13 @@
   <string name="yomi_info_abbrev_kami">上</string>
   <string name="yomi_info_abbrev_simo">下</string>
   <string name="yomi_info_abbrev_both">両</string>
-  <string name="yomi_info_sameas_yomifuda">詠み札と同じ</string>
-  <string name="yomi_info_sameas_kanji">漢字と同じ</string>
-  <string-array name="conf_show_yomi_info_entries">
-    <item>なし</item>
+  <string-array name="conf_yomi_info_japanese_fonts">
     <item>デフォルト</item>
     <item>Tフォント楷書</item>
     <item>衡山毛筆行書</item>
     <item>衡山毛筆草書</item>
   </string-array>
-  <string-array name="conf_show_yomi_info_entries_abbr">
-    <item>なし</item>
+  <string-array name="conf_yomi_info_japanese_fonts_abbr">
     <item>デフォルト</item>
     <item>楷書</item>
     <item>行書</item>

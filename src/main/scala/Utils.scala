@@ -30,7 +30,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 3
-  val PREFERENCE_VERSION = 5
+  val PREFERENCE_VERSION = 6
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -135,12 +135,13 @@ object Utils {
         Globals.prefs = Some(PreferenceManager.getDefaultSharedPreferences(app_context))
       }
       AllFuda.init(app_context)
-      val prev_version = Globals.prefs.get.getInt("preference_version",0)
+      val pref = Globals.prefs.get
+      val prev_version = pref.getInt("preference_version",0)
       if(prev_version < Globals.PREFERENCE_VERSION){
         PreferenceManager.setDefaultValues(app_context,R.xml.conf,true)
-        val edit = Globals.prefs.get.edit
+        val edit = pref.edit
         if(prev_version <= 2){
-          val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+          val roe = pref.getString("read_order_each","CUR2_NEXT1")
           val new_roe = roe match {
             case "NEXT1_NEXT2" => "CUR1_CUR2"
             case "NEXT1_NEXT2_NEXT2" => "CUR1_CUR2_CUR2"
@@ -151,14 +152,42 @@ object Utils {
           }
         }
         if(prev_version <= 4){
-          val english_mode = ! Globals.prefs.get.getBoolean("yomi_info_default_lang_is_jpn",true)
+          val english_mode = ! pref.getBoolean("yomi_info_default_lang_is_jpn",true)
           if(english_mode){
             edit.putString("yomi_info_default_lang",YomiInfoLang.English.toString)
           }
         }
-        if(prev_version != 0){
+
+        if(prev_version > 0 && prev_version < 5){
           edit.putString("intended_use","competitive")
         }
+
+        if(prev_version > 0 && prev_version < 6){
+          val show_yomi_info = pref.getString("show_yomi_info","None").split(";")
+          val yomi_info_show_text = show_yomi_info.head != "None"
+          val poem_text_font = {
+            val ar = show_yomi_info.filter{ _ != "None" }
+            if(ar.isEmpty){
+              YomiInfoUtils.DEFAULT_FONT
+            }else{
+              ar.head
+            }
+          }
+          edit.putBoolean("yomi_info_show_text",yomi_info_show_text)
+          edit.putString("yomi_info_japanese_font", poem_text_font)
+          if(pref.getString("yomi_info_furigana_font","None") == "None"){
+            edit.putString("yomi_info_furigana_font", poem_text_font)
+          }
+          if(pref.getString("yomi_info_torifuda_font","None") == "None"){
+            edit.putString("yomi_info_torifuda_font", poem_text_font)
+          }
+          edit.remove("show_yomi_info")
+        }
+
+        // remove obsolete preferences
+        edit.remove("wav_threashold") // misspelled
+        edit.remove("hardware_accelerate") // always on
+        
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()
       }

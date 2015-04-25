@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/category_global">
     <karuta.hpnpwd.wasuramoti.YomiInfoPreference
-      android:key="show_yomi_info"
+      android:key="yomi_info_show_text"
       android:title="@string/conf_show_yomi_info_title"
       android:summary="@string/conf_show_yomi_info_summary"
       android:widgetLayout="@layout/conf_current_value"

@@ -98,7 +98,8 @@
   <string name="conf_show_yomi_info_summary">Show current poem text on the screen.</string>
   <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
   <string name="yomi_info_conf_translation_title">Poem Text Translation</string>
-  <string name="yomi_info_main_desc">Poem Text:</string>
+  <string name="yomi_info_show_text_desc">Show Poem Text</string>
+  <string name="yomi_info_japanese_desc">Poem Text\nFont:</string>
   <string name="yomi_info_furigana_desc">Furigana\nFont:</string>
   <string name="yomi_info_torifuda_desc">Torifuda\nFont:</string>
   <string name="yomi_info_torifuda_mode_desc">Default Mode:</string>
@@ -116,24 +117,19 @@
   <string name="yomi_info_abbrev_kami">1</string>
   <string name="yomi_info_abbrev_simo">2</string>
   <string name="yomi_info_abbrev_both">12</string>
-  <string name="yomi_info_sameas_yomifuda">Same as Yomifuda</string>
-  <string name="yomi_info_sameas_kanji">Same as Kanji</string>
-  <string-array name="conf_show_yomi_info_entries">
-    <item>None</item>
+  <string-array name="conf_yomi_info_japanese_fonts">
     <item>Default</item>
     <item>T-Font Regular</item>
     <item>Kouzan Semi-cursive</item>
     <item>Kouzan Cursive</item>
   </string-array>
-  <string-array name="conf_show_yomi_info_entries_abbr">
-    <item>None</item>
+  <string-array name="conf_yomi_info_japanese_fonts_abbr">
     <item>Default</item>
     <item>Regular</item>
     <item>Semi-cursive</item>
     <item>Cursive</item>
   </string-array>
-  <string-array name="conf_show_yomi_info_entryValues">
-    <item>None</item>
+  <string-array name="conf_yomi_info_japanese_fonts_values">
     <item>Default</item>
     <item>asset:tfont-kaisho.ttf</item>
     <item>asset:kouzan-gyosho.ttf</item>

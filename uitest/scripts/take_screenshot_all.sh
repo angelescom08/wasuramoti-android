@@ -43,10 +43,8 @@ for simo in true false;do
 <string name="dimlock_minutes">5</string>
 <string name="wav_fadein_kami">0.1</string>
 <string name="read_order_each">CUR2_NEXT1</string>
-<boolean name="hardware_accelerate" value="true" />
 <string name="wav_span_simokami">1.0</string>
 <string name="reader_path">INT:inaba</string>
-<string name="wav_threashold">0.01</string>
 <int name="preference_version" value="2" />
 <string name="read_order">SHUFFLE</string>
 <string name="wav_fadeout_simo">0.2</string>

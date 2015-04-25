@@ -33,7 +33,7 @@
       <Spinner android:id="@+id/yomi_info_torifuda_font"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:entries="@array/conf_show_yomi_info_entries"
+                android:entries="@array/conf_yomi_info_japanese_fonts"
                  />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />

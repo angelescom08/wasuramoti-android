@@ -195,13 +195,8 @@ trait YomiInfoYomifudaTrait{
 
     val main_font = TypefaceManager.get(context,YomiInfoUtils.getPoemTextFont)
     paint.setTypeface(main_font)
-    val furigana_tmp = Globals.prefs.get.getString("yomi_info_furigana_font","None")
-    val furigana_font = if(furigana_tmp == "None"){
-      main_font
-    }else{
-      TypefaceManager.get(context,furigana_tmp)
-    }
-    paint_furigana.setTypeface(furigana_font)
+    val furigana_font = Globals.prefs.get.getString("yomi_info_furigana_font",YomiInfoUtils.DEFAULT_FONT)
+    paint_furigana.setTypeface(TypefaceManager.get(context,furigana_font))
   }
 
   // Typeface of paint must be set before calling this function
@@ -453,12 +448,7 @@ trait YomiInfoTorifudaTrait{
   paint_edge.setStyle(Paint.Style.STROKE)
 
   def initTorifuda(){
-    val tmp = Globals.prefs.get.getString("yomi_info_torifuda_font","None")
-    val font = if(tmp != "None"){
-      tmp
-    }else{
-      YomiInfoUtils.getPoemTextFont
-    }
+    val font = Globals.prefs.get.getString("yomi_info_torifuda_font",YomiInfoUtils.DEFAULT_FONT)
     paint.setTypeface(TypefaceManager.get(context,font))
   }
   def drawEdge(canvas:Canvas,frame:Rect){
