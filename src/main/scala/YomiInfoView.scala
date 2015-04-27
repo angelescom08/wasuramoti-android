@@ -293,7 +293,9 @@ trait YomiInfoYomifudaTrait{
     }
   }
 
-  def calcBootRatioFurigana():(Double,Double) = {
+  // boost : [1.0, 1.4]
+  // ratio:  [0.6, 1.0]
+  def calcBoostRatioFurigana():(Double,Double) = {
     val furigana_width_conf_default = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)
     val furigana_width_conf_max = self.context.getResources.getInteger(R.integer.yomi_info_furigana_width_max)
     val furigana_width_conf_cur = Globals.prefs.get.getInt("yomi_info_furigana_width",furigana_width_conf_default)
@@ -308,6 +310,18 @@ trait YomiInfoYomifudaTrait{
       1.0
     }
     (boost,ratio)
+  }
+
+  // rate: [0.6, 1.4]
+  def calcRateFurigana():Double = {
+    val (boost,ratio) = calcBoostRatioFurigana
+    if(boost > 1.0){
+      boost
+    }else if(ratio < 1.0){
+      ratio
+    }else{
+      1.0
+    }
   }
 
   def onDrawYomifuda(canvas:Canvas){
@@ -361,7 +375,7 @@ trait YomiInfoYomifudaTrait{
         case _ => 0.8
       }
 
-      val (space_boost3,furigana_ratio) = if(show_furigana){calcBootRatioFurigana()}else{(1.0,1.0)}
+      val (space_boost3,furigana_ratio) = if(show_furigana){calcBoostRatioFurigana}else{(1.0,1.0)}
 
       val space_h = SPACE_H * space_boost1 * space_boost2 * space_boost3
 
@@ -672,7 +686,7 @@ trait YomiInfoRomajiTrait{
     (w_max,max_hira,max_roma)
   }
   def calculateTextSizeRomaji(all_array:Array[Array[(String,String)]],paint:Paint,paint_furigana:Paint):(Int,Int,Int) ={
-    val (furigana_boost,_) = calcBootRatioFurigana()
+    val furigana_rate = calcRateFurigana
     val row_chars = all_array.map{ ar => ar.map{_._2.length}.sum + ar.length - 1}.max
     val roma_rate =
     if(row_chars >= 14){
@@ -685,7 +699,7 @@ trait YomiInfoRomajiTrait{
       0.8
     }
     val base_rate = Math.min( 0.5 / all_array.length, 1.0 / row_chars)
-    val estimated_roma = (getHeight * base_rate * roma_rate * furigana_boost).toInt
+    val estimated_roma = (getHeight * base_rate * roma_rate * furigana_rate).toInt
     val estimated_hira = (getHeight * base_rate).toInt
     val estimated_space = (Math.max(estimated_roma,estimated_hira)/2.0).toInt
     paint.setTextSize(estimated_hira)
