@@ -132,6 +132,7 @@
   <string name="yomi_info_search_poem_num_abbrev">番:</string>
   <string name="yomi_info_search_kimariji_abbrev">決:</string>
   <string-array name="yomi_info_search_array">
+    <item>A.MEMORIZE_SWITCH|覚えた</item>
     <item>A.DISPLAY_KAMI|上の句</item>
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>

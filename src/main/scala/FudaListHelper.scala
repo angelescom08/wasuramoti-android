@@ -318,7 +318,7 @@ object FudaListHelper{
   }
 
   def shuffle(context:Context){ Globals.db_lock.synchronized{
-    if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
+    if(Globals.prefs.get.getBoolean("karafuda_enable",false) || Globals.IS_MEMORIZE_MODE){
       updateSkipList()
     }
     val rand = new Random()
@@ -343,21 +343,42 @@ object FudaListHelper{
       title
     }
     val dbr = Globals.database.get.getReadableDatabase
-    val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
-    val have_to_read = if( cursor.getCount > 0 ){
-      cursor.moveToFirst()
-      val body = cursor.getString(1)
-      TrieUtils.makeHaveToRead(body)
-    }else{
-      AllFuda.list.toSet
+    val have_to_read = {
+      // TODO: this is redundant query when fudaset_title is empty
+      val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
+      val r = if( cursor.getCount > 0 ){
+        cursor.moveToFirst()
+        val body = cursor.getString(1)
+        TrieUtils.makeHaveToRead(body)
+      }else{
+        AllFuda.list.toSet
+      }
+      cursor.close()
+      r
     }
-    cursor.close()
+
+    val memorized = {
+      if(Globals.IS_MEMORIZE_MODE){
+        val cursor = dbr.query(Globals.TABLE_FUDALIST,Array("num"),"memorized = 1",null,null,null,null,null)
+        cursor.moveToFirst()
+        val r = ( 0 until cursor.getCount ).map{ x=>
+          val n = AllFuda.list(cursor.getInt(0)-1)
+          cursor.moveToNext
+          n
+        }
+        cursor.close()
+        r
+      }else{
+        Set()
+      }
+    }
+
     //dbr.close()
 
-    val skip_temp = AllFuda.list.toSet -- have_to_read
+    val skip_temp = AllFuda.list.toSet -- have_to_read ++ memorized
     val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
-      TrieUtils.makeKarafuda(have_to_read,skip_temp,kara_num)
+      TrieUtils.makeKarafuda(have_to_read,skip_temp -- memorized,kara_num)
     }else{
       Set()
     }
@@ -432,6 +453,23 @@ object FudaListHelper{
     }else{
       r
     }
+  }
+
+  def isMemorized(fudanum:Int):Boolean = {
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("memorized"),"num = ?",Array(fudanum.toString),null,null,null,"1")
+    cursor.moveToFirst
+    val r = cursor.getInt(0)
+    cursor.close()
+    return r == 1
+  }
+  def switchMemorized(fudanum:Int){
+    val db = Globals.database.get.getWritableDatabase
+    Utils.withTransaction(db, () =>
+        db.execSQL("UPDATE " + Globals.TABLE_FUDALIST + " SET memorized = CASE memorized WHEN 1 THEN 0 ELSE 1 END WHERE num = '" + fudanum + "'")
+      )
+    db.close()
+
   }
 }
 

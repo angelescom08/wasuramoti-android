@@ -13,6 +13,7 @@ import scala.collection.mutable
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
 object YomiInfoSearchDialog{
+  val PREFIX_MEMORIZE = "A.MEMORIZE"
   val PREFIX_DISPLAY = "A.DISPLAY"
   val PREFIX_KIMARIJI = "B.KIMARIJI"
   val PREFIX_SWITCH = "B.SWITCH"
@@ -53,6 +54,17 @@ class YomiInfoSearchDialog extends DialogFragment{
       }
     }
   }
+  def setMemorizedButton(){
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    if(btnlist != null){
+      val tag = YomiInfoSearchDialog.PREFIX_MEMORIZE + "_SWITCH"
+      val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
+      if(b != null){
+        val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
+        b.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
+      }
+    }
+  }
   def getOrigText(tag:String):String ={
     val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
     items.find{_.startsWith(tag+"|")}.get.split("\\|")(1)
@@ -68,6 +80,9 @@ class YomiInfoSearchDialog extends DialogFragment{
     }else{
       enableDisplayButton(true)
     }
+
+    setMemorizedButton()
+
     val tag = YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
@@ -155,6 +170,8 @@ class YomiInfoSearchDialog extends DialogFragment{
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableButton(tag)
+      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_MEMORIZE+"_")){
+        Globals.IS_MEMORIZE_MODE
       }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
         Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
       }else{
@@ -198,12 +215,17 @@ class YomiInfoSearchDialog extends DialogFragment{
             val fudanum = getArguments.getInt("fudanum",0)
             doWebSearch(fudanum,tag.split("_")(1))
           }else{
+            val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>
-              tag.split("_")(1) match{
-                case "AUTHOR" => vw.show_author ^= true
-                case "KAMI" => vw.show_kami ^= true
-                case "SIMO" => vw.show_simo ^= true
-                case "FURIGANA" => vw.show_furigana ^= true
+              if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
+                vw.switchMemorized
+              }else{
+                postfix match{
+                  case "AUTHOR" => vw.show_author ^= true
+                  case "KAMI" => vw.show_kami ^= true
+                  case "SIMO" => vw.show_simo ^= true
+                  case "FURIGANA" => vw.show_furigana ^= true
+                }
               }
               vw.invalidate
               val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))

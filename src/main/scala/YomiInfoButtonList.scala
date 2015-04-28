@@ -24,7 +24,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
     button.setText(text)
     button.setEnabled(enabled)
     val drawable = tag.split("_").head match{
-      case YomiInfoSearchDialog.PREFIX_DISPLAY => Utils.getButtonDrawableId(yiv,tag)
+      case YomiInfoSearchDialog.PREFIX_DISPLAY | YomiInfoSearchDialog.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
       case YomiInfoSearchDialog.PREFIX_KIMARIJI => R.drawable.ic_action_storage
       case YomiInfoSearchDialog.PREFIX_SWITCH => R.drawable.ic_action_refresh
       case YomiInfoSearchDialog.PREFIX_SEARCH => R.drawable.ic_action_web_site

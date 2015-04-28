@@ -25,6 +25,13 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
 
   var rendered_num = None:Option[Int] // for consistency check
 
+  def isMemorized():Boolean = {
+    cur_num.exists(FudaListHelper.isMemorized(_))
+  }
+  def switchMemorized(){
+    cur_num.foreach(FudaListHelper.switchMemorized(_))
+  }
+
   def updateCurNum(num:Option[Int] = None){
     // do all the heavy task here
     val fn = getId match {

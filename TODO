@@ -6,15 +6,19 @@ Priority High:
   * Support Android 5.x
     - Change color theme for ConfActivity and NotifyTimerActivity
     - Change color of status bar
+      - http://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android
+      - https://chris.banes.me/2014/10/17/appcompat-v21/
+      - https://developer.android.com/training/material/theme.html
       - http://stackoverflow.com/questions/27093287/how-to-change-status-bar-color-to-match-app-in-lollipop-android
   * Show "Wasuramoti Timer Started" on notification area.
+  * Show "You can scroll yomi info button list" TIPS
   * Show font example
 
 Priority Medium-High:
   * set contentDescription for all buttons
   * Solve the warnings caused by -Xlint
   * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%
-    - use AppCompat 22.1.0+ (this will automatically emulates Material Design for lower API version devices)
+    - use AppCompat >= 22.1.0 (this will automatically emulates Material Design for lower API version devices)
     - ActionBarActivity -> AppCompatActivity
     - Use PreferenceFragment instead for PreferenceActivity for API >= 11
       - see http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders

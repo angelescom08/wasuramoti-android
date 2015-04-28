@@ -24,6 +24,7 @@ import scala.collection.mutable
 
 object Globals {
   val IS_DEBUG = false
+  val IS_MEMORIZE_MODE = true // TODO: this is temporary. move to preference
   val TABLE_FUDASETS = "fudasets"
   val TABLE_FUDALIST = "fudalist"
   val TABLE_READFILTER = "readfilter"
@@ -636,12 +637,17 @@ object Utils {
     return r
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
+    val Array(prefix,postfix) = tag.split("_")
     yiv.map{vw =>
-      val rx = tag.split("_")(1) match{
-        case "AUTHOR" => vw.show_author
-        case "KAMI" => vw.show_kami
-        case "SIMO" => vw.show_simo
-        case "FURIGANA" => vw.show_furigana
+      val rx = if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
+        vw.isMemorized
+      }else{
+        postfix match{
+          case "AUTHOR" => vw.show_author
+          case "KAMI" => vw.show_kami
+          case "SIMO" => vw.show_simo
+          case "FURIGANA" => vw.show_furigana
+        }
       }
       if(rx){
         R.drawable.ic_action_brightness_high

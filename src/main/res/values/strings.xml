@@ -149,6 +149,7 @@
   <string name="title_bar_poem_num">@string/yomi_info_search_poem_num_abbrev</string>
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
+    <item>A.MEMORIZE_SWITCH|Memorized</item>
     <item>A.DISPLAY_KAMI|1st Half</item>
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
