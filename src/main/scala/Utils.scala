@@ -29,7 +29,7 @@ object Globals {
   val TABLE_READFILTER = "readfilter"
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
-  val DATABASE_VERSION = 3
+  val DATABASE_VERSION = 4
   val PREFERENCE_VERSION = 6
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"

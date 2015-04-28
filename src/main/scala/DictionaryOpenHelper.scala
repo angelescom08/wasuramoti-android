@@ -44,7 +44,7 @@ object DbUtils{
 
 class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
   override def onUpgrade(db:SQLiteDatabase,oldv:Int,newv:Int){
-    if(newv == Globals.DATABASE_VERSION){
+    if(oldv < 3){
       Utils.withTransaction(db, () => {
         db.execSQL("ALTER TABLE "+Globals.TABLE_FUDASETS+" ADD COLUMN set_size INTEGER;")
         val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","body"),null,null,null,null,null,null)
@@ -59,15 +59,22 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
         cursor.close
       })
     }
+    if(oldv < 4){
+      Utils.withTransaction(db, () => {
+        db.execSQL("ALTER TABLE "+Globals.TABLE_FUDALIST+" ADD COLUMN memorized INTEGER;")
+        db.execSQL("UPDATE "+Globals.TABLE_FUDALIST+" SET memorized=0;")
+      })
+    }
   }
   override def onCreate(db:SQLiteDatabase){
      db.execSQL("CREATE TABLE "+Globals.TABLE_FUDASETS+" (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT, set_size INTEGER);")
-     db.execSQL("CREATE TABLE "+Globals.TABLE_FUDALIST+" (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER);")
+     db.execSQL("CREATE TABLE "+Globals.TABLE_FUDALIST+" (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER, memorized INTEGER);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_READFILTER+" (id INTEGER PRIMARY KEY, readers_id INTEGER, num INTEGER, volume NUMERIC, pitch NUMECIR, speed NUMERIC);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_READERS+" (id INTEGER PRIMARY KEY, path TEXT);")
      Utils.withTransaction(db, () => {
        val cv = new ContentValues()
        cv.put("skip",new java.lang.Integer(0))
+       cv.put("memorized",new java.lang.Integer(0))
        for( i  <- 0 to AllFuda.list.length){
          cv.put("num",new java.lang.Integer(i))
          cv.put("read_order",new java.lang.Integer(i))
