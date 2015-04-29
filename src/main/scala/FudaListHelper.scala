@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.content.{Context,ContentValues}
 import _root_.android.database.CursorIndexOutOfBoundsException
+import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.text.TextUtils
 import scala.util.Random
 
@@ -22,6 +23,10 @@ object FudaListHelper{
   var current_index_with_skip = None:Option[Int]
   var numbers_to_read = None:Option[Int]
   var numbers_of_karafuda = None:Option[Int]
+
+  def invalidateTotalReadNum(){
+    numbers_to_read = None
+  }
 
   def getCurrentIndex(context:Context):Int = {
     val prefs = context.getSharedPreferences(PREFS_NAME,0)
@@ -65,7 +70,12 @@ object FudaListHelper{
     val set_name = if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
       ""
     }else{
-      Globals.prefs.get.getString("fudaset","") + "\n"
+      val t = Globals.prefs.get.getString("fudaset","")
+      if(TextUtils.isEmpty(t)){
+        ""
+      }else{
+        t + "\n"
+      }
     }
     val kara_and_order = {
       val kara = if(num_of_kara > 0){
@@ -79,7 +89,7 @@ object FudaListHelper{
       }
       val s = Array(kara,order).collect{case Some(x)=>x}.mkString(" , ")
       if(TextUtils.isEmpty(s)){
-        s
+        ""
       }else{
         s + "\n"
       }
@@ -195,6 +205,7 @@ object FudaListHelper{
   }
   def queryIndexWithSkip(context:Context,fake_index:Int):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
+    // TODO: use string interpolation
     val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip <= 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip <= 0 AND rnk = "+fake_index,null)
     cursor.moveToFirst()
     val ret = cursor.getInt(1)
@@ -455,19 +466,24 @@ object FudaListHelper{
     }
   }
 
-  def isMemorized(fudanum:Int):Boolean = {
-    val db = Globals.database.get.getReadableDatabase
+  def getMemoraziedFlag(db:SQLiteDatabase,fudanum:Int):Boolean = {
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("memorized"),"num = ?",Array(fudanum.toString),null,null,null,"1")
     cursor.moveToFirst
     val r = cursor.getInt(0)
     cursor.close()
     return r == 1
   }
+
+  def isMemorized(fudanum:Int):Boolean = {
+    getMemoraziedFlag(Globals.database.get.getReadableDatabase,fudanum)
+  }
   def switchMemorized(fudanum:Int){
     val db = Globals.database.get.getWritableDatabase
-    Utils.withTransaction(db, () =>
-        db.execSQL("UPDATE " + Globals.TABLE_FUDALIST + " SET memorized = CASE memorized WHEN 1 THEN 0 ELSE 1 END WHERE num = '" + fudanum + "'")
-      )
+    Utils.withTransaction(db, () => {
+        // we disable karafuda mode when memorize mode is on, so we don't have to consider skip = -1
+        val newmem = if(getMemoraziedFlag(db,fudanum)){0}else{1}
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = $newmem, skip = $newmem WHERE num = '$fudanum'")
+    })
     db.close()
 
   }

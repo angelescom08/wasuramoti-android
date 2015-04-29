@@ -43,6 +43,7 @@ object DbUtils{
 }
 
 class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Globals.DATABASE_NAME,null,Globals.DATABASE_VERSION){
+  // TODO: use string interpolation
   override def onUpgrade(db:SQLiteDatabase,oldv:Int,newv:Int){
     if(oldv < 3){
       Utils.withTransaction(db, () => {
