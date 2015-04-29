@@ -430,6 +430,9 @@
     覚えた歌を全てリセットして良いですか？
   </string>
   <string name="memorization_mode_reset_done">
-    リセット完了
+    覚えた歌のリセット完了
+  </string>
+  <string name="memorization_warn_joka">
+    序歌は暗記モードの対象外です．
   </string>
 </resources>

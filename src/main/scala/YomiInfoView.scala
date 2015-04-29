@@ -29,7 +29,14 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     cur_num.exists(FudaListHelper.isMemorized(_))
   }
   def switchMemorized(){
-    cur_num.foreach(FudaListHelper.switchMemorized(_))
+    cur_num.foreach{ num =>
+      if(num == 0){
+        // TODO: include joka to memorization mode
+        Utils.messageDialog(context,Right(R.string.memorization_warn_joka))
+      }else{
+        FudaListHelper.switchMemorized(num)
+      }
+    }
   }
 
   def updateCurNum(num:Option[Int] = None){

@@ -475,6 +475,9 @@
     Really reset all the memorized poems?
   </string>
   <string name="memorization_mode_reset_done">
-    Reset done.
+    Finished resetting memorized poem.
+  </string>
+  <string name="memorization_warn_joka">
+    Joka is not subjected to memorization mode.
   </string>
 </resources>

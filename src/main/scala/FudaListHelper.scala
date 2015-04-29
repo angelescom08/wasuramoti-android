@@ -356,23 +356,10 @@ object FudaListHelper{
       title
     }
     val dbr = Globals.database.get.getReadableDatabase
-    val have_to_read = {
-      // TODO: this is redundant query when fudaset_title is empty
-      val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
-      val r = if( cursor.getCount > 0 ){
-        cursor.moveToFirst()
-        val body = cursor.getString(1)
-        TrieUtils.makeHaveToRead(body)
-      }else{
-        AllFuda.list.toSet
-      }
-      cursor.close()
-      r
-    }
 
     val memorized = {
       if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-        val cursor = dbr.query(Globals.TABLE_FUDALIST,Array("num"),"memorized = 1",null,null,null,null,null)
+        val cursor = dbr.query(Globals.TABLE_FUDALIST,Array("num"),"memorized = 1 AND num > 0",null,null,null,null,null)
         cursor.moveToFirst()
         val r = ( 0 until cursor.getCount ).map{ x=>
           val n = AllFuda.list(cursor.getInt(0)-1)
@@ -386,9 +373,23 @@ object FudaListHelper{
       }
     }
 
+    val have_to_read = {
+      // TODO: this is redundant query when fudaset_title is empty
+      val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
+      val r = if( cursor.getCount > 0 ){
+        cursor.moveToFirst()
+        val body = cursor.getString(1)
+        TrieUtils.makeHaveToRead(body)
+      }else{
+        AllFuda.list.toSet
+      }
+      cursor.close()
+      r
+    } -- memorized
+
     //dbr.close()
 
-    val skip_temp = AllFuda.list.toSet -- have_to_read ++ memorized
+    val skip_temp = AllFuda.list.toSet -- have_to_read
     val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
       val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
       TrieUtils.makeKarafuda(have_to_read,skip_temp -- memorized,kara_num)
@@ -480,6 +481,10 @@ object FudaListHelper{
     getMemoraziedFlag(Globals.database.get.getReadableDatabase,fudanum)
   }
   def switchMemorized(fudanum:Int){
+    if(fudanum == 0){
+      // TODO: include joka to memorization mode
+      return
+    }
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () => {
         // we disable karafuda mode when memorize mode is on, so we don't have to consider skip = -1
