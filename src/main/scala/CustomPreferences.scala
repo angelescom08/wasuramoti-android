@@ -5,7 +5,7 @@ import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Button}
 import _root_.android.media.AudioManager
-import _root_.android.text.TextUtils
+import _root_.android.text.{TextUtils,Html}
 import scala.collection.mutable
 
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
@@ -51,6 +51,56 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   }
 }
 
+class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  var root_view = None:Option[View]
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  override def getAbbrValue():String={
+    if(getPersistedBoolean(false)){
+      context.getResources.getString(R.string.message_enabled)
+    }else{
+      context.getResources.getString(R.string.message_disabled)
+    }
+  }
+  def getWidgets(view:View) = {
+    val enable = view.findViewById(R.id.memorization_mode_enable).asInstanceOf[CheckBox]
+    enable
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+    if(positiveResult){
+      root_view.foreach{ view =>
+        val edit = getEditor
+        val enable = getWidgets(view)
+        edit.putBoolean(getKey,enable.isChecked)
+        edit.commit
+        notifyChangedPublic
+        Globals.forceRestart = true
+        FudaListHelper.updateSkipList()
+      }
+    }
+    super.onDialogClosed(positiveResult)
+  }
+  override def onCreateDialogView():View = {
+    super.onCreateDialogView()
+    val view = LayoutInflater.from(context).inflate(R.layout.memorization_conf,null)
+    root_view = Some(view)
+    val html = context.getResources.getString(R.string.memorization_desc)
+    view.findViewById(R.id.memorization_desc_container).asInstanceOf[TextView].setText(Html.fromHtml(html))
+    val enable = getWidgets(view)
+    enable.setChecked(getPersistedBoolean(false))
+    val btn_reset = view.findViewById(R.id.memorization_mode_reset).asInstanceOf[Button]
+    btn_reset.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
+            FudaListHelper.resetMemorizedAll()
+            FudaListHelper.updateSkipList()
+            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+          })
+        }
+    })
+    view
+  }
+
+}
 
 class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   val DEFAULT_VALUE = 5

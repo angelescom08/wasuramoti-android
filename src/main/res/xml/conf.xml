@@ -8,6 +8,12 @@
       android:summary="@string/conf_show_yomi_info_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
+    <karuta.hpnpwd.wasuramoti.MemorizationPreference
+      android:key="memorization_mode"
+      android:title="@string/conf_memorization_title"
+      android:summary="@string/conf_memorization_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <karuta.hpnpwd.wasuramoti.FudaSetPreference
       android:key="fudaset"
       android:title="@string/conf_fudaset_title"

@@ -35,6 +35,7 @@
   <string name="conf_unit_second">秒</string>
 
   <!-- CATEGORY_GLOBAL -->
+  <string name="message_enabled">有効</string>
   <string name="message_disabled">無効</string>
   <string name="category_global">全体</string>
   <string name="conf_fudaset_title">札セット</string>
@@ -412,5 +413,23 @@
     [注意]: \n
     * ステレオや 44100 Hz の音声ファイルはメモリを消費するのでモノラルの 22050 Hz の音声ファイルを推奨します．\n
     * 「札ごとの詠み順」において「カスタム」に長い文字列を指定するとメモリを消費するので短くして下さい．
+  </string>
+  <string name="memorization_mode_enable">暗記モードを有効</string>
+  <string name="memorization_mode_reset">覚えた歌をリセット</string>
+  <string name="conf_memorization_title">暗記モード</string>
+  <string name="conf_memorization_summary">「覚えた」ボタンを表示して苦手な歌だけを学習</string>
+  <string name="memorization_desc">
+    <![CDATA[
+      <font color="#00FF99">[暗記モードの使い方]</font><br>
+      * 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにしたいならそのまま右へスワイプして次へ進んで下さい．<br>
+      * 覚えた歌は非表示になります．<br>
+      * メニューの<font color="#FFFF00">「詳細設定」&rArr;「暗記モード」&rArr;「覚えた歌をリセット」</font>を選択すると全ての歌が覚えていない状態に戻ります．<br>
+    ]]>
+  </string>
+  <string name="memorization_mode_reset_confirm">
+    覚えた歌を全てリセットして良いですか？
+  </string>
+  <string name="memorization_mode_reset_done">
+    リセット完了
   </string>
 </resources>

@@ -171,7 +171,7 @@ class YomiInfoSearchDialog extends DialogFragment{
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableButton(tag)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_MEMORIZE+"_")){
-        Globals.IS_MEMORIZE_MODE
+        Globals.prefs.get.getBoolean("memorization_mode",false)
       }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
         Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
       }else{

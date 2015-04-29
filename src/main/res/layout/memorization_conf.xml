@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:fillViewport="true" >
+<LinearLayout android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical" >
+  <CheckBox
+    android:id="@+id/memorization_mode_enable"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="@string/memorization_mode_enable"
+    />
+  <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="@string/memorization_mode_reset"
+    android:id="@+id/memorization_mode_reset"
+    />
+  <include layout="@layout/horizontal_rule" />
+  <karuta.hpnpwd.wasuramoti.PatchedTextView
+    android:id="@+id/memorization_desc_container"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:textColor="#FFFFFF"
+    />
+</LinearLayout>
+</ScrollView>

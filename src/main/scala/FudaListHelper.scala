@@ -329,7 +329,9 @@ object FudaListHelper{
   }
 
   def shuffle(context:Context){ Globals.db_lock.synchronized{
-    if(Globals.prefs.get.getBoolean("karafuda_enable",false) || Globals.IS_MEMORIZE_MODE){
+    if(Globals.prefs.get.getBoolean("karafuda_enable",false) ||
+      Globals.prefs.get.getBoolean("memorization_mode",false)
+      ){
       updateSkipList()
     }
     val rand = new Random()
@@ -369,7 +371,7 @@ object FudaListHelper{
     }
 
     val memorized = {
-      if(Globals.IS_MEMORIZE_MODE){
+      if(Globals.prefs.get.getBoolean("memorization_mode",false)){
         val cursor = dbr.query(Globals.TABLE_FUDALIST,Array("num"),"memorized = 1",null,null,null,null,null)
         cursor.moveToFirst()
         val r = ( 0 until cursor.getCount ).map{ x=>
@@ -485,8 +487,16 @@ object FudaListHelper{
         db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = $newmem, skip = $newmem WHERE num = '$fudanum'")
     })
     db.close()
-
   }
+
+  def resetMemorizedAll(){
+    val db = Globals.database.get.getWritableDatabase
+    Utils.withTransaction(db, () => {
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = 0")
+    })
+    db.close()
+  }
+
 }
 
 // vim: set ts=2 sw=2 et:

@@ -24,7 +24,6 @@ import scala.collection.mutable
 
 object Globals {
   val IS_DEBUG = false
-  val IS_MEMORIZE_MODE = true // TODO: this is temporary. move to preference
   val TABLE_FUDASETS = "fudasets"
   val TABLE_FUDALIST = "fudalist"
   val TABLE_READFILTER = "readfilter"

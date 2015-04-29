@@ -46,6 +46,7 @@
   <string name="conf_unit_second">&#160;sec</string>
 
   <!-- CATEGORY_GLOBAL -->
+  <string name="message_enabled">Enabled</string>
   <string name="message_disabled">Disabled</string>
   <string name="category_global">Global</string>
   <string name="conf_fudaset_title">Set of Poem</string>
@@ -456,5 +457,24 @@
     [Note]: \n
     * Using stereo or 44100 Hz audio file uses lot of memory. Mono, 22050 Hz is recommended.\n
     * In `Play Order of Each Poem`, setting long sequence for `Custom` uses a lot of memory, so make it short.
+  </string>
+  <string name="memorization_mode_enable">Enable Memorization Mode</string>
+  <string name="memorization_mode_reset">Reset Memorized Poems</string>
+  <string name="conf_memorization_title">Memorization Mode</string>
+  <string name="conf_memorization_summary">Show `Memorized` button.</string>
+  <string name="memorization_desc">
+    <![CDATA[
+      <font color="#00FF99">[How to Use Memorization Mode]</font><br>
+      * If you memorized the poem, press <font color="#FFFF00">`Memorized` and go next poem by swiping rightwards. If not, just skip it.<br>
+      * Memorized poems are hidden from the list. 
+      * You can reset the memorized state from <font color="#FFFF00">`Advanced Config` &rArr; `Memorization Mode` &rArr; `Reset Memorized Poems`.</font><br>
+* Joka is not subject to memorization mode.<br>
+    ]]>
+  </string>
+  <string name="memorization_mode_reset_confirm">
+    Really reset all the memorized poems?
+  </string>
+  <string name="memorization_mode_reset_done">
+    Reset done.
   </string>
 </resources>
