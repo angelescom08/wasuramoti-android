@@ -445,7 +445,7 @@
   <string name="intended_use_competitive">Competitive Karuta</string>
   <string name="intended_use_study">Study 100 Poems</string>
   <string name="intended_use_recreation">Just for Fun</string>
-  <string name="intended_use_result">Settings changed as follows. You can reconfigure it from Quick/Advanced Config.</string>
+  <string name="intended_use_result">Settings changed as follows. You can reconfigure it from config.</string>
   <string name="intended_use_result_title">Config Done</string>
   <string name="intended_use_poem_text">Poem Text</string>
   <string name="intended_use_read_order">Read Order</string>
@@ -462,14 +462,18 @@
   <string name="memorization_mode_enable">Enable Memorization Mode</string>
   <string name="memorization_mode_reset">Reset Memorized Poems</string>
   <string name="conf_memorization_title">Memorization Mode</string>
-  <string name="conf_memorization_summary">Show `Memorized` button.</string>
+  <string name="conf_memorization_summary">Use `Memorized` button for assistance of rememebering the poems.</string>
   <string name="memorization_desc">
     <![CDATA[
       <font color="#00FF99">[How to Use Memorization Mode]</font><br>
-      * If you memorized the poem, press <font color="#FFFF00">`Memorized` and go next poem by swiping rightwards. If not, just skip it.<br>
-      * Memorized poems are hidden from the list. 
-      * You can reset the memorized state from <font color="#FFFF00">`Advanced Config` &rArr; `Memorization Mode` &rArr; `Reset Memorized Poems`.</font><br>
-* Joka is not subject to memorization mode.<br>
+      &middot; If you rememebered the poem, press <font color="#FFFF00">`Memorized`</font> and go next poem by <font color="#FFFF00">swiping rightwards</font>. If not, just skip it.<br>
+      &middot; Memorized poems are hidden from the list, so try remembering the rest. 
+      &middot; You can reset the memorized state from <font color="#FFFF00">`Reset Memorized Poems`</font> in this page.<br>
+    ]]>
+  </string>
+  <string name="memorization_desc_brief">
+    <![CDATA[
+      In memorization mode, the `Memorized` poems are hidden. See `Advanced Config` &rArr; `Memorization Mode` for detail.
     ]]>
   </string>
   <string name="memorization_mode_reset_confirm">

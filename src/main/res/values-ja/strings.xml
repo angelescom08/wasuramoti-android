@@ -320,7 +320,7 @@
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
   <string name="message_in_fudanum_order">番号順</string>
   <string name="message_karafuda_num">空札%d枚</string>
-  <string name="message_memorized_num">%d枚覚えた</string>
+  <string name="message_memorized_num">%d首覚えた</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
   <string name="message_readindex_done">完了: %d 首</string>
 
@@ -401,9 +401,9 @@
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_study">百人一首の学習</string>
   <string name="intended_use_recreation">正月のかるた遊び</string>
-  <string name="intended_use_result">下記のように設定を変更しました．簡易設定/詳細設定からいつでも変更できます．</string>
+  <string name="intended_use_result">下記のように設定を変更しました．設定画面でいつでも変更できます．</string>
   <string name="intended_use_result_title">設定完了</string>
-  <string name="intended_use_poem_text">詠み句</string>
+  <string name="intended_use_poem_text">詠み句の表示</string>
   <string name="intended_use_read_order">詠み順</string>
   <string name="intended_use_joka">序歌</string>
   <string name="intended_use_joka_on">詠む</string>
@@ -418,13 +418,18 @@
   <string name="memorization_mode_enable">暗記モードを有効</string>
   <string name="memorization_mode_reset">覚えた歌をリセット</string>
   <string name="conf_memorization_title">暗記モード</string>
-  <string name="conf_memorization_summary">「覚えた」ボタンを表示して苦手な歌だけを学習</string>
+  <string name="conf_memorization_summary">「覚えた」ボタンを使って効率的に学習</string>
   <string name="memorization_desc">
     <![CDATA[
       <font color="#00FF99">[暗記モードの使い方]</font><br>
-      * 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにしたいならそのまま右へスワイプして次へ進んで下さい．<br>
-      * 覚えた歌は非表示になります．<br>
-      * メニューの<font color="#FFFF00">「詳細設定」&rArr;「暗記モード」&rArr;「覚えた歌をリセット」</font>を選択すると全ての歌が覚えていない状態に戻ります．<br>
+      &middot; 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにするならそのまま<font color="#FFFF00">右へスワイプ</font>して次へ進んで下さい．<br>
+      &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
+      &middot; このページにある<font color="#FFFF00">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
+    ]]>
+  </string>
+  <string name="memorization_desc_brief">
+    <![CDATA[
+      暗記モードでは「覚えた」歌は非表示になります．詳しくは「詳細設定」&rArr;「暗記モード」を参照して下さい．
     ]]>
   </string>
   <string name="memorization_mode_reset_confirm">

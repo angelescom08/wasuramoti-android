@@ -574,33 +574,39 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           edit.putString("intended_use","competitive")
           edit.putString("read_order_each","CUR2_NEXT1")
           edit.putString("read_order_joka","upper_1,lower_1")
+          edit.putBoolean("memorization_mode",false)
           YomiInfoUtils.hidePoemText(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_hide),
             (R.string.intended_use_read_order,R.string.conf_read_order_each_cur2_next1),
-            (R.string.intended_use_joka,R.string.intended_use_joka_on)
+            (R.string.intended_use_joka,R.string.intended_use_joka_on),
+            (R.string.conf_memorization_title,R.string.message_disabled)
           )
         }
         case R.id.intended_use_study => {
           edit.putString("intended_use","study")
           edit.putString("read_order_each","CUR1_CUR2")
           edit.putString("read_order_joka","upper_0,lower_0")
+          edit.putBoolean("memorization_mode",true)
           YomiInfoUtils.showFull(edit)
            Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_full),
             (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2),
-            (R.string.intended_use_joka,R.string.intended_use_joka_off)
+            (R.string.intended_use_joka,R.string.intended_use_joka_off),
+            (R.string.conf_memorization_title,R.string.message_enabled)
           )
         }
         case R.id.intended_use_recreation => {
           edit.putString("intended_use","recreation")
           edit.putString("read_order_each","CUR1_CUR2_CUR2")
           edit.putString("read_order_joka","upper_0,lower_0")
+          edit.putBoolean("memorization_mode",false)
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
             (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2_cur2),
-            (R.string.intended_use_joka,R.string.intended_use_joka_off)
+            (R.string.intended_use_joka,R.string.intended_use_joka_off),
+            (R.string.conf_memorization_title,R.string.message_disabled)
           )
         }
         case _ => return
@@ -608,11 +614,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       edit.commit()
       Globals.forceRefresh = true
 
-      val html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
+      var html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
         val kk = getResources.getString(k)
         val vv = getResources.getString(v)
         s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
       }).mkString("<br>") + "</big>"
+      if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+        html += "<big><br>-------<br>" + getResources.getString(R.string.memorization_desc_brief) + "</big>"
+      }
       val hcustom = (builder:AlertDialog.Builder) => {
         builder.setTitle(R.string.intended_use_result_title)
       }
