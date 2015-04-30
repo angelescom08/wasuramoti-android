@@ -219,7 +219,7 @@ class YomiInfoSearchDialog extends DialogFragment{
             getCurYomiInfoView.foreach{vw =>
               if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
                 vw.switchMemorized
-                Utils.setButtonTextByState(getActivity.getApplicationContext, invalidateTotalReadNum = true)
+                Utils.setButtonTextByState(getActivity.getApplicationContext, invalidateReadNumAndMemorized = true)
               }else{
                 postfix match{
                   case "AUTHOR" => vw.show_author ^= true

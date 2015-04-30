@@ -363,6 +363,7 @@
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
   <string name="message_in_fudanum_order">In Order</string>
   <string name="message_karafuda_num">Kara: %d</string>
+  <string name="message_memorized_num">Mem: %d</string>
   <string name="message_readindex_random">Random / %d</string>
   <string name="message_readindex_done">Done: %d</string>
 

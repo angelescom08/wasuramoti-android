@@ -18,14 +18,20 @@ import scala.util.Random
 //   http://d.hatena.ne.jp/ukiki999/20100524/p1 [Japanese]
 
 object FudaListHelper{
+  // TODO: context is not used in some functions
+
   val PREFS_NAME="wasuramoti.pref"
   val KEY_CURRENT_INDEX="fuda_current_index"
+
+  // caches
   var current_index_with_skip = None:Option[Int]
   var numbers_to_read = None:Option[Int]
   var numbers_of_karafuda = None:Option[Int]
+  var numbers_of_memorized = None:Option[Int]
 
-  def invalidateTotalReadNum(){
+  def invalidateReadNumAndMemorized(){
     numbers_to_read = None
+    numbers_of_memorized = None
   }
 
   def getCurrentIndex(context:Context):Int = {
@@ -77,9 +83,15 @@ object FudaListHelper{
         t + "\n"
       }
     }
-    val kara_and_order = {
+    val kara_memorized_order = {
       val kara = if(num_of_kara > 0){
         Some(context.getResources.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)))
+      }else{
+        None
+      }
+      val memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+        val memorized = getOrQueryNumbersOfMemorized(context)
+        Some(context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(memorized)))
       }else{
         None
       }
@@ -87,7 +99,7 @@ object FudaListHelper{
         case Utils.ReadOrder.PoemNum => Some(context.getResources.getString(R.string.message_in_fudanum_order))
         case _ => None
       }
-      val s = Array(kara,order).collect{case Some(x)=>x}.mkString(" , ")
+      val s = Array(order,kara,memorized).flatten.mkString(", ")
       if(TextUtils.isEmpty(s)){
         ""
       }else{
@@ -112,7 +124,7 @@ object FudaListHelper{
           new java.lang.Integer(total_s))
       }
     }
-    set_name + kara_and_order + body
+    set_name + kara_memorized_order + body
   }
 
   def allReadDone(context:Context):Boolean = {
@@ -131,9 +143,9 @@ object FudaListHelper{
     }
   }
 
-  def queryNumbersToRead(context:Context,cond:String):Int = Globals.db_lock.synchronized{
+  def countNumbersInFudaList(cond:String):Int = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip "+cond+" AND num > 0",null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),cond,null,null,null,null,null)
     cursor.moveToFirst()
     val count = cursor.getInt(0)
     cursor.close()
@@ -141,14 +153,17 @@ object FudaListHelper{
     return count
   }
 
+  def queryNumbersToRead(context:Context,cond:String):Int = Globals.db_lock.synchronized{
+    countNumbersInFudaList(s"skip $cond AND num > 0")
+  }
+
+  def queryNumbersOfMemorized(context:Context):Int = Globals.db_lock.synchronized{
+    countNumbersInFudaList(s"memorized = 1")
+  }
+
   def queryCurrentIndexWithSkip(context:Context):Int = Globals.db_lock.synchronized{
     val current_index = getCurrentIndex(context)
-    val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),"skip <= 0 AND read_order <= ?",Array(current_index.toString),null,null,null,null)
-    cursor.moveToFirst()
-    val index = cursor.getInt(0)
-    cursor.close()
-    //db.close()
+    val index = countNumbersInFudaList(s"skip <= 0 AND read_order <= $current_index")
     if(current_index == AllFuda.list.length + 1){
       return(index+1)
     }else{
@@ -441,6 +456,14 @@ object FudaListHelper{
       r
     }
   }
+  def getOrQueryNumbersOfMemorized(context:Context):Int = {
+    numbers_of_memorized.getOrElse{
+      val r = queryNumbersOfMemorized(context)
+      numbers_of_memorized = Some(r)
+      r
+    }
+  }
+
   def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[Int] = {
     val r = offset match{
       case 0 =>

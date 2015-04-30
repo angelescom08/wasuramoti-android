@@ -497,15 +497,15 @@ object Utils {
       }
     }
   }
-  def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateTotalReadNum:Boolean = false){
+  def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateReadNumAndMemorized:Boolean = false){
     Globals.setButtonText.foreach{
       _(
         if(!NotifyTimerUtils.notify_timers.isEmpty){
           NotifyTimerUtils.makeTimerText(context)
         }else{
           val res = context.getResources
-          if(invalidateTotalReadNum){
-            FudaListHelper.invalidateTotalReadNum()
+          if(invalidateReadNumAndMemorized){
+            FudaListHelper.invalidateReadNumAndMemorized()
           }
           FudaListHelper.makeReadIndexMessage(context) + "\n" +
           (
