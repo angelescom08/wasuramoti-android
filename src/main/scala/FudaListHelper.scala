@@ -390,9 +390,12 @@ object FudaListHelper{
     //dbr.close()
 
     val skip_temp = AllFuda.list.toSet -- have_to_read
-    val karafuda = if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
+    val karafuda = if(
+      Globals.prefs.get.getBoolean("karafuda_enable",false) &&
+      ! Globals.prefs.get.getBoolean("memorization_mode",false) // disable karafuda when memorization mode
+    ){
       val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
-      TrieUtils.makeKarafuda(have_to_read,skip_temp -- memorized,kara_num)
+      TrieUtils.makeKarafuda(have_to_read,skip_temp,kara_num)
     }else{
       Set()
     }

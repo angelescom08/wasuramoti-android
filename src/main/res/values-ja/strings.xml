@@ -435,4 +435,7 @@
   <string name="memorization_warn_joka">
     序歌は暗記モードの対象外です．
   </string>
+  <string name="memorization_warn_karafuda">
+    注意: 暗記モードでは空札は無効化されます．
+  </string>
 </resources>

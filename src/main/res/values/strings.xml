@@ -480,4 +480,7 @@
   <string name="memorization_warn_joka">
     Joka is not subjected to memorization mode.
   </string>
+  <string name="memorization_warn_karafuda">
+    Note: Karafuda is disabled on memorization mode.
+  </string>
 </resources>
