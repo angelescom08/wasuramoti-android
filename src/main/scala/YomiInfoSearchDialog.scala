@@ -18,28 +18,39 @@ object YomiInfoSearchDialog{
   val PREFIX_KIMARIJI = "B.KIMARIJI"
   val PREFIX_SWITCH = "B.SWITCH"
   val PREFIX_SEARCH = "C.SEARCH"
-  def newInstance(is_dialog:Boolean,fudanum:Int):YomiInfoSearchDialog = {
+  def newInstance(is_dialog:Boolean,fudanum:Option[Int]):YomiInfoSearchDialog = {
     val fragment = new YomiInfoSearchDialog()
     val args = new Bundle()
-    args.putInt("fudanum",fudanum)
+    args.putSerializable("fudanum",fudanum)
     args.putBoolean("is_dialog",is_dialog)
     fragment.setArguments(args)
     return fragment
   }
-  def getFudaNumAndKimari(context:Context,fudanum:Int):(String,Spanned) ={
-    if(fudanum == 0){
-      (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
-    }else{
-      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(context,fudanum)
-      val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
-      val k_c = kimari_all.substring(kimari_in_fudaset.length)
-      val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#FFFFFF">$k_b</font><font color="#999999">$k_c</font>"""
-      (fudanum.toString,Html.fromHtml(html))
+  def getFudaNumAndKimari(context:Context,fudanum:Option[Int]):(String,Spanned) ={
+    fudanum.map{num =>
+      if(num == 0){
+        (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
+      }else{
+        val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(context,num)
+        val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
+        val k_c = kimari_all.substring(kimari_in_fudaset.length)
+        val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#FFFFFF">$k_b</font><font color="#999999">$k_c</font>"""
+        (num.toString,Html.fromHtml(html))
+      }
+    }.getOrElse{
+      ("---", Html.fromHtml("---"))
     }
   }
 }
 
-class YomiInfoSearchDialog extends DialogFragment{
+trait GetFudanum {
+  self:DialogFragment =>
+  def getFudanum():Option[Int] = {
+    Option(self.getArguments.getSerializable("fudanum").asInstanceOf[Option[Int]]).flatten
+  }
+}
+
+class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
   def enableDisplayButton(enabled:Boolean,force:Map[String,Boolean]=Map()){
     val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
     if(btnlist != null){
@@ -69,8 +80,8 @@ class YomiInfoSearchDialog extends DialogFragment{
     val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
     items.find{_.startsWith(tag+"|")}.get.split("\\|")(1)
   }
-  def setFudanum(fudanum:Int){
-    getArguments.putInt("fudanum",fudanum)
+  def setFudanum(fudanum:Option[Int]){
+    getArguments.putSerializable("fudanum",fudanum)
     val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
     val info_lang = Utils.YomiInfoLang.withName(Globals.prefs.get.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     if(info_lang != Utils.YomiInfoLang.Japanese){
@@ -92,12 +103,19 @@ class YomiInfoSearchDialog extends DialogFragment{
       }
     }
   }
-  def doWebSearch(fudanum:Int,mode:String){
+  def doWebSearch(fudanum:Option[Int],mode:String){
     val query = if(mode == "TEXT"){
-      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(fudanum))
+      fudanum.map{ num =>
+        AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(num))
+      }.getOrElse{
+        getActivity.getString(R.string.search_text_default)
+      }
     }else{
-      AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(fudanum)).replace(" ","") +
-        " " + getActivity.getString(R.string.search_text_author)
+      fudanum.map{ num =>
+        AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(num)).replace(" ","")
+      }.getOrElse{
+        getActivity.getString(R.string.search_text_default)
+      } + " " + getActivity.getString(R.string.search_text_author)
     }
     val f1 = {() =>
       val intent = new Intent(Intent.ACTION_WEB_SEARCH)
@@ -212,8 +230,7 @@ class YomiInfoSearchDialog extends DialogFragment{
               enableDisplayButton(true)
             }
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
-            val fudanum = getArguments.getInt("fudanum",0)
-            doWebSearch(fudanum,tag.split("_")(1))
+            doWebSearch(getFudanum,tag.split("_")(1))
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>
@@ -283,9 +300,8 @@ class YomiInfoSearchDialog extends DialogFragment{
     if(!getArguments.getBoolean("is_dialog")){
       return super.onCreateDialog(saved)
     }
-    val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
-    val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(getActivity,fudanum)
+    val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(getActivity,getFudanum)
     val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null)
     title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
     title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
@@ -299,55 +315,56 @@ class YomiInfoSearchDialog extends DialogFragment{
 }
 
 
-class YomiInfoDetailDialog extends DialogFragment{
+class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
   def addRow(table:LinearLayout,text:String){
     val item = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail_row,null)
     val v_text = item.findViewById(R.id.kimariji_changelog_row).asInstanceOf[TextView]
     v_text.setText(Html.fromHtml(text))
     table.addView(item)
   }
-  def addKimarijiChangelog(table:LinearLayout,fudanum:Int){
-    if(fudanum == 0){
-      addRow(table,getActivity.getString(R.string.kimariji_changelog_joka))
-      return
-    }
-    val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
-    getActivity.getString(R.string.kimariji_changelog_current)
-    val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,fudanum)
-    addRow(table,getActivity.getString(R.string.kimariji_changelog_init,kimari_all)+
-      (if(kimari_all == kimari_cur){msg_cur}else{""})
-    )
-    if(kimari_all != kimari_in_fudaset){
-      addRow(table,getActivity.getString(R.string.kimariji_changelog_fudaset,kimari_in_fudaset)+
-      (if(kimari_in_fudaset == kimari_cur){msg_cur}else{""})
+  def addKimarijiChangelog(table:LinearLayout,fudanum:Option[Int]){
+    fudanum.foreach{num =>
+      if(num == 0){
+        addRow(table,getActivity.getString(R.string.kimariji_changelog_joka))
+        return
+      }
+      val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
+      getActivity.getString(R.string.kimariji_changelog_current)
+      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,num)
+      addRow(table,getActivity.getString(R.string.kimariji_changelog_init,kimari_all)+
+        (if(kimari_all == kimari_cur){msg_cur}else{""})
       )
-    }else if(FudaListHelper.getOrQueryNumbersToRead(getActivity) < 100 &&
-      FudaListHelper.getOrQueryNumbersOfKarafuda(getActivity) == 0
-    ){
-      addRow(table,getActivity.getString(R.string.kimariji_changelog_sameas))
-    }
-    if(kimari_in_fudaset != kimari_cur){
-      val alread_read = FudaListHelper.getAlreadyReadFromKimariji(getActivity,fudanum,kimari_cur)
-      var kima_prev = kimari_in_fudaset
-      for(ar<-alread_read.inits.toArray.reverse if ! ar.isEmpty ){
-        val (_,read_order) = ar.last
-        val kima = FudaListHelper.getKimarijiAtIndex(getActivity,fudanum,Some(read_order))
-        if(kima_prev != kima){
-          val fuda_buf = ar.map{_._1}.filter{_.startsWith(kima)}
-          addRow(table,getActivity.getString(R.string.kimariji_changelog_changed,fuda_buf.mkString(", "),kima)+
-            (if(kima == kimari_cur){msg_cur}else{""})
-          )
-          kima_prev = kima
+      if(kimari_all != kimari_in_fudaset){
+        addRow(table,getActivity.getString(R.string.kimariji_changelog_fudaset,kimari_in_fudaset)+
+        (if(kimari_in_fudaset == kimari_cur){msg_cur}else{""})
+        )
+      }else if(FudaListHelper.getOrQueryNumbersToRead(getActivity) < 100 &&
+        FudaListHelper.getOrQueryNumbersOfKarafuda(getActivity) == 0
+      ){
+        addRow(table,getActivity.getString(R.string.kimariji_changelog_sameas))
+      }
+      if(kimari_in_fudaset != kimari_cur){
+        val alread_read = FudaListHelper.getAlreadyReadFromKimariji(getActivity,num,kimari_cur)
+        var kima_prev = kimari_in_fudaset
+        for(ar<-alread_read.inits.toArray.reverse if ! ar.isEmpty ){
+          val (_,read_order) = ar.last
+          val kima = FudaListHelper.getKimarijiAtIndex(getActivity,num,Some(read_order))
+          if(kima_prev != kima){
+            val fuda_buf = ar.map{_._1}.filter{_.startsWith(kima)}
+            addRow(table,getActivity.getString(R.string.kimariji_changelog_changed,fuda_buf.mkString(", "),kima)+
+              (if(kima == kimari_cur){msg_cur}else{""})
+            )
+            kima_prev = kima
+          }
         }
       }
     }
   }
   override def onCreateDialog(saved:Bundle):Dialog = {
-    val fudanum = getArguments.getInt("fudanum",0)
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail,null)
     val table = view.findViewById(R.id.kimariji_changelog).asInstanceOf[LinearLayout]
-    addKimarijiChangelog(table,fudanum)
+    addKimarijiChangelog(table,getFudanum)
     builder
     .setTitle(getActivity.getString(R.string.yomi_info_search_detail_title))
     .setView(view)

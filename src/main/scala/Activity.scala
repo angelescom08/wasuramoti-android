@@ -231,7 +231,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
     ){
       frag_stub.inflate()
-      val fragment = YomiInfoSearchDialog.newInstance(false,0)
+      val fragment = YomiInfoSearchDialog.newInstance(false,Some(0))
       getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
     }else if(frag_stub != null){
       // Android 2.1 does not ignore ViewStub's layout_weight
@@ -386,21 +386,20 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   def updatePoemInfo(cur_view:Int){
     val yomi_cur = findViewById(cur_view).asInstanceOf[YomiInfoView]
     if(yomi_cur != null){
-      yomi_cur.cur_num.foreach{fudanum =>
-        bar_poem_info_num = Some(fudanum)
-        val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
-        if(yomi_dlg != null && Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
-          yomi_dlg.setFudanum(fudanum)
-        }
-        val cv = getSupportActionBar.getCustomView
-        if(cv!=null && Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)){
-          val v_fn = cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]
-          val v_kima = cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]
-          if(v_fn != null && v_kima != null){
-            val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
-            v_fn.setText(fudanum_s)
-            v_kima.setText(kimari)
-          }
+      val fudanum = yomi_cur.cur_num
+      bar_poem_info_num = fudanum
+      val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
+      if(yomi_dlg != null && Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
+        yomi_dlg.setFudanum(fudanum)
+      }
+      val cv = getSupportActionBar.getCustomView
+      if(cv != null && Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)){
+        val v_fn = cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]
+        val v_kima = cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]
+        if(v_fn != null && v_kima != null){
+          val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
+          v_fn.setText(fudanum_s)
+          v_kima.setText(kimari)
         }
       }
     }
@@ -520,8 +519,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         view.setOnLongClickListener(
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
-              view.cur_num.foreach{num=>
-                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num.getOrElse(num))
+              if(!view.cur_num.isEmpty){
+                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num)
                 dlg.show(getSupportFragmentManager,"yomi_info_search")
               }
               return true
