@@ -90,6 +90,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
     val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
+    Utils.setStatusBarForLolipop(this)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)

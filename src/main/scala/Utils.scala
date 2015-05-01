@@ -201,6 +201,20 @@ object Utils {
     if(s.hasNext){s.next}else{""}
   }
 
+  def setStatusBarForLolipop(activity:Activity){
+    // TODO: As for AppCompat >= 21, the correct way to change color of status bar seems to be setting colorPrimaryDark.
+    //  https://chris.banes.me/2014/10/17/appcompat-v21/
+    //  https://developer.android.com/training/material/theme.html
+    //  http://stackoverflow.com/questions/27093287/how-to-change-status-bar-color-to-match-app-in-lollipop-android
+    //  http://stackoverflow.com/questions/26702000/change-status-bar-color-with-appcompat-actionbaractivity
+    //  http://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android
+    if(android.os.Build.VERSION.SDK_INT >= 21){
+      val window = activity.getWindow
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+      window.setStatusBarColor(android.graphics.Color.DKGRAY)
+    }
+  }
+
   def dpToPx(dp:Float):Float = {
    (dp * Resources.getSystem.getDisplayMetrics.density).toFloat
   }

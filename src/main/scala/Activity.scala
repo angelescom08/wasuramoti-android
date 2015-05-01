@@ -428,6 +428,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       // onCreate returned before loading preference
       return
     }
+    Utils.setStatusBarForLolipop(this)
     if(Globals.forceRestart){
       Globals.forceRestart = false
       Utils.restartActivity(this)
