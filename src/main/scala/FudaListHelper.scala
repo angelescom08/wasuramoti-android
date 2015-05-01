@@ -482,7 +482,15 @@ object FudaListHelper{
         }
       case -1 =>
         val current_index = getCurrentIndex(context)
-        queryPrev(context, current_index).map{_._2}
+        if(Globals.player.isEmpty && queryPrevOrNext(context, current_index, true, true).isEmpty){
+          // This means it is last fuda and cur_view.cur_num is None.
+          // It occurs when in either one of the following condition holds.
+          // (1) go last poem -> memorization mode -> click `memorized` -> swipe rightwards
+          // (2) go last poem -> play the poem -> restart app
+          queryPrevOrNext(context, current_index, false, true).map{_._1}
+        }else{
+          queryPrev(context, current_index).map{_._2}
+        }
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)
     }
