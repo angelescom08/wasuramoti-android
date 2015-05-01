@@ -661,7 +661,10 @@ trait MainButtonTrait{
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
-        if(FudaListHelper.allReadDone(self.getApplicationContext())){
+        if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
+          FudaListHelper.getOrQueryNumbersToRead(self.getApplicationContext) == 0){
+          Utils.messageDialog(self,Right(R.string.all_memorized))
+        }else if(FudaListHelper.allReadDone(self.getApplicationContext())){
           val custom = (builder:AlertDialog.Builder) => {
             builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
               override def onClick(dialog:DialogInterface, which:Int){
