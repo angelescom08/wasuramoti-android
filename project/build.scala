@@ -4,8 +4,8 @@ import android.Keys._
 object Build extends android.AutoBuild {
   lazy val mySettings = super.settings ++ android.Plugin.androidBuild ++ Seq (
     name := "wasuramoti",
-    version := "0.8.22",
-    versionCode := Some(60),
+    version := "0.8.23",
+    versionCode := Some(61),
     scalaVersion := "2.11.6",
     platformTarget in Android := "android-22",
     buildToolsVersion in Android := Some("22.0.1"),
