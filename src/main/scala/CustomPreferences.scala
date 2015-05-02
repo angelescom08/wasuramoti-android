@@ -70,7 +70,22 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
       root_view.foreach{ view =>
         val edit = getEditor
         val enable = getWidgets(view)
-        edit.putBoolean(getKey,enable.isChecked)
+        val is_c = enable.isChecked
+        edit.putBoolean(getKey,is_c)
+        if(is_c){
+          var changed = false
+          if(!YomiInfoUtils.showPoemText){
+            YomiInfoUtils.setPoemTextVisibility(edit,true)
+            changed = true
+          }
+          if(!Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
+            edit.putBoolean("yomi_info_show_info_button",true)
+            changed = true
+          }
+          if(changed){
+            Utils.messageDialog(context,Right(R.string.memorization_warn_yomi_info_view))
+          }
+        }
         edit.commit
         notifyChangedPublic
         Globals.forceRestart = true

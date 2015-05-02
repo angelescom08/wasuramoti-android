@@ -429,7 +429,7 @@
               <div>Write the detail of the bug here:</div>
               <textarea name="bug_detail">%4$s</textarea>
             </div>
-            <div>Clicking the following button will send some device informations which is useful for debugging.</div>
+            <div>Clicking the following button will send some device information which is useful for debugging.</div>
             <input type="hidden" name="bug_device_info" value="%3$s">
             <input type="submit" value="Send_Bug_Report">
           </form>
@@ -463,12 +463,12 @@
   <string name="memorization_mode_enable">Enable Memorization Mode</string>
   <string name="memorization_mode_reset">Reset Memorized Poems</string>
   <string name="conf_memorization_title">Memorization Mode</string>
-  <string name="conf_memorization_summary">Use `Memorized` button for assistance of rememebering the poems.</string>
+  <string name="conf_memorization_summary">Use `Memorized` button for assistance of remembering the poems.</string>
   <string name="memorization_desc">
     <![CDATA[
       <font color="#00FF99">[How to Use Memorization Mode]</font><br>
-      &middot; If you rememebered the poem, press <font color="#FFFF00">`Memorized`</font> and go next poem by <font color="#FFFF00">swiping rightwards</font>. If not, just skip it.<br>
-      &middot; Memorized poems are hidden from the list, so try remembering the rest. 
+      &middot; If you remembered the poem, press <font color="#FFFF00">`Memorized`</font> and go next. Otherwise, just skip it.<br>
+      &middot; Memorized poems are hidden from the list, so remember the rest. <br>
       &middot; You can reset the memorized state from <font color="#FFFF00">`Reset Memorized Poems`</font> in this page.<br>
     ]]>
   </string>
@@ -488,5 +488,8 @@
   </string>
   <string name="memorization_warn_karafuda">
     Note: Karafuda is disabled on memorization mode.
+  </string>
+  <string name="memorization_warn_yomi_info_view">
+    Poem text will be enabled in memorization mode.
   </string>
 </resources>

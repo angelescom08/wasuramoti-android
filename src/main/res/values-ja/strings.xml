@@ -423,7 +423,7 @@
   <string name="memorization_desc">
     <![CDATA[
       <font color="#00FF99">[暗記モードの使い方]</font><br>
-      &middot; 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにするならそのまま<font color="#FFFF00">右へスワイプ</font>して次へ進んで下さい．<br>
+      &middot; 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
       &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
       &middot; このページにある<font color="#FFFF00">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
     ]]>
@@ -444,5 +444,8 @@
   </string>
   <string name="memorization_warn_karafuda">
     注意: 暗記モードでは空札は無効化されます．
+  </string>
+  <string name="memorization_warn_yomi_info_view">
+    暗記モードでは詠み句表示が有効化されます.
   </string>
 </resources>

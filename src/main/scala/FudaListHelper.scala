@@ -429,6 +429,7 @@ object FudaListHelper{
     numbers_to_read = None
     numbers_of_karafuda = None
     current_index_with_skip = None
+    Globals.forceRefresh = true
   }}
 
   def getOrQueryCurrentIndexWithSkip(context:Context):Int = {
