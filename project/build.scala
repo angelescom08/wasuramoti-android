@@ -25,7 +25,7 @@ object Build extends android.AutoBuild {
         "-deprecation",
         "-feature",
         "-Xlint",
-        // "-Xfatal-warnings", // treat warning as error
+        // See `scalac -Y` for more options
         "-Ywarn-dead-code",
         //"-Ywarn-numeric-widen",
         //"-Ywarn-value-discard",

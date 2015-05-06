@@ -663,7 +663,7 @@ trait MainButtonTrait{
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
-          FudaListHelper.getOrQueryNumbersToRead(self.getApplicationContext) == 0){
+          FudaListHelper.getOrQueryNumbersToRead() == 0){
           Utils.messageDialog(self,Right(R.string.all_memorized))
         }else if(FudaListHelper.allReadDone(self.getApplicationContext())){
           val custom = (builder:AlertDialog.Builder) => {

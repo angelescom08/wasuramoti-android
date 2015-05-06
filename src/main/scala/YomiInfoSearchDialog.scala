@@ -31,7 +31,7 @@ object YomiInfoSearchDialog{
       if(num == 0){
         (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
       }else{
-        val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(context,num)
+        val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
         val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
         val k_c = kimari_all.substring(kimari_in_fudaset.length)
         val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#FFFFFF">$k_b</font><font color="#999999">$k_c</font>"""
@@ -330,7 +330,7 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
       }
       val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
       getActivity.getString(R.string.kimariji_changelog_current)
-      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(getActivity,num)
+      val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
       addRow(table,getActivity.getString(R.string.kimariji_changelog_init,kimari_all)+
         (if(kimari_all == kimari_cur){msg_cur}else{""})
       )
@@ -338,17 +338,17 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
         addRow(table,getActivity.getString(R.string.kimariji_changelog_fudaset,kimari_in_fudaset)+
         (if(kimari_in_fudaset == kimari_cur){msg_cur}else{""})
         )
-      }else if(FudaListHelper.getOrQueryNumbersToRead(getActivity) < 100 &&
-        FudaListHelper.getOrQueryNumbersOfKarafuda(getActivity) == 0
+      }else if(FudaListHelper.getOrQueryNumbersToRead() < 100 &&
+        FudaListHelper.getOrQueryNumbersOfKarafuda() == 0
       ){
         addRow(table,getActivity.getString(R.string.kimariji_changelog_sameas))
       }
       if(kimari_in_fudaset != kimari_cur){
-        val alread_read = FudaListHelper.getAlreadyReadFromKimariji(getActivity,num,kimari_cur)
+        val alread_read = FudaListHelper.getAlreadyReadFromKimariji(num,kimari_cur)
         var kima_prev = kimari_in_fudaset
         for(ar<-alread_read.inits.toArray.reverse if ! ar.isEmpty ){
           val (_,read_order) = ar.last
-          val kima = FudaListHelper.getKimarijiAtIndex(getActivity,num,Some(read_order))
+          val kima = FudaListHelper.getKimarijiAtIndex(num,Some(read_order))
           if(kima_prev != kima){
             val fuda_buf = ar.map{_._1}.filter{_.startsWith(kima)}
             addRow(table,getActivity.getString(R.string.kimariji_changelog_changed,fuda_buf.mkString(", "),kima)+

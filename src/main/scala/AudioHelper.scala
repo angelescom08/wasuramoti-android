@@ -41,10 +41,10 @@ object AudioHelper{
     val current_index = FudaListHelper.getCurrentIndex(app_context)
     val num = if(Utils.isRandom){
       val cur_num = Globals.player.map{_.next_num}.getOrElse(0)
-      val next_num = FudaListHelper.queryRandom(app_context)
+      val next_num = FudaListHelper.queryRandom()
       Some((cur_num,next_num))
     }else{
-      FudaListHelper.queryNext(app_context,current_index).map{
+      FudaListHelper.queryNext(current_index).map{
         case (cur_num,next_num,_,_) => (cur_num,next_num)
       }
     }
@@ -363,7 +363,7 @@ object KarutaPlayUtils{
       if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
         FudaListHelper.allReadDone(activity.getApplicationContext())
       ){
-        FudaListHelper.shuffle(activity.getApplicationContext())
+        FudaListHelper.shuffle()
         FudaListHelper.moveToFirst(activity.getApplicationContext())
         activity.refreshAndInvalidate(auto)
       }

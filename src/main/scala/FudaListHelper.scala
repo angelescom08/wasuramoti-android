@@ -18,7 +18,6 @@ import scala.util.Random
 //   http://d.hatena.ne.jp/ukiki999/20100524/p1 [Japanese]
 
 object FudaListHelper{
-  // TODO: context is not used in some functions
 
   val PREFS_NAME="wasuramoti.pref"
   val KEY_CURRENT_INDEX="fuda_current_index"
@@ -53,13 +52,13 @@ object FudaListHelper{
     }else{
       1
     }
-    queryNext(context, fst).foreach(
+    queryNext(fst).foreach(
       {case (_,_,first_index,_) => putCurrentIndex(context,first_index)}
     )
   }
   def movePrevOrNext(context:Context,is_next:Boolean){
     val current_index = getCurrentIndex(context)
-    queryPrevOrNext(context, current_index,is_next).foreach{
+    queryPrevOrNext(current_index,is_next).foreach{
       x => putCurrentIndex(context,x._4)
     }
   }
@@ -71,8 +70,8 @@ object FudaListHelper{
   }
 
   def makeReadIndexMessage(context:Context):String = {
-    val num_to_read = getOrQueryNumbersToReadAlt(context)
-    val num_of_kara = getOrQueryNumbersOfKarafuda(context)
+    val num_to_read = getOrQueryNumbersToReadAlt()
+    val num_of_kara = getOrQueryNumbersOfKarafuda()
     val set_name = if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
       ""
     }else{
@@ -90,7 +89,7 @@ object FudaListHelper{
         None
       }
       val memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-        val memorized = getOrQueryNumbersOfMemorized(context)
+        val memorized = getOrQueryNumbersOfMemorized()
         Some(context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(memorized)))
       }else{
         None
@@ -131,7 +130,7 @@ object FudaListHelper{
     if(Utils.isRandom){
       false
     }else{
-      getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToReadAlt(context)
+      getOrQueryCurrentIndexWithSkip(context) > getOrQueryNumbersToReadAlt()
     }
   }
 
@@ -139,11 +138,11 @@ object FudaListHelper{
     if(Utils.isRandom){
       false
     }else{
-      getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToReadAlt(context)
+      getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToReadAlt()
     }
   }
 
-  def countNumbersInFudaList(cond:String):Int = {
+  def countNumbersInFudaList(cond:String):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),cond,null,null,null,null,null)
     cursor.moveToFirst()
@@ -153,15 +152,15 @@ object FudaListHelper{
     return count
   }
 
-  def queryNumbersToRead(context:Context,cond:String):Int = Globals.db_lock.synchronized{
+  def queryNumbersToRead(cond:String):Int = {
     countNumbersInFudaList(s"skip $cond AND num > 0")
   }
 
-  def queryNumbersOfMemorized(context:Context):Int = Globals.db_lock.synchronized{
+  def queryNumbersOfMemorized():Int = {
     countNumbersInFudaList(s"memorized = 1")
   }
 
-  def queryCurrentIndexWithSkip(context:Context):Int = Globals.db_lock.synchronized{
+  def queryCurrentIndexWithSkip(context:Context):Int = {
     val current_index = getCurrentIndex(context)
     val index = countNumbersInFudaList(s"skip <= 0 AND read_order <= $current_index")
     if(current_index == AllFuda.list.length + 1){
@@ -170,7 +169,7 @@ object FudaListHelper{
       return(index)
     }
   }
-  def queryPrevOrNext(context:Context,index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = Globals.db_lock.synchronized{
+  def queryPrevOrNext(index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val (op,order) = if(is_next){ (">=","ASC") }else{ ("<=","DESC") }
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
@@ -196,7 +195,7 @@ object FudaListHelper{
     }
   }
 
-  def queryIndexFromFudaNum(context:Context,fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
+  def queryIndexFromFudaNum(fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"skip <= 0 AND num = ?",Array(fudanum.toString),null,null,null,"1")
     try{
@@ -212,13 +211,13 @@ object FudaListHelper{
     }
   }
 
-  def queryNext(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
-    queryPrevOrNext(context,index,true)
+  def queryNext(index:Int):Option[(Int,Int,Int,Int)] = {
+    queryPrevOrNext(index,true)
   }
-  def queryPrev(context:Context,index:Int):Option[(Int,Int,Int,Int)] = {
-    queryPrevOrNext(context,index,false)
+  def queryPrev(index:Int):Option[(Int,Int,Int,Int)] = {
+    queryPrevOrNext(index,false)
   }
-  def queryIndexWithSkip(context:Context,fake_index:Int):Int = Globals.db_lock.synchronized{
+  def queryIndexWithSkip(fake_index:Int):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     // TODO: use string interpolation
     val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip <= 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip <= 0 AND rnk = "+fake_index,null)
@@ -243,9 +242,9 @@ object FudaListHelper{
     have_to_read
   }
 
-  def getNotYetRead(context:Context,index:Int):Set[String] = Globals.db_lock.synchronized{
+  def getNotYetRead(index:Int):Set[String] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
-    val cond = if(getOrQueryNumbersOfKarafuda(context) > 0){
+    val cond = if(getOrQueryNumbersOfKarafuda() > 0){
       // When Karafuda is enabled, we treat all the fuda is supposed to be read
       // since the Kimariji will be the hint to which Karafuda was chosen.
       "OR (read_order < "+index+" AND skip = 1)"
@@ -263,7 +262,7 @@ object FudaListHelper{
     //db.close
     notyetread
   }
-  def getFudanumIndex(context:Context,fudanum:Int):Int = Globals.db_lock.synchronized{
+  def getFudanumIndex(fudanum:Int):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"num = ?",Array(fudanum.toString),null,null,null,"1")
     cursor.moveToFirst
@@ -272,13 +271,13 @@ object FudaListHelper{
     // db.close()
     r
   }
-  def getKimarijiAtIndex(context:Context,fudanum:Int,index:Option[Int]):String = {
-    val target_index = index.getOrElse(getFudanumIndex(context,fudanum))
-    val notyetread = getNotYetRead(context,target_index)
+  def getKimarijiAtIndex(fudanum:Int,index:Option[Int]):String = {
+    val target_index = index.getOrElse(getFudanumIndex(fudanum))
+    val notyetread = getNotYetRead(target_index)
     TrieUtils.calcKimariji(notyetread,AllFuda.list(fudanum-1))
   }
-  def getAlreadyReadFromKimariji(context:Context,fudanum:Int,kimari:String):Array[(String,Int)] = Globals.db_lock.synchronized{
-    val current_index = getFudanumIndex(context,fudanum)
+  def getAlreadyReadFromKimariji(fudanum:Int,kimari:String):Array[(String,Int)] = Globals.db_lock.synchronized{
+    val current_index = getFudanumIndex(fudanum)
     val db = Globals.database.get.getReadableDatabase
     val nums = TrieUtils.makeNumListFromKimariji(kimari)
     if(nums.isEmpty){
@@ -297,17 +296,17 @@ object FudaListHelper{
     alreadyread.toArray
   }
 
-  def getKimarijis(context:Context,fudanum:Int):(String,String,String) = {
+  def getKimarijis(fudanum:Int):(String,String,String) = {
     val kimari_all = AllFuda.list(fudanum-1)
-    val kimari_in_fudaset = if(FudaListHelper.getOrQueryNumbersToRead(context) < 100){
-      FudaListHelper.getKimarijiAtIndex(context,fudanum,Some(-1))
+    val kimari_in_fudaset = if(FudaListHelper.getOrQueryNumbersToRead() < 100){
+      FudaListHelper.getKimarijiAtIndex(fudanum,Some(-1))
     }else{
       kimari_all
     }
     val kimari_cur = if(Utils.isRandom){
       kimari_in_fudaset
     }else{
-      FudaListHelper.getKimarijiAtIndex(context,fudanum,None)
+      FudaListHelper.getKimarijiAtIndex(fudanum,None)
     }
     (kimari_all,kimari_cur,kimari_in_fudaset)
   }
@@ -319,9 +318,9 @@ object FudaListHelper{
     AllFuda.getFudaNum(kara.head)
   }
 
-  def queryRandom(context:Context):Int = Globals.db_lock.synchronized{
-    val num_read = getOrQueryNumbersToRead(context)
-    val num_kara = getOrQueryNumbersOfKarafuda(context)
+  def queryRandom():Int = Globals.db_lock.synchronized{
+    val num_read = getOrQueryNumbersToRead()
+    val num_kara = getOrQueryNumbersOfKarafuda()
     if(num_kara > 0){
       val rand = new Random()
       val r = rand.nextDouble * num_read.toDouble
@@ -339,11 +338,11 @@ object FudaListHelper{
   }
 
   def shuffleAndMoveToFirst(context:Context){
-     shuffle(context)
+     shuffle()
      moveToFirst(context)
   }
 
-  def shuffle(context:Context){ Globals.db_lock.synchronized{
+  def shuffle(){ Globals.db_lock.synchronized{
     if(Globals.prefs.get.getBoolean("karafuda_enable",false) ||
       Globals.prefs.get.getBoolean("memorization_mode",false)
       ){
@@ -428,6 +427,7 @@ object FudaListHelper{
     dbw.close()
     numbers_to_read = None
     numbers_of_karafuda = None
+    numbers_of_memorized = None
     current_index_with_skip = None
     Globals.forceRefresh = true
   }}
@@ -439,27 +439,27 @@ object FudaListHelper{
       r
     }
   }
-  def getOrQueryNumbersToRead(context:Context):Int = {
+  def getOrQueryNumbersToRead():Int = {
     numbers_to_read.getOrElse{
-      val r = queryNumbersToRead(context,"<= 0")
+      val r = queryNumbersToRead("<= 0")
       numbers_to_read = Some(r)
       r
     }
   }
-  def getOrQueryNumbersToReadAlt(context:Context):Int = {
-    val r = getOrQueryNumbersToRead(context)
+  def getOrQueryNumbersToReadAlt():Int = {
+    val r = getOrQueryNumbersToRead()
     r + Utils.incTotalRead()
   }
-  def getOrQueryNumbersOfKarafuda(context:Context):Int = {
+  def getOrQueryNumbersOfKarafuda():Int = {
     numbers_of_karafuda.getOrElse{
-      val r = queryNumbersToRead(context,"= -1")
+      val r = queryNumbersToRead("= -1")
       numbers_of_karafuda = Some(r)
       r
     }
   }
-  def getOrQueryNumbersOfMemorized(context:Context):Int = {
+  def getOrQueryNumbersOfMemorized():Int = {
     numbers_of_memorized.getOrElse{
-      val r = queryNumbersOfMemorized(context)
+      val r = queryNumbersOfMemorized()
       numbers_of_memorized = Some(r)
       r
     }
@@ -472,25 +472,25 @@ object FudaListHelper{
           Some(Globals.player.get.cur_num)
         }else{
           val current_index = getCurrentIndex(context)
-          queryPrevOrNext(context, current_index, true, true).map{_._1}
+          queryPrevOrNext(current_index, true, true).map{_._1}
         }
       case 1 =>
         if(!Globals.player.isEmpty){
           Some(Globals.player.get.next_num)
         }else{
           val current_index = getCurrentIndex(context)
-          queryNext(context, current_index).map{_._2}
+          queryNext(current_index).map{_._2}
         }
       case -1 =>
         val current_index = getCurrentIndex(context)
-        if(Globals.player.isEmpty && queryPrevOrNext(context, current_index, true, true).isEmpty){
+        if(Globals.player.isEmpty && queryPrevOrNext(current_index, true, true).isEmpty){
           // This means it is last fuda and cur_view.cur_num is None.
           // It occurs when in either one of the following condition holds.
           // (1) go last poem -> memorization mode -> click `memorized` -> swipe rightwards
           // (2) go last poem -> play the poem -> restart app
-          queryPrevOrNext(context, current_index, false, true).map{_._1}
+          queryPrevOrNext(current_index, false, true).map{_._1}
         }else{
-          queryPrev(context, current_index).map{_._2}
+          queryPrev(current_index).map{_._2}
         }
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)

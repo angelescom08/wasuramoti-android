@@ -40,7 +40,7 @@ class MovePositionDialog extends DialogFragment{
       numbers_to_read = savedState.getInt("numbers_to_read",0)
       current_index = savedState.getInt("current_index",0)
     }else{
-      numbers_to_read = FudaListHelper.getOrQueryNumbersToReadAlt(getActivity)
+      numbers_to_read = FudaListHelper.getOrQueryNumbersToReadAlt()
       current_index = FudaListHelper.getOrQueryCurrentIndexWithSkip(getActivity)
     }
     val builder = new AlertDialog.Builder(getActivity)
@@ -61,7 +61,7 @@ class MovePositionDialog extends DialogFragment{
     return dialog
   }
   def onOk(){
-    val index = FudaListHelper.queryIndexWithSkip(getActivity,current_index)
+    val index = FudaListHelper.queryIndexWithSkip(current_index)
     FudaListHelper.putCurrentIndex(getActivity,index)
     getActivity.asInstanceOf[WasuramotiActivity].refreshAndInvalidate()
   }

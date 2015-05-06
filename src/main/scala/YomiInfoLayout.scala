@@ -143,7 +143,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
               val wa = context.asInstanceOf[WasuramotiActivity]
               wa.cancelAllPlay()
               v.cur_num.foreach{ cn =>
-                FudaListHelper.queryIndexFromFudaNum(context,cn).foreach{index =>
+                FudaListHelper.queryIndexFromFudaNum(cn).foreach{index =>
                   FudaListHelper.putCurrentIndex(context,index)
                 }
               }
