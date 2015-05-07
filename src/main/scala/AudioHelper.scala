@@ -42,7 +42,9 @@ object AudioHelper{
     val num = if(Utils.isRandom){
       val cur_num = Globals.player.map{_.next_num}.getOrElse(0)
       val next_num = FudaListHelper.queryRandom()
-      Some((cur_num,next_num))
+      next_num.map{
+       (cur_num,_)
+      }
     }else{
       FudaListHelper.queryNext(current_index).map{
         case (cur_num,next_num,_,_) => (cur_num,next_num)

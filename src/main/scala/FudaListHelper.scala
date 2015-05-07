@@ -318,20 +318,24 @@ object FudaListHelper{
     AllFuda.getFudaNum(kara.head)
   }
 
-  def queryRandom():Int = Globals.db_lock.synchronized{
+  def queryRandom():Option[Int] = Globals.db_lock.synchronized{
     val num_read = getOrQueryNumbersToRead()
     val num_kara = getOrQueryNumbersOfKarafuda()
     if(num_kara > 0){
       val rand = new Random()
       val r = rand.nextDouble * num_read.toDouble
       if(r < num_kara.toDouble){
-        return chooseKarafuda()
+        return Some(chooseKarafuda())
       }
     }
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"skip = 0 AND num > 0",null,null,null,"random()","1")
-    cursor.moveToFirst()
-    val num = cursor.getInt(0)
+    val num = if(cursor.getCount == 0){
+      None
+    }else{
+      cursor.moveToFirst()
+      Some(cursor.getInt(0))
+    }
     cursor.close()
     //db.close()
     return num
