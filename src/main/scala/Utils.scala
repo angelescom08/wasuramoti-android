@@ -186,7 +186,9 @@ object Utils {
 
         // remove obsolete preferences
         edit.remove("wav_threashold") // misspelled
-        edit.remove("hardware_accelerate") // always on
+        edit.remove("hardware_accelerate") // always true
+        edit.remove("yomi_info_furigana_size") // migrated to yomi_info_furigana_width
+        edit.remove("audio_track_mode") // always STATIC
         
         edit.putInt("preference_version",Globals.PREFERENCE_VERSION)
         edit.commit()

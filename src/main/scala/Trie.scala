@@ -91,10 +91,10 @@ object CreateTrie{
 }
 
 object TrieUtils{
-  def makeKimarijiSetFromNumList(num_list:List[Int]):Option[(String,Int)] = {
+  def makeKimarijiSetFromNumList(num_list:Seq[Int]):Option[(String,Int)] = {
     makeKimarijiSet(num_list.map(i => AllFuda.list(i-1)))
   }
-  def makeKimarijiSet(str_list:List[String]):Option[(String,Int)] = {
+  def makeKimarijiSet(str_list:Seq[String]):Option[(String,Int)] = {
     val trie = CreateTrie.makeTrie(AllFuda.list)
     val st = mutable.Set[String]()
     for( m <- str_list ){

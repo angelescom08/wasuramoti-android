@@ -8,13 +8,12 @@ object DbUtils{
     if(delete_all){
       db.delete(Globals.TABLE_FUDASETS,"1",null)
     }
-    insertInits(context,db)
-    insertGoshoku(context,db)
+    insertAllAndGoshoku(context,db)
   }
-  def insertGoshoku(context:Context,db:SQLiteDatabase){
+  def insertAllAndGoshoku(context:Context,db:SQLiteDatabase){
     val cv = new ContentValues()
     Utils.withTransaction(db, () => {
-      for( (name_id,list) <- AllFuda.goshoku ){
+      for( (name_id,list) <- Seq((R.string.fudaset_title_all,1 to 100)) ++ AllFuda.goshoku ){
         TrieUtils.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
           cv.put("title",context.getResources().getString(name_id))
           cv.put("body",str)
@@ -23,22 +22,6 @@ object DbUtils{
         db.insert(Globals.TABLE_FUDASETS,null,cv)
       }
     })
-  }
-  def insertInits(context:Context,db:SQLiteDatabase){
-    Utils.withTransaction(db, () => {
-      val conds = Array[(Int,(String => Boolean))](
-        R.string.fudaset_title_all -> (_ => true),
-        R.string.fudaset_title_one -> (_.length() == 1))
-      val cv = new ContentValues()
-      for( (title_id,cond) <- conds ){
-        val list = AllFuda.list.filter(cond)
-        val body = list.map(_(0).toString).toSet.toList.sortWith(AllFuda.compareMusumefusahose).mkString(" ")
-        cv.put("title",context.getResources().getString(title_id))
-        cv.put("body",body)
-        cv.put("set_size",new java.lang.Integer(list.length))
-        db.insert(Globals.TABLE_FUDASETS,null,cv)
-      }
-      })
   }
 }
 
