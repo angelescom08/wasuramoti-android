@@ -183,6 +183,7 @@
   </string>
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>
   <string name="kimariji_changelog_sameas">The Kimariji in current poem set is as same as above.</string>
+  <string name="kimariji_changelog_disabled">The rest change is disabled in memorization mode or random mode.</string>
 
   <string name="yomi_info_button_config_font">Font</string>
   <string name="yomi_info_default_language_desc">Default Language:</string>

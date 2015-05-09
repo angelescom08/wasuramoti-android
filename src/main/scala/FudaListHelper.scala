@@ -69,16 +69,22 @@ object FudaListHelper{
     movePrevOrNext(context,false)
   }
 
+  // this does not consider karafuda
+  def isBoundedByFudaset():Boolean = {
+    val num_to_read = getOrQueryNumbersToRead
+    val num_memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+      getOrQueryNumbersOfMemorized
+    }else{
+      0
+    }
+    num_to_read + num_memorized != AllFuda.list.size
+  }
+
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = getOrQueryNumbersToReadAlt()
     val num_of_kara = getOrQueryNumbersOfKarafuda()
-    val num_memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-      Some(getOrQueryNumbersOfMemorized)
-    }else{
-      None
-    }
 
-    val set_name = if(num_to_read + num_memorized.getOrElse(0) == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
+    val set_name = if(!isBoundedByFudaset && num_of_kara == 0){
       ""
     }else{
       val t = Globals.prefs.get.getString("fudaset","")
@@ -94,8 +100,11 @@ object FudaListHelper{
       }else{
         None
       }
-      val memorized = num_memorized.map{ num =>
-        context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(num))
+      val memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+        val num = getOrQueryNumbersOfMemorized
+        Some(context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(num)))
+      }else{
+        None
       }
       val order = Utils.getReadOrder match {
         case Utils.ReadOrder.PoemNum => Some(context.getResources.getString(R.string.message_in_fudanum_order))
@@ -297,12 +306,12 @@ object FudaListHelper{
 
   def getKimarijis(fudanum:Int):(String,String,String) = {
     val kimari_all = AllFuda.list(fudanum-1)
-    val kimari_in_fudaset = if(FudaListHelper.getOrQueryNumbersToRead() < 100){
+    val kimari_in_fudaset = if(isBoundedByFudaset){
       FudaListHelper.getKimarijiAtIndex(fudanum,Some(-1))
     }else{
       kimari_all
     }
-    val kimari_cur = if(Utils.isRandom){
+    val kimari_cur = if(Utils.disableKimarijiLog){
       kimari_in_fudaset
     }else{
       FudaListHelper.getKimarijiAtIndex(fudanum,None)

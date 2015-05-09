@@ -328,8 +328,12 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
         addRow(table,getActivity.getString(R.string.kimariji_changelog_joka))
         return
       }
-      val msg_cur = (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
-      getActivity.getString(R.string.kimariji_changelog_current)
+      val msg_cur = if(!Utils.disableKimarijiLog){
+        (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
+        getActivity.getString(R.string.kimariji_changelog_current)
+      }else{
+        ""
+      }
       val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
       addRow(table,getActivity.getString(R.string.kimariji_changelog_init,kimari_all)+
         (if(kimari_all == kimari_cur){msg_cur}else{""})
@@ -338,7 +342,7 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
         addRow(table,getActivity.getString(R.string.kimariji_changelog_fudaset,kimari_in_fudaset)+
         (if(kimari_in_fudaset == kimari_cur){msg_cur}else{""})
         )
-      }else if(FudaListHelper.getOrQueryNumbersToRead() < 100 &&
+      }else if(FudaListHelper.isBoundedByFudaset &&
         FudaListHelper.getOrQueryNumbersOfKarafuda() == 0
       ){
         addRow(table,getActivity.getString(R.string.kimariji_changelog_sameas))
@@ -357,6 +361,8 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
             kima_prev = kima
           }
         }
+      }else if(Utils.disableKimarijiLog){
+        addRow(table,getActivity.getString(R.string.kimariji_changelog_disabled))
       }
     }
   }

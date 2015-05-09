@@ -228,6 +228,9 @@ object Utils {
   def isRandom():Boolean = {
     getReadOrder == ReadOrder.Random
   }
+  def disableKimarijiLog():Boolean = {
+    isRandom || Globals.prefs.get.getBoolean("memorization_mode",false)
+  }
 
   def getReadOrder():ReadOrder.ReadOrder = {
     Globals.prefs.get.getString("read_order",null) match {

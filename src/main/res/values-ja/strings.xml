@@ -166,6 +166,7 @@
   </string>
   <string name="kimariji_changelog_current">これが現在の決まり字です．</string>
   <string name="kimariji_changelog_sameas">現在の札セット内での決まり字も上記と同じです．</string>
+  <string name="kimariji_changelog_disabled">札の詠み上げによる決まり字変化は暗記モードとランダムモードでは表示できません．</string>
 
   <string name="yomi_info_button_config_font">フォント</string>
   <string name="yomi_info_default_language_desc">既定の言語:</string>
