@@ -72,7 +72,13 @@ object FudaListHelper{
   def makeReadIndexMessage(context:Context):String = {
     val num_to_read = getOrQueryNumbersToReadAlt()
     val num_of_kara = getOrQueryNumbersOfKarafuda()
-    val set_name = if(num_to_read == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
+    val num_memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+      Some(getOrQueryNumbersOfMemorized)
+    }else{
+      None
+    }
+
+    val set_name = if(num_to_read + num_memorized.getOrElse(0) == AllFuda.list.size + Utils.incTotalRead && num_of_kara == 0){
       ""
     }else{
       val t = Globals.prefs.get.getString("fudaset","")
@@ -88,11 +94,8 @@ object FudaListHelper{
       }else{
         None
       }
-      val memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-        val memorized = getOrQueryNumbersOfMemorized()
-        Some(context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(memorized)))
-      }else{
-        None
+      val memorized = num_memorized.map{ num =>
+        context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(num))
       }
       val order = Utils.getReadOrder match {
         case Utils.ReadOrder.PoemNum => Some(context.getResources.getString(R.string.message_in_fudanum_order))
@@ -154,10 +157,6 @@ object FudaListHelper{
 
   def queryNumbersToRead(cond:String):Int = {
     countNumbersInFudaList(s"skip $cond AND num > 0")
-  }
-
-  def queryNumbersOfMemorized():Int = {
-    countNumbersInFudaList(s"memorized = 1")
   }
 
   def queryCurrentIndexWithSkip(context:Context):Int = {
@@ -375,7 +374,7 @@ object FudaListHelper{
     }
     val dbr = Globals.database.get.getReadableDatabase
 
-    val memorized = {
+    val memorized:Set[String] = {
       if(Globals.prefs.get.getBoolean("memorization_mode",false)){
         val cursor = dbr.query(Globals.TABLE_FUDALIST,Array("num"),"memorized = 1 AND num > 0",null,null,null,null,null)
         cursor.moveToFirst()
@@ -385,13 +384,13 @@ object FudaListHelper{
           n
         }
         cursor.close()
-        r
+        r.toSet
       }else{
         Set()
       }
     }
 
-    val have_to_read = {
+    val have_to_read_all = {
       // TODO: this is redundant query when fudaset_title is empty
       val cursor = dbr.query(Globals.TABLE_FUDASETS,Array("title","body"),"title = ?",Array(fudaset_title),null,null,null,null)
       val r = if( cursor.getCount > 0 ){
@@ -403,24 +402,27 @@ object FudaListHelper{
       }
       cursor.close()
       r
-    } -- memorized
+    }
 
     //dbr.close()
 
-    val skip_temp = AllFuda.list.toSet -- have_to_read
+    val skip_temp = AllFuda.list.toSet -- have_to_read_all
     val karafuda = if(
       Globals.prefs.get.getBoolean("karafuda_enable",false) &&
       ! Globals.prefs.get.getBoolean("memorization_mode",false) // disable karafuda when memorization mode
     ){
       val kara_num = Globals.prefs.get.getInt("karafuda_append_num",0)
-      TrieUtils.makeKarafuda(have_to_read,skip_temp,kara_num)
+      TrieUtils.makeKarafuda(have_to_read_all--memorized,skip_temp--memorized,kara_num)
     }else{
       Set()
     }
     val skip = skip_temp -- karafuda
+    val have_to_read = have_to_read_all -- memorized
+    val memorized_skip = memorized & have_to_read_all
+
     val dbw = Globals.database.get.getWritableDatabase
     Utils.withTransaction(dbw, ()=>
-      for((ss,flag) <- Array((karafuda,-1),(have_to_read,0),(skip,1))){
+      for((ss,flag) <- Array((karafuda,-1),(have_to_read,0),(skip,1),(memorized_skip,2))){
         for( s <- ss ){
           val cv = new ContentValues()
           cv.put("skip",new java.lang.Integer(flag))
@@ -463,7 +465,7 @@ object FudaListHelper{
   }
   def getOrQueryNumbersOfMemorized():Int = {
     numbers_of_memorized.getOrElse{
-      val r = queryNumbersOfMemorized()
+      val r = queryNumbersToRead("= 2")
       numbers_of_memorized = Some(r)
       r
     }
@@ -527,8 +529,12 @@ object FudaListHelper{
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () => {
         // we disable karafuda mode when memorize mode is on, so we don't have to consider skip = -1
-        val newmem = if(getMemoraziedFlag(db,fudanum)){0}else{1}
-        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = $newmem, skip = $newmem WHERE num = '$fudanum'")
+        val (newm,news) = if(getMemoraziedFlag(db,fudanum)){
+          (0,0)
+        }else{
+          (1,2)
+        }
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = $newm, skip = $news WHERE num = '$fudanum'")
     })
     db.close()
   }
