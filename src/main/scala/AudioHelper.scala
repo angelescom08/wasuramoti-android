@@ -356,6 +356,7 @@ object KarutaPlayUtils{
         return
       }
       val activity = Globals.player.get.activity
+      val context = activity.getApplicationContext
       val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
       if(auto || Globals.prefs.get.getBoolean("move_next_after_done",true)){
         activity.moveToNextFuda(!auto,auto)
@@ -363,15 +364,15 @@ object KarutaPlayUtils{
         activity.refreshAndInvalidate()
       }
       if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
-        FudaListHelper.allReadDone(activity.getApplicationContext())
+        FudaListHelper.allReadDone(context)
       ){
-        FudaListHelper.shuffle()
-        FudaListHelper.moveToFirst(activity.getApplicationContext())
+        FudaListHelper.shuffle(context)
+        FudaListHelper.moveToFirst(context)
         activity.refreshAndInvalidate(auto)
       }
       if(auto && !Globals.player.isEmpty){
         KarutaPlayUtils.startKarutaPlayTimer(
-          activity.getApplicationContext,
+          context,
           KarutaPlayUtils.Action.Auto,
           Globals.prefs.get.getLong("autoplay_span", 5)*1000
         )

@@ -89,7 +89,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
         edit.commit
         notifyChangedPublic
         Globals.forceRestart = true
-        FudaListHelper.updateSkipList()
+        FudaListHelper.updateSkipList(context)
       }
     }
     super.onDialogClosed(positiveResult)
@@ -107,7 +107,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
         override def onClick(view:View){
           Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
             FudaListHelper.resetMemorizedAll()
-            FudaListHelper.updateSkipList()
+            FudaListHelper.updateSkipList(context)
             Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
           })
         }
@@ -205,7 +205,7 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         edit.putFloat("karafuda_urafuda_prob",rand.getProgress.toFloat/rand.getMax.toFloat)
         edit.commit
         notifyChangedPublic
-        FudaListHelper.updateSkipList()
+        FudaListHelper.updateSkipList(context)
       }
 
     }

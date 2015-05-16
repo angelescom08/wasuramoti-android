@@ -46,6 +46,12 @@ object FudaListHelper{
     current_index_with_skip = None
   }
 
+  def updateCurrentIndexWithSkip(context:Context,index:Option[Int]=None){
+    val current_index = index.getOrElse{getOrQueryCurrentIndexWithSkip(context)}
+    val new_index = queryIndexWithSkip(current_index)
+    FudaListHelper.putCurrentIndex(context,new_index)
+  }
+
   def moveToFirst(context:Context){
     val fst = if(Utils.readFirstFuda){
       0
@@ -350,15 +356,15 @@ object FudaListHelper{
   }
 
   def shuffleAndMoveToFirst(context:Context){
-     shuffle()
+     shuffle(context)
      moveToFirst(context)
   }
 
-  def shuffle(){ Globals.db_lock.synchronized{
+  def shuffle(context:Context){ Globals.db_lock.synchronized{
     if(Globals.prefs.get.getBoolean("karafuda_enable",false) ||
       Globals.prefs.get.getBoolean("memorization_mode",false)
       ){
-      updateSkipList()
+      updateSkipList(context)
     }
     val rand = new Random()
     val num_list = (1 to AllFuda.list.length).toList
@@ -375,7 +381,7 @@ object FudaListHelper{
       })
     db.close()
   }}
-  def updateSkipList(title:String=null){ Globals.db_lock.synchronized{
+  def updateSkipList(context:Context,title:String=null){ Globals.db_lock.synchronized{
     val fudaset_title = if(title == null){
       Globals.prefs.get.getString("fudaset","")
     }else{
@@ -444,6 +450,7 @@ object FudaListHelper{
     numbers_of_karafuda = None
     numbers_of_memorized = None
     current_index_with_skip = None
+    updateCurrentIndexWithSkip(context)
     Globals.forceRefresh = true
   }}
 

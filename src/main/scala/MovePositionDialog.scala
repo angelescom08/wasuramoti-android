@@ -61,8 +61,7 @@ class MovePositionDialog extends DialogFragment{
     return dialog
   }
   def onOk(){
-    val index = FudaListHelper.queryIndexWithSkip(current_index)
-    FudaListHelper.putCurrentIndex(getActivity,index)
+    FudaListHelper.updateCurrentIndexWithSkip(getActivity,Some(current_index))
     getActivity.asInstanceOf[WasuramotiActivity].refreshAndInvalidate()
   }
   def onPrev(){incCurrentIndex(-1)}

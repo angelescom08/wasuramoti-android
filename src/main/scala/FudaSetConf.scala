@@ -48,7 +48,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
         case _:IndexOutOfBoundsException => return
       }
       persistString(title)
-      FudaListHelper.updateSkipList(title)
+      FudaListHelper.updateSkipList(context,title)
     }
     notifyChangedPublic // in case that number of fudas in current fudaset changed
     super.onDialogClosed(positiveResult)
