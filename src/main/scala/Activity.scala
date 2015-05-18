@@ -612,6 +612,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         case _ => return
       }
       edit.commit()
+      FudaListHelper.updateSkipList(getApplicationContext)
       Globals.forceRefresh = true
 
       var html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>

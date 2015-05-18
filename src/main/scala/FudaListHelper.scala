@@ -381,6 +381,8 @@ object FudaListHelper{
       })
     db.close()
   }}
+
+  // Note: we have to always call this function after memorization_mode has been changed
   def updateSkipList(context:Context,title:String=null){ Globals.db_lock.synchronized{
     val fudaset_title = if(title == null){
       Globals.prefs.get.getString("fudaset","")
