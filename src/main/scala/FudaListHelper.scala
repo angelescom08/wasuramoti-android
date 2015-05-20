@@ -492,16 +492,14 @@ object FudaListHelper{
   def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[Int] = {
     val r = offset match{
       case 0 =>
-        if(!Globals.player.isEmpty){
-          Some(Globals.player.get.cur_num)
-        }else{
+        Globals.player.map{_.cur_num}
+        .orElse{
           val current_index = getCurrentIndex(context)
           queryPrevOrNext(current_index, true, true).map{_._1}
         }
       case 1 =>
-        if(!Globals.player.isEmpty){
-          Some(Globals.player.get.next_num)
-        }else{
+        Globals.player.map{_.next_num}
+        .orElse{
           val current_index = getCurrentIndex(context)
           queryNext(current_index).map{_._2}
         }
