@@ -3,8 +3,10 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "You can scroll yomi info button list" TIPS
   * Show font example
+  * Use _.nonEmpty instead of !_.isEmpty
 
 Priority Medium-High:
+  * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Set contentDescription for all buttons
   * Solve the warnings caused by -Xlint
   * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%

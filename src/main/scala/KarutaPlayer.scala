@@ -43,7 +43,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therefore, we execute it here
-  val is_last_fuda = FudaListHelper.isLastFuda(activity.getApplicationContext())
   val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask]
 
   def audioQueueInfo():String = {
@@ -65,7 +64,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     bld ++= s"equalizer_seq:${equalizer_seq},"
     bld ++= s"current_yomi_info:${current_yomi_info},"
     bld ++= s"set_audio_volume:${set_audio_volume},"
-    bld ++= s"is_last_fuda:${is_last_fuda},"
     val audio_queue_info = audioQueueInfo()
     bld ++= s"audio_queue:${audio_queue_info}"
     bld.toString
@@ -411,6 +409,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
     // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
     // otherwise it raises AbstractMethodError "abstract method not implemented"
+    
     override def doInBackground(unused:AnyRef*):AnyRef = {
       this.synchronized{
       try{
@@ -434,45 +433,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         // which occurs at beginning of wav when using bluetooth speaker.
         val (silence_time,_) = Utils.calcSilenceAndWaitLength
         add_to_audio_queue(Right(silence_time),true)
-        val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
-        var ss = read_order_each.split("_")
-        if(cur_num == 0){
-          val read_order_joka = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
-          ss = read_order_joka.split(",").flatMap{ s =>
-            val Array(t,num) = s.split("_")
-            Array.fill(num.toInt){
-              t match{
-                case "upper" => "CUR1"
-                case "lower" => "CUR2"
-              }
-            }
-          } ++ ss.filter(_.startsWith("NEXT"))
-        }
-        if(is_last_fuda && read_order_each.endsWith("NEXT1")){
-          ss ++= Array("NEXT2")
-        }
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()
-        for (i <- 0 until ss.length ){
+        val ss = AudioHelper.genReadNumKamiSimoPairs(activity.getApplicationContext,cur_num,next_num)
+        for (((read_num,kami_simo,is_cur),i) <-ss.zipWithIndex){
           if(isCancelled){
             // TODO: what should we return ?
             return Left(new AudioQueue())
           }
-          val s = ss(i)
-          val read_num = if(s.startsWith("CUR")){
-            cur_num
-          }else{
-            next_num
-          }
-          val kami_simo = if(s.endsWith("1")){
-            1
-          }else{
-            2
-          }
           if(reader.exists(read_num,kami_simo)){
             try{
               val key = (read_num,kami_simo)
-              val is_cur = s.startsWith("CUR")
               if(decoded_wavs.contains(key)){
                 add_to_audio_queue(Left(decoded_wavs(key)),is_cur)
               }else{
@@ -503,7 +474,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
               }
             }
             if( i != ss.length - 1 ){
-              add_to_audio_queue(Right(span_simokami),s.startsWith("CUR"))
+              add_to_audio_queue(Right(span_simokami),is_cur)
             }
           }
         }

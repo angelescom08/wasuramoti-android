@@ -18,6 +18,41 @@ object AudioHelper{
   type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
   val SHORT_SIZE = java.lang.Short.SIZE/java.lang.Byte.SIZE
 
+  def genReadNumKamiSimoPairs(context:Context,cur_num:Int,next_num:Int):Seq[(Int,Int,Boolean)] = {
+    val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+    var ss = read_order_each.split("_")
+    if(cur_num == 0){
+      val read_order_joka = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+      ss = read_order_joka.split(",").flatMap{ s =>
+        val Array(t,num) = s.split("_")
+        Array.fill(num.toInt){
+          t match{
+            case "upper" => "CUR1"
+            case "lower" => "CUR2"
+          }
+        }
+      } ++ ss.filter(_.startsWith("NEXT"))
+    }
+    val is_last_fuda = FudaListHelper.isLastFuda(context)
+    if(is_last_fuda && read_order_each.endsWith("NEXT1")){
+      ss ++= Array("NEXT2")
+    }
+    ss.map{ s =>
+      val read_num = if(s.startsWith("CUR")){
+        cur_num
+      }else{
+        next_num
+      }
+      val kami_simo = if(s.endsWith("1")){
+        1
+      }else{
+        2
+      }
+      val is_cur = s.startsWith("CUR")
+      (read_num,kami_simo,is_cur)
+    }
+  }
+
   def calcTotalMillisec(audio_queue:AudioQueue):Long = {
     audio_queue.map{ arg =>{
       arg match {
@@ -52,7 +87,7 @@ object AudioHelper{
     }
     num.flatMap{case(cur_num,next_num) =>{
         val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != ((cur_num, next_num)) }
-        if(!maybe_reader.get.bothExists(cur_num,next_num)){
+        if(!maybe_reader.get.audioFileExists(cur_num,next_num)){
           None
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false
