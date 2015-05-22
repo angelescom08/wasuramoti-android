@@ -105,6 +105,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
             Globals.global_lock.synchronized{
               if(Globals.is_playing){
                 Globals.player.foreach{pl=>{
+                  // TODO: If `Play` button is pressed at the same time as SeekBar has changed,
+                  //       the KarutaPlayer.audio_track would be None at this row.
+                  //       To avoid it, we have to ensure that audio_track is non empty here.
                   pl.makeEqualizer(true)
                   pl.equalizer.foreach{ e =>
                     val Array(min_eq,max_eq) = e.getBandLevelRange

@@ -102,14 +102,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def makeAudioTrack(){
-    makeAudioTrackAux(getFirstDecoder(),calcBufferSize())
+    // getFirstDecoder waits for decoding ends
+    makeAudioTrackAux(getFirstDecoder,calcBufferSize)
   }
 
   def makeAudioTrackAux(decoder:OggVorbisDecoder,buffer_size_bytes:Int=0){
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
-      //TODO:set appropriate value
+      //TODO: set appropriate value
       (AudioFormat.ENCODING_PCM_8BIT,1)
     }
     val (channels,rate_2) = if(decoder.channels == 1){
@@ -131,29 +132,29 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       mode ))
     makeEqualizer()
   }
-  // Precondition: audio_track is not None
   def makeEqualizer(force:Boolean=false){
     val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer())
-    if(!equalizer.isEmpty || (!force && ar.seq.isEmpty)){
+    // Equalizer is supported by API >= 9
+    if(android.os.Build.VERSION.SDK_INT < 9 || equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
       return
     }
-    try{
-      equalizer = Some(new Equalizer(0, audio_track.get.getAudioSessionId))
-      equalizer.foreach(dest => {
-        dest.setEnabled(true)
-        val Array(min_eq,max_eq) = dest.getBandLevelRange
-        for( i <- 0 until dest.getNumberOfBands){
+    // TODO: Ensure that audio_track is not None here.
+    //       See also EqualizerPref's add_seekbars
+    audio_track.foreach{ atrk =>
+      equalizer = Some{
+        val eql = new Equalizer(0, atrk.getAudioSessionId)
+        eql.setEnabled(true)
+        val Array(min_eq,max_eq) = eql.getBandLevelRange
+        for( i <- 0 until eql.getNumberOfBands){
           try{
             val r = ar.seq(i).getOrElse(0.5f)
-            dest.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
+            eql.setBandLevel(i.toShort,(min_eq+(max_eq-min_eq)*r).toShort)
           }catch{
             case _:Exception => Unit
           }
         }
-      })
-    }catch{
-      // Equalizer is only supported in Android 2.3+(API Level 9)
-      case e:NoClassDefFoundError => None
+        eql
+      }
     }
   }
   def play(bundle:Bundle,auto_play:Boolean=false,from_swipe:Boolean=false){
