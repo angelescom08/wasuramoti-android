@@ -19,18 +19,21 @@ import scala.util.Random
 
 object FudaListHelper{
 
+  // Since current index is updated frequently, we save it to separate file for performance.
+  // However, the performance effect may be very very small so we may merge to main preference.
   val PREFS_NAME="wasuramoti.pref"
   val KEY_CURRENT_INDEX="fuda_current_index"
 
-  // caches
+  // query cache
   var current_index_with_skip = None:Option[Int]
   var numbers_to_read = None:Option[Int]
   var numbers_of_karafuda = None:Option[Int]
   var numbers_of_memorized = None:Option[Int]
 
-  def invalidateReadNumAndMemorized(){
+  def invalidateQueryCacheExceptKarafuda(){
     numbers_to_read = None
     numbers_of_memorized = None
+    current_index_with_skip = None
   }
 
   def getCurrentIndex(context:Context):Int = {

@@ -516,15 +516,15 @@ object Utils {
       }
     }
   }
-  def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateReadNumAndMemorized:Boolean = false){
+  def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateQueryCacheExceptKarafuda:Boolean = false){
     Globals.setButtonText.foreach{
       _(
         if(!NotifyTimerUtils.notify_timers.isEmpty){
           NotifyTimerUtils.makeTimerText(context)
         }else{
           val res = context.getResources
-          if(invalidateReadNumAndMemorized){
-            FudaListHelper.invalidateReadNumAndMemorized()
+          if(invalidateQueryCacheExceptKarafuda){
+            FudaListHelper.invalidateQueryCacheExceptKarafuda()
           }
           FudaListHelper.makeReadIndexMessage(context) + "\n" +
           (

@@ -236,7 +236,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
             getCurYomiInfoView.foreach{vw =>
               if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
                 vw.switchMemorized
-                Utils.setButtonTextByState(getActivity.getApplicationContext, invalidateReadNumAndMemorized = true)
+                Utils.setButtonTextByState(getActivity.getApplicationContext, invalidateQueryCacheExceptKarafuda = true)
               }else{
                 postfix match{
                   case "AUTHOR" => vw.show_author ^= true
