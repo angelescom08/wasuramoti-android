@@ -3,16 +3,18 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "You can scroll yomi info button list" TIPS
   * Use _.nonEmpty instead of !_.isEmpty
+  * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
+  * Show warning when volume or equalizer level is too low
 
 Priority Medium-High:
+  * Show font example
+  * Change the color of author, poem text, and furigana.
   * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Solve the warnings caused by -Xlint
   * Use AAssetManager_* and AAsset_* to access asset directry
     - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
     - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
-  * Show font example
-  * Change the color of author, poem text, and furigana.
   * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%
     - use AppCompat >= 22.1.0 (this will automatically emulates Material Design for lower API version devices)
     - Use colorPrimaryDark instead of setStatusBarColor

@@ -425,6 +425,9 @@
         <body>
           <h3>Wasuramoti Anonymous Bug Report Form</h3>
           <form method="post" action="%2$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
+            <div>Please give [<a target="_blank" href="http://pjmtdw.github.io/en/wasuramoti/faq.html">FAQ</a>] a cursory glance before writing bug report.</div>
+            <div>
+            <hr />
             <div>
               <div>Write the detail of the bug here:</div>
               <textarea name="bug_detail">%4$s</textarea>
