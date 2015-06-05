@@ -33,7 +33,6 @@ public class OggVorbisDecoder {
   public static native void slesCreateEngine();
   public static native void slesCreateBufferQueueAudioPlayer();
   public static native boolean slesEnqueuePCM(short[] in_data, int data_length);
-  public static native boolean slesEnableReverb(boolean enabled);
   public static native boolean slesPlay();
   public static native boolean slesStop();
   public static native void slesShutdown();
