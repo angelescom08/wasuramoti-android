@@ -30,10 +30,12 @@ object KarutaPlayerDebug{
   }
 }
 
+case class OpenSLESTrack()
+
 class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
   type AudioQueue = Utils.AudioQueue
   var cur_millisec = 0:Long
-  var audio_track = None:Option[AudioTrack]
+  var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]
   var equalizer = None:Option[Equalizer]
   var equalizer_seq = None:Option[Utils.EqualizerSeq]
   var current_yomi_info = None:Option[Int]
@@ -44,6 +46,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
   // Therefore, we execute it here
   val decode_task = (new OggDecodeTask().execute(new AnyRef())).asInstanceOf[OggDecodeTask]
+
+  def releaseTrackSetNone(){
+    music_track.foreach{case Left(x) => x.release();case _=>}
+    music_track = None
+  }
 
   def audioQueueInfo():String = {
     if(audio_queue.isEmpty){
@@ -101,12 +108,23 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }.sum
   }
 
-  def makeAudioTrack(){
+  def makeMusicTrack(){
     // getFirstDecoder waits for decoding ends
-    makeAudioTrackAux(getFirstDecoder,calcBufferSize)
+    val decoder = getFirstDecoder
+
+    if(Globals.prefs.get.getBoolean("use_opensles",false)){
+      // it is safe to call these functions multiple times.
+      OggVorbisDecoder.slesCreateEngine()
+      OggVorbisDecoder.slesCreateBufferQueueAudioPlayer()
+
+      music_track = Some(Right(new OpenSLESTrack))
+    }else{
+      makeAudioTrack(getFirstDecoder)
+    }
   }
 
-  def makeAudioTrackAux(decoder:OggVorbisDecoder,buffer_size_bytes:Int=0){
+  def makeAudioTrack(decoder:OggVorbisDecoder){
+    val buffer_size_bytes = calcBufferSize
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
@@ -124,12 +142,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     val rate_3 = rate_1 * rate_2
     buffer_size = (buffer_size / rate_3) * rate_3
 
-    audio_track = Some(new AudioTrack( AudioManager.STREAM_MUSIC,
+    music_track = Some(Left(new AudioTrack( AudioManager.STREAM_MUSIC,
       decoder.rate.toInt,
       channels,
       audio_format,
       buffer_size,
-      mode ))
+      mode )))
     makeEqualizer()
   }
   def makeEqualizer(force:Boolean=false){
@@ -138,9 +156,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(android.os.Build.VERSION.SDK_INT < 9 || equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
       return
     }
-    // TODO: Ensure that audio_track is not None here.
+    // TODO: Ensure that music_track is not None here.
     //       See also EqualizerPref's add_seekbars
-    audio_track.foreach{ atrk =>
+    music_track.foreach{ case Left(atrk) => {
       equalizer = Some{
         val eql = new Equalizer(0, atrk.getAudioSessionId)
         eql.setEnabled(true)
@@ -155,6 +173,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
         eql
       }
+    }
+    case _ =>
     }
   }
   def play(bundle:Bundle,auto_play:Boolean=false,from_swipe:Boolean=false){
@@ -214,20 +234,23 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def doWhenDone(bundle:Bundle){
     Globals.global_lock.synchronized{
-      audio_track.foreach(x => {x.stop();x.release()})
-      audio_track = None
+      music_track.foreach{
+        case Left(x) => {x.stop();x.release()}
+        case Right(_) => OggVorbisDecoder.slesStop()
+      }
+      music_track = None
       doWhenStop()
       KarutaPlayUtils.doAfterDone(bundle)
     }
   }
 
   def onReallyStart(bundle:Bundle){
-    // Since makeAudioTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
+    // Since makeMusicTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
     val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
       try{
-        makeAudioTrack()
+        makeMusicTrack()
       }catch{
         case e:OggDecodeFailException => {
             activity.runOnUiThread(new Runnable{
@@ -259,7 +282,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       val decode_and_play_again = () => {
         // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
-        audio_track = None
+        music_track = None
         activity.runOnUiThread(new Runnable(){
             override def run(){
               Globals.player = AudioHelper.refreshKarutaPlayer(activity,Globals.player,true)
@@ -270,7 +293,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         })
       }
 
-      val r_write = audio_track.get.write(buf,0,buf.length)
+      val r_write = music_track.map{
+        case Left(atrk) => Left((atrk.write(buf,0,buf.length),atrk.getState))
+        case Right(_) => Right(OggVorbisDecoder.slesEnqueuePCM(buf,buf.length))
+      }
 
       if(Globals.IS_DEBUG){
         // you can add wav header to pcm file by following command
@@ -289,17 +315,21 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // `java.lang.IllegalStateException: play() called on uninitialized AudioTrack.`
       // It is occasionally reported from customer, but I could not figure out the cause.
       // Thus I will just retry again, and throw exception if it occurs second time.
-      if( Array(AudioTrack.ERROR_INVALID_OPERATION,AudioTrack.ERROR_BAD_VALUE).contains(r_write) ||
-          audio_track.get.getState != AudioTrack.STATE_INITIALIZED ){
-          val message = "AudioTrack.write failed: rval=" + r_write + ", state=" + audio_track.get.getState + ", blen=" + buf.length
-          Log.v("wasuramoti",message)
-          if(Globals.audio_track_failed_count == 0){
-            Globals.audio_track_failed_count += 1
-            decode_and_play_again()
-          }else{
-            throw new Exception(message)
+      r_write.foreach{
+        case Left((rw,state)) =>
+          if( Array(AudioTrack.ERROR_INVALID_OPERATION,AudioTrack.ERROR_BAD_VALUE).contains(rw) ||
+              state != AudioTrack.STATE_INITIALIZED ){
+              val message = s"AudioTrack.write failed: rval=${rw}, state=${state}, blen=${buf.length}"
+              Log.v("wasuramoti",message)
+              if(Globals.audio_track_failed_count == 0){
+                Globals.audio_track_failed_count += 1
+                decode_and_play_again()
+              }else{
+                throw new Exception(message)
+              }
+              return
           }
-          return
+        case _=>
       }
 
       if(bundle.getBoolean("have_to_run_border",false)){
@@ -337,7 +367,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       )
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
-      audio_track.get.play()
+      music_track.foreach{
+        case Left(atrk) => atrk.play()
+        case Right(_) => OggVorbisDecoder.slesPlay()
+      }
     }}})
     thread.setUncaughtExceptionHandler(
       new Thread.UncaughtExceptionHandler(){
@@ -366,12 +399,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.getApplicationContext,action
         )
       }
-      audio_track.foreach(track => {
+      music_track.foreach{
+        case Left(track) => {
           track.flush()
           track.stop()
           track.release()
-        })
-      audio_track = None
+        }
+        case Right(_) =>
+          OggVorbisDecoder.slesStop()
+      }
+      music_track = None
       play_started = None
       doWhenStop()
     }

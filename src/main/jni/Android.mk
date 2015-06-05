@@ -17,7 +17,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libstbvorbis
-LOCAL_LDLIBS := -llog
+LOCAL_LDLIBS := -llog -lOpenSLES
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 
@@ -27,6 +27,7 @@ $(warning Value of LOCAL_CFLAGS is '$(LOCAL_CFLAGS)')
 LOCAL_SRC_FILES := \
 	./wav_ogg_file_codec_jni.c \
 	./decode_file.c \
+	./native-audio-jni.c \
 	./stb_vorbis.c
 
 include $(BUILD_SHARED_LIBRARY)

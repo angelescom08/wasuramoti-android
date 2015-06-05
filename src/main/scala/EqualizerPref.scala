@@ -106,8 +106,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
               if(Globals.is_playing){
                 Globals.player.foreach{pl=>{
                   // TODO: If `Play` button is pressed at the same time as SeekBar has changed,
-                  //       the KarutaPlayer.audio_track would be None at this row.
-                  //       To avoid it, we have to ensure that audio_track is non empty here.
+                  //       the KarutaPlayer.music_track would be None at this row.
+                  //       To avoid it, we have to ensure that music_track is non empty here.
                   pl.makeEqualizer(true)
                   pl.equalizer.foreach{ e =>
                     val Array(min_eq,max_eq) = e.getBandLevelRange
@@ -146,7 +146,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     Globals.player match{
       case Some(pl) => {
           try{
-            pl.makeAudioTrack()
+            pl.makeMusicTrack()
           }catch{
             case e:OggDecodeFailException =>
             view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(e.getMessage())
@@ -166,8 +166,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
             }
           }
 
-          pl.audio_track.foreach(_.release())
-          pl.audio_track = None
+          pl.releaseTrackSetNone() 
       }
       case None => {
         view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.player_error_noplay))

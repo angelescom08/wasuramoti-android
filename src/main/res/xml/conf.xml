@@ -173,6 +173,14 @@
           unit="@string/conf_unit_second"
           />
       </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_beta">
+        <CheckBoxPreference
+          android:key="use_opensles"
+          android:title="@string/conf_use_opensles"
+          android:summary="@string/conf_use_opensles_summary"
+          android:defaultValue="false"
+          />
+      </PreferenceCategory>
     </PreferenceScreen>
     <Preference android:title="@string/conf_show_credits" android:summary="@string/conf_show_credits_summary" android:key="show_credits"/>
     <Preference android:title="@string/conf_bug_report" android:summary="@string/conf_bug_report_summary" android:key="bug_report"/>

@@ -14,7 +14,6 @@ import _root_.java.lang.Runnable
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
 import scala.collection.mutable
 
-
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0

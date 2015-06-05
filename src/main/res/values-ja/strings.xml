@@ -215,7 +215,7 @@
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>
-  <string name="category_move">進んだり 詠んだり</string>
+  <string name="category_move">詠んだり 進んだり</string>
   <string name="conf_play_after_swipe">スワイプ後に詠む</string>
   <string name="conf_play_after_swipe_summary">詠み句を左右にスワイプしたら詠み始める</string>
   <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
@@ -454,4 +454,7 @@
   <string name="memorization_warn_yomi_info_view">
     暗記モードでは詠み句表示が有効化されます.
   </string>
+  <string name="category_beta">ベータ機能</string>
+  <string name="conf_use_opensles">OpenSL ES を使う</string>
+  <string name="conf_use_opensles_summary">音声を正常に再生できない場合はこれを試してみて下さい</string>
 </resources>

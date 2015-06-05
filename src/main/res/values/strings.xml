@@ -499,4 +499,7 @@
   <string name="memorization_warn_yomi_info_view">
     Poem text will be enabled in memorization mode.
   </string>
+  <string name="category_beta">Beta Function</string>
+  <string name="conf_use_opensles">Use OpenSL ES</string>
+  <string name="conf_use_opensles_summary">If you cannot play audio correctly. try this option.</string>
 </resources>
