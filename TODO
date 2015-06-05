@@ -6,10 +6,12 @@ Priority High:
   * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
   * Show warning when volume or equalizer level is too low
+  * Add android.os.Build.VERSION.RELEASE to bug report
 
 Priority Medium-High:
-  * Show font example
+  * Show font example.
   * Change the color of author, poem text, and furigana.
+  * Save poem text as image.
   * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Solve the warnings caused by -Xlint
   * Use AAssetManager_* and AAsset_* to access asset directry

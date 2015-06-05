@@ -151,17 +151,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      百首全体におけるこの札の決まり字は「<font color="#90EE90">%s</font>」です．
+      百首全体におけるこの札の決まり字は「<font color=\"#90EE90\">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      現在の札セット内での決まり字は「<font color="#90EE90">%s</font>」です．
+      現在の札セット内での決まり字は「<font color=\"#90EE90\">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-    「<font color="#EE90EE">%1$s</font>」が詠まれたので，決まり字は「<font color="#90EE90">%2$s</font>」になりました．
+    「<font color=\"#EE90EE\">%1$s</font>」が詠まれたので，決まり字は「<font color=\"#90EE90\">%2$s</font>」になりました．
     ]]>
   </string>
   <string name="kimariji_changelog_current">これが現在の決まり字です．</string>
@@ -256,7 +256,7 @@
   <string name="fudasetedit_name">名前</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color="#00CCFF">[<u>歌番号指定</u>]</font>
+    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color=\"#00CCFF\">[<u>歌番号指定</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
@@ -289,7 +289,7 @@
     <![CDATA[
     <h3>注意</h3>
     <p>
-      下記の説明は必要最低限のみです．詳しくは「<font color="#00FFFF">わすらもち用読み音声データの作成</font>」でネット検索して下さい．
+      下記の説明は必要最低限のみです．詳しくは「<font color=\"#00FFFF\">わすらもち用読み音声データの作成</font>」でネット検索して下さい．
     </p>
     <h3>音声形式</h3>
     <p>
@@ -298,19 +298,19 @@
     </p>
     <h3>ファイル名</h3>
     <p>
-      各ファイルを <tt><font color="#FFFF00">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前に変更する．<br/>
+      各ファイルを <tt><font color=\"#FFFF00\">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前に変更する．<br/>
       ただし歌番号は3桁になるように0を先頭に付ける．また序歌は000番とする．<br/>
-      (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+      (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color=\"#FFFF00\">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>配置方法</h3>
     <p>
-      (1) SDカードまたは内部ストレージに <tt><font color="#FFFF00">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
+      (1) SDカードまたは内部ストレージに <tt><font color=\"#FFFF00\">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
     </p>
     <p>
-      (2) そのフォルダの下に <tt><font color="#FFFF00">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
+      (2) そのフォルダの下に <tt><font color=\"#FFFF00\">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
     </p>
     <p>
-      (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
       以上でわすらもちの詠み手の選択肢に追加される．
     </p>
     ]]>
@@ -367,12 +367,12 @@
   <string name="bug_report_html">
     <![CDATA[
       <!DOCTYPE html>
-      <html lang="ja">
+      <html lang=\"ja\">
         <head>
-          <meta charset="utf-8">
-          <meta content="width=device-width, initial-scale=1.0" name="viewport">
+          <meta charset=\"utf-8\">
+          <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
           <title>わすらもち匿名バグ報告フォーム</title>
-          <style type="text/css">
+          <style type=\"text/css\">
             textarea{
               width: 24em;
               height: 6em;
@@ -381,20 +381,20 @@
         </head>
         <body>
           <h3>わすらもち匿名バグ報告フォーム</h3>
-          <form method="post" action="%2$s" onsubmit="return(confirm(\'本当に送信しますか？\'))" >
-            <div>バグ報告の前に [<a target="_blank" href="http://pjmtdw.github.io/wasuramoti/faq.html">良くある質問</a>] に軽く目を通しておいて下さい</div>
+          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
+            <div>バグ報告の前に [<a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">良くある質問</a>] に軽く目を通しておいて下さい</div>
             <hr />
             <div>
               <div>バグの再現手順とその症状を書いて下さい:</div>
-              <textarea name="bug_detail" placeholder="○○したら△△になる" >%4$s</textarea>
+              <textarea name=\"bug_detail\" placeholder=\"○○したら△△になる\" >%4$s</textarea>
             </div>
             <div>「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．</div>
-              <input type="hidden" name="bug_device_info value="%3$s">
-              <input type="submit" value="送信する">
+              <input type=\"hidden\" name=\"bug_device_info value=\"%3$s\">
+              <input type=\"submit\" value=\"送信する\">
           </form>
           <hr />
           <div>匿名のバグ報告の場合は開発者側から詳しい症状をお伺いすることができません．</div>
-          <div>もし本当に直して欲しいバグならメールで連絡して下さい &rArr; [<a href="mailto:%1$s">%1$s</a>]</div>
+          <div>もし本当に直して欲しいバグならメールで連絡して下さい &rArr; [<a href=\"mailto:%1$s\">%1$s</a>]</div>
         </body>
       </html>
     ]]>
@@ -428,10 +428,10 @@
   <string name="conf_memorization_summary">「覚えた」ボタンを使って効率的に学習</string>
   <string name="memorization_desc">
     <![CDATA[
-      <font color="#00FF99">[暗記モードの使い方]</font><br>
-      &middot; 歌を覚えたら<font color="#FFFF00">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
+      <font color=\"#00FF99\">[暗記モードの使い方]</font><br>
+      &middot; 歌を覚えたら<font color=\"#FFFF00\">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
       &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
-      &middot; このページにある<font color="#FFFF00">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
+      &middot; このページにある<font color=\"#FFFF00\">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
     ]]>
   </string>
   <string name="memorization_desc_brief">

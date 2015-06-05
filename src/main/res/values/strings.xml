@@ -168,17 +168,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      Original Kimariji of this poem is <font color="#90EE90">%s</font>.
+      Original Kimariji of this poem is <font color=\"#90EE90\">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      The Kimariji inside current fudaset is <font color="#90EE90">%s</font>.
+      The Kimariji inside current fudaset is <font color=\"#90EE90\">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-      Since <font color="#EE90EE">%1$s</font> has already been read, the Kimariji was changed to <font color="#90EE90">%2$s</font>.
+      Since <font color=\"#EE90EE\">%1$s</font> has already been read, the Kimariji was changed to <font color=\"#90EE90\">%2$s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>
@@ -304,7 +304,7 @@
   <string name="fudasetedit_name">Title</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    First characters of poem written in Romanized Japanese. (e.g. asazi, koi, oo) <font color="#00CCFF">[<u>Poem No.</u>]</font>
+    First characters of poem written in Romanized Japanese. (e.g. asazi, koi, oo) <font color=\"#00CCFF\">[<u>Poem No.</u>]</font>
     ]]>
   </string>
   <string name="fudasetedit_fudanum_html">
@@ -341,19 +341,19 @@
     </p>
     <h3>File Name Convention</h3>
     <p>
-      Rename each file to <tt><font color="#FFFF00">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
+      Rename each file to <tt><font color=\"#FFFF00\">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
       , where some zeros must be padded to fit three digits. Poem number of Joka is 000.<br/>
-      (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <tt><font color="#FFFF00">inaba_081_2.ogg</font></tt>)
+      (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <tt><font color=\"#FFFF00\">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>Where to Place</h3>
     <p>
-      (1) Make folder named <tt><font color="#FFFF00">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
+      (1) Make folder named <tt><font color=\"#FFFF00\">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
     </p>
     <p>
-      (2) Make folder named <tt><font color="#FFFF00">[Reciter]</font></tt>, and place 202 ogg files in it.
+      (2) Make folder named <tt><font color=\"#FFFF00\">[Reciter]</font></tt>, and place 202 ogg files in it.
     </p>
     <p>
-      (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color="#FFFF00">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
       Now new reader should be added to choices in this app.
     </p>
     ]]>
@@ -413,9 +413,9 @@
     <![CDATA[
       <html>
         <head>
-          <meta content="width=device-width, initial-scale=1.0" name="viewport">
+          <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
           <title>Wasuramoti Anonymous Bug Report Form</title>
-          <style type="text/css">
+          <style type=\"text/css\">
             textarea{
               width: 24em;
               height: 6em;
@@ -424,21 +424,21 @@
         </head>
         <body>
           <h3>Wasuramoti Anonymous Bug Report Form</h3>
-          <form method="post" action="%2$s" onsubmit="return(confirm(\'Really_Send_OK?\'))" >
-            <div>Please give [<a target="_blank" href="http://pjmtdw.github.io/en/wasuramoti/faq.html">FAQ</a>] a cursory glance before writing bug report.</div>
+          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
+            <div>Please give [<a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">FAQ</a>] a cursory glance before writing bug report.</div>
             <div>
             <hr />
             <div>
               <div>Write the detail of the bug here:</div>
-              <textarea name="bug_detail">%4$s</textarea>
+              <textarea name=\"bug_detail\">%4$s</textarea>
             </div>
             <div>Clicking the following button will send some device information which is useful for debugging.</div>
-            <input type="hidden" name="bug_device_info" value="%3$s">
-            <input type="submit" value="Send_Bug_Report">
+            <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
+            <input type=\"submit\" value=\"Send Bug Report\">
           </form>
           <hr />
           <div>In case of anonymous bug report, we cannot ask you the detail of the bug.</div>
-          <div>If you really want us to fix the bug, please contact us by E-Mail &rArr; [<a href="mailto:%1$s">%1$s</a>]</div>
+          <div>If you really want us to fix the bug, please contact us by E-Mail &rArr; [<a href=\"mailto:%1$s\">%1$s</a>]</div>
 
         </body>
       </html>
@@ -473,10 +473,10 @@
   <string name="conf_memorization_summary">Use `Memorized` button for assistance of remembering the poems.</string>
   <string name="memorization_desc">
     <![CDATA[
-      <font color="#00FF99">[How to Use Memorization Mode]</font><br>
-      &middot; If you remembered the poem, press <font color="#FFFF00">`Memorized`</font> and go next. Otherwise, just skip it.<br>
+      <font color=\"#00FF99\">[How to Use Memorization Mode]</font><br>
+      &middot; If you remembered the poem, press <font color=\"#FFFF00\">`Memorized`</font> and go next. Otherwise, just skip it.<br>
       &middot; Memorized poems are hidden from the list, so remember the rest. <br>
-      &middot; You can reset the memorized state from <font color="#FFFF00">`Reset Memorized Poems`</font> in this page.<br>
+      &middot; You can reset the memorized state from <font color=\"#FFFF00\">`Reset Memorized Poems`</font> in this page.<br>
     ]]>
   </string>
   <string name="memorization_desc_brief">
