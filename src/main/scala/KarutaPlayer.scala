@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
+import _root_.karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
 import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
 import _root_.android.os.{AsyncTask,Bundle,SystemClock}
 import _root_.android.media.audiofx.Equalizer
@@ -114,8 +114,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
     if(Globals.prefs.get.getBoolean("use_opensles",false)){
       // it is safe to call these functions multiple times.
-      OggVorbisDecoder.slesCreateEngine()
-      OggVorbisDecoder.slesCreateBufferQueueAudioPlayer()
+      OpenSLESPlayer.slesCreateEngine()
+      OpenSLESPlayer.slesCreateBufferQueueAudioPlayer()
 
       music_track = Some(Right(new OpenSLESTrack))
     }else{
@@ -236,7 +236,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     Globals.global_lock.synchronized{
       music_track.foreach{
         case Left(x) => {x.stop();x.release()}
-        case Right(_) => OggVorbisDecoder.slesStop()
+        case Right(_) => OpenSLESPlayer.slesStop()
       }
       music_track = None
       doWhenStop()
@@ -295,7 +295,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       val r_write = music_track.map{
         case Left(atrk) => Left((atrk.write(buf,0,buf.length),atrk.getState))
-        case Right(_) => Right(OggVorbisDecoder.slesEnqueuePCM(buf,buf.length))
+        case Right(_) => Right(OpenSLESPlayer.slesEnqueuePCM(buf,buf.length))
       }
 
       if(Globals.IS_DEBUG){
@@ -369,7 +369,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       play_started = Some(SystemClock.elapsedRealtime)
       music_track.foreach{
         case Left(atrk) => atrk.play()
-        case Right(_) => OggVorbisDecoder.slesPlay()
+        case Right(_) => OpenSLESPlayer.slesPlay()
       }
     }}})
     thread.setUncaughtExceptionHandler(
@@ -406,7 +406,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           track.release()
         }
         case Right(_) =>
-          OggVorbisDecoder.slesStop()
+          OpenSLESPlayer.slesStop()
       }
       music_track = None
       play_started = None

@@ -28,14 +28,4 @@ public class OggVorbisDecoder {
 
   // implemented in src/main/jni/wav_ogg_file_codec_jni.c
   public native short[] decodeFile(String oggfile_pat);
-
-  // implemented in src/main/jni/native-audio-jni.c 
-  public static native void slesCreateEngine();
-  public static native void slesCreateBufferQueueAudioPlayer();
-  public static native boolean slesEnqueuePCM(short[] in_data, int data_length);
-  public static native boolean slesPlay();
-  public static native boolean slesStop();
-  public static native void slesShutdown();
-
 }
-

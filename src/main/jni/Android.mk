@@ -14,20 +14,28 @@
 #
 LOCAL_PATH := $(call my-dir)
 
+# stbvorbis
 include $(CLEAR_VARS)
-
 LOCAL_MODULE    := libstbvorbis
-LOCAL_LDLIBS := -llog -lOpenSLES
-
+LOCAL_LDLIBS := -llog
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
-
+$(warning Compiling '$(LOCAL_MODULE)' ..) 
 $(warning Value of LOCAL_C_INCLUDES is '$(LOCAL_C_INCLUDES)') 
-$(warning Value of LOCAL_CFLAGS is '$(LOCAL_CFLAGS)') 
-
+$(warning LOCAL_CFLAGS '$(LOCAL_CFLAGS)') 
 LOCAL_SRC_FILES := \
 	./wav_ogg_file_codec_jni.c \
 	./decode_file.c \
-	./native-audio-jni.c \
 	./stb_vorbis.c
+include $(BUILD_SHARED_LIBRARY)
 
+# opensles
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libslesplayer
+LOCAL_LDLIBS := -llog -lOpenSLES
+LOCAL_C_INCLUDES := $(LOCAL_PATH)
+$(warning Compiling '$(LOCAL_MODULE)' ..) 
+$(warning Value of LOCAL_C_INCLUDES is '$(LOCAL_C_INCLUDES)') 
+$(warning LOCAL_CFLAGS '$(LOCAL_CFLAGS)') 
+LOCAL_SRC_FILES := \
+	./native-audio-jni.c
 include $(BUILD_SHARED_LIBRARY)

@@ -61,7 +61,7 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 }
 
 // create the engine and output mix objects
-void Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesCreateEngine(JNIEnv* env, jclass clazz)
+void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateEngine(JNIEnv* env, jclass clazz)
 {
     if(engineObject != NULL){
       return;
@@ -97,7 +97,7 @@ void Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesCreateEngine(JNIEnv* env, jcl
 
 
 // create buffer queue audio player
-void Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesCreateBufferQueueAudioPlayer(JNIEnv* env,
+void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlayer(JNIEnv* env,
         jclass clazz)
 {
     if(bqPlayerObject != NULL){
@@ -165,7 +165,7 @@ void stopAndClear(){
 }
 
 // enqueue PCM data
-jboolean Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesEnqueuePCM(JNIEnv* env, jclass clazz, jshortArray in_data, jint data_length)
+jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesEnqueuePCM(JNIEnv* env, jclass clazz, jshortArray in_data, jint data_length)
 {
     if(data_length == 0){
       return JNI_TRUE;
@@ -182,7 +182,7 @@ jboolean Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesEnqueuePCM(JNIEnv* env, j
     return JNI_TRUE;
 }
 
-jboolean Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesPlay(JNIEnv* env, jclass clazz)
+jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesPlay(JNIEnv* env, jclass clazz)
 {
     SLresult result;
     result = (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_PLAYING);
@@ -193,14 +193,14 @@ jboolean Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesPlay(JNIEnv* env, jclass 
     }
   
 }
-jboolean Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesStop(JNIEnv* env, jclass clazz)
+jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesStop(JNIEnv* env, jclass clazz)
 {
   stopAndClear();
 }
 
 
 // shut down the native audio system
-void Java_karuta_hpnpwd_audio_OggVorbisDecoder_slesShutdown(JNIEnv* env, jclass clazz)
+void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesShutdown(JNIEnv* env, jclass clazz)
 {
 
     // destroy buffer queue audio player object, and invalidate all associated interfaces
