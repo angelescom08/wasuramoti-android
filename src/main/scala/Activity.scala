@@ -11,7 +11,7 @@ import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLay
 import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
 import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
 import _root_.java.lang.Runnable
-import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
+import _root_.karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
 import scala.collection.mutable
 
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
@@ -475,6 +475,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   override def onDestroy(){
     Utils.deleteCache(getApplicationContext(),_=>true)
+    if(OpenSLESPlayer.library_loaded){
+      OpenSLESPlayer.slesShutdown()
+    }
     super.onDestroy()
   }
   def startDimLockTimer(){

@@ -77,6 +77,7 @@
 
   <string name="player_error_noplay">現在の札は再生できません．前の札に戻って下さい</string>
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
+  <string name="equalizer_not_available_in_opensles">OpenSL ESモードではイコライザーは使えません</string>
 
   <string name="conf_autoplay">自動詠み上げ</string>
   <string name="conf_autoplay_summary">前の札が詠み終わったら自動的に次の札を詠む</string>

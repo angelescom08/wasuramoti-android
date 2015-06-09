@@ -92,7 +92,8 @@
 
   <string name="equalizer_reset">Reset</string>
   <string name="player_error_noplay">Cannot play current poem. Please go back to previous poem.</string>
-  <string name="equalizer_error_notsupported">Equalizer is not supported in this device</string>
+  <string name="equalizer_error_notsupported">Equalizer is not supported in this device.</string>
+  <string name="equalizer_not_available_in_opensles">Equalizer is not supported in OpenSL ES mode.</string>
   <!-- CATEGORY_ORDER -->
   <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>

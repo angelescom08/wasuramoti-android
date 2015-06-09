@@ -9,6 +9,9 @@ Priority High:
   * Add android.os.Build.VERSION.RELEASE to bug report
 
 Priority Medium-High:
+  * Support equalizer in OpenSL ES.
+  * Check that OpenSL ES Player work on large endian architecture.
+  * Add option to use android.media.MediaPlayer instead of AudioTrack or OpenSL ES
   * Show font example.
   * Change the color of author, poem text, and furigana.
   * Save poem text as image.

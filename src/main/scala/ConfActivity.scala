@@ -104,6 +104,13 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
             Globals.forceRefresh = true
+          case "use_opensles" =>
+            if(android.os.Build.VERSION.SDK_INT <= 8 && prefs.getBoolean(key,false)){
+              val edit = prefs.edit
+              edit.putBoolean(key,false)
+              edit.commit()
+              Utils.messageDialog(context,Left("Open SL ES not supported under Android 2.3"))
+            }
           case _ =>
         }
         val pref = findPreference(key)

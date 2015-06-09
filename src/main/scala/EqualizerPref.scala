@@ -162,7 +162,12 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
               pl.equalizer = None
             }
             case None => {
-              view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.equalizer_error_notsupported))
+              view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(
+                if(Globals.prefs.get.getBoolean("use_opensles",false)){
+                  R.string.equalizer_not_available_in_opensles
+                }else{
+                  R.string.equalizer_error_notsupported
+                })
             }
           }
 
