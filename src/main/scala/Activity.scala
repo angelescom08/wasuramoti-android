@@ -166,7 +166,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
       case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
       case android.R.id.home => {
-        // android.R.id.home is returned when the Icon is clicked if we are using android.support.v7.app.ActionBarActivity
+        // android.R.id.home will be returned when the Icon is clicked if we are using android.support.v7.app.ActionBarActivity
         if(haseo_count < 3){
           haseo_count += 1
         }else{

@@ -33,10 +33,10 @@ object Build extends android.AutoBuild {
         "-Ywarn-unused-import"
         ),
     proguardOptions in Android ++= Seq(
-    "-dontwarn scala.collection.**", // see http://blog.scaloid.org/2014_10_01_archive.html
     "-keepattributes Signature",
     "-verbose"
     ),
+    shrinkResources in Android := true,
     useProguard := true
   )
   lazy val root = Project(
