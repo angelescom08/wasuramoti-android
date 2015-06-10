@@ -1,4 +1,6 @@
 Priority High:
+  * Check whether we need MODIFY_AUDIO_SETTINGS or not.
+  * Support other than 22050 mono audio on OpenSLESPlayer.
   * Display license text inside the app.
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "You can scroll yomi info button list" TIPS

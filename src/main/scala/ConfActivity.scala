@@ -109,7 +109,7 @@ class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiB
               val edit = prefs.edit
               edit.putBoolean(key,false)
               edit.commit()
-              Utils.messageDialog(context,Left("Open SL ES not supported under Android 2.3"))
+              Utils.messageDialog(context,Right(R.string.conf_use_opensles_not_supported))
             }
           case _ =>
         }

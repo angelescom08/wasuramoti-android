@@ -113,10 +113,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     val decoder = getFirstDecoder
 
     if(Globals.prefs.get.getBoolean("use_opensles",false)){
+      // TODO: support audio other than 22050 mono
+      if(decoder.channels != 1 || decoder.rate != 22050){
+        throw new OpenSLESInvalidAudioFormatException("invalid audio format")
+      }
       // it is safe to call these functions multiple times.
-      OpenSLESPlayer.slesCreateEngine()
-      OpenSLESPlayer.slesCreateBufferQueueAudioPlayer()
-
+      if(!(OpenSLESPlayer.slesCreateEngine() && OpenSLESPlayer.slesCreateBufferQueueAudioPlayer())){
+        throw new OpenSLESInitException("init error")
+      }
       music_track = Some(Right(new OpenSLESTrack))
     }else{
       makeAudioTrack(getFirstDecoder)
@@ -246,9 +250,21 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def onReallyStart(bundle:Bundle){
     // Since makeMusicTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
+    // Note: when calling Utils.messageDialog, you have to use activity.runOnUithread
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
     val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
+      val abort_playing = (mid:Option[Int]) => {
+        mid.foreach{mm =>
+          activity.runOnUiThread(new Runnable{
+            override def run(){
+              Utils.messageDialog(activity,Right(mm))
+            }
+         })
+        }
+        stop()
+        Utils.setButtonTextByState(activity.getApplicationContext())
+      }
       try{
         makeMusicTrack()
       }catch{
@@ -263,8 +279,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             return
           }
         case e:AudioQueueEmptyException => {
-          stop()
-          Utils.setButtonTextByState(activity.getApplicationContext())
+          abort_playing(None)
+          return
+        }
+        case e:OpenSLESInvalidAudioFormatException => {
+          abort_playing(Some(R.string.opensles_invalid_audio_format))
+          return
+        }
+        case e:OpenSLESInitException => {
+          abort_playing(Some(R.string.opensles_init_error))
           return
         }
       }
@@ -526,5 +549,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 }
 
 class AudioQueueEmptyException(s:String) extends Exception(s){
+}
+class OpenSLESInvalidAudioFormatException(s:String) extends Exception(s){
+}
+class OpenSLESInitException(s:String) extends Exception(s){
 }
 

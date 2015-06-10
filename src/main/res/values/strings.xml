@@ -503,4 +503,7 @@
   <string name="category_beta">Beta Function</string>
   <string name="conf_use_opensles">Use OpenSL ES</string>
   <string name="conf_use_opensles_summary">If you cannot play audio correctly. try this option.</string>
+  <string name="conf_use_opensles_not_supported">OpenSL ES is only supported in Android 2.3 and above.</string>
+  <string name="opensles_init_error">OpenSL ES initialization error. Please disable OpenSL ES.</string>
+  <string name="opensles_invalid_audio_format">Current OpenSL ES Player only supports 22050Hz, mono audio.</string>
 </resources>

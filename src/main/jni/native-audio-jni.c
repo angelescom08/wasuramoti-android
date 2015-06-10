@@ -61,50 +61,46 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 }
 
 // create the engine and output mix objects
-void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateEngine(JNIEnv* env, jclass clazz)
+jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateEngine(JNIEnv* env, jclass clazz)
 {
     if(engineObject != NULL){
-      return;
+      return JNI_TRUE;
     }
     SLresult result;
 
     // create engine
-    result = slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-
+    if(SL_RESULT_SUCCESS != slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL)){
+      return JNI_FALSE;
+    }
     // realize the engine
-    result = (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-
+    if(SL_RESULT_SUCCESS != (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE)){
+      return JNI_FALSE;
+    }
     // get the engine interface, which is needed in order to create other objects
-    result = (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+    if(SL_RESULT_SUCCESS != (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine)){
+      return JNI_FALSE;
+    }
 
     // create output mix
-    result = (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, NULL, NULL);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+    if(SL_RESULT_SUCCESS != (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, NULL, NULL)){
+      return JNI_FALSE;
+    }
 
     // realize the output mix
-    result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-
+    if(SL_RESULT_SUCCESS != (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE)){
+      return JNI_FALSE;
+    }
+    return JNI_TRUE;
 }
 
 
 // create buffer queue audio player
-void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlayer(JNIEnv* env,
+jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlayer(JNIEnv* env,
         jclass clazz)
 {
     if(bqPlayerObject != NULL){
-      return;
+      return JNI_TRUE;
     }
-    SLresult result;
-
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
     SLDataFormat_PCM format_pcm = {SL_DATAFORMAT_PCM, 1, SL_SAMPLINGRATE_22_05,
@@ -119,37 +115,37 @@ void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlayer(JN
     // create audio player
     const SLInterfaceID ids[2] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME};
     const SLboolean req[2] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
-    result = (*engineEngine)->CreateAudioPlayer(engineEngine, &bqPlayerObject, &audioSrc, &audioSnk,
-            sizeof(ids)/sizeof(*ids), ids, req);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+
+    if(SL_RESULT_SUCCESS != (*engineEngine)->CreateAudioPlayer(
+          engineEngine, &bqPlayerObject, &audioSrc, &audioSnk, sizeof(ids)/sizeof(*ids), ids, req)
+      ){
+      return JNI_FALSE;
+    }
 
     // realize the player
-    result = (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+    if(SL_RESULT_SUCCESS != (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE)){
+      return JNI_FALSE;
+    }
 
     // get the play interface
-    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+    if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay)){
+      return JNI_FALSE;
+    }
 
     // get the buffer queue interface
-    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE,
-            &bqPlayerBufferQueue);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
+    if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE, &bqPlayerBufferQueue)){
+      return JNI_FALSE;
+    }
 
     // register callback on the buffer queue
-    result = (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-
+    if(SL_RESULT_SUCCESS != (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL)){
+      return JNI_FALSE;
+    }
     // get the volume interface
-    result = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
-    assert(SL_RESULT_SUCCESS == result);
-    (void)result;
-
+    if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume)){
+      return JNI_FALSE;
+    }
+    return JNI_TRUE;
 }
 
 

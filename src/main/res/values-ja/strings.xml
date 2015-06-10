@@ -458,4 +458,7 @@
   <string name="category_beta">ベータ機能</string>
   <string name="conf_use_opensles">OpenSL ES を使う</string>
   <string name="conf_use_opensles_summary">音声を正常に再生できない場合はこれを試してみて下さい</string>
+  <string name="conf_use_opensles_not_supported">OpenSL ESはAndroid 2.3以降でしか使えません</string>
+  <string name="opensles_init_error">OpenSL ESの初期化に失敗しました．OpenSL ESオプションを無効化して下さい．</string>
+  <string name="opensles_invalid_audio_format">現在OpenSL ES Playerは22050Hzのモノラル音声しかサポートしていません．</string>
 </resources>
