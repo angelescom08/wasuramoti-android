@@ -289,7 +289,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     getSupportActionBar.setHomeButtonEnabled(true)
     switchViewAndReloadHandler()
     setCustomActionBar()
-    this.setVolumeControlStream(Utils.getAudioStreamType)
     if(Globals.IS_DEBUG){
       setTitle(getResources().getString(R.string.app_name) + " DEBUG")
       val layout = getWindow.getDecorView.findViewWithTag("main_linear_layout").asInstanceOf[LinearLayout]
@@ -457,6 +456,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         changeIntendedUse(true)
       }
     }
+    this.setVolumeControlStream(Utils.getAudioStreamType)
   }
   override def onPause(){
     super.onPause()

@@ -26,11 +26,19 @@
 #include <string.h>
 
 // for __android_log_print(ANDROID_LOG_INFO, "YourApp", "formatted message");
-// #include <android/log.h>
+#include <android/log.h>
 
 // for native audio
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+#include <SLES/OpenSLES_AndroidConfiguration.h>
+
+const char * APP_NAME = "wasuramoti";
+
+#define abort_task(...) { \
+  __android_log_print(ANDROID_LOG_INFO,APP_NAME, __VA_ARGS__);\
+  return JNI_FALSE;\
+}
 
 // engine interfaces
 static SLObjectItf engineObject = NULL;
@@ -41,13 +49,24 @@ static SLObjectItf outputMixObject = NULL;
 
 // buffer queue player interfaces
 static SLObjectItf bqPlayerObject = NULL;
-static SLPlayItf bqPlayerPlay;
-static SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue;
+static SLPlayItf bqPlayerPlay = NULL;
+static SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue = NULL;
 static SLVolumeItf bqPlayerVolume;
 
 // pointer and size of the next player buffer to enqueue, and number of remaining buffers
 static short *nextBuffer = NULL;
 static unsigned nextSize;
+
+void destroyPlayer(){
+  // destroy buffer queue audio player object, and invalidate all associated interfaces
+  if (bqPlayerObject != NULL) {
+      (*bqPlayerObject)->Destroy(bqPlayerObject);
+      bqPlayerObject = NULL;
+      bqPlayerPlay = NULL;
+      bqPlayerBufferQueue = NULL;
+  }
+}
+
 
 // this callback handler is called every time a buffer finishes playing
 void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
@@ -70,25 +89,25 @@ jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateEngine(JNIEnv* env, j
 
     // create engine
     if(SL_RESULT_SUCCESS != slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL)){
-      return JNI_FALSE;
+      abort_task("create engine failed");
     }
     // realize the engine
     if(SL_RESULT_SUCCESS != (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE)){
-      return JNI_FALSE;
+      abort_task("realize engine failed");
     }
     // get the engine interface, which is needed in order to create other objects
     if(SL_RESULT_SUCCESS != (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine)){
-      return JNI_FALSE;
+      abort_task("getting engine interface failed");
     }
 
     // create output mix
     if(SL_RESULT_SUCCESS != (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, NULL, NULL)){
-      return JNI_FALSE;
+      abort_task("create output mix failed");
     }
 
     // realize the output mix
     if(SL_RESULT_SUCCESS != (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE)){
-      return JNI_FALSE;
+      abort_task("realize output mix failed");
     }
     return JNI_TRUE;
 }
@@ -96,11 +115,12 @@ jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateEngine(JNIEnv* env, j
 
 // create buffer queue audio player
 jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlayer(JNIEnv* env,
-        jclass clazz)
+        jclass clazz,
+        jint _streamType
+        )
 {
-    if(bqPlayerObject != NULL){
-      return JNI_TRUE;
-    }
+    destroyPlayer();  
+
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
     SLDataFormat_PCM format_pcm = {SL_DATAFORMAT_PCM, 1, SL_SAMPLINGRATE_22_05,
@@ -113,47 +133,58 @@ jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesCreateBufferQueueAudioPlaye
     SLDataSink audioSnk = {&loc_outmix, NULL};
 
     // create audio player
-    const SLInterfaceID ids[2] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME};
-    const SLboolean req[2] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
+    const SLInterfaceID ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME, SL_IID_ANDROIDCONFIGURATION};
+    const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
     if(SL_RESULT_SUCCESS != (*engineEngine)->CreateAudioPlayer(
           engineEngine, &bqPlayerObject, &audioSrc, &audioSnk, sizeof(ids)/sizeof(*ids), ids, req)
       ){
-      return JNI_FALSE;
+      abort_task("create audio player failed");
+    }
+
+    // set stream type
+    SLAndroidConfigurationItf playerConfig;
+    if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_ANDROIDCONFIGURATION, &playerConfig)){
+      abort_task("getting configuration interface failed");
+    }
+    SLint32 streamType = _streamType; // jint is compatible with SLint32, android.media.AudioManager.STREAM_* has same value with SL_ANDROID_STREAM_* defined in OpenSLES_Android.sh
+    if(SL_RESULT_SUCCESS != (*playerConfig)->SetConfiguration(playerConfig, SL_ANDROID_KEY_STREAM_TYPE, &streamType, sizeof(SLint32))){
+      abort_task("setting stream type failed");
     }
 
     // realize the player
     if(SL_RESULT_SUCCESS != (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE)){
-      return JNI_FALSE;
+      abort_task("realize player failed");
     }
 
     // get the play interface
     if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay)){
-      return JNI_FALSE;
+      abort_task("getting player interface failed");
     }
 
     // get the buffer queue interface
     if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE, &bqPlayerBufferQueue)){
-      return JNI_FALSE;
+      abort_task("buffer queue interface failed");
     }
 
     // register callback on the buffer queue
     if(SL_RESULT_SUCCESS != (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL)){
-      return JNI_FALSE;
+      abort_task("register callback failed");
     }
     // get the volume interface
     if(SL_RESULT_SUCCESS != (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume)){
-      return JNI_FALSE;
+      abort_task("getting volume interface failed");
     }
     return JNI_TRUE;
 }
 
-
-
-
 void stopAndClear(){
-  (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_STOPPED);
-  (*bqPlayerBufferQueue)->Clear(bqPlayerBufferQueue);
+  if(bqPlayerPlay != NULL){
+    (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_STOPPED);
+  }
+  if(bqPlayerBufferQueue != NULL){
+    (*bqPlayerBufferQueue)->Clear(bqPlayerBufferQueue);
+  }
   if(nextBuffer != NULL){
     free(nextBuffer);
     nextBuffer = NULL;
@@ -199,15 +230,7 @@ jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesStop(JNIEnv* env, jclass cl
 void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesShutdown(JNIEnv* env, jclass clazz)
 {
 
-    // destroy buffer queue audio player object, and invalidate all associated interfaces
-    if (bqPlayerObject != NULL) {
-        (*bqPlayerObject)->Destroy(bqPlayerObject);
-        bqPlayerObject = NULL;
-        bqPlayerPlay = NULL;
-        bqPlayerBufferQueue = NULL;
-    }
-
-
+    destroyPlayer();
 
     // destroy output mix object, and invalidate all associated interfaces
     if (outputMixObject != NULL) {

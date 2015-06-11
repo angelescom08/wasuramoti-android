@@ -728,15 +728,17 @@ object Utils {
   }
   def getAudioStreamType():Int = {
     import AudioManager._
-    Globals.prefs.get.getString("audio_stream_type","MUSIC") match {
-      case "MUSIC" => STREAM_MUSIC
-      case "NOTIFICATION" => STREAM_NOTIFICATION
-      case "ALARM" => STREAM_ALARM
-      case "RING" => STREAM_RING
-      case "VOICE_CALL" => STREAM_VOICE_CALL
-      case "SYSTEM" => STREAM_SYSTEM
-      case _ => STREAM_MUSIC
-    }
+    Globals.prefs.map{
+      _.getString("audio_stream_type","MUSIC") match {
+        case "MUSIC" => STREAM_MUSIC
+        case "NOTIFICATION" => STREAM_NOTIFICATION
+        case "ALARM" => STREAM_ALARM
+        case "RING" => STREAM_RING
+        case "VOICE_CALL" => STREAM_VOICE_CALL
+        case "SYSTEM" => STREAM_SYSTEM
+        case _ => STREAM_MUSIC
+      }
+    }.getOrElse(STREAM_MUSIC)
   }
 }
 

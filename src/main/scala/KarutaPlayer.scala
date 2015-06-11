@@ -117,8 +117,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(decoder.channels != 1 || decoder.rate != 22050){
         throw new OpenSLESInvalidAudioFormatException("invalid audio format")
       }
-      // it is safe to call these functions multiple times.
-      if(!(OpenSLESPlayer.slesCreateEngine() && OpenSLESPlayer.slesCreateBufferQueueAudioPlayer())){
+      // it is safe to call slesCreateEngine multiple times.
+      if(!(OpenSLESPlayer.slesCreateEngine() && OpenSLESPlayer.slesCreateBufferQueueAudioPlayer(Utils.getAudioStreamType))){
         throw new OpenSLESInitException("init error")
       }
       music_track = Some(Right(new OpenSLESTrack))
