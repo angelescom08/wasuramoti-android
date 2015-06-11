@@ -146,7 +146,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     val rate_3 = rate_1 * rate_2
     buffer_size = (buffer_size / rate_3) * rate_3
 
-    music_track = Some(Left(new AudioTrack( AudioManager.STREAM_MUSIC,
+    music_track = Some(Left(new AudioTrack( Utils.getAudioStreamType,
       decoder.rate.toInt,
       channels,
       audio_format,

@@ -506,4 +506,22 @@
   <string name="conf_use_opensles_not_supported">OpenSL ES is only supported in Android 2.3 and above.</string>
   <string name="opensles_init_error">OpenSL ES initialization error. Please disable OpenSL ES.</string>
   <string name="opensles_invalid_audio_format">Current OpenSL ES Player only supports 22050Hz, mono audio.</string>
+  <string name="conf_audio_stream_type">Stream Type</string>
+  <string name="conf_audio_stream_type_summary">Also try this option when you cannot play audio.</string>
+  <string-array name="conf_audio_stream_type_entries">
+    <item>Music</item>
+    <item>Notification</item>
+    <item>Alarm</item>
+    <item>Ring</item>
+    <item>Voice Call</item>
+    <item>System</item>
+  </string-array>
+  <string-array name="conf_audio_stream_type_entryValues">
+    <item>MUSIC</item>
+    <item>NOTIFICATION</item>
+    <item>ALARM</item>
+    <item>RING</item>
+    <item>VOICE_CALL</item>
+    <item>SYSTEM</item>
+  </string-array>
 </resources>

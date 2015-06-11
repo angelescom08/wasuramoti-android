@@ -461,4 +461,14 @@
   <string name="conf_use_opensles_not_supported">OpenSL ESはAndroid 2.3以降でしか使えません</string>
   <string name="opensles_init_error">OpenSL ESの初期化に失敗しました．OpenSL ESオプションを無効化して下さい．</string>
   <string name="opensles_invalid_audio_format">現在OpenSL ES Playerは22050Hzのモノラル音声しかサポートしていません．</string>
+  <string name="conf_audio_stream_type">Stream Type</string>
+  <string name="conf_audio_stream_type_summary">音声を正常に再生できない場合はこれも試してみて下さい</string>
+  <string-array name="conf_audio_stream_type_entries">
+    <item>音楽</item>
+    <item>通知音</item>
+    <item>アラーム音</item>
+    <item>電話の呼出音</item>
+    <item>電話の通話音</item>
+    <item>システム音</item>
+  </string-array>
 </resources>

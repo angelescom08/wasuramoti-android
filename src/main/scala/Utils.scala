@@ -571,10 +571,10 @@ object Utils {
       val pref_volume = Utils.parseFloat(pref_audio_volume)
       val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
-        val max_volume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        val max_volume = am.getStreamMaxVolume(Utils.getAudioStreamType)
         val new_volume = math.min((pref_volume*max_volume).toInt,max_volume)
-        Globals.audio_volume_bkup = Some(am.getStreamVolume(AudioManager.STREAM_MUSIC))
-        am.setStreamVolume(AudioManager.STREAM_MUSIC,new_volume,0)
+        Globals.audio_volume_bkup = Some(am.getStreamVolume(Utils.getAudioStreamType))
+        am.setStreamVolume(Utils.getAudioStreamType,new_volume,0)
       }
     }
   }
@@ -583,7 +583,7 @@ object Utils {
     Globals.audio_volume_bkup.foreach{ volume =>
         val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
         if(am != null){
-          am.setStreamVolume(AudioManager.STREAM_MUSIC,volume,0)
+          am.setStreamVolume(Utils.getAudioStreamType,volume,0)
         }
     }
     Globals.audio_volume_bkup = None
@@ -724,6 +724,18 @@ object Utils {
       manager.setExact(typ,triggerAtMillis,operation)
     }else{
       manager.set(typ,triggerAtMillis,operation)
+    }
+  }
+  def getAudioStreamType():Int = {
+    import AudioManager._
+    Globals.prefs.get.getString("audio_stream_type","MUSIC") match {
+      case "MUSIC" => STREAM_MUSIC
+      case "NOTIFICATION" => STREAM_NOTIFICATION
+      case "ALARM" => STREAM_ALARM
+      case "RING" => STREAM_RING
+      case "VOICE_CALL" => STREAM_VOICE_CALL
+      case "SYSTEM" => STREAM_SYSTEM
+      case _ => STREAM_MUSIC
     }
   }
 }
