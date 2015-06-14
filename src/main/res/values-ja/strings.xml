@@ -474,4 +474,8 @@
   <string name="conf_use_audio_focus" >Audio Focusを使う</string>
   <string name="conf_use_audio_focus_summary">他のアプリが音を鳴らし始めたら再生を止める</string>
   <string name="cannot_acquire_audio_focus">Audio Focusを取得できませんでした．音を使っている他のアプリを終了するか，「詳細設定」→「Audio Focusを使う」を無効にして下さい．</string>
+  <string name="conf_volume_alert">音量警告</string>
+  <string name="conf_volume_alert_summary">端末の音量が小さ過ぎる場合は警告を出す</string>
+  <string name="volume_alert_small">端末の音量が小さ過ぎです</string>
+  <string name="volume_alert_equalizer">イコライザーが小さ過ぎです</string>
 </resources>

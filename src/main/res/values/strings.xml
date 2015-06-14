@@ -527,4 +527,8 @@
   <string name="conf_use_audio_focus" >Use Audio Focus</string>
   <string name="conf_use_audio_focus_summary">Stop playing when other app starts to play sound.</string>
   <string name="cannot_acquire_audio_focus">Could not acquire audio focus. Quit the other app which is playing sound, or disable it from `Advanced Config`-`Use Audio Focus`</string>
+  <string name="conf_volume_alert">Volume Alert</string>
+  <string name="conf_volume_alert_summary">When device volume is too small, give an alert.</string>
+  <string name="volume_alert_small">Device volume too small</string>
+  <string name="volume_alert_equalizer">Equalizer too small</string>
 </resources>

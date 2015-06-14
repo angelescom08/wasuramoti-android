@@ -181,6 +181,12 @@
           android:defaultValue="true"
           />
         <CheckBoxPreference
+          android:key="volume_alert"
+          android:title="@string/conf_volume_alert"
+          android:summary="@string/conf_volume_alert_summary"
+          android:defaultValue="true"
+          />
+        <CheckBoxPreference
           android:key="use_opensles"
           android:title="@string/conf_use_opensles"
           android:summary="@string/conf_use_opensles_summary"

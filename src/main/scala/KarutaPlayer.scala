@@ -183,6 +183,34 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
+  def checkDeviceVolume():Boolean = {
+    val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+    if(am != null){
+      val stream_type = Utils.getAudioStreamType
+      val max_volume =  am.getStreamMaxVolume(stream_type)
+      val cur_volume = am.getStreamVolume(stream_type)
+      if(max_volume > 0 && cur_volume.toFloat / max_volume.toFloat < 0.05){
+        return false
+      }
+    }
+    return true
+  }
+  def checkEqualizerVolume():Boolean = {
+    val eql = Utils.getPrefsEqualizer.flatten
+    eql.isEmpty || ! eql.forall{  _ < 0.05}
+  }
+
+  def checkAudioVolume(){
+    if(!checkDeviceVolume){
+      Toast.makeText(activity.getApplicationContext,R.string.volume_alert_small,Toast.LENGTH_SHORT).show()
+      return
+    }
+    if(!checkEqualizerVolume){
+      Toast.makeText(activity.getApplicationContext,R.string.volume_alert_equalizer,Toast.LENGTH_SHORT).show()
+      return
+    }
+  }
+
   def requestAudioFocus():Boolean = {
     if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
       return true
@@ -256,6 +284,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(set_audio_volume){
         Utils.saveAndSetAudioVolume(activity.getApplicationContext())
       }
+      if(Globals.prefs.get.getBoolean("volume_alert",true)){
+        checkAudioVolume()
+      }
+
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
