@@ -455,7 +455,7 @@
   <string name="memorization_warn_yomi_info_view">
     暗記モードでは詠み句表示が有効化されます.
   </string>
-  <string name="category_beta">ベータ機能</string>
+  <string name="category_playback_detail">再生の詳細</string>
   <string name="conf_use_opensles">OpenSL ES を使う</string>
   <string name="conf_use_opensles_summary">音声を正常に再生できない場合はこれを試してみて下さい</string>
   <string name="conf_use_opensles_not_supported">OpenSL ESはAndroid 2.3以降でしか使えません</string>
@@ -471,4 +471,7 @@
     <item>電話の通話音</item>
     <item>システム音</item>
   </string-array>
+  <string name="conf_use_audio_focus" >Audio Focusを使う</string>
+  <string name="conf_use_audio_focus_summary">他のアプリが音を鳴らし始めたら再生を止める</string>
+  <string name="cannot_acquire_audio_focus">Audio Focusを取得できませんでした．音を使っている他のアプリを終了するか，「詳細設定」→「Audio Focusを使う」を無効にして下さい．</string>
 </resources>

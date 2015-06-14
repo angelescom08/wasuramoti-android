@@ -173,7 +173,13 @@
           unit="@string/conf_unit_second"
           />
       </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_beta">
+      <PreferenceCategory android:title="@string/category_playback_detail">
+        <CheckBoxPreference
+          android:key="use_audio_focus"
+          android:title="@string/conf_use_audio_focus"
+          android:summary="@string/conf_use_audio_focus_summary"
+          android:defaultValue="true"
+          />
         <CheckBoxPreference
           android:key="use_opensles"
           android:title="@string/conf_use_opensles"

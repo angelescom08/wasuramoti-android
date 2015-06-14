@@ -184,9 +184,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def requestAudioFocus():Boolean = {
-    // TODO: add "gain audio focus" option
-    if(android.os.Build.VERSION.SDK_INT < 8){
-      // audio focus is only supported API >= 8
+    if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
       return true
     }
     val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
@@ -195,7 +193,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         return true
       }else{
-        // TODO: show "we could not gain audio focus message"
         return false
       }
     }
@@ -203,7 +200,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def abandonAudioFocus(){
-    if(android.os.Build.VERSION.SDK_INT >= 8){
+    if(Globals.prefs.get.getBoolean("use_audio_focus",true) && android.os.Build.VERSION.SDK_INT >= 8){
       val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
         am.abandonAudioFocus(this)
@@ -231,7 +228,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
         //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
         //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
-        //       So we just lower the volume here, but maybe we can implement pause/resume for OpenSLESPlayer in the future.
+        //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
+        //       So we do nothing here yet.
         //       See following link:
         //          http://developer.android.com/training/managing-audio/audio-focus.html
         //          https://code.google.com/p/android/issues/detail?id=155984
@@ -248,6 +246,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         return
       }
       if(!requestAudioFocus){
+        activity.runOnUiThread(new Runnable{
+          override def run(){
+            Utils.messageDialog(activity,Right(R.string.cannot_acquire_audio_focus))
+          }
+        })
         return
       }
       if(set_audio_volume){

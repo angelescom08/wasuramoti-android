@@ -1,14 +1,17 @@
 Priority High:
   * Check whether we need MODIFY_AUDIO_SETTINGS or not.
   * Support other than 22050 mono audio on OpenSLESPlayer.
+  * The volume of OpenSLESPlayer is smaller than AudioTrack.
   * Display license text inside the app.
   * Show "Wasuramoti Timer Started" on notification area.
+  * Show "Currently Playing" in notification area.
   * Show "You can scroll yomi info button list" TIPS
   * Use _.nonEmpty instead of !_.isEmpty
   * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
   * Show warning when volume or equalizer level is too low
   * Add android.os.Build.VERSION.RELEASE to bug report
+  * Acquire audio focus for notification timer.
 
 Priority Medium-High:
   * Support equalizer in OpenSL ES.
