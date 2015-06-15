@@ -257,7 +257,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def abandonAudioFocus(){
     audio_focus.foreach{af =>
-      if(Globals.prefs.get.getBoolean("use_audio_focus",true) && android.os.Build.VERSION.SDK_INT >= 8){
+      if(android.os.Build.VERSION.SDK_INT >= 8){
         val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
         if(am != null){
           am.abandonAudioFocus(af)

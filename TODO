@@ -15,6 +15,7 @@ Priority High:
   * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
   * Add android.os.Build.VERSION.RELEASE to bug report
+  * Add link to https://github.com/pjmtdw/wasuramoti-android/issues to bug report
   * Acquire audio focus for notification timer.
 
 Priority Medium-High:

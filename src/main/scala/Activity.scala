@@ -474,6 +474,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onStop()
   }
   override def onDestroy(){
+    Globals.player.foreach{_.abandonAudioFocus()}
     Utils.deleteCache(getApplicationContext(),_=>true)
     if(OpenSLESPlayer.library_loaded){
       OpenSLESPlayer.slesShutdown()
