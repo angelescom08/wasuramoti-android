@@ -33,7 +33,7 @@ object KarutaPlayerDebug{
 
 case class OpenSLESTrack()
 
-class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable with AudioManager.OnAudioFocusChangeListener{
+class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
   type AudioQueue = Utils.AudioQueue
   var cur_millisec = 0:Long
   var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]
@@ -42,6 +42,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   var current_yomi_info = None:Option[Int]
   var set_audio_volume = true
   var play_started = None:Option[Long]
+  var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
 
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
@@ -215,10 +216,37 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
       return true
     }
+    abandonAudioFocus()
     val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(am != null){
-      val res = am.requestAudioFocus(this,Utils.getAudioStreamType,AudioManager.AUDIOFOCUS_GAIN)
+      val af = new AudioManager.OnAudioFocusChangeListener(){
+        override def onAudioFocusChange(focusChange:Int){
+          import AudioManager._
+          focusChange match {
+            case AUDIOFOCUS_GAIN =>
+              recoverVolume()
+            case AUDIOFOCUS_LOSS =>
+              // TODO: It is recommended to completely clean up this player when AUDIOFOCUS_LOSS event.
+              stop()     
+            case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
+              // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
+              //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
+              //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
+              //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
+              //       So we do nothing here yet.
+              //       See following link:
+              //          http://developer.android.com/training/managing-audio/audio-focus.html
+              //          https://code.google.com/p/android/issues/detail?id=155984
+              //          https://code.google.com/p/android/issues/detail?id=17995
+
+              lowerVolume()
+            case _ =>
+          }
+        }
+      }
+      val res = am.requestAudioFocus(af,Utils.getAudioStreamType,AudioManager.AUDIOFOCUS_GAIN)
       if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+        audio_focus = Some(af)
         return true
       }else{
         return false
@@ -228,12 +256,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def abandonAudioFocus(){
-    if(Globals.prefs.get.getBoolean("use_audio_focus",true) && android.os.Build.VERSION.SDK_INT >= 8){
-      val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-      if(am != null){
-        am.abandonAudioFocus(this)
-      }
-    } 
+    audio_focus.foreach{af =>
+      if(Globals.prefs.get.getBoolean("use_audio_focus",true) && android.os.Build.VERSION.SDK_INT >= 8){
+        val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+        if(am != null){
+          am.abandonAudioFocus(af)
+          audio_focus = None
+        }
+      } 
+    }
   }
 
   def lowerVolume(){
@@ -242,30 +273,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def recoverVolume(){
     //TODO: implement this
-  }
-
-  override def onAudioFocusChange(focusChange:Int){
-    import AudioManager._
-    focusChange match {
-      case AUDIOFOCUS_GAIN =>
-        recoverVolume()
-      case AUDIOFOCUS_LOSS =>
-        // TODO: It is recommended to completely clean up this player when AUDIOFOCUS_LOSS event.
-        stop()     
-      case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
-        // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
-        //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
-        //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
-        //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
-        //       So we do nothing here yet.
-        //       See following link:
-        //          http://developer.android.com/training/managing-audio/audio-focus.html
-        //          https://code.google.com/p/android/issues/detail?id=155984
-        //          https://code.google.com/p/android/issues/detail?id=17995
-
-        lowerVolume()
-      case _ =>
-    }
   }
 
   def play(bundle:Bundle,auto_play:Boolean=false,from_swipe:Boolean=false){
