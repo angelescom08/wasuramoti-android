@@ -309,7 +309,7 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val Auto,Start,Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
+    val Auto,Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
   }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
@@ -443,15 +443,6 @@ class KarutaPlayReceiver extends BroadcastReceiver {
     withName(intent.getAction) match{
       case Auto =>
         Globals.player.foreach{_.activity.doPlay(auto_play=true)}
-      case Start =>
-        val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
-        // try to wake up CPU three times, also this serves as text audio consistency check
-        if( (bundle != null && bundle.getBoolean("auto_play",false)) || YomiInfoUtils.showPoemText ){
-          for((t,a) <- Array((800,WakeUp1),(1600,WakeUp2),(2400,WakeUp3))){
-            KarutaPlayUtils.startKarutaPlayTimer(context,a,t)
-          }
-        }
-        Globals.player.foreach{_.onReallyStart(bundle)}
       case Border =>
         Globals.player.foreach{_.doWhenBorder()}
       case End =>

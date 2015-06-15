@@ -709,8 +709,6 @@ trait MainButtonTrait{
         bundle.putString("fromSender",KarutaPlayUtils.SENDER_MAIN)
         // Since we insert some silence at beginning of audio,
         // the actual wait_time should be shorter.
-        val (_,wait_time) = Utils.calcSilenceAndWaitLength
-        bundle.putLong("wait_time",wait_time.toLong)
         player.play(bundle,auto_play,from_swipe)
       }
     }

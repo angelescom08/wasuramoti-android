@@ -298,7 +298,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.is_playing = true
 
       Utils.setButtonTextByState(activity.getApplicationContext())
-      val wait_time = bundle.getLong("wait_time",100)
       if(YomiInfoUtils.showPoemText){
         if(Utils.readCurNext(activity.getApplicationContext)){
           activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
@@ -308,13 +307,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.invalidateYomiInfo()
         }
       }
+      // try to wake up CPU three times, also this serves as text audio consistency check
+      // TODO: As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
+      //       so this does not work correctly.
+      if( auto_play || YomiInfoUtils.showPoemText ){
+        for((t,a) <- Array((800,KarutaPlayUtils.Action.WakeUp1),(1600,KarutaPlayUtils.Action.WakeUp2),(2400,KarutaPlayUtils.Action.WakeUp3))){
+          KarutaPlayUtils.startKarutaPlayTimer(activity.getApplicationContext,a,t)
+        }
+      }
+      // do the rest in another thread
       bundle.putBoolean("auto_play",auto_play)
-      KarutaPlayUtils.startKarutaPlayTimer(
-        activity.getApplicationContext,
-        KarutaPlayUtils.Action.Start,
-        wait_time,
-        {_.putExtra("bundle",bundle)}
-      )
+      onReallyStart(bundle)
     }
   }
 
@@ -517,7 +520,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   def stop(){
     Globals.global_lock.synchronized{
       for(action <- Array(
-        KarutaPlayUtils.Action.Start,
         KarutaPlayUtils.Action.Border,
         KarutaPlayUtils.Action.End,
         KarutaPlayUtils.Action.WakeUp1,
@@ -599,7 +601,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         // we insert additional silence as wave data.
         // Additionally, playing silence as wave file can avoid some weird effect
         // which occurs at beginning of wav when using bluetooth speaker.
-        val (silence_time,_) = Utils.calcSilenceAndWaitLength
+        // Howener, note that taking silence_time too much can consume much more memory.
+        val silence_time = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
         add_to_audio_queue(Right(silence_time),true)
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()

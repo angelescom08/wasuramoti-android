@@ -111,17 +111,6 @@ object Utils {
   }
 
 
-  // return value is (silence, wait) in millisec
-  def calcSilenceAndWaitLength() : (Int,Int) = {
-    val SILENCE_MIN = 250 // in millisec
-    val SILENCE_MAX = 5000 // in millisec, making this too big can consume much memory
-    val WAIT_MIN = 50 // in millisec
-    val total = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 9999.0)*1000.0).toInt
-    val silence = Math.max(Math.min(total,SILENCE_MAX)-WAIT_MIN,SILENCE_MIN)
-    val wait = Math.max(total-silence, WAIT_MIN)
-    (silence,wait)
-  }
-
   type EqualizerSeq = Seq[Option[Float]]
   // Since every Activity has a possibility to be killed by android when it is background,
   // all the Activity in this application should call this method in onCreate()
