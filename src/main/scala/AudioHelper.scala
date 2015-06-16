@@ -309,7 +309,8 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val End,WakeUp1,WakeUp2,WakeUp3 = Value
+    // TODO: automatically create WakeUp{1..6}
+    val End,WakeUp1,WakeUp2,WakeUp3,WakeUp4,WakeUp5,WakeUp6 = Value
   }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
@@ -421,6 +422,45 @@ object KarutaPlayUtils{
     check_consistency_handler.removeCallbacksAndMessages(null)
   }
 
+  var wake_up_timer_group_switch = true
+
+  def startWakeUpTimers(context:Context,play_end_time:Long){
+    // If we call startKarutaPlayTimer with same action id, the previous timer will be overwrited.
+    // We need to run maximum of two groups of timers simultaneously because this timer is for NEXT play
+    val actions = if(wake_up_timer_group_switch){
+      Array(
+        KarutaPlayUtils.Action.WakeUp1,
+        KarutaPlayUtils.Action.WakeUp2,
+        KarutaPlayUtils.Action.WakeUp3
+        )
+    }else{
+      Array(
+        KarutaPlayUtils.Action.WakeUp4,
+        KarutaPlayUtils.Action.WakeUp5,
+        KarutaPlayUtils.Action.WakeUp6
+        )
+    }
+    val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+    for((act,t) <- actions.zip(Array(800,1600,2400))){
+      val delay = play_end_time + auto_delay + t
+      KarutaPlayUtils.startKarutaPlayTimer(context,act,delay)
+    }
+    wake_up_timer_group_switch ^= true
+  }
+  def cancelWakeUpTimers(context:Context){
+    for(action <- Array(
+      KarutaPlayUtils.Action.WakeUp1,
+      KarutaPlayUtils.Action.WakeUp2,
+      KarutaPlayUtils.Action.WakeUp3,
+      KarutaPlayUtils.Action.WakeUp4,
+      KarutaPlayUtils.Action.WakeUp5,
+      KarutaPlayUtils.Action.WakeUp6
+    )
+    ){
+      KarutaPlayUtils.cancelKarutaPlayTimer(context,action)
+    }
+  }
+
   def doAfterActivity(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
@@ -482,7 +522,7 @@ class KarutaPlayReceiver extends BroadcastReceiver {
       case End =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
-      case WakeUp1 | WakeUp2 | WakeUp3 =>
+      case WakeUp1 | WakeUp2 | WakeUp3 | WakeUp4 | WakeUp5 | WakeUp6 =>
         // Do nothing, just wake up device
     }
   }

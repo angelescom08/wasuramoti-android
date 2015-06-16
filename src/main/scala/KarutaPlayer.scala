@@ -491,13 +491,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // Try to wake up CPU three times on autoplay mode.
       // As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
       // Therefore this timer is for NEXT play since autoplay_span might be less than five seconds.
-      // Note: auto_play variable means "this play was started automatically" so we have to use autoplay_enable pref here.
-      if(Globals.prefs.get.getBoolean("autoplay_repeat",false)){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        for((t,a) <- Array((800,KarutaPlayUtils.Action.WakeUp1),(1600,KarutaPlayUtils.Action.WakeUp2),(2400,KarutaPlayUtils.Action.WakeUp3))){
-          val delay = play_end_time + auto_delay + t
-          KarutaPlayUtils.startKarutaPlayTimer(activity.getApplicationContext,a,delay)
-        }
+      // Note: auto_play variable means "this playback has been started automatically" so we have to use autoplay_enable preference here.
+      if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+        KarutaPlayUtils.startWakeUpTimers(activity.getApplicationContext,play_end_time)
       }
 
       Globals.audio_track_failed_count = 0
@@ -521,17 +517,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
   def stop(){
     Globals.global_lock.synchronized{
-      for(action <- Array(
-        KarutaPlayUtils.Action.End,
-        KarutaPlayUtils.Action.WakeUp1,
-        KarutaPlayUtils.Action.WakeUp2,
-        KarutaPlayUtils.Action.WakeUp3
+      KarutaPlayUtils.cancelKarutaPlayTimer(
+        activity.getApplicationContext,KarutaPlayUtils.Action.End
       )
-      ){
-        KarutaPlayUtils.cancelKarutaPlayTimer(
-          activity.getApplicationContext,action
-        )
-      }
       KarutaPlayUtils.cancelBorderTimer()
       KarutaPlayUtils.cancelCheckConsistencyTimers()
       music_track.foreach{

@@ -117,8 +117,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   def cancelAllPlay(){
-    Globals.player.foreach(_.stop())
     KarutaPlayUtils.cancelAutoPlay()
+    Globals.player.foreach(_.stop())
+    KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
   }
 
   def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
@@ -688,6 +689,7 @@ trait MainButtonTrait{
           Globals.prefs.get.getBoolean("move_after_first_phrase",true) &&
           player.isAfterFirstPoem)
         player.stop()
+        KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
         if(have_to_go_next){
           moveToNextFuda()
         }else{
