@@ -419,8 +419,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         activity.runOnUiThread(new Runnable(){
             override def run(){
               Globals.player = AudioHelper.refreshKarutaPlayer(activity,Globals.player,true)
-              // we won't wait playing for second time
-              bundle.remove("wait_time")
               Globals.player.foreach{_.play(bundle)}
             }
         })

@@ -118,10 +118,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
   def cancelAllPlay(){
     Globals.player.foreach(_.stop())
-    KarutaPlayUtils.cancelKarutaPlayTimer(
-      getApplicationContext,
-      KarutaPlayUtils.Action.Auto
-    )
+    KarutaPlayUtils.cancelAutoPlay()
   }
 
   def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
@@ -684,10 +681,7 @@ trait MainButtonTrait{
         return
       }
       val player = Globals.player.get
-      KarutaPlayUtils.cancelKarutaPlayTimer(
-        getApplicationContext,
-        KarutaPlayUtils.Action.Auto
-      )
+      KarutaPlayUtils.cancelAutoPlay()
       if(Globals.is_playing){
         val have_to_go_next = (
           from_main_button &&
@@ -707,8 +701,6 @@ trait MainButtonTrait{
         val bundle = new Bundle()
         bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && Utils.readCurNext(self.getApplicationContext))
         bundle.putString("fromSender",KarutaPlayUtils.SENDER_MAIN)
-        // Since we insert some silence at beginning of audio,
-        // the actual wait_time should be shorter.
         player.play(bundle,auto_play,from_swipe)
       }
     }

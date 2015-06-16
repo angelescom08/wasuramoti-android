@@ -309,7 +309,7 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val Auto,Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
+    val Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
   }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
@@ -317,6 +317,8 @@ object KarutaPlayUtils{
   // TODO: Why we cannot use Enumaration here
   val SENDER_MAIN = "SENDER_MAIN"
   val SENDER_CONF = "SENDER_CONF"
+
+  val auto_handler = new Handler() 
 
   val karuta_play_schema = "wasuramoti://karuta_play/"
   def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
@@ -385,6 +387,11 @@ object KarutaPlayUtils{
         doAfterConfiguration(bundle)
     }
   }
+
+  def cancelAutoPlay(){
+    auto_handler.removeCallbacksAndMessages(null) // cancel all delayed runnables
+  }
+
   def doAfterActivity(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
@@ -406,11 +413,13 @@ object KarutaPlayUtils{
         activity.refreshAndInvalidate(auto)
       }
       if(auto && !Globals.player.isEmpty){
-        KarutaPlayUtils.startKarutaPlayTimer(
-          context,
-          KarutaPlayUtils.Action.Auto,
-          Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        )
+        cancelAutoPlay()
+        val delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        auto_handler.postDelayed(new Runnable(){
+          override def run(){
+            Globals.player.foreach{_.activity.doPlay(auto_play=true)}
+          }
+        },delay)
       }
     }
   }
@@ -441,8 +450,6 @@ class KarutaPlayReceiver extends BroadcastReceiver {
   import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){
     withName(intent.getAction) match{
-      case Auto =>
-        Globals.player.foreach{_.activity.doPlay(auto_play=true)}
       case Border =>
         Globals.player.foreach{_.doWhenBorder()}
       case End =>
