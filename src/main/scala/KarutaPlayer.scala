@@ -307,14 +307,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.invalidateYomiInfo()
         }
       }
-      // try to wake up CPU three times, also this serves as text audio consistency check
-      // TODO: As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
-      //       so this does not work correctly.
-      if( auto_play ){
-        for((t,a) <- Array((800,KarutaPlayUtils.Action.WakeUp1),(1600,KarutaPlayUtils.Action.WakeUp2),(2400,KarutaPlayUtils.Action.WakeUp3))){
-          KarutaPlayUtils.startKarutaPlayTimer(activity.getApplicationContext,a,t)
-        }
-      }
       if( YomiInfoUtils.showPoemText ){
         KarutaPlayUtils.startCheckConsistencyTimers()
       }
@@ -488,12 +480,26 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // Note that calling System.gc() seems to have no effect.
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=17995
+      val play_end_time = buffer_length_millisec+200
       KarutaPlayUtils.startKarutaPlayTimer(
         activity.getApplicationContext,
         KarutaPlayUtils.Action.End,
-        buffer_length_millisec+200,
+        play_end_time,
         {_.putExtra("bundle",bundle)}
       )
+
+      // Try to wake up CPU three times on autoplay mode.
+      // As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
+      // Therefore this timer is for NEXT play since autoplay_span might be less than five seconds.
+      // Note: auto_play variable means "this play was started automatically" so we have to use autoplay_enable pref here.
+      if(Globals.prefs.get.getBoolean("autoplay_repeat",false)){
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        for((t,a) <- Array((800,KarutaPlayUtils.Action.WakeUp1),(1600,KarutaPlayUtils.Action.WakeUp2),(2400,KarutaPlayUtils.Action.WakeUp3))){
+          val delay = play_end_time + auto_delay + t
+          KarutaPlayUtils.startKarutaPlayTimer(activity.getApplicationContext,a,delay)
+        }
+      }
+
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
       music_track.foreach{
