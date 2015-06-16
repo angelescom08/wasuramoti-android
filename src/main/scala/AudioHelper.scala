@@ -318,9 +318,10 @@ object KarutaPlayUtils{
   val SENDER_MAIN = "SENDER_MAIN"
   val SENDER_CONF = "SENDER_CONF"
 
-  // TODO: shold we use same handler and different callbacks?
+  // TODO: shold we use single handler and multiple callbacks?
   val auto_handler = new Handler() 
   val border_handler = new Handler() 
+  val check_consistency_handler = new Handler()
 
   val karuta_play_schema = "wasuramoti://karuta_play/"
   def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
@@ -406,6 +407,20 @@ object KarutaPlayUtils{
     border_handler.removeCallbacksAndMessages(null)
   }
 
+  def startCheckConsistencyTimers(){
+    for(delay <- Array(600,1200,1800,2400)){
+      check_consistency_handler.postDelayed(new Runnable(){
+        override def run(){
+          Globals.player.foreach{_.activity.checkConsistencyBetweenPoemTextAndAudio()}
+        }
+      },delay)
+    }
+  }
+
+  def cancelCheckConsistencyTimers(){
+    check_consistency_handler.removeCallbacksAndMessages(null)
+  }
+
   def doAfterActivity(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
@@ -468,7 +483,7 @@ class KarutaPlayReceiver extends BroadcastReceiver {
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
       case WakeUp1 | WakeUp2 | WakeUp3 =>
-        Globals.player.foreach{_.activity.checkConsistencyBetweenPoemTextAndAudio()}
+        // Do nothing, just wake up device
     }
   }
 }

@@ -310,13 +310,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // try to wake up CPU three times, also this serves as text audio consistency check
       // TODO: As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
       //       so this does not work correctly.
-      if( auto_play || YomiInfoUtils.showPoemText ){
+      if( auto_play ){
         for((t,a) <- Array((800,KarutaPlayUtils.Action.WakeUp1),(1600,KarutaPlayUtils.Action.WakeUp2),(2400,KarutaPlayUtils.Action.WakeUp3))){
           KarutaPlayUtils.startKarutaPlayTimer(activity.getApplicationContext,a,t)
         }
       }
-      // do the rest in another thread
+      if( YomiInfoUtils.showPoemText ){
+        KarutaPlayUtils.startCheckConsistencyTimers()
+      }
       bundle.putBoolean("auto_play",auto_play)
+      // do the rest in another thread
       onReallyStart(bundle)
     }
   }
@@ -524,6 +527,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         )
       }
       KarutaPlayUtils.cancelBorderTimer()
+      KarutaPlayUtils.cancelCheckConsistencyTimers()
       music_track.foreach{
         case Left(track) => {
           track.flush()
