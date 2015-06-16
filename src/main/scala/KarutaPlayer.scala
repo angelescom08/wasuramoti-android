@@ -466,12 +466,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(bundle.getBoolean("have_to_run_border",false)){
         val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
         // This timer must be started after makeAudioTrack() since it would take some time to finish
-        KarutaPlayUtils.startKarutaPlayTimer(
-          activity.getApplicationContext,
-          KarutaPlayUtils.Action.Border,
-          t,
-          {_.putExtra("bundle",bundle)}
-        )
+        KarutaPlayUtils.startBorderTimer(t)
       }
 
       // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
@@ -518,7 +513,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   def stop(){
     Globals.global_lock.synchronized{
       for(action <- Array(
-        KarutaPlayUtils.Action.Border,
         KarutaPlayUtils.Action.End,
         KarutaPlayUtils.Action.WakeUp1,
         KarutaPlayUtils.Action.WakeUp2,
@@ -529,6 +523,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           activity.getApplicationContext,action
         )
       }
+      KarutaPlayUtils.cancelBorderTimer()
       music_track.foreach{
         case Left(track) => {
           track.flush()

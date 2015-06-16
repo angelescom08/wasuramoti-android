@@ -309,7 +309,7 @@ trait WavBufferDebugTrait{
 object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
-    val Border,End,WakeUp1,WakeUp2,WakeUp3 = Value
+    val End,WakeUp1,WakeUp2,WakeUp3 = Value
   }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
@@ -318,7 +318,9 @@ object KarutaPlayUtils{
   val SENDER_MAIN = "SENDER_MAIN"
   val SENDER_CONF = "SENDER_CONF"
 
+  // TODO: shold we use same handler and different callbacks?
   val auto_handler = new Handler() 
+  val border_handler = new Handler() 
 
   val karuta_play_schema = "wasuramoti://karuta_play/"
   def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
@@ -392,6 +394,18 @@ object KarutaPlayUtils{
     auto_handler.removeCallbacksAndMessages(null) // cancel all delayed runnables
   }
 
+  def startBorderTimer(delay:Long){
+    border_handler.postDelayed(new Runnable(){
+      override def run(){
+        Globals.player.foreach{_.doWhenBorder()}
+      }
+    },delay)
+  }
+
+  def cancelBorderTimer(){
+    border_handler.removeCallbacksAndMessages(null)
+  }
+
   def doAfterActivity(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
@@ -450,8 +464,6 @@ class KarutaPlayReceiver extends BroadcastReceiver {
   import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){
     withName(intent.getAction) match{
-      case Border =>
-        Globals.player.foreach{_.doWhenBorder()}
       case End =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}
