@@ -218,18 +218,7 @@ object FudaListHelper{
   // [0,100]
   def queryIndexFromFudaNum(fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"skip <= 0 AND num = ?",Array(fudanum.toString),null,null,null,"1")
-    try{
-      cursor.moveToFirst()
-      val index = cursor.getInt(0)
-      return Some(index)
-    }catch{
-      case _:CursorIndexOutOfBoundsException =>
-       return None
-    }finally{
-      cursor.close()
-      //db.close()
-    }
+    rawQueryGetInt(db,0,s"SELECT read_order FROM ${Globals.TABLE_FUDALIST} WHERE skip <=0 AND num=${fudanum} LIMIT 1")
   }
 
   def queryNext(index:Int):Option[(Int,Int,Int,Int)] = {
