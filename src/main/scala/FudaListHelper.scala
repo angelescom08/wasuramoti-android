@@ -162,7 +162,7 @@ object FudaListHelper{
       getOrQueryCurrentIndexWithSkip(context) == getOrQueryNumbersToReadAlt()
     }
   }
-
+  // [0,101]
   def countNumbersInFudaList(cond:String):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("count(*)"),cond,null,null,null,null,null)
@@ -172,15 +172,18 @@ object FudaListHelper{
     //db.close()
     return count
   }
-
+  
+  // [0,100]
   def queryNumbersToRead(cond:String):Int = {
     countNumbersInFudaList(s"skip $cond AND num > 0")
   }
 
+  // [0,102] 
   def queryCurrentIndexWithSkip(context:Context):Int = {
     val current_index = getCurrentIndex(context)
     val index = countNumbersInFudaList(s"skip <= 0 AND read_order <= $current_index")
     if(current_index == AllFuda.list.length + 1){
+      // only occurs when incTotalRead == 1
       return(index+1)
     }else{
       return(index)
@@ -212,6 +215,7 @@ object FudaListHelper{
     }
   }
 
+  // [0,100]
   def queryIndexFromFudaNum(fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("read_order"),"skip <= 0 AND num = ?",Array(fudanum.toString),null,null,null,"1")
@@ -234,15 +238,27 @@ object FudaListHelper{
   def queryPrev(index:Int):Option[(Int,Int,Int,Int)] = {
     queryPrevOrNext(index,false)
   }
+
+  def rawQueryGetInt(db:SQLiteDatabase,column:Int,query:String):Option[Int] = {
+    val cursor = db.rawQuery(query,null)
+    cursor.moveToFirst()
+    val res = if(cursor.getCount > 0){
+      Some(cursor.getInt(column))
+    }else{
+      None
+    }
+    cursor.close()
+    res
+  }
+
+  // input:  [0,102]
+  // output: [0,100]
   def queryIndexWithSkip(fake_index:Int):Int = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     // TODO: use string interpolation
-    val cursor = db.rawQuery("SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip <= 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip <= 0 AND rnk = "+fake_index,null)
-    cursor.moveToFirst()
-    val ret = cursor.getInt(1)
-    cursor.close()
-    //db.close()
-    return(ret)
+    rawQueryGetInt(db,1,"SELECT ( SELECT COUNT(a.read_order) FROM "+Globals.TABLE_FUDALIST+" AS a where a.read_order <= b.read_order AND skip <= 0) AS rnk,read_order FROM "+Globals.TABLE_FUDALIST+" AS b WHERE skip <= 0 AND rnk = "+fake_index)
+    .orElse(rawQueryGetInt(db,0,"SELECT MAX(read_order) FROM "+Globals.TABLE_FUDALIST+" WHERE skip <= 0"))
+    .getOrElse(0)
   }
 
   def getHaveToReadFromDB(cond:String):Set[String] = Globals.db_lock.synchronized{
