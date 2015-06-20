@@ -310,7 +310,7 @@ object KarutaPlayUtils{
   object Action extends Enumeration{
     type Action = Value
     // TODO: automatically create WakeUp{1..6}
-    val End,WakeUp1,WakeUp2,WakeUp3,WakeUp4,WakeUp5,WakeUp6 = Value
+    val Auto,End,WakeUp1,WakeUp2,WakeUp3,WakeUp4,WakeUp5,WakeUp6 = Value
   }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
@@ -320,7 +320,6 @@ object KarutaPlayUtils{
   val SENDER_CONF = "SENDER_CONF"
 
   // TODO: shold we use single handler and multiple callbacks?
-  val auto_handler = new Handler() 
   val border_handler = new Handler() 
   val check_consistency_handler = new Handler()
 
@@ -392,8 +391,8 @@ object KarutaPlayUtils{
     }
   }
 
-  def cancelAutoPlay(){
-    auto_handler.removeCallbacksAndMessages(null) // cancel all delayed runnables
+  def cancelAutoPlay(context:Context){
+    cancelKarutaPlayTimer(context,Action.Auto)
   }
 
   def startBorderTimer(delay:Long){
@@ -429,35 +428,35 @@ object KarutaPlayUtils{
     // We need to run maximum of two groups of timers simultaneously because this timer is for NEXT play
     val actions = if(wake_up_timer_group_switch){
       Array(
-        KarutaPlayUtils.Action.WakeUp1,
-        KarutaPlayUtils.Action.WakeUp2,
-        KarutaPlayUtils.Action.WakeUp3
+        Action.WakeUp1,
+        Action.WakeUp2,
+        Action.WakeUp3
         )
     }else{
       Array(
-        KarutaPlayUtils.Action.WakeUp4,
-        KarutaPlayUtils.Action.WakeUp5,
-        KarutaPlayUtils.Action.WakeUp6
+        Action.WakeUp4,
+        Action.WakeUp5,
+        Action.WakeUp6
         )
     }
     val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
     for((act,t) <- actions.zip(Array(800,1600,2400))){
       val delay = play_end_time + auto_delay + t
-      KarutaPlayUtils.startKarutaPlayTimer(context,act,delay)
+      startKarutaPlayTimer(context,act,delay)
     }
     wake_up_timer_group_switch ^= true
   }
   def cancelWakeUpTimers(context:Context){
     for(action <- Array(
-      KarutaPlayUtils.Action.WakeUp1,
-      KarutaPlayUtils.Action.WakeUp2,
-      KarutaPlayUtils.Action.WakeUp3,
-      KarutaPlayUtils.Action.WakeUp4,
-      KarutaPlayUtils.Action.WakeUp5,
-      KarutaPlayUtils.Action.WakeUp6
+      Action.WakeUp1,
+      Action.WakeUp2,
+      Action.WakeUp3,
+      Action.WakeUp4,
+      Action.WakeUp5,
+      Action.WakeUp6
     )
     ){
-      KarutaPlayUtils.cancelKarutaPlayTimer(context,action)
+      cancelKarutaPlayTimer(context,action)
     }
   }
 
@@ -480,15 +479,6 @@ object KarutaPlayUtils{
         FudaListHelper.shuffle(context)
         FudaListHelper.moveToFirst(context)
         activity.refreshAndInvalidate(auto)
-      }
-      if(auto && !Globals.player.isEmpty){
-        cancelAutoPlay()
-        val delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        auto_handler.postDelayed(new Runnable(){
-          override def run(){
-            Globals.player.foreach{_.activity.doPlay(auto_play=true)}
-          }
-        },delay)
       }
     }
   }
@@ -519,6 +509,8 @@ class KarutaPlayReceiver extends BroadcastReceiver {
   import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){
     withName(intent.getAction) match{
+      case Auto =>
+        Globals.player.foreach{_.activity.doPlay(auto_play=true)}
       case End =>
         val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
         Globals.player.foreach{_.doWhenDone(bundle)}

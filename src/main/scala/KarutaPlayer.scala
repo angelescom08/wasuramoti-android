@@ -492,7 +492,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
       // Therefore this timer is for NEXT play since autoplay_span might be less than five seconds.
       // Note: auto_play variable means "this playback has been started automatically" so we have to use autoplay_enable preference here.
+      // TODO: If the autoplay timer is in inexact and fires before the current playing ends, we cannot continue auto play.
       if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        KarutaPlayUtils.startKarutaPlayTimer(
+          activity.getApplicationContext,
+          KarutaPlayUtils.Action.Auto,
+          play_end_time + auto_delay
+          )
         KarutaPlayUtils.startWakeUpTimers(activity.getApplicationContext,play_end_time)
       }
 

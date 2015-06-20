@@ -117,7 +117,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   def cancelAllPlay(){
-    KarutaPlayUtils.cancelAutoPlay()
+    KarutaPlayUtils.cancelAutoPlay(getApplicationContext)
     Globals.player.foreach(_.stop())
     KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
   }
@@ -682,7 +682,7 @@ trait MainButtonTrait{
         return
       }
       val player = Globals.player.get
-      KarutaPlayUtils.cancelAutoPlay()
+      KarutaPlayUtils.cancelAutoPlay(getApplicationContext)
       if(Globals.is_playing){
         val have_to_go_next = (
           from_main_button &&
