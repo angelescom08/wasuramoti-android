@@ -423,6 +423,16 @@ object KarutaPlayUtils{
 
   var wake_up_timer_group_switch = true
 
+  // Canonical way to keep CPU awake on auto play, in battery mode, is adding WAKE_LOCK permission and
+  // to use WakefulBroadcastReceiver or PowerManager.
+  // see:
+  //   http://stackoverflow.com/questions/8713361/keep-a-service-running-even-when-phone-is-asleep
+  //
+  // However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
+  // As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
+  // However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immediately before calling next timer.
+  // So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
+  // This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on.
   def startWakeUpTimers(context:Context,play_end_time:Long){
     // If we call startKarutaPlayTimer with same action id, the previous timer will be overwrited.
     // We need to run maximum of two groups of timers simultaneously because this timer is for NEXT play
@@ -495,16 +505,6 @@ object KarutaPlayUtils{
   }
 }
 
-// Canonical way to keep CPU awake on auto play, in battery mode, is adding WAKE_LOCK permission and
-// to use WakefulBroadcastReceiver or PowerManager.
-// see:
-//   http://stackoverflow.com/questions/8713361/keep-a-service-running-even-when-phone-is-asleep
-//
-// However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
-// As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
-// However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immediately before calling next timer.
-// So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
-// This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on.
 class KarutaPlayReceiver extends BroadcastReceiver {
   import KarutaPlayUtils.Action._
   override def onReceive(context:Context, intent:Intent){
