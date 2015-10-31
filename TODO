@@ -18,10 +18,22 @@ Priority High:
   * Add android.os.Build.VERSION.RELEASE to bug report
   * Add link to https://github.com/pjmtdw/wasuramoti-android/issues to bug report
   * Acquire audio focus for notification timer.
-  * Shall we add WAKE_LOCK permission to keep device wake up instead of sending WakeUp1, WakeUp2, WakeUp3 action using AlarmManager.setExact ?
-    - https://developer.android.com/training/scheduling/wakelock.html
-
+  * Support Android 6.0
+    * Apply runtime permission
+      - https://developer.android.com/training/permissions/requesting.html
+    * Add WAKE_LOCK permission to keep device wake up instead of sending WakeUp1, WakeUp2, WakeUp3 action using AlarmManager.setExact
+      - https://developer.android.com/training/scheduling/wakelock.html
+    * Use Service
+      - http://developer.android.com/guide/components/services.html
+      - Use both bound and started service - we have to carefully consider lifecycle
+      - Show "Now Playing" in notification bar, and Play/Stop button
+        - In Android >= 5.x, able to show in lock screen ?
+  * Solve ANR
+    - Add timeout for decoding ?
 Priority Medium-High:
+  * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
+  * Configure poem size using pinch zoom
+  * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
   * Support equalizer in OpenSL ES.
   * Check that OpenSL ES Player work on large endian architecture.
   * Add option to use android.media.MediaPlayer instead of AudioTrack or OpenSL ES
@@ -58,3 +70,5 @@ Priority Low:
   * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog.
     (Need to use fragment first since we have to call setTargetFragment to get the result).
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
+  * Support Android Wear
+  * Support Chromecast

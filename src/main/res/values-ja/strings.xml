@@ -200,7 +200,7 @@
   <string name="read_order_abbr_2nd">下</string>
   
   <string name="conf_read_order_joka">序歌の詠み方</string>
-  <string name="conf_read_order_joka_summary">序歌の上の句と下の句をそれぞれ何回詠むか</string>
+  <string name="conf_read_order_joka_summary">序歌とは競技かるたで最初に詠まれる百人一首にない歌のことです</string>
 
   <string name="conf_joka_upper_phrase">上の句 (000_1.ogg)</string>
   <string name="conf_joka_lower_phrase">下の句 (000_2.ogg)</string>
