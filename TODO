@@ -1,4 +1,5 @@
 Priority High:
+  * Use gradle instead of sbt
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
   * Check whether current_index == 102 is valid or not.
   * Check whether we need MODIFY_AUDIO_SETTINGS or not.
@@ -12,7 +13,6 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "Currently Playing" in notification area.
   * Show "You can scroll yomi info button list" TIPS
-  * Use _.nonEmpty instead of !_.isEmpty
   * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
   * Add android.os.Build.VERSION.RELEASE to bug report

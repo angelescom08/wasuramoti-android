@@ -46,7 +46,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       case R.id.yomi_info_view_next => 1
       case _ => 0
     }
-    cur_num = if(!num.isEmpty){
+    cur_num = if(num.nonEmpty){
       num
     }else if(Utils.isRandom && fn == -1){
       None

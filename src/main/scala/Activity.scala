@@ -99,7 +99,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     Globals.global_lock.synchronized{
       run_refresh_text.foreach(handler.removeCallbacks(_))
       run_refresh_text = None
-      if(!NotifyTimerUtils.notify_timers.isEmpty){
+      if(NotifyTimerUtils.notify_timers.nonEmpty){
         run_refresh_text = Some(new Runnable(){
           override def run(){
             if(NotifyTimerUtils.notify_timers.isEmpty){
@@ -521,7 +521,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         view.setOnLongClickListener(
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
-              if(!view.cur_num.isEmpty){
+              if(view.cur_num.nonEmpty){
                 val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num)
                 dlg.show(getSupportFragmentManager,"yomi_info_search")
               }

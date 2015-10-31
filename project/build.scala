@@ -6,7 +6,7 @@ object Build extends android.AutoBuild {
     name := "wasuramoti",
     version := "0.9.1",
     versionCode := Some(62),
-    scalaVersion := "2.11.6",
+    scalaVersion := "2.11.7",
     platformTarget in Android := "android-22",
     buildToolsVersion in Android := Some("22.0.1"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88

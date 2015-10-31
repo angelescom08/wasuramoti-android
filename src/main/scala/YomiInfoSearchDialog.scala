@@ -350,7 +350,7 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
       if(kimari_in_fudaset != kimari_cur){
         val alread_read = FudaListHelper.getAlreadyReadFromKimariji(num,kimari_cur)
         var kima_prev = kimari_in_fudaset
-        for(ar<-alread_read.inits.toArray.reverse if ! ar.isEmpty ){
+        for(ar<-alread_read.inits.toArray.reverse if ar.nonEmpty ){
           val (_,read_order) = ar.last
           val kima = FudaListHelper.getKimarijiAtIndex(num,Some(read_order))
           if(kima_prev != kima){

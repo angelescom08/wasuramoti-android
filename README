@@ -60,10 +60,10 @@ __END_CREDITS__
   Requirements:
     # general installment from package manager in linux
       IcedTea JDK 7 (or some other Java JDK )
-      scala 2.11.5
-      sbt 0.13.7 (A Scala-Based Simple Build Tool)
+      scala 2.11.7
+      sbt 0.13.9 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
-      android-sdk-plugin 1.3.17 (https://github.com/pfn/android-sdk-plugin)
+      android-sdk-plugin 1.4.9 (https://github.com/pfn/android-sdk-plugin)
     # downloaded from official Android SDK/NDK site and Android SDK manager
       Android SDK v19 (https://developer.android.com/sdk/index.html#download)
       Android NDK v9 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)

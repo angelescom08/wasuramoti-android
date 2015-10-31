@@ -390,7 +390,7 @@
               <textarea name=\"bug_detail\" placeholder=\"○○したら△△になる\" >%4$s</textarea>
             </div>
             <div>「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．</div>
-              <input type=\"hidden\" name=\"bug_device_info value=\"%3$s\">
+              <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
               <input type=\"submit\" value=\"送信する\">
           </form>
           <hr />

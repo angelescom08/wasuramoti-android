@@ -508,7 +508,7 @@ object Utils {
   def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateQueryCacheExceptKarafuda:Boolean = false){
     Globals.setButtonText.foreach{
       _(
-        if(!NotifyTimerUtils.notify_timers.isEmpty){
+        if(NotifyTimerUtils.notify_timers.nonEmpty){
           NotifyTimerUtils.makeTimerText(context)
         }else{
           val res = context.getResources
@@ -524,7 +524,7 @@ object Utils {
                 res.getString(R.string.now_playing)
               }
             }else{
-              if(fromAuto && !Globals.player.isEmpty){
+              if(fromAuto && Globals.player.nonEmpty){
                 val sec = Globals.prefs.get.getLong("autoplay_span",5).toInt
                 res.getString(R.string.now_stopped_auto,new java.lang.Integer(sec))
               }else{
@@ -538,7 +538,7 @@ object Utils {
   }
 
   def deleteCache(context:Context,match_func:String=>Boolean){
-    Globals.global_lock.synchronized{
+    this.synchronized{
       val files = context.getCacheDir().listFiles()
       if(files != null){
         for(f <- files){

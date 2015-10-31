@@ -12,7 +12,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
   override def onDialogClosed(positiveResult:Boolean){
     Globals.current_config_dialog = None
-    if(positiveResult && !number_of_bands.isEmpty){
+    if(positiveResult && number_of_bands.nonEmpty){
       persistString(Utils.equalizerToString(makeSeq()))
     }
     Globals.player.foreach{ p => {
