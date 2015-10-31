@@ -138,9 +138,12 @@ object FudaListHelper{
       if(current_index > num_to_read){
         context.getResources.getString(R.string.message_readindex_done,
           new java.lang.Integer(total_s))
-      }else{
+      }else if(Globals.prefs.get.getBoolean("show_current_index",true)){
         context.getResources.getString(R.string.message_readindex_shuffle,
           new java.lang.Integer(index_s),
+          new java.lang.Integer(total_s))
+      }else{
+        context.getResources.getString(R.string.message_readindex_onlytotal,
           new java.lang.Integer(total_s))
       }
     }

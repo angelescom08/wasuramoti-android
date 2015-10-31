@@ -273,9 +273,14 @@
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
   <string name="conf_move_next_after_done">Go Next after Done</string>
   <string name="conf_move_next_after_done_summary">Go to next poem after playing done.</string>
+
+  <!-- CATEGORY_DISPLAY -->
+  <string name="category_display">Display</string>
   <string name="conf_show_message_when_moved">Show Msg when Moved</string>
   <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message</string>
   <string name="message_when_moved">Moved to next poem</string>
+  <string name="conf_show_current_index">Show Number</string>
+  <string name="conf_show_current_index_summary">Show how many number of poem played from the beginning.</string>
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">Time</string>
@@ -364,6 +369,7 @@
   <string name="all_memorized">No more poem to remember. Choose `Advanced Config` and reset memorization mode or choose another fudaset.</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d</string>
+  <string name="message_readindex_onlytotal" formatted="false">%d</string>
   <string name="message_in_fudanum_order">In Order</string>
   <string name="message_karafuda_num">Kara: %d</string>
   <string name="message_memorized_num">Mem: %d</string>

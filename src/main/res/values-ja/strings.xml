@@ -225,9 +225,14 @@
   <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
   <string name="conf_move_next_after_done">終了時に次の札へ</string>
   <string name="conf_move_next_after_done_summary">詠みが終了したら次の札へ進む</string>
+
+  <!-- CATEGORY_DISPLAY -->
+  <string name="category_display">表示</string>
   <string name="conf_show_message_when_moved">進んだ時にその旨を表示</string>
   <string name="conf_show_message_when_moved_summary">「次の札へ進みました」を表示する</string>
   <string name="message_when_moved">次の札へ進みました</string>
+  <string name="conf_show_current_index">何番目の札か表示</string>
+  <string name="conf_show_current_index_summary">次に詠まれる札が何首目なのかを表示</string>
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">時間</string>
@@ -321,6 +326,7 @@
   <string name="all_memorized">全て覚え終えました．メニューの「詳細設定」から暗記モードをリセットするか，別の札セットを選択して下さい．</string>
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
+  <string name="message_readindex_onlytotal" formatted="false">%d 首</string>
   <string name="message_in_fudanum_order">番号順</string>
   <string name="message_karafuda_num">空札%d枚</string>
   <string name="message_memorized_num">%d首覚えた</string>
