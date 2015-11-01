@@ -187,17 +187,31 @@
   </string>
   <string name="conf_read_order_each_custom_must_include_cur">少なくとも一つは現在の札を含まないといけません</string>
 
-  <string name="conf_read_order_each_cur2_next1">下の句 / 上の句</string>
-  <string name="conf_read_order_each_cur2_next1_next2">下の句 / 上の句 - 下の句</string>
-  <string name="conf_read_order_each_cur1_cur2">上の句 - 下の句</string>
-  <string name="conf_read_order_each_cur1_cur2_cur2">上の句 - 下の句 - 下の句</string>
-  <string name="conf_read_order_each_cur1">上の句のみ</string>
-  <string name="conf_read_order_each_custom">カスタム</string>
-  <string name="conf_read_order_each_custom_undefined">未設定</string>
   <string name="conf_read_order_each_custom_title">カスタムの編集</string>
+
+  <string name="conf_read_order_name_cur2_next1">競技かるた用</string>
+  <string name="conf_read_order_name_cur2_next1_next2">競技かるた初心者用</string>
+  <string name="conf_read_order_name_cur1_cur2">かるた遊び用</string>
+  <string name="conf_read_order_name_cur1_cur2_cur2">かるた遊び初心者用</string>
+  <string name="conf_read_order_name_cur1">上の句のみ</string>
+  <string name="conf_read_order_name_custom">カスタム</string>
+
+  <string name="conf_read_order_value_cur2_next1">下の句 / 上の句</string>
+  <string name="conf_read_order_value_cur2_next1_next2">下の句 / 上の句 - 下の句</string>
+  <string name="conf_read_order_value_cur1_cur2">上の句 - 下の句</string>
+  <string name="conf_read_order_value_cur1_cur2_cur2">上の句 - 下の句 - 下の句</string>
+  <string name="conf_read_order_value_cur1">上の句</string>
+  <string name="conf_read_order_value_undefined">未設定</string>
 
   <string name="read_order_abbr_1st">上</string>
   <string name="read_order_abbr_2nd">下</string>
+
+  <string-array name="conf_read_order_abbr_presets">
+    <item>CUR2_NEXT1:競技1</item>
+    <item>CUR2_NEXT1_NEXT2:競技2</item>
+    <item>CUR1_CUR2:遊び1</item>
+    <item>CUR1_CUR2_CUR2:遊び2</item>
+  </string-array>
   
   <string name="conf_read_order_joka">序歌の詠み方</string>
   <string name="conf_read_order_joka_summary">序歌とは競技かるたで最初に詠まれる百人一首にない歌のことです</string>

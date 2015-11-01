@@ -222,24 +222,30 @@
   </string>
   <string name="conf_read_order_each_custom_must_include_cur">It must include at lease one current poem.</string>
   
-  <string name="conf_read_order_each_cur2_next1">2nd / 1st</string>
-  <string name="conf_read_order_each_cur2_next1_next2">2nd / 1st - 2nd</string>
-  <string name="conf_read_order_each_cur1_cur2">1st - 2nd</string>
-  <string name="conf_read_order_each_cur1_cur2_cur2">1st - 2nd - 2nd</string>
-  <string name="conf_read_order_each_cur1">1st Only</string>
-  <string name="conf_read_order_each_custom">Custom</string>
-  <string name="conf_read_order_each_custom_undefined">Undefined</string>
   <string name="conf_read_order_each_custom_title">Custom Edit</string>
+
+  <string name="conf_read_order_name_cur2_next1">Competitive Karuta</string>
+  <string name="conf_read_order_name_cur2_next1_next2">Competitive Karuta Beginners</string>
+  <string name="conf_read_order_name_cur1_cur2">Recreative Karuta</string>
+  <string name="conf_read_order_name_cur1_cur2_cur2">Recreative Karuta Beginner</string>
+  <string name="conf_read_order_name_cur1">上の句のみ</string>
+  <string name="conf_read_order_name_custom">Custom</string>
+
+  <string name="conf_read_order_value_cur2_next1">2nd / 1st</string>
+  <string name="conf_read_order_value_cur2_next1_next2">2nd / 1st - 2nd</string>
+  <string name="conf_read_order_value_cur1_cur2">1st - 2nd</string>
+  <string name="conf_read_order_value_cur1_cur2_cur2">1st - 2nd - 2nd</string>
+  <string name="conf_read_order_value_cur1">1st Only</string>
+  <string name="conf_read_order_value_undefined">Undefined</string>
 
   <string name="read_order_abbr_1st">1</string>
   <string name="read_order_abbr_2nd">2</string>
 
-  <string-array name="conf_read_order_each_entryValues">
-    <item>CUR2_NEXT1</item>
-    <item>CUR2_NEXT1_NEXT2</item>
-    <item>CUR1_CUR2</item>
-    <item>CUR1_CUR2_CUR2</item>
-    <item>CUR1</item>
+  <string-array name="conf_read_order_abbr_presets">
+    <item>CUR2_NEXT1:Comp.1</item>
+    <item>CUR2_NEXT1_NEXT2:Comp.2</item>
+    <item>CUR1_CUR2:Recr.1</item>
+    <item>CUR1_CUR2_CUR2:Recr.2</item>
   </string-array>
 
   <string name="conf_read_order_joka">How to Play Joka</string>
@@ -453,7 +459,7 @@
   <string name="intended_use_desc">Select your intended use:</string>
   <string name="intended_use_competitive">Competitive Karuta</string>
   <string name="intended_use_study">Study 100 Poems</string>
-  <string name="intended_use_recreation">Just for Fun</string>
+  <string name="intended_use_recreation">Recreative Karuta</string>
   <string name="intended_use_result">
     <![CDATA[
       Settings changed as follows. You can reconfigure it from `Quick Config` &rArr; `Change Intended Use`.

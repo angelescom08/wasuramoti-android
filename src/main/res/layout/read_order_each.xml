@@ -17,36 +17,91 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur2_next1"
+        android:tag="cur2_next1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur2_next1" />
+        android:text="@string/conf_read_order_name_cur2_next1" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        android:text="@string/conf_read_order_value_cur2_next1"/>
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur2_next1_next2"
+        android:tag="cur2_next1_next2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur2_next1_next2" />
+        android:text="@string/conf_read_order_name_cur2_next1_next2" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        android:text="@string/conf_read_order_value_cur2_next1_next2"/>
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1_cur2"
+        android:tag="cur1_cur2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur1_cur2" />
+        android:text="@string/conf_read_order_name_cur1_cur2" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        android:text="@string/conf_read_order_value_cur1_cur2"/>
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1_cur2_cur2"
+        android:tag="cur1_cur2_cur2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur1_cur2_cur2" />
+        android:text="@string/conf_read_order_name_cur1_cur2_cur2" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        android:text="@string/conf_read_order_value_cur1_cur2_cur2"/>
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1"
+        android:tag="cur1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_cur1" />
+        android:text="@string/conf_read_order_name_cur1" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        android:text="@string/conf_read_order_value_cur1"/>
+      <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_custom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conf_read_order_each_custom" />
+        android:text="@string/conf_read_order_name_custom" />
+      <TextView
+        android:id="@+id/conf_read_order_value_custom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF9900"
+        android:paddingLeft="17dip"
+        android:paddingBottom="5dip"
+        />
+      <include layout="@layout/horizontal_rule" />
     </RadioGroup>
 
   </LinearLayout>

@@ -579,7 +579,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           YomiInfoUtils.hidePoemText(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_hide),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur2_next1),
+            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
             (R.string.intended_use_joka,R.string.intended_use_joka_on),
             (R.string.conf_memorization_title,R.string.message_disabled)
           )
@@ -592,7 +592,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           YomiInfoUtils.showFull(edit)
            Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_full),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2),
+            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2),
             (R.string.intended_use_joka,R.string.intended_use_joka_off),
             (R.string.conf_memorization_title,R.string.message_enabled)
           )
@@ -605,7 +605,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           YomiInfoUtils.showOnlyFirst(edit)
           Array(
             (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
-            (R.string.intended_use_read_order,R.string.conf_read_order_each_cur1_cur2_cur2),
+            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2_cur2),
             (R.string.intended_use_joka,R.string.intended_use_joka_off),
             (R.string.conf_memorization_title,R.string.message_disabled)
           )

@@ -4,7 +4,7 @@ import _root_.android.content.{Context,SharedPreferences,DialogInterface}
 import _root_.android.util.AttributeSet
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.os.Bundle
-import _root_.android.widget.{RadioGroup,RadioButton,Button,EditText}
+import _root_.android.widget.{RadioGroup,RadioButton,Button,EditText,TextView}
 import _root_.android.app.AlertDialog
 class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
@@ -21,9 +21,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
         persistString(Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE))
       }else{
         val vw = group.findViewById(bid)
-        val idx = group.indexOfChild(vw)
-        val ar = context.getResources.getStringArray(R.array.conf_read_order_each_entryValues)
-        persistString(ar(idx))
+        persistString(vw.getTag.asInstanceOf[String].toUpperCase)
       }
     }
     super.onDialogClosed(positiveResult)
@@ -35,10 +33,9 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
     val group = view.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
-    val ar = context.getResources.getStringArray(R.array.conf_read_order_each_entryValues)
     val value = getPersistedString(DEFAULT_VALUE)
-    val idx = ar.indexOf(value)
-    if(idx == -1){
+    val vw = group.findViewWithTag(value.toLowerCase)
+    if(vw == null){
       if(value != Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE)){
         // migrate from abolished option
         val edit = Globals.prefs.get.edit
@@ -47,7 +44,6 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
       }
       group.check(R.id.conf_read_order_each_custom)
     }else{
-      val vw = group.getChildAt(idx)
       group.check(vw.getId())
     }
 
@@ -75,21 +71,22 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
       val abbr = if(prefs.contains("read_order_each_custom")){
         toAbbrValue(prefs.getString("read_order_each_custom",DEFAULT_VALUE))
       }else{
-        context.getResources.getString(R.string.conf_read_order_each_custom_undefined)
+        context.getResources.getString(R.string.conf_read_order_value_undefined)
       }
-      v.findViewById(R.id.conf_read_order_each_custom).asInstanceOf[RadioButton].setText(
-        context.getResources.getString(R.string.conf_read_order_each_custom) + " (" + abbr + ")"
-      )
+      v.findViewById(R.id.conf_read_order_value_custom).asInstanceOf[TextView].setText(abbr)
     }
   }
 
   def toAbbrValue(value:String):String = {
     val res = context.getResources
-    value.replaceFirst("NEXT","/").collect{
-      case '1' => res.getString(R.string.read_order_abbr_1st)
-      case '2' => res.getString(R.string.read_order_abbr_2nd)
-      case '/' => "/"
-    }.mkString("-").replace("-/-","/")
+    val ar = res.getStringArray(R.array.conf_read_order_abbr_presets)
+    ar.find(_.startsWith(value+":")).map(_.split(":")(1)).getOrElse(
+      value.replaceFirst("NEXT","/").collect{
+        case '1' => res.getString(R.string.read_order_abbr_1st)
+        case '2' => res.getString(R.string.read_order_abbr_2nd)
+        case '/' => "/"
+      }.mkString("-").replace("-/-","/")
+    )
   }
   override def getAbbrValue():String = {
     val value = getPersistedString(DEFAULT_VALUE)
