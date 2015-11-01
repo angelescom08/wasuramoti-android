@@ -574,7 +574,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         case R.id.intended_use_competitive => {
           edit.putString("intended_use","competitive")
           edit.putString("read_order_each","CUR2_NEXT1")
-          edit.putString("read_order_joka","upper_1,lower_1")
+          edit.putBoolean("joka_enable",true)
           edit.putBoolean("memorization_mode",false)
           YomiInfoUtils.hidePoemText(edit)
           Array(
@@ -587,7 +587,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         case R.id.intended_use_study => {
           edit.putString("intended_use","study")
           edit.putString("read_order_each","CUR1_CUR2")
-          edit.putString("read_order_joka","upper_0,lower_0")
+          edit.putBoolean("joka_enable",false)
           edit.putBoolean("memorization_mode",true)
           YomiInfoUtils.showFull(edit)
            Array(
@@ -600,7 +600,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         case R.id.intended_use_recreation => {
           edit.putString("intended_use","recreation")
           edit.putString("read_order_each","CUR1_CUR2_CUR2")
-          edit.putString("read_order_joka","upper_0,lower_0")
+          edit.putBoolean("joka_enable",false)
           edit.putBoolean("memorization_mode",false)
           YomiInfoUtils.showOnlyFirst(edit)
           Array(

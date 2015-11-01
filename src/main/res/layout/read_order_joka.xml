@@ -5,64 +5,73 @@
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" android:layout_height="fill_parent"
               android:orientation="vertical">
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/conf_joka_upper_phrase"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-                />
-    <RadioGroup
-      android:id="@+id/conf_joka_upper_num"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
-      <RadioButton
-        android:id="@+id/conf_joka_upper_num_0"
+    <CheckBox
+      android:id="@+id/joka_enable"
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:text="@string/conf_joka_enable"
+      android:checked="true"
+      />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:id="@+id/read_order_joka_layout"
+      android:orientation="vertical"
+      >
+      <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tag="upper_0"
-        android:text="@string/conf_num_0" />
-      <RadioButton
-        android:id="@+id/conf_joka_upper_num_1"
+        android:text="@string/conf_joka_upper_phrase"
+                  />
+      <RadioGroup
+        android:id="@+id/conf_joka_upper_num"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+          android:id="@+id/conf_joka_upper_num_0"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:tag="upper_0"
+          android:text="@string/conf_num_0" />
+        <RadioButton
+          android:id="@+id/conf_joka_upper_num_1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:tag="upper_1"
+          android:text="@string/conf_num_1" />
+      </RadioGroup>
+      <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tag="upper_1"
-        android:text="@string/conf_num_1" />
-    </RadioGroup>
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/conf_joka_lower_phrase"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-                />
-    <RadioGroup
-      android:id="@+id/conf_joka_lower_num"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
-      <RadioButton
-        android:id="@+id/conf_joka_lower_num_0"
+        android:text="@string/conf_joka_lower_phrase"
+                  />
+      <RadioGroup
+        android:id="@+id/conf_joka_lower_num"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+          android:id="@+id/conf_joka_lower_num_0"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:tag="lower_0"
+          android:text="@string/conf_num_0" />
+        <RadioButton
+          android:id="@+id/conf_joka_lower_num_1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:tag="lower_1"
+          android:text="@string/conf_num_1" />
+        <RadioButton
+          android:id="@+id/conf_joka_lower_num_2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:tag="lower_2"
+          android:text="@string/conf_num_2" />
+      </RadioGroup>
+      <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tag="lower_0"
-        android:text="@string/conf_num_0" />
-      <RadioButton
-        android:id="@+id/conf_joka_lower_num_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tag="lower_1"
-        android:text="@string/conf_num_1" />
-      <RadioButton
-        android:id="@+id/conf_joka_lower_num_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tag="lower_2"
-        android:text="@string/conf_num_2" />
-    </RadioGroup>
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/conf_joka_caveat" />
+        android:text="@string/conf_joka_caveat" />
+    </LinearLayout>
   </LinearLayout>
 
 </ScrollView>

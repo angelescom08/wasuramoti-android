@@ -30,7 +30,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 4
-  val PREFERENCE_VERSION = 6
+  val PREFERENCE_VERSION = 7
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -172,6 +172,12 @@ object Utils {
           }
           edit.remove("show_yomi_info")
         }
+        if(prev_version > 0 && prev_version < 7){
+          if(pref.getString("read_order_joka","upper_1,lower_1") == "upper_0,lower_0"){
+            edit.putBoolean("joka_enable",false)
+            edit.putString("read_order_joka","upper_1,lower_1")
+          }
+        }
 
         // remove obsolete preferences
         edit.remove("wav_threashold") // misspelled
@@ -259,8 +265,7 @@ object Utils {
     (is_joka || roe.contains("CUR")) && roe.contains("NEXT")
   }
   def readJoka():Boolean = {
-    val roj = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
-    roj != "upper_0,lower_0"
+    Globals.prefs.get.getBoolean("joka_enable",true)
   }
   def readFirstFuda():Boolean = {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")

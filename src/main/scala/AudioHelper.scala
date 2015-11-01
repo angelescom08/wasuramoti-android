@@ -22,7 +22,11 @@ object AudioHelper{
     val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
     var ss = read_order_each.split("_")
     if(cur_num == 0){
-      val read_order_joka = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+      val read_order_joka = if(Globals.prefs.get.getBoolean("joka_enable",true)){
+        Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+      }else{
+        "upper_0,lower_0"
+      }
       ss = read_order_joka.split(",").flatMap{ s =>
         val Array(t,num) = s.split("_")
         Array.fill(num.toInt){

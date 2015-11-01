@@ -244,11 +244,9 @@
 
   <string name="conf_read_order_joka">How to Play Joka</string>
   <string name="conf_read_order_joka_summary">`Joka` is an introduction poem which is played before all poems.</string>
+  <string name="conf_joka_enable">Enable Joka</string>
   <string name="conf_joka_upper_phrase">1st Half (000_1.ogg)</string>
   <string name="conf_joka_lower_phrase">2nd Half (000_2.ogg)</string>
-
-  <string name="conf_upper_abbr">F</string>
-  <string name="conf_lower_abbr">S</string>
 
   <string name="conf_num_0">None</string>
   <string name="conf_num_1">Once</string>

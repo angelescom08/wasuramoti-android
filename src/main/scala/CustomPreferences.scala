@@ -23,10 +23,21 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
-      persistString(Array(R.id.conf_joka_upper_num,R.id.conf_joka_lower_num).map{ rid =>
+      val read_order_joka = Array(R.id.conf_joka_upper_num,R.id.conf_joka_lower_num).map{ rid =>
         val btn = root_view.get.findViewById(rid).asInstanceOf[RadioGroup].getCheckedRadioButtonId()
         root_view.get.findViewById(btn).getTag()
-      }.mkString(","))
+      }.mkString(",")
+      val edit = getEditor
+      val enable = root_view.get.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
+      val (eld,roj) = if(read_order_joka == "upper_0,lower_0"){
+        (false,DEFAULT_VALUE)
+      }else{
+        (enable.isChecked,read_order_joka)
+      }
+      edit.putBoolean("joka_enable",eld)
+      edit.putString(getKey,roj)
+      edit.commit
+      notifyChangedPublic
     }
     super.onDialogClosed(positiveResult)
   }
@@ -38,16 +49,17 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     for( t <- getPersistedString(DEFAULT_VALUE).split(",")){
       view.findViewWithTag(t).asInstanceOf[RadioButton].toggle()
     }
+    val enable = view.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
+    enable.setChecked(Globals.prefs.get.getBoolean("joka_enable",true))
+    switchVisibilityByCheckBox(root_view,enable,R.id.read_order_joka_layout)
     return view
   }
   override def getAbbrValue():String = {
-    getPersistedString(DEFAULT_VALUE).split(",").map{ x =>{
-      val Array(ul,num) = x.split("_")
-      context.getResources.getString(ul match{
-        case "upper" => R.string.conf_upper_abbr
-        case "lower" => R.string.conf_lower_abbr
-      }) + num
-    }}.mkString("")
+    if(Globals.prefs.get.getBoolean("joka_enable",true)){
+      context.getResources.getString(R.string.intended_use_joka_on)
+    }else{
+      context.getResources.getString(R.string.intended_use_joka_off)
+    }
   }
 }
 

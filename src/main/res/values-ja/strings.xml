@@ -201,12 +201,9 @@
   
   <string name="conf_read_order_joka">序歌の詠み方</string>
   <string name="conf_read_order_joka_summary">序歌とは競技かるたで最初に詠まれる百人一首にない歌のことです</string>
-
+  <string name="conf_joka_enable">序歌を詠む</string>
   <string name="conf_joka_upper_phrase">上の句 (000_1.ogg)</string>
   <string name="conf_joka_lower_phrase">下の句 (000_2.ogg)</string>
-
-  <string name="conf_upper_abbr">上</string>
-  <string name="conf_lower_abbr">下</string>
 
   <string name="conf_num_0">なし</string>
   <string name="conf_num_1">1回</string>
