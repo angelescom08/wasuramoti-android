@@ -63,6 +63,7 @@ object BugReport{
     val bld = new mutable.StringBuilder
     bld ++= "[build]\n"
     bld ++= s"api_level=${Build.VERSION.SDK_INT}\n"
+    bld ++= s"release=${Build.VERSION.RELEASE}\n"
     bld ++= s"cpu_abi=${Build.CPU_ABI}\n"
     bld ++= s"brand=${Build.BRAND}\n"
     bld ++= s"manufacturer=${Build.MANUFACTURER}\n"

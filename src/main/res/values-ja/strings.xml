@@ -380,8 +380,8 @@
   <string name="category_other">その他</string>
   <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです．</string>
   <string name="bug_report_not_supported">すみません．この端末からはバグレポートを送れません．</string>
-  <string name="conf_bug_report">バグ報告</string>
-  <string name="conf_bug_report_summary">匿名のバグレポートを送ることができます</string>
+  <string name="conf_bug_report">サポート窓口</string>
+  <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら</string>
   <string name="bug_report_html">
     <![CDATA[
       <!DOCTYPE html>
@@ -389,7 +389,7 @@
         <head>
           <meta charset=\"utf-8\">
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>わすらもち匿名バグ報告フォーム</title>
+          <title>わすらもちサポート窓口</title>
           <style type=\"text/css\">
             textarea{
               width: 24em;
@@ -398,21 +398,24 @@
           </style>
         </head>
         <body>
-          <h3>わすらもち匿名バグ報告フォーム</h3>
+          <h3>メールで連絡</h3>
+          作者のメールアドレス: <a href=\"mailto:%1$s\">%1$s</a><br/>
+          質問，要望，バグ報告何でもどうぞ．<br/>
+          <hr/>
+          <h3>FAQ</h3>
+          良くある質問: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">公式サイトへのリンク</a><br/>
+          匿名フォームへの質問および要望に対する返答や，バグ報告がバグじゃなくて仕様だった場合などはこちらに記載します．<br/>
+          <hr/>
+          <h3>匿名フォーム</h3>
           <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
-            <div>バグ報告の前に [<a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">良くある質問</a>] に軽く目を通しておいて下さい</div>
-            <hr />
-            <div>
-              <div>バグの再現手順とその症状を書いて下さい:</div>
-              <textarea name=\"bug_detail\" placeholder=\"○○したら△△になる\" >%4$s</textarea>
-            </div>
-            <div>「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．</div>
-              <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
-              <input type=\"submit\" value=\"送信する\">
+            匿名の質問，要望，バグ報告はこちら:<br/>
+            <textarea name=\"bug_detail\">%4$s</textarea><br/>
+            「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．<br/>
+            匿名のバグ報告は開発者側から詳しい症状をお伺いすることができません．<br/>
+            メールで連絡してくれた方が直せる確率は高まります．<br/>
+            <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
+            <input type=\"submit\" value=\"送信する\">
           </form>
-          <hr />
-          <div>匿名のバグ報告の場合は開発者側から詳しい症状をお伺いすることができません．</div>
-          <div>もし本当に直して欲しいバグならメールで連絡して下さい &rArr; [<a href=\"mailto:%1$s\">%1$s</a>]</div>
         </body>
       </html>
     ]]>

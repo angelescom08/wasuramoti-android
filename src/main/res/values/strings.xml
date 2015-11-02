@@ -228,7 +228,7 @@
   <string name="conf_read_order_name_cur2_next1_next2">Competitive Karuta Beginners</string>
   <string name="conf_read_order_name_cur1_cur2">Recreative Karuta</string>
   <string name="conf_read_order_name_cur1_cur2_cur2">Recreative Karuta Beginner</string>
-  <string name="conf_read_order_name_cur1">上の句のみ</string>
+  <string name="conf_read_order_name_cur1">Only 1st Half</string>
   <string name="conf_read_order_name_custom">Custom</string>
 
   <string name="conf_read_order_value_cur2_next1">2nd / 1st</string>
@@ -418,14 +418,14 @@
   <string name="browser_not_found">Web Browser not found in this device</string>
   <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
   <string name="bug_report_not_supported">Sorry, you cannot send bug report from this device.</string>
-  <string name="conf_bug_report">Bug Report</string>
-  <string name="conf_bug_report_summary">You can send anonymous bug report from here.</string>
+  <string name="conf_bug_report">Support Form</string>
+  <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
   <string name="bug_report_html">
     <![CDATA[
       <html>
         <head>
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>Wasuramoti Anonymous Bug Report Form</title>
+          <title>Wasuramoti Support Form</title>
           <style type=\"text/css\">
             textarea{
               width: 24em;
@@ -434,23 +434,25 @@
           </style>
         </head>
         <body>
-          <h3>Wasuramoti Anonymous Bug Report Form</h3>
-          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
-            <div>Please give [<a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">FAQ</a>] a cursory glance before writing bug report.</div>
-            <div>
-            <hr />
-            <div>
-              <div>Write the detail of the bug here:</div>
-              <textarea name=\"bug_detail\">%4$s</textarea>
-            </div>
-            <div>Clicking the following button will send some device information which is useful for debugging.</div>
+          <h3>Contact by E-Mail</h3>
+          E-Mail address of developer: <a href=\"mailto:%1$s\">%1$s</a><br/>
+          Feel free to ask any question, give a request, and report bug.<br/>
+          <hr/>
+          <h3>FAQ</h3>
+          Frequestly asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">Link to official page</a><br/>
+          Answer to anonymous question, request, bug report will be published here.<br/>
+          <hr/>
+          <h3>Anonymous Form</h3>
+          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really_Send_OK?\'))\" >
+            Anonymous question, request, and bug report:<br/>
+            <textarea name=\"bug_detail\">%4$s</textarea><br/>
+            Clicking `Submit` button will send some information which is useful for debugging.<br/>
+            We cannot ask you the detail of the bug if you send bug report anonymously.<br/>
+            Therefore, contact us by E-Mail if you want higher possibility to fix the bug.<br/>
             <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
-            <input type=\"submit\" value=\"Send Bug Report\">
+            <input type=\"submit\" value=\"Submit\">
           </form>
-          <hr />
-          <div>In case of anonymous bug report, we cannot ask you the detail of the bug.</div>
-          <div>If you really want us to fix the bug, please contact us by E-Mail &rArr; [<a href=\"mailto:%1$s\">%1$s</a>]</div>
-
+        </body>
         </body>
       </html>
     ]]>

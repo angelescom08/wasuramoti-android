@@ -15,8 +15,6 @@ Priority High:
   * Show "You can scroll yomi info button list" TIPS
   * Use scala.util.Try instead of try ... catch
   * Set contentDescription for all the buttons
-  * Add android.os.Build.VERSION.RELEASE to bug report
-  * Add link to https://github.com/pjmtdw/wasuramoti-android/issues to bug report
   * Acquire audio focus for notification timer.
   * Support Android 6.0
     * Apply runtime permission
