@@ -37,6 +37,7 @@ object Globals {
   val READER_SCAN_DEPTH_MAX = 3
   val global_lock = new Object()
   val db_lock = new Object()
+  val decode_lock = new Object()
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]

@@ -580,7 +580,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     // otherwise it raises AbstractMethodError "abstract method not implemented"
     
     override def doInBackground(unused:AnyRef*):AnyRef = {
-      this.synchronized{
+      // According to "Order of execution" in http://developer.android.com/reference/android/os/AsyncTask.html
+      // > Starting with HONEYCOMB, tasks are executed on a single thread to avoid common application errors caused by parallel execution.
+      // Therefore maybe we don't need lock here. However, the behavior of AsyncTask is little bit confusing, so using Scala's Futures and Promises may be better choice.
+      // TODO: Using AsyncTask seems not so convenient. maybe we should use Scala's Futures and Promises instead.
+      Globals.decode_lock.synchronized{
       try{
         Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG).exists{s=>path.endsWith(s)})
         val res_queue = new AudioQueue()

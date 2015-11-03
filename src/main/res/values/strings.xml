@@ -74,7 +74,7 @@
   </string-array>
 
   <string name="conf_reader_list">Reciter</string>
-  <string name="conf_reader_list_summary">Press `Config`-&gt;`Help` to see how to add new audio file.</string>
+  <string name="conf_reader_list_summary">See `Config`-&gt;`Help` for how to load audio file from internal/external storage.</string>
   <string name="scan_reader_title">Scan Path</string>
   <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
   <string name="scan_reader_addition">You can add scan path in following textbox:</string>
@@ -227,7 +227,7 @@
   <string name="conf_read_order_name_cur2_next1">Competitive Karuta</string>
   <string name="conf_read_order_name_cur2_next1_next2">Competitive Karuta Beginners</string>
   <string name="conf_read_order_name_cur1_cur2">Recreative Karuta</string>
-  <string name="conf_read_order_name_cur1_cur2_cur2">Recreative Karuta Beginner</string>
+  <string name="conf_read_order_name_cur1_cur2_cur2">Recreative Karuta Beginners</string>
   <string name="conf_read_order_name_cur1">Only 1st Half</string>
   <string name="conf_read_order_name_custom">Custom</string>
 
@@ -439,11 +439,11 @@
           Feel free to ask any question, give a request, and report bug.<br/>
           <hr/>
           <h3>FAQ</h3>
-          Frequestly asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">Link to official page</a><br/>
+          Frequestly asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
           Answer to anonymous question, request, bug report will be published here.<br/>
           <hr/>
           <h3>Anonymous Form</h3>
-          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really_Send_OK?\'))\" >
+          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
             Anonymous question, request, and bug report:<br/>
             <textarea name=\"bug_detail\">%4$s</textarea><br/>
             Clicking `Submit` button will send some information which is useful for debugging.<br/>

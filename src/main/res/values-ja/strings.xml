@@ -57,7 +57,7 @@
     <item>歌番号順</item>
   </string-array>
   <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">追加する方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
+  <string name="conf_reader_list_summary">外部/内部ストレージから読み込む方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
   <string name="scan_reader_title">探索対象パス</string>
   <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
   <string name="scan_reader_addition">追加でスキャンさせたいパスを下記に入力して下さい</string>
