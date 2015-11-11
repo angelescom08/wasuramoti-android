@@ -267,9 +267,10 @@
   <string name="conf_wav_fadein_kami_summary">先頭のフェードイン秒数</string>
 
   <!-- FUDASET_EDIT -->
-  <string name="fudaset_new">新規</string>
   <string name="fudaset_delete">削除</string>
   <string name="fudaset_edit">編集</string>
+  <string name="fudaset_new">新規作成</string>
+  <string name="fudaset_copymerge">複製/合成</string>
 
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの作成/編集</string>

@@ -307,9 +307,10 @@
   <string name="conf_wav_fadein_kami_summary">How many seconds to fade in.</string>
 
   <!-- FUDASET_EDIT -->
-  <string name="fudaset_new">New</string>
   <string name="fudaset_delete">Delete</string>
   <string name="fudaset_edit">Edit</string>
+  <string name="fudaset_new">Create</string>
+  <string name="fudaset_copymerge">Copy/Merge</string>
 
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
   <string name="fudasetedit_title">New/Edit Poem Set</string>
