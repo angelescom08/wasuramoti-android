@@ -97,7 +97,22 @@ trait FudaSetTrait{
   }
   def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val (adapter,adapter_pos) = getSpinnerSelected(view)
-    val dialog = new FudaSetEditDialog(this,is_add,adapter,adapter_pos,orig_fs) 
+    val callback = (fudaset_with_size:FudaSetWithSize)=>{
+      if(is_add){
+        adapter.add(fudaset_with_size)
+        adapter.notifyDataSetChanged()
+        val spinner = view.getRootView.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
+        if(spinner != null){
+          spinner.setSelection(adapter.getCount-1)
+        }
+
+      }else{
+        adapter.remove(orig_fs)
+        adapter.insert(fudaset_with_size,adapter_pos)
+      }
+    }
+    val orig_title = Option(orig_fs).map(_.title).getOrElse("")
+    val dialog = new FudaSetEditDialog(this,is_add,callback,orig_title) 
     dialog.show()
   }
   def newFudaSet(view:View){
