@@ -56,16 +56,6 @@
     <item>ランダム</item>
     <item>歌番号順</item>
   </string-array>
-  <string name="conf_reader_list">詠み手</string>
-  <string name="conf_reader_list_summary">外部/内部ストレージから読み込む方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
-  <string name="scan_reader_title">探索対象パス</string>
-  <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
-  <string name="scan_reader_addition">追加でスキャンさせたいパスを下記に入力して下さい</string>
-  <string name="scan_reader_invalid_path">テキストボックスに入力されたパスはディレクトリではありません</string>
-
-  <string name="conf_audio_volume">音量</string>
-  <string name="conf_audio_volume_summary">詠み上げ時の端末の音量</string>
-  <string name="volume_set_each_play">詠み上げ開始時にこの音量に設定し，終了後に元に戻す</string>
 
   <string name="conf_equalizer">イコライザー</string>
   <string name="conf_equalizer_summary">周波数帯ごとの音量調整</string>
@@ -80,7 +70,7 @@
   <string name="equalizer_not_available_in_opensles">OpenSL ESモードではイコライザーは使えません</string>
 
   <string name="conf_autoplay">自動詠み上げ</string>
-  <string name="conf_autoplay_summary">前の札が詠み終わったら自動的に次の札を詠む</string>
+  <string name="conf_autoplay_summary">前の札を詠み終えたら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
   <string name="autoplay_repeat">全部詠み終えるとシャッフルして最初から続ける</string>
@@ -224,6 +214,19 @@
   <string name="conf_num_2">2回</string>
 
   <string name="conf_joka_caveat">※実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意</string>
+
+  <!-- CATEGORY_VOICE -->
+  <string name="category_voice">音源</string>
+  <string name="conf_reader_list">詠み手</string>
+  <string name="conf_reader_list_summary">外部/内部ストレージから読み込む方法は[設定]-&gt;[ヘルプ]を見て下さい</string>
+  <string name="scan_reader_title">探索対象パス</string>
+  <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
+  <string name="scan_reader_addition">追加でスキャンさせたいパスを下記に入力して下さい</string>
+  <string name="scan_reader_invalid_path">テキストボックスに入力されたパスはディレクトリではありません</string>
+
+  <string name="conf_audio_volume">音量</string>
+  <string name="conf_audio_volume_summary">詠み上げ時の端末の音量</string>
+  <string name="volume_set_each_play">詠み上げ開始時にこの音量に設定し，終了後に元に戻す</string>
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>

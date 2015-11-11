@@ -33,18 +33,6 @@
       android:widgetLayout="@layout/conf_current_value"
       unit="@string/conf_unit_second"
       />
-    <karuta.hpnpwd.wasuramoti.AudioVolumePreference
-      android:key="audio_volume"
-      android:title="@string/conf_audio_volume"
-      android:summary="@string/conf_audio_volume_summary"
-      android:widgetLayout="@layout/conf_current_value"
-      />
-    <karuta.hpnpwd.wasuramoti.ReaderListPreference
-      android:key="reader_path"
-      android:title="@string/conf_reader_list"
-      android:summary="@string/conf_reader_list_summary"
-      android:widgetLayout="@layout/conf_current_value"
-      />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_order" android:key="category_order">
     <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
@@ -69,6 +57,20 @@
       android:summary="@string/conf_read_order_joka_summary"
       android:widgetLayout="@layout/conf_current_value"
       android:defaultValue="upper_1,lower_1"
+      />
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_voice">
+    <karuta.hpnpwd.wasuramoti.AudioVolumePreference
+      android:key="audio_volume"
+      android:title="@string/conf_audio_volume"
+      android:summary="@string/conf_audio_volume_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
+    <karuta.hpnpwd.wasuramoti.ReaderListPreference
+      android:key="reader_path"
+      android:title="@string/conf_reader_list"
+      android:summary="@string/conf_reader_list_summary"
+      android:widgetLayout="@layout/conf_current_value"
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_other">

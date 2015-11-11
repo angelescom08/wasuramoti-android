@@ -73,17 +73,6 @@
     <item>POEM_NUM</item>
   </string-array>
 
-  <string name="conf_reader_list">Reciter</string>
-  <string name="conf_reader_list_summary">See `Config`-&gt;`Help` for how to load audio file from internal/external storage.</string>
-  <string name="scan_reader_title">Scan Path</string>
-  <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
-  <string name="scan_reader_addition">You can add scan path in following textbox:</string>
-  <string name="scan_reader_invalid_path">The path in text box is not a valid directory. </string>
-
-  <string name="conf_audio_volume">Volume</string>
-  <string name="conf_audio_volume_summary">Set audio volume of device when playing.</string>
-  <string name="volume_set_each_play">Set volume when it starts playing, and reset after it.</string>
-
   <string name="conf_equalizer">Equalizer</string>
   <string name="conf_equalizer_summary">Set volume for each frequency range.</string>
 
@@ -265,6 +254,19 @@
   <string name="autoplay_enable">Start playing next poem when finished.</string>
   <string name="autoplay_span">Span:</string>
   <string name="autoplay_repeat">After finishing all, shuffle and continue.</string>
+
+  <!-- CATEGORY_VOICE -->
+  <string name="category_voice">Voice</string>
+  <string name="conf_reader_list">Reciter</string>
+  <string name="conf_reader_list_summary">See `Config`-&gt;`Help` for how to load audio file from internal/external storage.</string>
+  <string name="scan_reader_title">Scan Path</string>
+  <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
+  <string name="scan_reader_addition">You can add scan path in following textbox:</string>
+  <string name="scan_reader_invalid_path">The path in text box is not a valid directory. </string>
+
+  <string name="conf_audio_volume">Volume</string>
+  <string name="conf_audio_volume_summary">Set audio volume of device when playing.</string>
+  <string name="volume_set_each_play">Set volume when it starts playing, and reset after it.</string>
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>

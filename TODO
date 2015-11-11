@@ -28,6 +28,8 @@ Priority High:
         - In Android >= 5.x, able to show in lock screen ?
   * Solve ANR
     - Add timeout for decoding ?
+  * Only delete file created by this app in Utils.deleteCache
+    - Maybe android automatically creates some system files in cache directory ?
 Priority Medium-High:
   * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
   * Configure poem size using pinch zoom
