@@ -18,13 +18,13 @@
             android:layout_height="wrap_content"
             android:layout_width="96sp"
             android:text="@string/fudaset_edit"
-            android:onClick="editFudaSet"
+            android:id="@+id/button_fudaset_edit"
             />
      <Button
             android:layout_height="wrap_content"
             android:layout_width="96sp"
             android:text="@string/fudaset_delete"
-            android:onClick="deleteFudaSet"
+            android:id="@+id/button_fudaset_delete"
             />
   </LinearLayout>
   <include layout="@layout/horizontal_rule" />
@@ -32,13 +32,13 @@
          android:layout_height="wrap_content"
          android:layout_width="192sp"
          android:text="@string/fudaset_new"
-         android:onClick="newFudaSet"
+         android:id="@+id/button_fudaset_new"
          />
   <Button
          android:layout_height="wrap_content"
          android:layout_width="192sp"
          android:text="@string/fudaset_copymerge"
-         android:onClick="copymergeFudaSet"
+         android:id="@+id/button_fudaset_copymerge"
          />
 </LinearLayout>
 </ScrollView>

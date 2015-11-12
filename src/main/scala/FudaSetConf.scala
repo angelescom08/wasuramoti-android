@@ -18,11 +18,21 @@ class FudaSetWithSize(val title:String, val num:Int){
   }
 
 }
-class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with View.OnClickListener{
   var listItems = new ArrayList[FudaSetWithSize]()
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+
+  val buttonMapping = Map(
+      R.id.button_fudaset_edit -> editFudaSet _,
+      R.id.button_fudaset_new ->  newFudaSet _,
+      R.id.button_fudaset_delete ->  deleteFudaSet _,
+      R.id.button_fudaset_copymerge -> copymergeFudaSet _
+    )
+  override def onClick(view:View){
+    buttonMapping.get(view.getId).foreach{_()}
+  }
 
   override def getAbbrValue():String = Globals.db_lock.synchronized{
     val title = getPersistedString("")
@@ -83,65 +93,55 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     cursor.close()
     // db.close()
     adapter.get.notifyDataSetChanged()
+    for(id <- buttonMapping.keys){
+      view.findViewById(id).setOnClickListener(this)
+    }
     return view
   }
-}
-
-trait FudaSetTrait{
-  this:Context =>
-  def getSpinnerSelected(view:View):(ArrayAdapter[FudaSetWithSize],Int) = {
-    val spinner = view.getRootView().findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
-    val adapter = spinner.getAdapter().asInstanceOf[ArrayAdapter[FudaSetWithSize]]
-    val pos = spinner.getSelectedItemPosition()
-    return (adapter,pos)
-  }
-  def editFudaSetBase(view:View,is_add:Boolean,orig_fs:FudaSetWithSize=null){
-    val (adapter,adapter_pos) = getSpinnerSelected(view)
+  def editFudaSetBase(is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val callback = (fudaset_with_size:FudaSetWithSize)=>{
       if(is_add){
-        adapter.add(fudaset_with_size)
-        adapter.notifyDataSetChanged()
-        val spinner = view.getRootView.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
-        if(spinner != null){
-          spinner.setSelection(adapter.getCount-1)
-        }
+        adapter.get.add(fudaset_with_size)
+        adapter.get.notifyDataSetChanged()
+        spinner.get.setSelection(adapter.get.getCount-1)
 
       }else{
-        adapter.remove(orig_fs)
-        adapter.insert(fudaset_with_size,adapter_pos)
+        val pos = spinner.get.getSelectedItemPosition
+        adapter.get.remove(orig_fs)
+        adapter.get.insert(fudaset_with_size,pos)
       }
     }
     val orig_title = Option(orig_fs).map(_.title).getOrElse("")
-    val dialog = new FudaSetEditDialog(this,is_add,callback,orig_title) 
+    val dialog = new FudaSetEditDialog(context,is_add,callback,orig_title) 
     dialog.show()
   }
-  def newFudaSet(view:View){
-    editFudaSetBase(view, true)
+  def newFudaSet(){
+    editFudaSetBase(true)
   }
 
-  def editFudaSet(view: View){
-    val (adapter,pos) = getSpinnerSelected(view)
+  def editFudaSet(){
+    val pos = spinner.get.getSelectedItemPosition
     if(pos == AdapterView.INVALID_POSITION){
       return
     }
-    val fs = adapter.getItem(pos)
-    editFudaSetBase(view, false, fs)
+    val fs = adapter.get.getItem(pos)
+    editFudaSetBase(false, fs)
   }
-  def deleteFudaSet(view: View){ Globals.db_lock.synchronized{
-    val (adapter,pos) = getSpinnerSelected(view)
+  def deleteFudaSet(){ Globals.db_lock.synchronized{
+    val pos = spinner.get.getSelectedItemPosition
     if(pos == AdapterView.INVALID_POSITION){
       return
     }
-    val fs = adapter.getItem(pos)
-    val message = getResources().getString(R.string.fudaset_confirmdelete,fs.title)
-    Utils.confirmDialog(this,Left(message), () => Globals.db_lock.synchronized{
+    val fs = adapter.get.getItem(pos)
+    val message = context.getResources.getString(R.string.fudaset_confirmdelete,fs.title)
+    Utils.confirmDialog(context,Left(message), () => Globals.db_lock.synchronized{
       val db = Globals.database.get.getWritableDatabase
       db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
       db.close()
-      adapter.remove(fs)
+      adapter.get.remove(fs)
     })
   }}
-  def copymergeFudaSet(view: View){
-    new FudaSetCopyMergeDialog(this).show()
+  def copymergeFudaSet(){
+    new FudaSetCopyMergeDialog(context).show()
   }
 }

@@ -84,7 +84,7 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
   }
 }
 
-class ConfActivity extends PreferenceActivity with FudaSetTrait with WasuramotiBaseTrait {
+class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
 
   override def onCreate(savedInstanceState: Bundle) {

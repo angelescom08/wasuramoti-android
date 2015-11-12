@@ -20,6 +20,10 @@ class FudaSetEditDialog(
       R.id.fudasetedit_help_html -> helpHtmlClicked _
     )
 
+  override def onClick(view:View){
+    buttonMapping.get(view.getId).foreach{_()}
+  }
+
   var data_id = None:Option[Long]
 
   def selectFudasetByTitle(title:String):(Long,String) = {
@@ -58,15 +62,12 @@ class FudaSetEditDialog(
       this.findViewById(id).setOnClickListener(this)
     }
   }
-  override def onClick(view:View){
-    buttonMapping.get(view.getId).foreach{_(view)}
-  }
 
-  def helpHtmlClicked(view:View){
+  def helpHtmlClicked(){
     Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
   }
 
-  def buttonOk(view:View){
+  def buttonOk(){
    Globals.db_lock.synchronized{
       val dialog = this
       val title_view = this.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
@@ -107,11 +108,11 @@ class FudaSetEditDialog(
     }
   }
 
-  def buttonCancel(view:View){
+  def buttonCancel(){
     dismiss()
   }
 
-  def buttonFudasetEditList(view:View){
+  def buttonFudasetEditList(){
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     val kms = makeKimarijiSetFromBodyView(body_view) match{
       case None => ""
