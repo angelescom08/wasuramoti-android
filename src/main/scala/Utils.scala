@@ -740,3 +740,21 @@ object Utils {
 class AlreadyReportedException(s:String) extends Exception(s){
 }
 
+trait CustomAlertDialogTrait{
+  self:AlertDialog =>
+  def doWhenClose(view:View)
+  def setViewAndButton(view:View){
+    self.setView(view)
+    self.setButton(DialogInterface.BUTTON_POSITIVE,self.getContext.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
+      override def onClick(dialog:DialogInterface,which:Int){
+        doWhenClose(view)
+        dismiss()
+      }
+    })
+    self.setButton(DialogInterface.BUTTON_NEGATIVE,self.getContext.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){
+      override def onClick(dialog:DialogInterface,which:Int){
+        dismiss()
+      }
+    })
+  }
+}

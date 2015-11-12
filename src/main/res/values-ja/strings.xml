@@ -271,6 +271,7 @@
   <string name="fudaset_edit">編集</string>
   <string name="fudaset_new">新規作成</string>
   <string name="fudaset_copymerge">複製/合成</string>
+  <string name="fudaset_copymerge_title">札セットの複製/合成</string>
 
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの作成/編集</string>

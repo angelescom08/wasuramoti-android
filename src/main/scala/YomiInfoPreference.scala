@@ -117,7 +117,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   }
 }
 
-class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
+class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
     val show_btn = view.findViewById(R.id.yomi_info_show_info_button).asInstanceOf[CheckBox]
@@ -158,7 +158,7 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   }
 }
 
-class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with YomiInfoPreferenceSubDialogTrait{
+class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val japanese_font = view.findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
     val furigana_font = view.findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]
@@ -207,24 +207,6 @@ trait YomiInfoPreferenceTrait{
   }
 }
 
-trait YomiInfoPreferenceSubDialogTrait{
-  self:AlertDialog =>
-  def doWhenClose(view:View)
-  def setViewAndButton(view:View){
-    self.setView(view)
-    self.setButton(DialogInterface.BUTTON_POSITIVE,self.getContext.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
-      override def onClick(dialog:DialogInterface,which:Int){
-        doWhenClose(view)
-        dismiss()
-      }
-    })
-    self.setButton(DialogInterface.BUTTON_NEGATIVE,self.getContext.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){
-      override def onClick(dialog:DialogInterface,which:Int){
-        dismiss()
-      }
-    })
-  }
-}
 class QuickConfigDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val listener = new DialogInterface.OnClickListener{

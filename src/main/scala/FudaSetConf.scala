@@ -141,4 +141,7 @@ trait FudaSetTrait{
       adapter.remove(fs)
     })
   }}
+  def copymergeFudaSet(view: View){
+    new FudaSetCopyMergeDialog(this).show()
+  }
 }
