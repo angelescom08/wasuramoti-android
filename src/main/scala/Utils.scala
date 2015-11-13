@@ -12,7 +12,7 @@ import _root_.android.text.method.LinkMovementMethod
 import _root_.android.os.{Environment,SystemClock}
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
-import _root_.android.widget.{TextView,Button}
+import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter}
 import _root_.android.content.pm.{ResolveInfo,PackageManager}
 import _root_.android.net.Uri
 
@@ -734,6 +734,12 @@ object Utils {
         case _ => STREAM_MUSIC
       }
     }.getOrElse(STREAM_MUSIC)
+  }
+
+  def getCheckedItemsFromListView[T](container:ListView):Seq[T] = {
+    val poss = container.getCheckedItemPositions()
+    val adapter = container.getAdapter().asInstanceOf[ArrayAdapter[T]]
+    (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_) }
   }
 }
 

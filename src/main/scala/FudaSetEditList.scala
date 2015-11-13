@@ -98,9 +98,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     addItemsToListView()
     val get_num_list = ()=> {
-      val poss = container_view.getCheckedItemPositions()
-      val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
-      (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_).fudanum }.toList
+      Utils.getCheckedItemsFromListView[FudaListItem](container_view).map(_.fudanum).toList
     }
 
     val update_fudanum = ()=> {

@@ -61,10 +61,10 @@ class FudaSetEditDialog(
       val dialog = this
       val title_view = this.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
       val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-      val title = title_view.getText().toString()
+      val title = title_view.getText.toString
       if(TextUtils.isEmpty(title)){
         Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-        return()
+        return
       }
       val db = Globals.database.get.getReadableDatabase
       val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title"),"title = ?",Array(title),null,null,null,null)

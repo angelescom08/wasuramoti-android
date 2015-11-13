@@ -591,7 +591,7 @@ object FudaListHelper{
   def selectFudasetAll():Array[(String,Int)] = {
     val res = mutable.Buffer[(String,Int)]()
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,"id asc",null)
     cursor.moveToFirst()
     for( i <- 0 until cursor.getCount ){
       res += ((cursor.getString(0), cursor.getInt(1)))

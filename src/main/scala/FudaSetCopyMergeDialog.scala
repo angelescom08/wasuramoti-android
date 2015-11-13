@@ -3,8 +3,9 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.view.{View,LayoutInflater}
 import _root_.android.os.Bundle
 import _root_.android.content.Context
-import _root_.android.widget.{ArrayAdapter,ListView}
+import _root_.android.widget.{ArrayAdapter,ListView,EditText}
 import _root_.android.app.AlertDialog
+import _root_.android.text.TextUtils
 
 class FudaSetCopyMergeDialog(context:Context) extends AlertDialog(context) with CustomAlertDialogTrait{
 
@@ -22,12 +23,22 @@ class FudaSetCopyMergeDialog(context:Context) extends AlertDialog(context) with 
   }
 
   override def doWhenClose(view:View){
-    // TODO: implement this
+    val title_view = view.findViewById(R.id.fudasetcopymerge_name).asInstanceOf[EditText]
+    val title = title_view.getText.toString
+    if(TextUtils.isEmpty(title)){
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
+      return
+    }
+    val items = Utils.getCheckedItemsFromListView(view.findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView])
+    if(items.isEmpty){
+      Utils.messageDialog(context,Right(R.string.fudaset_copymerge_notchecked),{()=>show()})
+      return
+    }
+    // TODO: save copy/merged fuda set to DB
   }
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset_copymerge, null)
     addItemsToListView(view)
-    // TODO implement this
     setTitle(R.string.fudaset_copymerge_title)
     setViewAndButton(view)
     super.onCreate(state)
