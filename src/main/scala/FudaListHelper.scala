@@ -588,18 +588,31 @@ object FudaListHelper{
     //db.close()
     (did,body)
   }
-  def selectFudasetAll():Array[(String,Int)] = {
-    val res = mutable.Buffer[(String,Int)]()
+  def selectFudasetAll():Array[(Long,String,Int)] = {
+    val res = mutable.Buffer[(Long,String,Int)]()
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,"id asc",null)
+    val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title","set_size"),null,null,null,null,"id ASC",null)
     cursor.moveToFirst()
     for( i <- 0 until cursor.getCount ){
-      res += ((cursor.getString(0), cursor.getInt(1)))
+      res += ((cursor.getLong(0),cursor.getString(1), cursor.getInt(2)))
       cursor.moveToNext()
     }
     cursor.close()
     //db.close()
     res.toArray
+  }
+  def queryMergedFudaset(ids:Seq[Long]):Option[(String,Int)] = {
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.rawQuery(s"SELECT body FROM ${Globals.TABLE_FUDASETS} WHERE id IN (${ids.mkString(",")})",null)
+    val kimaset = mutable.Set[String]()
+    cursor.moveToFirst
+    for( i <- 0 until cursor.getCount ){
+      val body = cursor.getString(0)
+      kimaset ++= body.split(" ")
+      cursor.moveToNext()
+    }
+    cursor.close()
+    TrieUtils.makeKimarijiSet(kimaset.toSeq)
   }
 }
 
