@@ -77,21 +77,13 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
-    val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
-    cursor.moveToFirst()
     listItems.clear()
-    for( i <- 0 until cursor.getCount){
-      val title = cursor.getString(0)
-      val num = cursor.getInt(1)
+    for(((title,num),i) <- FudaListHelper.selectFudasetAll.zipWithIndex){
       listItems.add(new FudaSetWithSize(title,num))
       if(title == persisted){
         spin.setSelection(i)
       }
-      cursor.moveToNext()
     }
-    cursor.close()
-    // db.close()
     adapter.get.notifyDataSetChanged()
     for(id <- buttonMapping.keys){
       view.findViewById(id).setOnClickListener(this)

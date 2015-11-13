@@ -26,17 +26,6 @@ class FudaSetEditDialog(
 
   var data_id = None:Option[Long]
 
-  def selectFudasetByTitle(title:String):(Long,String) = {
-    val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","body"),"title = ?",Array(title),null,null,null,null)
-    cursor.moveToFirst()
-    val did = cursor.getLong(0)
-    val body = cursor.getString(1)
-    cursor.close()
-    //db.close()
-    (did,body)
-  }
-
   def makeKimarijiSetFromBodyView(body_view:LocalizationEditText):Option[(String,Int)] = {
     val PATTERN_HIRAGANA = "[あ-ん]+".r
     var text = body_view.getLocalizationText()
@@ -52,7 +41,7 @@ class FudaSetEditDialog(
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     if(!is_add){
       title_view.setText(orig_title)
-      val (did,body) = selectFudasetByTitle(orig_title)
+      val (did,body) = FudaListHelper.selectFudasetByTitle(orig_title)
       body_view.setLocalizationText(body)
       data_id = Some(did)
     }

@@ -4,7 +4,9 @@ import _root_.android.content.{Context,ContentValues}
 import _root_.android.database.CursorIndexOutOfBoundsException
 import _root_.android.database.sqlite.SQLiteDatabase
 import _root_.android.text.TextUtils
+
 import scala.util.Random
+import scala.collection.mutable
 
 // According to one of the Android framework engineer, there is no need to close the database in content provider.
 // In fact, if we close it manually with SQLiteDatabase.close() method, there seems to occur exception such as
@@ -550,7 +552,7 @@ object FudaListHelper{
   def isMemorized(fudanum:Int):Boolean = {
     getMemoraziedFlag(Globals.database.get.getReadableDatabase,fudanum)
   }
-  def switchMemorized(fudanum:Int){
+  def switchMemorized(fudanum:Int){ Globals.db_lock.synchronized {
     if(fudanum == 0){
       // TODO: include joka to memorization mode
       return
@@ -566,16 +568,39 @@ object FudaListHelper{
         db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = $newm, skip = $news WHERE num = '$fudanum'")
     })
     db.close()
-  }
+  } }
 
-  def resetMemorizedAll(){
+  def resetMemorizedAll(){ Globals.db_lock.synchronized {
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () => {
         db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = 0")
     })
     db.close()
-  }
+  } }
 
+  def selectFudasetByTitle(title:String):(Long,String) = {
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","body"),"title = ?",Array(title),null,null,null,null)
+    cursor.moveToFirst()
+    val did = cursor.getLong(0)
+    val body = cursor.getString(1)
+    cursor.close()
+    //db.close()
+    (did,body)
+  }
+  def selectFudasetAll():Array[(String,Int)] = {
+    val res = mutable.Buffer[(String,Int)]()
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.query(Globals.TABLE_FUDASETS,Array("title","set_size"),null,null,null,null,null,null)
+    cursor.moveToFirst()
+    for( i <- 0 until cursor.getCount ){
+      res += ((cursor.getString(0), cursor.getInt(1)))
+      cursor.moveToNext()
+    }
+    cursor.close()
+    //db.close()
+    res.toArray
+  }
 }
 
 // vim: set ts=2 sw=2 et:
