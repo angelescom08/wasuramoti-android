@@ -8,6 +8,8 @@ import _root_.android.text.TextUtils
 import scala.util.Random
 import scala.collection.mutable
 
+case class FudaSet(id:Long, title:String, body:String, set_size: Int)
+
 // According to one of the Android framework engineer, there is no need to close the database in content provider.
 // In fact, if we close it manually with SQLiteDatabase.close() method, there seems to occur exception such as
 // `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed.`
@@ -578,27 +580,27 @@ object FudaListHelper{
     db.close()
   } }
 
-  def selectFudasetByTitle(title:String):(Long,String) = {
+  def selectFudasetByTitle(title:String):Option[FudaSet] = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","body"),"title = ?",Array(title),null,null,null,null)
-    cursor.moveToFirst()
-    val did = cursor.getLong(0)
-    val body = cursor.getString(1)
-    cursor.close()
-    //db.close()
-    (did,body)
-  }
-  def selectFudasetAll():Array[(Long,String,Int)] = {
-    val res = mutable.Buffer[(Long,String,Int)]()
-    val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title","set_size"),null,null,null,null,"id ASC",null)
-    cursor.moveToFirst()
-    for( i <- 0 until cursor.getCount ){
-      res += ((cursor.getLong(0),cursor.getString(1), cursor.getInt(2)))
-      cursor.moveToNext()
+    val cs = db.query(Globals.TABLE_FUDASETS,Array("id","title","body","set_size"),"title = ?",Array(title),null,null,null,null)
+    val res = if(cs.moveToFirst){
+      Some(FudaSet(cs.getLong(0),cs.getString(1),cs.getString(2),cs.getInt(3)))
+    }else{
+      None
     }
-    cursor.close()
-    //db.close()
+    cs.close
+    res
+  }
+  def selectFudasetAll():Array[FudaSet] = {
+    val res = mutable.Buffer[FudaSet]()
+    val db = Globals.database.get.getReadableDatabase
+    val cs = db.query(Globals.TABLE_FUDASETS,Array("id","title","body","set_size"),null,null,null,null,"id ASC",null)
+    cs.moveToFirst
+    for( i <- 0 until cs.getCount ){
+      res += FudaSet(cs.getLong(0),cs.getString(1),cs.getString(2),cs.getInt(3))
+      cs.moveToNext
+    }
+    cs.close
     res.toArray
   }
   def queryMergedFudaset(ids:Seq[Long]):Option[(String,Int)] = {
@@ -609,10 +611,21 @@ object FudaListHelper{
     for( i <- 0 until cursor.getCount ){
       val body = cursor.getString(0)
       kimaset ++= body.split(" ")
-      cursor.moveToNext()
+      cursor.moveToNext
     }
-    cursor.close()
+    cursor.close
     TrieUtils.makeKimarijiSet(kimaset.toSeq)
+  }
+  def isDuplicatedFudasetTitle(title:String,is_add:Boolean,data_id:Option[Long]):Boolean = {
+    if(!is_add && data_id.isEmpty){
+      throw new Exception(s"this method does not accept is_add=${is_add}, data_id=${data_id}")
+    }
+    val fs = FudaListHelper.selectFudasetByTitle(title)
+    if(!is_add && fs.nonEmpty){
+      data_id != fs.map{_.id}
+    }else{
+      is_add && fs.nonEmpty
+    }
   }
 }
 

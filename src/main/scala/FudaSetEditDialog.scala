@@ -41,9 +41,9 @@ class FudaSetEditDialog(
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     if(!is_add){
       title_view.setText(orig_title)
-      val (did,body) = FudaListHelper.selectFudasetByTitle(orig_title)
-      body_view.setLocalizationText(body)
-      data_id = Some(did)
+      val fs = FudaListHelper.selectFudasetByTitle(orig_title)
+      fs.foreach{ f => body_view.setLocalizationText(f.body) }
+      data_id = fs.map{_.id}
     }
     val help_view = this.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
     help_view.setText(Html.fromHtml(context.getString(R.string.fudasetedit_help_html)))
@@ -66,21 +66,9 @@ class FudaSetEditDialog(
         Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
         return
       }
-      val db = Globals.database.get.getReadableDatabase
-      val cursor = db.query(Globals.TABLE_FUDASETS,Array("id","title"),"title = ?",Array(title),null,null,null,null)
-      val count = cursor.getCount()
-      cursor.moveToFirst()
-      val is_duplicate =
-        if(!is_add && count > 0){
-          data_id.get != cursor.getLong(0)
-        }else{
-          is_add && count > 0
-        }
-      cursor.close()
-      //db.close()
-      if(is_duplicate){
+      if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
         Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
-        return()
+        return
       }
       makeKimarijiSetFromBodyView(body_view) match {
       case None =>

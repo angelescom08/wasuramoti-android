@@ -78,9 +78,9 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
     listItems.clear()
-    for(((id,title,num),i) <- FudaListHelper.selectFudasetAll.zipWithIndex){
-      listItems.add(new FudaSetWithSize(title,num))
-      if(title == persisted){
+    for((fs,i) <- FudaListHelper.selectFudasetAll.zipWithIndex){
+      listItems.add(new FudaSetWithSize(fs.title,fs.set_size))
+      if(fs.title == persisted){
         spin.setSelection(i)
       }
     }

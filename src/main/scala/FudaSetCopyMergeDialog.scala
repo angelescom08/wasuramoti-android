@@ -17,7 +17,7 @@ class FudaSetCopyMergeDialog(context:Context) extends AlertDialog(context) with 
 
   def addItemsToListView(view:View){
     val container_view = view.findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView]
-    val setlist = FudaListHelper.selectFudasetAll.map{ x => new FudaSetItem(x._1,x._2,x._3) }
+    val setlist = FudaListHelper.selectFudasetAll.map{ fs => new FudaSetItem(fs.id,fs.title,fs.set_size) }
     val adapter = new ArrayAdapter[FudaSetItem](context,R.layout.my_simple_list_item_multiple_choice,setlist)
     container_view.setAdapter(adapter)
   }
@@ -27,6 +27,10 @@ class FudaSetCopyMergeDialog(context:Context) extends AlertDialog(context) with 
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
       Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
+      return
+    }
+    if(FudaListHelper.isDuplicatedFudasetTitle(title,true,None)){
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated),{()=>show()})
       return
     }
     val items = Utils.getCheckedItemsFromListView[FudaSetItem](view.findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView])

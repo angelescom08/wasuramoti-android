@@ -32,6 +32,7 @@ Priority High:
     - Maybe android automatically creates some system files in cache directory ?
   * Use fudaset.id instead of fudaset.title when quering the DB
 Priority Medium-High:
+  * Use scalaz
   * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
   * Configure poem size using pinch zoom
   * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
