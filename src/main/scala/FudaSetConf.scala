@@ -90,13 +90,15 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     }
     return view
   }
+  def addFudaSetToSpinner(fs:FudaSetWithSize){
+    adapter.get.add(fs)
+    adapter.get.notifyDataSetChanged
+    spinner.get.setSelection(adapter.get.getCount-1)
+  }
   def editFudaSetBase(is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val callback = (fudaset_with_size:FudaSetWithSize)=>{
       if(is_add){
-        adapter.get.add(fudaset_with_size)
-        adapter.get.notifyDataSetChanged()
-        spinner.get.setSelection(adapter.get.getCount-1)
-
+        addFudaSetToSpinner(fudaset_with_size)
       }else{
         val pos = spinner.get.getSelectedItemPosition
         adapter.get.remove(orig_fs)
@@ -134,6 +136,6 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     })
   }}
   def copymergeFudaSet(){
-    new FudaSetCopyMergeDialog(context).show()
+    new FudaSetCopyMergeDialog(context, addFudaSetToSpinner).show()
   }
 }
