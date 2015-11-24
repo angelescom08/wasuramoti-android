@@ -606,7 +606,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         // which occurs at beginning of wav when using bluetooth speaker.
         // However, note that taking silence_time_{begin,end} too much can consume much more memory.
         val silence_time_begin = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
-        val silence_time_end = (Utils.getPrefAs[Double]("wav_end_read", 0.1, 5.0)*1000.0).toInt
+        val silence_time_end = (Utils.getPrefAs[Double]("wav_end_read", 0.2, 5.0)*1000.0).toInt
         add_to_audio_queue(Right(silence_time_begin),true)
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()

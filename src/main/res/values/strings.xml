@@ -283,7 +283,7 @@
   <!-- CATEGORY_DISPLAY -->
   <string name="category_display">Display</string>
   <string name="conf_show_message_when_moved">Show Msg when Moved</string>
-  <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message</string>
+  <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message.</string>
   <string name="message_when_moved">Moved to next poem</string>
   <string name="conf_show_current_index">Show Number</string>
   <string name="conf_show_current_index_summary">Show how many number of poem played from the beginning.</string>

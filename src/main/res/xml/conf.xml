@@ -153,7 +153,7 @@
           android:title="@string/conf_wav_end_read"
           android:summary="@string/conf_wav_end_read_summary"
           android:numeric="decimal"
-          android:defaultValue="0.1"
+          android:defaultValue="0.2"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />
