@@ -31,8 +31,13 @@ Priority High:
   * Only delete file created by this app in Utils.deleteCache
     - Maybe android automatically creates some system files in cache directory ?
   * Use fudaset.id instead of fudaset.title when quering the DB
+  * Forbid deleting last poem set
+  * In "Change Inteded Use", show the description of each mode
+    - "Competitive Karuta" ... It reads joka, and read order is different.
+    - "Recreative Karuta" ... Plays 2nd Half twice
+    - "Study 100 Poems" ... Memorize mode is On
 Priority Medium-High:
-  * Use scalaz
+  * Use scalaz, shapeless
   * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
   * Configure poem size using pinch zoom
   * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
