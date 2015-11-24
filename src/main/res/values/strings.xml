@@ -291,7 +291,9 @@
   <!-- CATEGORY_TIME -->
   <string name="category_time">Time</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
-  <string name="conf_wav_begin_read_summary">How many seconds to wait before playing.</string>
+  <string name="conf_wav_begin_read_summary">Add silence before playing the poem.</string>
+  <string name="conf_wav_end_read">End of Play</string>
+  <string name="conf_wav_end_read_summary">Add silence after playing the poem.</string>
   <string name="conf_wav_span_simokami">Interval</string>
   <string name="conf_wav_span_simokami_summary">Interval between each half of the poem.</string>
   <string name="conf_dimlock_minutes">Lock Screen</string>

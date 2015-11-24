@@ -122,13 +122,13 @@
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_time">
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="wav_begin_read"
-          android:title="@string/conf_wav_begin_read"
-          android:summary="@string/conf_wav_begin_read_summary"
-          android:numeric="decimal"
-          android:defaultValue="0.5"
+          android:key="dimlock_minutes"
+          android:title="@string/conf_dimlock_minutes"
+          android:summary="@string/conf_dimlock_minutes_summary"
+          android:numeric="integer"
+          android:defaultValue="5"
           android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_second"
+          unit="@string/conf_unit_minute"
           />
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
           android:key="wav_span_simokami"
@@ -140,13 +140,22 @@
           unit="@string/conf_unit_second"
           />
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
-          android:key="dimlock_minutes"
-          android:title="@string/conf_dimlock_minutes"
-          android:summary="@string/conf_dimlock_minutes_summary"
-          android:numeric="integer"
-          android:defaultValue="5"
+          android:key="wav_begin_read"
+          android:title="@string/conf_wav_begin_read"
+          android:summary="@string/conf_wav_begin_read_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.5"
           android:widgetLayout="@layout/conf_current_value"
-          unit="@string/conf_unit_minute"
+          unit="@string/conf_unit_second"
+          />
+        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+          android:key="wav_end_read"
+          android:title="@string/conf_wav_end_read"
+          android:summary="@string/conf_wav_end_read_summary"
+          android:numeric="decimal"
+          android:defaultValue="0.1"
+          android:widgetLayout="@layout/conf_current_value"
+          unit="@string/conf_unit_second"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_processing">

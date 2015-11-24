@@ -604,9 +604,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         // we insert additional silence as wave data.
         // Additionally, playing silence as wave file can avoid some weird effect
         // which occurs at beginning of wav when using bluetooth speaker.
-        // Howener, note that taking silence_time too much can consume much more memory.
-        val silence_time = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
-        add_to_audio_queue(Right(silence_time),true)
+        // However, note that taking silence_time_{begin,end} too much can consume much more memory.
+        val silence_time_begin = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
+        val silence_time_end = (Utils.getPrefAs[Double]("wav_end_read", 0.1, 5.0)*1000.0).toInt
+        add_to_audio_queue(Right(silence_time_begin),true)
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()
         val ss = AudioHelper.genReadNumKamiSimoPairs(activity.getApplicationContext,cur_num,next_num)
@@ -652,6 +653,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
           }
         }
+        add_to_audio_queue(Right(silence_time_end),false)
         return(Left(res_queue))
       }catch{
         case e:OggDecodeFailException => return(Right(e))

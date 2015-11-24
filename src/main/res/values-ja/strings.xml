@@ -250,8 +250,10 @@
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">時間</string>
-  <string name="conf_wav_begin_read">詠み始め</string>
-  <string name="conf_wav_begin_read_summary">ボタンを押してから詠み始めるまでの秒数</string>
+  <string name="conf_wav_begin_read">詠みの前の空白</string>
+  <string name="conf_wav_begin_read_summary">ボタンを押してから詠み始めるまでの無音再生</string>
+  <string name="conf_wav_end_read">詠みの後の空白</string>
+  <string name="conf_wav_end_read_summary">詠み終えた後の無音再生</string>
   <string name="conf_wav_span_simokami">間</string>
   <string name="conf_wav_span_simokami_summary">句と句の間の秒数</string>
   <string name="conf_dimlock_minutes">画面ロック</string>

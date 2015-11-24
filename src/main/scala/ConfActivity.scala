@@ -99,7 +99,7 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
       override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
         key match{
           case "read_order_each"|"reader_path"|"read_order_joka"|"joka_enable"|
-            "wav_begin_read"|"wav_span_simokami"|"wav_threshold"|
+            "wav_begin_read"|"wav_end_read"|"wav_span_simokami"|"wav_threshold"|
             "wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
             Globals.forceRefresh = true
           case "read_order" =>
