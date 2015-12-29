@@ -401,6 +401,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
+  def getCurNumInView():Option[Int] = {
+    Option(findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]).flatMap{_.cur_num}
+  }
+
   def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[()=>Unit]=None){
     if(!YomiInfoUtils.showPoemText){
       return
