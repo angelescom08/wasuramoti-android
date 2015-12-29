@@ -7,8 +7,8 @@ object Build extends android.AutoBuild {
     version := "0.9.4",
     versionCode := Some(65),
     scalaVersion := "2.11.7",
-    platformTarget in Android := "android-22",
-    buildToolsVersion in Android := Some("22.0.1"),
+    platformTarget in Android := "android-23",
+    buildToolsVersion in Android := Some("23.0.2"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88
     sourceGenerators in Compile <<= (sourceGenerators in Compile) (g => Seq(g.last)),
     // Android support library >= 20 tries to emulate Material Design instead of Holo design.
