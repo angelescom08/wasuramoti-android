@@ -639,7 +639,11 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val custom = (builder:AlertDialog.Builder) => {
       builder.setView(view).setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
     }
-    Utils.confirmDialog(this,null,on_yes,custom = custom)
+    if(first_config){
+      Utils.messageDialog(this,null,on_yes,custom = custom)
+    }else{
+      Utils.confirmDialog(this,null,on_yes,custom = custom)
+    }
   }
 }
 
