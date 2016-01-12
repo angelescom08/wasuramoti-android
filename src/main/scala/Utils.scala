@@ -320,13 +320,14 @@ object Utils {
     func_no:()=>Unit={()=>Unit},
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
-    val builder = new AlertDialog.Builder(context)
+    val builder = custom(new AlertDialog.Builder(context))
     // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
-    val str = arg match {
-      case Left(x) => x
-      case Right(x) => context.getResources().getString(x)
+    arg match {
+      case Left(x) => builder.setMessage(x)
+      case Right(x) => builder.setMessage(context.getResources().getString(x))
+      case null => // do nothing
     }
-    val dialog:AlertDialog = custom(builder).setMessage(str)
+    val dialog:AlertDialog = builder
     .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
@@ -346,12 +347,13 @@ object Utils {
     func_done:()=>Unit = {()=>Unit},
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
-    val builder = new AlertDialog.Builder(context)
-    val str = arg match {
-      case Left(x) => x
-      case Right(x) => context.getResources().getString(x)
+    val builder = custom(new AlertDialog.Builder(context))
+    arg match {
+      case Left(x) => builder.setMessage(x)
+      case Right(x) => builder.setMessage(context.getResources().getString(x))
+      case null => // do nothing
     }
-    val dialog = custom(builder).setMessage(str)
+    val dialog = builder
       .setPositiveButton(android.R.string.ok,null)
       .create
     showDialogAndSetGlobalRef(dialog, func_done)

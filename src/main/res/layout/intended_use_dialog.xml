@@ -8,6 +8,12 @@
               android:orientation="vertical"
               android:layout_marginBottom="18dip"
               >
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/intended_use_desc"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      />
     <RadioGroup
       android:id="@+id/intended_use_group"
       android:layout_width="fill_parent"
