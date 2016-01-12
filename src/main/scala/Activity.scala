@@ -564,10 +564,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   def changeIntendedUse(first_config:Boolean = true){
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)
     val radio_group = view.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
-    val check_id = Globals.prefs.get.getString("intended_use","competitive") match {
+    val check_id = Globals.prefs.get.getString("intended_use","recreation") match {
       case "study" => R.id.intended_use_study
-      case "recreation" => R.id.intended_use_recreation
-      case _ => R.id.intended_use_competitive
+      case "competitive" => R.id.intended_use_competitive
+      case _ => R.id.intended_use_recreation
     }
     radio_group.check(check_id)
 

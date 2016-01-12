@@ -431,9 +431,18 @@
   </string>
   <string name="intended_use_title">初期設定</string>
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
-  <string name="intended_use_competitive">競技かるた</string>
+  <string name="intended_use_recreation">かるた遊び</string>
+  <string name="intended_use_recreation_desc">
+    上の句→下の句(2回) の順番で詠み上げます．詠み句は上の句のみ表示されます．
+  </string>
   <string name="intended_use_study">百人一首の学習</string>
-  <string name="intended_use_recreation">正月のかるた遊び</string>
+  <string name="intended_use_study_desc">
+    上の句→下の句 の順番で詠み上げます．詠み句は全表示．暗記モードが有効になります．
+  </string>
+  <string name="intended_use_competitive">競技かるた</string>
+  <string name="intended_use_competitive_desc">
+    下の句→上の句 の順番で詠み上げます．詠み句は非表示．序歌が有効になります．
+  </string>
   <string name="intended_use_result">
     <![CDATA[
       下記のように設定を変更しました．「簡易設定」&rArr;「使用目的変更」で再設定できます．
