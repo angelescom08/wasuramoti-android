@@ -562,88 +562,110 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
   def changeIntendedUse(first_config:Boolean = true){
+    val builder = new AlertDialog.Builder(this)
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)
     val radio_group = view.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
-    val check_id = Globals.prefs.get.getString("intended_use","recreation") match {
-      case "study" => R.id.intended_use_study
-      case "competitive" => R.id.intended_use_competitive
-      case _ => R.id.intended_use_recreation
-    }
-    radio_group.check(check_id)
+    (Globals.prefs.get.getString("intended_use","") match {
+      case "study" => Some(R.id.intended_use_study)
+      case "competitive" => Some(R.id.intended_use_competitive)
+      case "recreation" => Some(R.id.intended_use_recreation)
+      case _ => None
+    }).foreach{ radio_group.check(_) }
+    val that = this
+    val listener = new DialogInterface.OnClickListener(){
+      override def onClick(interface:DialogInterface,which:Int){
+        val id = radio_group.getCheckedRadioButtonId
+        if(id == -1){
+          return
+        }
+        val edit = Globals.prefs.get.edit
+        val changes = id match {
+          case R.id.intended_use_competitive => {
+            edit.putString("intended_use","competitive")
+            edit.putString("read_order_each","CUR2_NEXT1")
+            edit.putBoolean("joka_enable",true)
+            edit.putBoolean("memorization_mode",false)
+            YomiInfoUtils.hidePoemText(edit)
+            Array(
+              (R.string.intended_use_poem_text,R.string.quick_conf_hide),
+              (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
+              (R.string.intended_use_joka,R.string.intended_use_joka_on),
+              (R.string.conf_memorization_title,R.string.message_disabled)
+            )
+          }
+          case R.id.intended_use_study => {
+            edit.putString("intended_use","study")
+            edit.putString("read_order_each","CUR1_CUR2")
+            edit.putBoolean("joka_enable",false)
+            edit.putBoolean("memorization_mode",true)
+            YomiInfoUtils.showFull(edit)
+             Array(
+              (R.string.intended_use_poem_text,R.string.quick_conf_full),
+              (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2),
+              (R.string.intended_use_joka,R.string.intended_use_joka_off),
+              (R.string.conf_memorization_title,R.string.message_enabled)
+            )
+          }
+          case R.id.intended_use_recreation => {
+            edit.putString("intended_use","recreation")
+            edit.putString("read_order_each","CUR1_CUR2_CUR2")
+            edit.putBoolean("joka_enable",false)
+            edit.putBoolean("memorization_mode",false)
+            YomiInfoUtils.showOnlyFirst(edit)
+            Array(
+              (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
+              (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2_cur2),
+              (R.string.intended_use_joka,R.string.intended_use_joka_off),
+              (R.string.conf_memorization_title,R.string.message_disabled)
+            )
+          }
+          case _ => Array() // do nothing
+        }
+        edit.commit()
+        FudaListHelper.updateSkipList(getApplicationContext)
+        Globals.forceRefresh = true
 
-    val on_yes = () => {
-      val edit = Globals.prefs.get.edit
-      val id = radio_group.getCheckedRadioButtonId
-      val changes = id match {
-        case R.id.intended_use_competitive => {
-          edit.putString("intended_use","competitive")
-          edit.putString("read_order_each","CUR2_NEXT1")
-          edit.putBoolean("joka_enable",true)
-          edit.putBoolean("memorization_mode",false)
-          YomiInfoUtils.hidePoemText(edit)
-          Array(
-            (R.string.intended_use_poem_text,R.string.quick_conf_hide),
-            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
-            (R.string.intended_use_joka,R.string.intended_use_joka_on),
-            (R.string.conf_memorization_title,R.string.message_disabled)
-          )
+        var html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
+          val kk = getResources.getString(k)
+          val vv = getResources.getString(v)
+          s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
+        }).mkString("<br>") + "</big>"
+        if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+          html += "<big><br>-------<br>" + getResources.getString(R.string.memorization_desc_brief) + "</big>"
         }
-        case R.id.intended_use_study => {
-          edit.putString("intended_use","study")
-          edit.putString("read_order_each","CUR1_CUR2")
-          edit.putBoolean("joka_enable",false)
-          edit.putBoolean("memorization_mode",true)
-          YomiInfoUtils.showFull(edit)
-           Array(
-            (R.string.intended_use_poem_text,R.string.quick_conf_full),
-            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2),
-            (R.string.intended_use_joka,R.string.intended_use_joka_off),
-            (R.string.conf_memorization_title,R.string.message_enabled)
-          )
+        val hcustom = (builder:AlertDialog.Builder) => {
+          builder.setTitle(R.string.intended_use_result_title)
         }
-        case R.id.intended_use_recreation => {
-          edit.putString("intended_use","recreation")
-          edit.putString("read_order_each","CUR1_CUR2_CUR2")
-          edit.putBoolean("joka_enable",false)
-          edit.putBoolean("memorization_mode",false)
-          YomiInfoUtils.showOnlyFirst(edit)
-          Array(
-            (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
-            (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2_cur2),
-            (R.string.intended_use_joka,R.string.intended_use_joka_off),
-            (R.string.conf_memorization_title,R.string.message_disabled)
-          )
-        }
-        case _ => return
+        Utils.generalHtmlDialog(that,Left(html),()=>{
+          Utils.restartActivity(that)
+        },custom = hcustom)
       }
-      edit.commit()
-      FudaListHelper.updateSkipList(getApplicationContext)
-      Globals.forceRefresh = true
-
-      var html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
-        val kk = getResources.getString(k)
-        val vv = getResources.getString(v)
-        s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
-      }).mkString("<br>") + "</big>"
-      if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-        html += "<big><br>-------<br>" + getResources.getString(R.string.memorization_desc_brief) + "</big>"
-      }
-      val hcustom = (builder:AlertDialog.Builder) => {
-        builder.setTitle(R.string.intended_use_result_title)
-      }
-      Utils.generalHtmlDialog(this,Left(html),()=>{
-        Utils.restartActivity(this)
-      },custom = hcustom)
-      ()
     }
-    val custom = (builder:AlertDialog.Builder) => {
-      builder.setView(view).setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
-    }
+    builder.setView(view).setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
+    builder.setPositiveButton(android.R.string.yes,listener)
     if(first_config){
-      Utils.messageDialog(this,null,on_yes,custom = custom)
+      builder.setCancelable(false)
     }else{
-      Utils.confirmDialog(this,null,on_yes,custom = custom)
+      builder.setNegativeButton(android.R.string.no,null)
     }
+    val dialog = builder.create
+    if(first_config && android.os.Build.VERSION.SDK_INT >= 8){
+      dialog.setOnShowListener(new DialogInterface.OnShowListener(){
+        override def onShow(interface:DialogInterface){
+          val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+          val rgp = dialog.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
+          if(rgp != null && button != null){
+            rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+              override def onCheckedChanged(group:RadioGroup,checkedId:Int){
+                button.setEnabled(true)
+              }
+            })
+            button.setEnabled(false)
+          }
+        }
+      })
+    }
+    Utils.showDialogAndSetGlobalRef(dialog)
   }
 }
 
