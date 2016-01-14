@@ -1,14 +1,17 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.Context
-import _root_.android.content.pm.PackageInfo
+import _root_.android.content.{Context,Intent,ComponentName}
+import _root_.android.content.pm.{ResolveInfo,PackageInfo}
 import _root_.android.os.{Build,StatFs}
 import _root_.android.app.ActivityManager
-import _root_.android.util.Log
+import _root_.android.util.{Base64,Log}
+import _root_.android.net.Uri
+
 import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.ByteBuffer
 import _root_.java.nio.channels.FileChannel
 import _root_.java.util.zip.CRC32
+
 import scala.collection.mutable
 
 trait BugReportable{
@@ -57,6 +60,49 @@ object BugReport{
     dir.listFiles.collect{
       case f if f.isFile => s"(name:${f.getName},size:${f.length},crc32:${getCRC(f)})"
     }
+  }
+
+  def showBugReport(context:Context, defaultBugDetail:String){
+    if( android.os.Build.VERSION.SDK_INT < 8 ){
+      Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
+      return
+    }
+    val pm = context.getPackageManager
+    val i_temp = new Intent(Intent.ACTION_VIEW)
+    // dummy data to get list of activities
+    i_temp.setData(Uri.parse("http://www.google.com/"))
+    val list = scala.collection.JavaConversions.asScalaBuffer[ResolveInfo](pm.queryIntentActivities(i_temp,0))
+    if(list.isEmpty){
+      Utils.messageDialog(context,Right(R.string.browser_not_found))
+    }else{
+      val defaultActivities = list.filter{ info =>
+        val filters = new java.util.ArrayList[android.content.IntentFilter]()
+        val activities = new java.util.ArrayList[android.content.ComponentName]()
+        pm.getPreferredActivities(filters,activities,info.activityInfo.packageName)
+        ! activities.isEmpty
+      }
+      // TODO: show activity chooser
+      (defaultActivities ++ list).exists{ ri =>
+        val comp = new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name)
+        val intent = pm.getLaunchIntentForPackage(ri.activityInfo.packageName)
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setComponent(comp)
+        val post_url = context.getResources.getString(R.string.bug_report_url)
+        val mail_addr = context.getResources.getString(R.string.developer_mail_addr)
+        val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
+        val html = context.getResources.getString(R.string.bug_report_html,mail_addr,post_url,bug_report,defaultBugDetail)
+        val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
+        intent.setData(Uri.parse(dataUri))
+        try{
+          context.startActivity(intent)
+          true
+        }catch{
+          case _:android.content.ActivityNotFoundException => false
+        }
+      }
+    }
+    return
   }
 
   def createBugReport(context:Context):String = {

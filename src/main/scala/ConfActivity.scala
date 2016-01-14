@@ -142,7 +142,7 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
     })
     findPreference("bug_report").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {
-        Utils.showBugReport(context,"")
+        BugReport.showBugReport(context,"")
         return false
       }
     })
