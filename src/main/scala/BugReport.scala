@@ -7,7 +7,7 @@ import _root_.android.app.{AlertDialog,ActivityManager}
 import _root_.android.util.{Base64,Log}
 import _root_.android.net.Uri
 import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.TextView
+import _root_.android.widget.{TextView,Button}
 
 import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.ByteBuffer
@@ -74,6 +74,12 @@ object BugReport{
         sendMailToDeveloper(context) 
       }
     })
+    val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]
+    form.setOnClickListener(new View.OnClickListener(){
+      override def onClick(view:View){
+        showAnonymousForm(context)
+      }
+    })
 
     builder.setNegativeButton(android.R.string.cancel,null)
       .setTitle(R.string.conf_bug_report)
@@ -89,7 +95,7 @@ object BugReport{
     context.startActivity(intent) 
   }
 
-  def showAnonymousBugReport(context:Context){
+  def showAnonymousForm(context:Context){
     if( android.os.Build.VERSION.SDK_INT < 8 ){
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
       return
@@ -115,9 +121,8 @@ object BugReport{
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setComponent(comp)
         val post_url = context.getResources.getString(R.string.bug_report_url)
-        val mail_addr = context.getResources.getString(R.string.developer_mail_addr)
         val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
-        val html = context.getResources.getString(R.string.bug_report_html,mail_addr,post_url,bug_report)
+        val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
         val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
         intent.setData(Uri.parse(dataUri))
         try{

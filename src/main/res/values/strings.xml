@@ -429,12 +429,16 @@
   <string name="conf_bug_report">Support Form</string>
   <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
   <string name="bug_report_subject" >About Wasuramoti for Android</string>
+  <string name="bug_report_summary" >You can contact us by either E-Mail or Anonymous Form. Feel free to ask any question, give a request, and report bug.</string>
+  <string name="bug_report_mail_addr" >E-Mail: </string>
+  <string name="bug_report_anonymous_form" >Anonymous Form</string>
+  <string name="bug_report_anonymous_form_notice" >Notice: Some browser may not support anonymous form. Sorry.</string>
   <string name="bug_report_html">
     <![CDATA[
       <html>
         <head>
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>Wasuramoti Support Form</title>
+          <title>Wasuramoti Anonymous Form</title>
           <style type=\"text/css\">
             textarea{
               width: 24em;
@@ -443,22 +447,18 @@
           </style>
         </head>
         <body>
-          <h3>Contact by E-Mail</h3>
-          E-Mail address of developer: <a href=\"mailto:%1$s\">%1$s</a><br/>
-          Feel free to ask any question, give a request, and report bug.<br/>
-          <hr/>
           <h3>FAQ</h3>
           Frequestly asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
           Answer to anonymous question, request, bug report will be published here.<br/>
           <hr/>
           <h3>Anonymous Form</h3>
-          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
+          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
             Anonymous question, request, and bug report:<br/>
             <textarea name=\"bug_detail\"></textarea><br/>
             Clicking `Submit` button will send some information which is useful for debugging.<br/>
             We cannot ask you the detail of the bug if you send bug report anonymously.<br/>
             Therefore, contact us by E-Mail if you want higher possibility to fix the bug.<br/>
-            <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
+            <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"Submit\">
           </form>
         </body>

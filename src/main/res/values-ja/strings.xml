@@ -392,6 +392,10 @@
   <string name="conf_bug_report">サポート窓口</string>
   <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら</string>
   <string name="bug_report_subject" >Android版わすらもちについて</string>
+  <string name="bug_report_summary" >連絡はEメールもしくは匿名フォームで受け付けています．質問，要望，バグ報告何でもどうぞ．</string>
+  <string name="bug_report_mail_addr" >Eメール: </string>
+  <string name="bug_report_anonymous_form" >匿名フォーム</string>
+  <string name="bug_report_anonymous_form_notice" >※ お使いのブラウザによっては匿名フォームは表示できない可能性があるのでご容赦下さい．</string>
   <string name="bug_report_html">
     <![CDATA[
       <!DOCTYPE html>
@@ -399,7 +403,7 @@
         <head>
           <meta charset=\"utf-8\">
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>わすらもちサポート窓口</title>
+          <title>わすらもち匿名フォーム</title>
           <style type=\"text/css\">
             textarea{
               width: 24em;
@@ -408,22 +412,18 @@
           </style>
         </head>
         <body>
-          <h3>メールで連絡</h3>
-          作者のメールアドレス: <a href=\"mailto:%1$s\">%1$s</a><br/>
-          質問，要望，バグ報告何でもどうぞ．<br/>
-          <hr/>
           <h3>FAQ</h3>
           良くある質問: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">公式サイトへのリンク</a><br/>
           匿名フォームへの質問および要望に対する返答や，バグ報告がバグじゃなくて仕様だった場合などはこちらに記載します．<br/>
           <hr/>
           <h3>匿名フォーム</h3>
-          <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
+          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
             匿名の質問，要望，バグ報告はこちら:<br/>
             <textarea name=\"bug_detail\"></textarea><br/>
             「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．<br/>
             匿名のバグ報告は開発者側から詳しい症状をお伺いすることができません．<br/>
             メールで連絡してくれた方が直せる確率は高まります．<br/>
-            <input type=\"hidden\" name=\"bug_device_info\" value=\"%3$s\">
+            <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"送信する\">
           </form>
         </body>
