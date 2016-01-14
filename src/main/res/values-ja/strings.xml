@@ -435,13 +435,28 @@
   <string name="intended_use_recreation_desc">
     上の句→下の句(2回) の順番で詠み上げます．詠み句は上の句のみ表示されます．
   </string>
+  <string name="intended_use_recreation_footnote">
+    <![CDATA[
+      詠み句の表示方法や詠み順などを個別に変更したい場合は「詳細設定」からできます．
+    ]]>
+  </string>
   <string name="intended_use_study">百人一首の学習</string>
   <string name="intended_use_study_desc">
     上の句→下の句 の順番で詠み上げます．詠み句は全表示．暗記モードが有効になります．
   </string>
+  <string name="intended_use_study_footnote">
+    <![CDATA[
+      暗記モードでは「覚えた」歌は非表示になります．詳しくは「詳細設定」&rArr;「暗記モード」を参照して下さい．
+    ]]>
+  </string>
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_competitive_desc">
     下の句→上の句 の順番で詠み上げます．詠み句は非表示．序歌が有効になります．
+  </string>
+  <string name="intended_use_competitive_footnote">
+    <![CDATA[
+      「序歌」は競技かるた等で必ず最初に詠まれる百人一首にない歌のことです．全日本かるた協会の序歌は「なにわづに〜」です．
+    ]]>
   </string>
   <string name="intended_use_result">
     <![CDATA[
@@ -471,11 +486,6 @@
       &middot; 歌を覚えたら<font color=\"#FFFF00\">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
       &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
       &middot; このページにある<font color=\"#FFFF00\">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
-    ]]>
-  </string>
-  <string name="memorization_desc_brief">
-    <![CDATA[
-      暗記モードでは「覚えた」歌は非表示になります．詳しくは「詳細設定」&rArr;「暗記モード」を参照して下さい．
     ]]>
   </string>
   <string name="memorization_mode_reset_confirm">

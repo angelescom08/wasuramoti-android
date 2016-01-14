@@ -621,6 +621,12 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           }
           case _ => Array() // do nothing
         }
+        val footnote = id match {
+          case R.id.intended_use_competitive => Some(R.string.intended_use_competitive_footnote)
+          case R.id.intended_use_study => Some(R.string.intended_use_study_footnote)
+          case R.id.intended_use_recreation => Some(R.string.intended_use_recreation_footnote)
+          case _ => None
+        }
         edit.commit()
         FudaListHelper.updateSkipList(getApplicationContext)
         Globals.forceRefresh = true
@@ -630,8 +636,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           val vv = getResources.getString(v)
           s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
         }).mkString("<br>") + "</big>"
-        if(Globals.prefs.get.getBoolean("memorization_mode",false)){
-          html += "<big><br>-------<br>" + getResources.getString(R.string.memorization_desc_brief) + "</big>"
+        footnote.foreach{
+          html += "<big><br>-------<br>" + getResources.getString(_) + "</big>"
         }
         val hcustom = (builder:AlertDialog.Builder) => {
           builder.setTitle(R.string.intended_use_result_title)
