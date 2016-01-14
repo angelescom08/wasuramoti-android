@@ -3,9 +3,11 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.content.{Context,Intent,ComponentName}
 import _root_.android.content.pm.{ResolveInfo,PackageInfo}
 import _root_.android.os.{Build,StatFs}
-import _root_.android.app.ActivityManager
+import _root_.android.app.{AlertDialog,ActivityManager}
 import _root_.android.util.{Base64,Log}
 import _root_.android.net.Uri
+import _root_.android.view.{View,LayoutInflater}
+import _root_.android.widget.TextView
 
 import _root_.java.io.{File,RandomAccessFile}
 import _root_.java.nio.ByteBuffer
@@ -62,15 +64,39 @@ object BugReport{
     }
   }
 
-  def showBugReport(context:Context, defaultBugDetail:String){
+  def showBugReportDialog(context:Context){
+    val builder = new AlertDialog.Builder(context)
+    val view = LayoutInflater.from(context).inflate(R.layout.bug_report_dialog,null)
+    val mail = view.findViewById(R.id.developer_mail_addr).asInstanceOf[TextView]
+    Utils.setUnderline(mail)
+    mail.setOnClickListener(new View.OnClickListener(){
+      override def onClick(view:View){
+        sendMailToDeveloper(context) 
+      }
+    })
+
+    builder.setNegativeButton(android.R.string.cancel,null)
+      .setTitle(R.string.conf_bug_report)
+      .setView(view)
+    Utils.showDialogAndSetGlobalRef(builder.create)
+  }
+
+  def sendMailToDeveloper(context:Context){
+    val address = context.getResources.getString(R.string.developer_mail_addr)
+    val subject = context.getResources.getString(R.string.bug_report_subject)
+    val uri = s"mailto:${address}?subject=${Uri.encode(subject)}"
+    val intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(uri))
+    context.startActivity(intent) 
+  }
+
+  def showAnonymousBugReport(context:Context){
     if( android.os.Build.VERSION.SDK_INT < 8 ){
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
       return
     }
     val pm = context.getPackageManager
-    val i_temp = new Intent(Intent.ACTION_VIEW)
     // dummy data to get list of activities
-    i_temp.setData(Uri.parse("http://www.google.com/"))
+    val i_temp = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.google.com/"))
     val list = scala.collection.JavaConversions.asScalaBuffer[ResolveInfo](pm.queryIntentActivities(i_temp,0))
     if(list.isEmpty){
       Utils.messageDialog(context,Right(R.string.browser_not_found))
@@ -91,7 +117,7 @@ object BugReport{
         val post_url = context.getResources.getString(R.string.bug_report_url)
         val mail_addr = context.getResources.getString(R.string.developer_mail_addr)
         val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
-        val html = context.getResources.getString(R.string.bug_report_html,mail_addr,post_url,bug_report,defaultBugDetail)
+        val html = context.getResources.getString(R.string.bug_report_html,mail_addr,post_url,bug_report)
         val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
         intent.setData(Uri.parse(dataUri))
         try{

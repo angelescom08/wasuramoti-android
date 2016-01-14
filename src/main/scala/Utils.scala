@@ -15,6 +15,7 @@ import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter}
 import _root_.android.content.pm.PackageManager
 import _root_.android.net.Uri
+import _root_.android.graphics.Paint
 
 import _root_.java.io.File
 import _root_.java.util.Locale
@@ -608,6 +609,10 @@ object Utils {
         case None => "None"
         case Some(x) => formatFloat("%.3f", x)
       }).mkString(",")
+  }
+
+  def setUnderline(view:TextView){
+    view.setPaintFlags(view.getPaintFlags | Paint.UNDERLINE_TEXT_FLAG)
   }
 
   def restartActivity(activity:Activity){

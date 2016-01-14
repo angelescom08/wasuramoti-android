@@ -391,6 +391,7 @@
   <string name="bug_report_not_supported">すみません．この端末からはバグレポートを送れません．</string>
   <string name="conf_bug_report">サポート窓口</string>
   <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら</string>
+  <string name="bug_report_subject" >Android版わすらもちについて</string>
   <string name="bug_report_html">
     <![CDATA[
       <!DOCTYPE html>
@@ -418,7 +419,7 @@
           <h3>匿名フォーム</h3>
           <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
             匿名の質問，要望，バグ報告はこちら:<br/>
-            <textarea name=\"bug_detail\">%4$s</textarea><br/>
+            <textarea name=\"bug_detail\"></textarea><br/>
             「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．<br/>
             匿名のバグ報告は開発者側から詳しい症状をお伺いすることができません．<br/>
             メールで連絡してくれた方が直せる確率は高まります．<br/>

@@ -428,6 +428,7 @@
   <string name="bug_report_not_supported">Sorry, you cannot send bug report from this device.</string>
   <string name="conf_bug_report">Support Form</string>
   <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
+  <string name="bug_report_subject" >About Wasuramoti for Android</string>
   <string name="bug_report_html">
     <![CDATA[
       <html>
@@ -453,7 +454,7 @@
           <h3>Anonymous Form</h3>
           <form method=\"post\" action=\"%2$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
             Anonymous question, request, and bug report:<br/>
-            <textarea name=\"bug_detail\">%4$s</textarea><br/>
+            <textarea name=\"bug_detail\"></textarea><br/>
             Clicking `Submit` button will send some information which is useful for debugging.<br/>
             We cannot ask you the detail of the bug if you send bug report anonymously.<br/>
             Therefore, contact us by E-Mail if you want higher possibility to fix the bug.<br/>
