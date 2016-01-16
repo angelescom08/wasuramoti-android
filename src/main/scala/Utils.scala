@@ -547,6 +547,10 @@ object Utils {
   }
 
   def deleteCache(context:Context,match_func:String=>Boolean){
+    if(android.os.Build.VERSION.SDK_INT >= 9){
+      // context.getCacheDir is only used in Asset.withAssetOrFile
+      return
+    }
     this.synchronized{
       val files = context.getCacheDir().listFiles()
       if(files != null){

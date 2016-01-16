@@ -5,6 +5,7 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#include <android/asset_manager_jni.h>
 #include <jni.h>
 #define close_jni() { \
   if(curThread != NULL){(*env)->DeleteLocalRef(env,curThread);}; \
@@ -43,7 +44,7 @@
 #define APP_NAME "wasuramoti"
 
 // Returns zero for success, non-zero for failure
-int decode_file(JNIEnv *env, const char* fin_path, short ** out_data, int * out_data_len, stb_vorbis_info * return_info){
+int decode_asset_or_file(JNIEnv *env, AAssetManager *mgr, const char* fin_path, short ** out_data, int * out_data_len, stb_vorbis_info * return_info){
 
   // we have to define all the variable used in abort_task() before calling it.
 
@@ -67,7 +68,7 @@ int decode_file(JNIEnv *env, const char* fin_path, short ** out_data, int * out_
   short *data = NULL;
   int error = 0;
 
-  if((vin = stb_vorbis_open_filename(fin_path, &error, NULL)) == NULL) {
+  if((vin = stb_vorbis_open_asset_or_file(mgr, fin_path, &error, NULL)) == NULL) {
     abort_task("cannot open read file: %s\n",fin_path)
   }
 

@@ -4,18 +4,13 @@
 #include "stb_vorbis.c"
 
 // Returns zero for success, non-zero for failure
-jshortArray
-Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile(
-  JNIEnv* env,
-  jobject thiz,
-  jstring fin_path
-){
+static jshortArray decodeCommon(JNIEnv* env, jobject thiz, AAssetManager *mgr, jstring fin_path){
   //Get the native string from javaString
   const char *native_fin_path = (*env)->GetStringUTFChars(env, fin_path, 0);
   short * native_out_data;
   int out_data_len;
   stb_vorbis_info wi;
-  int r = decode_file(env, native_fin_path, &native_out_data, &out_data_len, &wi);
+  int r = decode_asset_or_file(env, mgr, native_fin_path, &native_out_data, &out_data_len, &wi);
   //Don't forget to release strings
   (*env)->ReleaseStringUTFChars(env, fin_path, native_fin_path);
   if(r == 0){
@@ -37,4 +32,19 @@ Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile(
   }else{
     return NULL;
   }
+}
+
+jshortArray
+Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeFile(
+  JNIEnv* env, jobject thiz, jstring fin_path
+){
+  return decodeCommon(env, thiz, NULL, fin_path);
+} 
+
+jshortArray
+Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeAsset(
+  JNIEnv* env, jobject thiz, jobject asset_manager, jstring fin_path
+){
+  AAssetManager *mgr = (AAssetManager *)AAssetManager_fromJava(env, asset_manager);
+  return decodeCommon(env, thiz, mgr, fin_path);
 } 

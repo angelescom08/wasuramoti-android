@@ -164,6 +164,7 @@ class OggDecodeFailException(s:String) extends Exception(s){
 }
 
 abstract class Reader(context:Context,val path:String){
+  type AssetOrFile = Either[String,File]
   def basename:String = new File(path).getName()
   def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
   def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
@@ -174,16 +175,19 @@ abstract class Reader(context:Context,val path:String){
       .map{case (rn,sk,_) => (rn,sk)}.toSet
     pairs.nonEmpty && pairs.forall{case(rn,sk) => exists(rn,sk)}
   }
-  def withFile(num:Int, kamisimo:Int, func:File=>Unit):Unit
+  def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
     val decoder = new OggVorbisDecoder()
-    withFile(num,kamisimo,temp_file => {
-      val buffer = decoder.decodeFileToShortBuffer(temp_file.getAbsolutePath())
+    withAssetOrFile(num,kamisimo,asset_or_file => {
+      val buffer = asset_or_file match{
+        case Left(asset) => decoder.decodeAssetToShortBuffer(context,asset)
+        case Right(file) => decoder.decodeFileToShortBuffer(file.getAbsolutePath())
+      }
       if(buffer != null){
         val wav = new WavBuffer(buffer,decoder,num,kamisimo)
         func(wav)
       }else{
-        throw new OggDecodeFailException("ogg decode failed: "+temp_file.getName)
+        throw new OggDecodeFailException("ogg decode failed: "+asset_or_file.fold(identity,_.getName))
       }
     })
   }
@@ -208,17 +212,23 @@ class Asset(context:Context,path:String) extends Reader(context,path){
       case _:IOException => false
     }
   }
-  override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
-    val temp_dir = context.getCacheDir()
-    val temp_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_OGG,temp_dir)
-    val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
-    val finstream = asset_fd.createInputStream()
-    new FileOutputStream(temp_file).getChannel().transferFrom(
-      finstream.getChannel(), 0, asset_fd.getLength())
-    func(temp_file)
-    finstream.close()
-    asset_fd.close()
-    temp_file.delete()
+  override def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit){
+    if(android.os.Build.VERSION.SDK_INT >= 9){
+      // functions in asset_manager.h and asset_manager_jni.h is only available in Android >= 2.3
+      val assetPath = getAssetPath(num,kamisimo)
+      func(Left(assetPath))
+    }else{
+      val temp_dir = context.getCacheDir()
+      val temp_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_OGG,temp_dir)
+      val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
+      val finstream = asset_fd.createInputStream()
+      new FileOutputStream(temp_file).getChannel().transferFrom(
+        finstream.getChannel(), 0, asset_fd.getLength())
+      func(Right(temp_file))
+      finstream.close()
+      asset_fd.close()
+      temp_file.delete()
+    }
   }
 }
 abstract class ExtAbsBase(context:Context,path:String) extends Reader(context,path){
@@ -227,8 +237,8 @@ abstract class ExtAbsBase(context:Context,path:String) extends Reader(context,pa
   override def exists(num:Int, kamisimo:Int):Boolean = {
     getFile(num,kamisimo).exists()
   }
-  override def withFile(num:Int, kamisimo:Int, func:File=>Unit){
-    func(getFile(num,kamisimo))
+  override def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit){
+    func(Right(getFile(num,kamisimo)))
   }
 }
 class External(context:Context,path:String) extends ExtAbsBase(context,path){

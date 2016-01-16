@@ -59,6 +59,8 @@
 #ifndef STB_VORBIS_INCLUDE_STB_VORBIS_H
 #define STB_VORBIS_INCLUDE_STB_VORBIS_H
 
+#include <android/asset_manager.h>
+
 #if defined(STB_VORBIS_NO_CRT) && !defined(STB_VORBIS_NO_STDIO)
 #define STB_VORBIS_NO_STDIO 1
 #endif
@@ -238,28 +240,11 @@ extern stb_vorbis * stb_vorbis_open_memory(const unsigned char *data, int len,
 // this must be the entire stream!). on failure, returns NULL and sets *error
 
 #ifndef STB_VORBIS_NO_STDIO
-extern stb_vorbis * stb_vorbis_open_filename(const char *filename,
+extern stb_vorbis * stb_vorbis_open_asset_or_file(AAssetManager *mgr, const char *filename,
                                   int *error, stb_vorbis_alloc *alloc_buffer);
-// create an ogg vorbis decoder from a filename via fopen(). on failure,
+// create an ogg vorbis decoder from a filename via fopen() or asset via AAssetManager_open. on failure,
 // returns NULL and sets *error (possibly to VORBIS_file_open_failure).
 
-extern stb_vorbis * stb_vorbis_open_file(FILE *f, int close_handle_on_close,
-                                  int *error, stb_vorbis_alloc *alloc_buffer);
-// create an ogg vorbis decoder from an open FILE *, looking for a stream at
-// the _current_ seek point (ftell). on failure, returns NULL and sets *error.
-// note that stb_vorbis must "own" this stream; if you seek it in between
-// calls to stb_vorbis, it will become confused. Morever, if you attempt to
-// perform stb_vorbis_seek_*() operations on this file, it will assume it
-// owns the _entire_ rest of the file after the start point. Use the next
-// function, stb_vorbis_open_file_section(), to limit it.
-
-extern stb_vorbis * stb_vorbis_open_file_section(FILE *f, int close_handle_on_close,
-                int *error, stb_vorbis_alloc *alloc_buffer, unsigned int len);
-// create an ogg vorbis decoder from an open FILE *, looking for a stream at
-// the _current_ seek point (ftell); the stream will be of length 'len' bytes.
-// on failure, returns NULL and sets *error. note that stb_vorbis must "own"
-// this stream; if you seek it in between calls to stb_vorbis, it will become
-// confused.
 #endif
 
 extern int stb_vorbis_seek_frame(stb_vorbis *f, unsigned int sample_number);
@@ -519,6 +504,7 @@ enum STBVorbisError
 
 //////////////////////////////////////////////////////////////////////////////
 
+
 #ifdef STB_VORBIS_NO_PULLDATA_API
    #define STB_VORBIS_NO_INTEGER_CONVERSION
    #define STB_VORBIS_NO_STDIO
@@ -720,6 +706,12 @@ typedef struct
    uint32 last_decoded_sample;
 } ProbedPage;
 
+typedef struct
+{
+  FILE *file;
+  AAsset *asset;
+} AAssetOrFILE;
+
 struct stb_vorbis
 {
   // user-accessible info
@@ -732,7 +724,7 @@ struct stb_vorbis
 
   // input config
 #ifndef STB_VORBIS_NO_STDIO
-   FILE *f;
+   AAssetOrFILE *af;
    uint32 f_start;
    int close_on_free;
 #endif
@@ -857,6 +849,77 @@ static int error(vorb *f, enum STBVorbisError e)
    return 0;
 }
 
+
+// API for AAssetOrFILE
+static void afclose(AAssetOrFILE *af){
+  if(af->file != NULL){
+    fclose(af->file);
+  }else if(af->asset != NULL){
+    AAsset_close(af->asset);
+  }
+  free(af);
+  af = NULL;
+}
+
+static long aftell(AAssetOrFILE *af){
+  if(af->file != NULL){
+    return ftell(af->file);
+  }else if(af->asset != NULL){
+    return AAsset_getLength(af->asset) - AAsset_getRemainingLength(af->asset);
+  }
+  return -1;
+}
+
+static long aflen(AAssetOrFILE *af){
+  if(af->file != NULL){
+    unsigned int cur = ftell(af->file);
+    fseek(af->file, 0, SEEK_END);
+    unsigned int len = ftell(af->file);
+    fseek(af->file, cur, SEEK_SET);
+    return len;
+  }else if(af->asset != NULL){
+    return AAsset_getLength(af->asset);
+  }
+  return -1;
+}
+
+static int afseek(AAssetOrFILE *af, long offset, int whence){
+  if(af->file != NULL){
+    return fseek(af->file, offset, whence);
+  }else if(af->asset != NULL){
+    long r = AAsset_seek(af->asset, offset, whence);
+    if( r == -1){
+      return -1; // failed
+    }else{
+      return 0; // success
+    }
+  }
+}
+
+static int afgetc(AAssetOrFILE *af){
+  if(af->file != NULL){
+    return fgetc(af->file);
+  }else if(af->asset != NULL){
+    char b;
+    int r = AAsset_read(af->asset, &b, 1);
+    if( r == 1 ){
+      return b;
+    }else{
+      return EOF;
+    }
+  }
+  return EOF;
+}
+
+static size_t afread(void *buf, size_t size, size_t nmemb, AAssetOrFILE *af){
+  if(af->file != NULL){
+    return fread(buf, size, nmemb, af->file);
+  }else if(af->asset != NULL){
+    int r = AAsset_read(af->asset, buf, size*nmemb);
+    return r/size;
+  }
+  return 0;
+}
 
 // these functions are used for allocating temporary memory
 // while decoding. if you can afford the stack space, use
@@ -1280,7 +1343,7 @@ static uint8 get8(vorb *z)
 
    #ifndef STB_VORBIS_NO_STDIO
    {
-   int c = fgetc(z->f);
+   int c = afgetc(z->af);
    if (c == EOF) { z->eof = TRUE; return 0; }
    return c;
    }
@@ -1307,7 +1370,7 @@ static int getn(vorb *z, uint8 *data, int n)
    }
 
    #ifndef STB_VORBIS_NO_STDIO   
-   if (fread(data, n, 1, z->f) == 1)
+   if (afread(data, n, 1, z->af) == 1)
       return 1;
    else {
       z->eof = 1;
@@ -1325,8 +1388,8 @@ static void skip(vorb *z, int n)
    }
    #ifndef STB_VORBIS_NO_STDIO
    {
-      long x = ftell(z->f);
-      fseek(z->f, x+n, SEEK_SET);
+      long x = aftell(z->af);
+      afseek(z->af, x+n, SEEK_SET);
    }
    #endif
 }
@@ -1354,10 +1417,10 @@ static int set_file_offset(stb_vorbis *f, unsigned int loc)
    } else {
       loc += f->f_start;
    }
-   if (!fseek(f->f, loc, SEEK_SET))
+   if (!afseek(f->af, loc, SEEK_SET))
       return 1;
    f->eof = 1;
-   fseek(f->f, f->f_start, SEEK_END);
+   afseek(f->af, f->f_start, SEEK_END);
    return 0;
    #endif
 }
@@ -4205,7 +4268,7 @@ static void vorbis_deinit(stb_vorbis *p)
       setup_free(p, p->bit_reverse[i]);
    }
    #ifndef STB_VORBIS_NO_STDIO
-   if (p->close_on_free) fclose(p->f);
+   if (p->close_on_free) afclose(p->af);
    #endif
 }
 
@@ -4231,7 +4294,7 @@ static void vorbis_init(stb_vorbis *p, stb_vorbis_alloc *z)
    p->page_crc_tests = -1;
    #ifndef STB_VORBIS_NO_STDIO
    p->close_on_free = FALSE;
-   p->f = NULL;
+   p->af = NULL;
    #endif
 }
 
@@ -4480,7 +4543,7 @@ unsigned int stb_vorbis_get_file_offset(stb_vorbis *f)
    #endif
    if (USE_MEMORY(f)) return f->stream - f->stream_start;
    #ifndef STB_VORBIS_NO_STDIO
-   return ftell(f->f) - f->f_start;
+   return aftell(f->af) - f->f_start;
    #endif
 }
 
@@ -4971,13 +5034,13 @@ int stb_vorbis_get_frame_float(stb_vorbis *f, int *channels, float ***output)
 
 #ifndef STB_VORBIS_NO_STDIO
 
-stb_vorbis * stb_vorbis_open_file_section(FILE *file, int close_on_free, int *error, stb_vorbis_alloc *alloc, unsigned int length)
+static stb_vorbis * open_asset_or_file(AAssetOrFILE *afile, int close_on_free, int *error, stb_vorbis_alloc *alloc)
 {
    stb_vorbis *f, p;
    vorbis_init(&p, alloc);
-   p.f = file;
-   p.f_start = ftell(file);
-   p.stream_len   = length;
+   p.af = afile;
+   p.f_start = 0;
+   p.stream_len   = aflen(afile);
    p.close_on_free = close_on_free;
    if (start_decoder(&p)) {
       f = vorbis_alloc(&p);
@@ -4992,21 +5055,18 @@ stb_vorbis * stb_vorbis_open_file_section(FILE *file, int close_on_free, int *er
    return NULL;
 }
 
-stb_vorbis * stb_vorbis_open_file(FILE *file, int close_on_free, int *error, stb_vorbis_alloc *alloc)
+stb_vorbis * stb_vorbis_open_asset_or_file(AAssetManager *mgr, const char *filename, int *error, stb_vorbis_alloc *alloc)
 {
-   unsigned int len, start;
-   start = ftell(file);
-   fseek(file, 0, SEEK_END);
-   len = ftell(file) - start;
-   fseek(file, start, SEEK_SET);
-   return stb_vorbis_open_file_section(file, close_on_free, error, alloc, len);
-}
-
-stb_vorbis * stb_vorbis_open_filename(const char *filename, int *error, stb_vorbis_alloc *alloc)
-{
-   FILE *f = fopen(filename, "rb");
-   if (f) 
-      return stb_vorbis_open_file(f, TRUE, error, alloc);
+   AAssetOrFILE *af = (AAssetOrFILE *)malloc(sizeof(AAssetOrFILE));
+   if(mgr != NULL){
+     af->file = NULL;
+     af->asset = AAssetManager_open(mgr, filename, AASSET_MODE_RANDOM);
+   }else{
+     af->asset = NULL;
+     af->file = fopen(filename, "rb");
+   }
+   if (af->file || af->asset) 
+      return open_asset_or_file(af, TRUE, error, alloc);
    if (error) *error = VORBIS_file_open_failure;
    return NULL;
 }
@@ -5257,11 +5317,11 @@ int stb_vorbis_get_samples_short(stb_vorbis *f, int channels, short **buffer, in
 }
 
 #ifndef STB_VORBIS_NO_STDIO
-int stb_vorbis_decode_filename(const char *filename, int *channels, int *sample_rate, short **output)
+int stb_vorbis_decode_asset_or_file(AAssetManager *mgr, const char *filename, int *channels, int *sample_rate, short **output)
 {
    int data_len, offset, total, limit, error;
    short *data;
-   stb_vorbis *v = stb_vorbis_open_filename(filename, &error, NULL);
+   stb_vorbis *v = stb_vorbis_open_asset_or_file(mgr, filename, &error, NULL);
    if (v == NULL) return -1;
    limit = v->channels * 4096;
    *channels = v->channels;
