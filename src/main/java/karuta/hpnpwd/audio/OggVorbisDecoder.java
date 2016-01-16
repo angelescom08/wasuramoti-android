@@ -14,7 +14,11 @@ public class OggVorbisDecoder {
   static{
     try{
       System.loadLibrary("stbvorbis");
-      library_loaded = true;
+      if(android.os.Build.VERSION.SDK_INT >= 9){
+        library_loaded = initDynAsset();
+      }else{
+        library_loaded = true;
+      }
     }catch(UnsatisfiedLinkError e){
       Log.e("wasuramoti", "cannot load stbvorbis", e);
     }
@@ -36,4 +40,5 @@ public class OggVorbisDecoder {
   // implemented in src/main/jni/wav_ogg_file_codec_jni.c
   public native short[] decodeFile(String file_path);
   public native short[] decodeAsset(AssetManager asset_manager, String asset_path);
+  public static native boolean initDynAsset();
 }

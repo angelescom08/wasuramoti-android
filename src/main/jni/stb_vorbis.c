@@ -60,6 +60,7 @@
 #define STB_VORBIS_INCLUDE_STB_VORBIS_H
 
 #include <android/asset_manager.h>
+#include "dynamic_asset.h"
 
 #if defined(STB_VORBIS_NO_CRT) && !defined(STB_VORBIS_NO_STDIO)
 #define STB_VORBIS_NO_STDIO 1
@@ -855,7 +856,7 @@ static void afclose(AAssetOrFILE *af){
   if(af->file != NULL){
     fclose(af->file);
   }else if(af->asset != NULL){
-    AAsset_close(af->asset);
+    DynAsset_close(af->asset);
   }
   free(af);
   af = NULL;
@@ -865,7 +866,7 @@ static long aftell(AAssetOrFILE *af){
   if(af->file != NULL){
     return ftell(af->file);
   }else if(af->asset != NULL){
-    return AAsset_getLength(af->asset) - AAsset_getRemainingLength(af->asset);
+    return DynAsset_getLength(af->asset) - DynAsset_getRemainingLength(af->asset);
   }
   return -1;
 }
@@ -878,7 +879,7 @@ static long aflen(AAssetOrFILE *af){
     fseek(af->file, cur, SEEK_SET);
     return len;
   }else if(af->asset != NULL){
-    return AAsset_getLength(af->asset);
+    return DynAsset_getLength(af->asset);
   }
   return -1;
 }
@@ -887,7 +888,7 @@ static int afseek(AAssetOrFILE *af, long offset, int whence){
   if(af->file != NULL){
     return fseek(af->file, offset, whence);
   }else if(af->asset != NULL){
-    long r = AAsset_seek(af->asset, offset, whence);
+    long r = DynAsset_seek(af->asset, offset, whence);
     if( r == -1){
       return -1; // failed
     }else{
@@ -901,7 +902,7 @@ static int afgetc(AAssetOrFILE *af){
     return fgetc(af->file);
   }else if(af->asset != NULL){
     char b;
-    int r = AAsset_read(af->asset, &b, 1);
+    int r = DynAsset_read(af->asset, &b, 1);
     if( r == 1 ){
       return b;
     }else{
@@ -915,7 +916,7 @@ static size_t afread(void *buf, size_t size, size_t nmemb, AAssetOrFILE *af){
   if(af->file != NULL){
     return fread(buf, size, nmemb, af->file);
   }else if(af->asset != NULL){
-    int r = AAsset_read(af->asset, buf, size*nmemb);
+    int r = DynAsset_read(af->asset, buf, size*nmemb);
     return r/size;
   }
   return 0;
@@ -5060,7 +5061,7 @@ stb_vorbis * stb_vorbis_open_asset_or_file(AAssetManager *mgr, const char *filen
    AAssetOrFILE *af = (AAssetOrFILE *)malloc(sizeof(AAssetOrFILE));
    if(mgr != NULL){
      af->file = NULL;
-     af->asset = AAssetManager_open(mgr, filename, AASSET_MODE_RANDOM);
+     af->asset = DynAssetManager_open(mgr, filename, AASSET_MODE_RANDOM);
    }else{
      af->asset = NULL;
      af->file = fopen(filename, "rb");

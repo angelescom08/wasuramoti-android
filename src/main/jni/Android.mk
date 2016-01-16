@@ -17,7 +17,7 @@ LOCAL_PATH := $(call my-dir)
 # stbvorbis
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libstbvorbis
-LOCAL_LDLIBS := -llog -landroid
+LOCAL_LDLIBS := -llog -ldl
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 $(warning Compiling '$(LOCAL_MODULE)' ..) 
 $(warning Value of LOCAL_C_INCLUDES is '$(LOCAL_C_INCLUDES)') 
