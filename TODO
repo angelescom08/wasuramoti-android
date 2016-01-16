@@ -3,9 +3,6 @@ Priority High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
   * Check whether current_index == 102 is valid or not.
   * Check whether we need MODIFY_AUDIO_SETTINGS or not.
-  * Support other than 22050 mono audio on OpenSLESPlayer.
-  * The volume of OpenSLESPlayer is smaller than AudioTrack.
-  * Do not play sound in silent mode (instead show warning).
   * Show some information on audio volume config
     - current play state
     - current volume
@@ -14,7 +11,6 @@ Priority High:
   * Show "Currently Playing" in notification area.
   * Show "You can scroll yomi info button list" TIPS
   * Use scala.util.Try instead of try ... catch
-  * Set contentDescription for all the buttons
   * Acquire audio focus for notification timer.
   * Support Android 6.0
     * Apply runtime permission
@@ -28,30 +24,27 @@ Priority High:
         - In Android >= 5.x, able to show in lock screen ?
   * Solve ANR
     - Add timeout for decoding ?
-  * Only delete file created by this app in Utils.deleteCache
-    - Maybe android automatically creates some system files in cache directory ?
-  * Use fudaset.id instead of fudaset.title when quering the DB
-  * Forbid deleting last poem set
-  * In "Change Inteded Use", show the description of each mode
-    - "Competitive Karuta" ... It reads joka, and read order is different.
-    - "Recreative Karuta" ... Plays 2nd Half twice
-    - "Study 100 Poems" ... Memorize mode is On
+  * OpenSLESPlayer issues
+    - The volume is smaller than AudioTrack.
+    - Support other than 22050 mono audio.
+  * Forbid deleting last poem set.
+  * Add "Enable Equalizer" checkbox.
+  * Append all the table data compressed in anonymous bug report form.
+
 Priority Medium-High:
   * Use scalaz, shapeless
+  * Set contentDescription for all the buttons
   * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
   * Configure poem size using pinch zoom
   * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
-  * Support equalizer in OpenSL ES.
-  * Check that OpenSL ES Player work on large endian architecture.
+  * Support equalizer in OpenSLESPlayer.
+  * Check that OpenSLESPlayer work on large endian architecture.
   * Add option to use android.media.MediaPlayer instead of AudioTrack or OpenSL ES
   * Show font example.
   * Change the color of author, poem text, and furigana.
   * Save poem text as image.
   * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Solve the warnings caused by -Xlint
-  * Use AAssetManager_* and AAsset_* to access asset directry
-    - http://en.wikibooks.org/wiki/OpenGL_Programming/Android_GLUT_Wrapper#Accessing_assets
-    - will fix: in Android 2.x, swiping Left/Right frequently when poem text displayed causes "cannot read file: ..." when decoding file.
   * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%
     - use AppCompat >= 22.1.0 (this will automatically emulates Material Design for lower API version devices)
     - Use colorPrimaryDark instead of setStatusBarColor

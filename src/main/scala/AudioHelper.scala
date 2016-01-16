@@ -79,7 +79,7 @@ object AudioHelper{
     }
     val current_index = FudaListHelper.getCurrentIndex(app_context)
     val num = if(Utils.isRandom){
-      val cur_num = Globals.player.map{_.next_num}
+      val cur_num = old_player.map{_.next_num}
         .orElse(activity.getCurNumInView)
         .orElse(FudaListHelper.queryRandom)
         .getOrElse(0)
