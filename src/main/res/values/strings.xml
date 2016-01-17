@@ -328,10 +328,12 @@
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>Select By Poem Number</h3>
+    <div><b>ab..cd</b> &rArr; ab, ab+1, ..., cd</div>
     <div><b>?</b> &rArr; any single character</div>
     <div><b>*</b> &rArr; any string, including empty string</div>
     <div><b>[xyz]</b> &rArr; x, y or z</div>
     <h3>Examples</h3>
+    <div><b>3..14</b> &rArr; 3,4,5, ..., 14</div>
     <div><b>8?</b> &rArr; 80,81, ..., 89</div>
     <div><b>*[13579]</b> &rArr; odd number</div>
     ]]>

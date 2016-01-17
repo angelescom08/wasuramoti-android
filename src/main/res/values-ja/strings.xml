@@ -288,10 +288,12 @@
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>歌番号指定</h3>
+    <div><b>ab..cd</b> &rArr; ab以上cd以下の数字</div>
     <div><b>?</b> &rArr; 任意の一文字の数字</div>
     <div><b>*</b> &rArr; 任意の0文字以上の数字</div>
     <div><b>[xyz]</b> &rArr; x, y, z のいずれかの数字</div>
     <h3>例</h3>
+    <div><b>3..14</b> &rArr; 3以上14以下の数字</div>
     <div><b>8?</b> &rArr; 十の位が8の二桁の数字</div>
     <div><b>*[13579]</b> &rArr; 奇数</div>
     ]]>

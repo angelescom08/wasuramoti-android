@@ -4,6 +4,7 @@ import _root_.java.util.regex.PatternSyntaxException
 import _root_.android.content.Context
 import _root_.android.text.TextUtils
 import scala.collection.mutable
+import scala.util.Try
 
 object AllFuda{
   var musumefusahoseAll = null:String
@@ -135,19 +136,28 @@ object AllFuda{
   }
 
   def replaceFudaNumPattern(str:String):String = {
-    val PATTERN_FUDANUM = """[0-9?*\[\]]+""".r
-    val buf = Romanization.zenkaku_to_hankaku(str)
-    val patterns = PATTERN_FUDANUM.findAllIn(buf).flatMap({
-        s => try{
-          Some(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r)
-        }catch{
-          case _:PatternSyntaxException => None
-        }
-    }).toList
-    val r = new StringBuilder(PATTERN_FUDANUM.replaceAllIn(buf,""))
+    val PATTERN_FUDANUM_1 = """(\d{1,3})\.\.(\d{1,3})""".r
+    val PATTERN_FUDANUM_2 = """[0-9?*\[\]]+""".r
+
+    val buf1 = Romanization.zenkaku_to_hankaku(str)
+    val patterns1 = PATTERN_FUDANUM_1.findAllMatchIn(buf1).flatMap{
+      m => Try((m.group(1).toInt,m.group(2).toInt)).toOption
+    }.toList
+
+    val buf2 = PATTERN_FUDANUM_1.replaceAllIn(buf1,"")
+    val patterns2 = PATTERN_FUDANUM_2.findAllIn(buf2).flatMap{
+      s => Try(s.replaceAllLiterally("?","\\d").replaceAllLiterally("*","\\d*").r).toOption
+    }.toList
+
+    val buf3 = PATTERN_FUDANUM_2.replaceAllIn(buf2,"")
+
+    val r = new StringBuilder(buf3)
     for( i <- 0 until list.length){
       val s = (i+1).toString
-      if(patterns.exists(_.pattern.matcher(s).matches)){
+      if(
+        patterns1.exists{case (m,n) => m <= i+1 && i+1 <= n} ||
+        patterns2.exists{_.pattern.matcher(s).matches}
+        ){
         r.append(" " + list(i))
       }
     }
