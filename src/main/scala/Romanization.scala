@@ -19,7 +19,8 @@ class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(
 }
 
 object Romanization{
-  lazy val PAT_ROMA = "([kstnhmyrwgzdbp]?[aiueo]| +)".r
+  // all the characters in AllFuda.replaceFudaNumPattern must be included
+  lazy val PAT_ROMA = """([kstnhmyrwgzdbp]?[aiueo]|[ .0-9?*\[\]]+)""".r
   lazy val MAP_ROMA_TO_JAP = Array(
     ("a", "あ"), ("i", "い"), ("u", "う"), ("e", "え"),  ("o","お"),
     ("ka","か"), ("ki","き"), ("ku","く"), ("ke","け"), ("ko","こ"),
