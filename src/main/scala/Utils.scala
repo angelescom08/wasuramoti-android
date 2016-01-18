@@ -12,7 +12,7 @@ import _root_.android.text.method.LinkMovementMethod
 import _root_.android.os.{Environment,SystemClock}
 import _root_.android.media.AudioManager
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
-import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter}
+import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox}
 import _root_.android.content.pm.PackageManager
 import _root_.android.net.Uri
 import _root_.android.graphics.Paint
@@ -314,6 +314,14 @@ object Utils {
     dialog.show()
     Globals.alert_dialog = Some(dialog)
   }
+
+  def getStringOrResource(context:Context,arg:Either[String,Int]):Option[String] = {
+    Option(arg).map{
+      case Left(x) => x
+      case Right(x) => context.getResources.getString(x)
+    }
+  }
+
   def confirmDialog(
     context:Context,
     arg:Either[String,Int],
@@ -323,11 +331,7 @@ object Utils {
   ){
     val builder = custom(new AlertDialog.Builder(context))
     // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
-    arg match {
-      case Left(x) => builder.setMessage(x)
-      case Right(x) => builder.setMessage(context.getResources().getString(x))
-      case null => // do nothing
-    }
+    getStringOrResource(context,arg).foreach{builder.setMessage(_)}
     val dialog:AlertDialog = builder
     .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
@@ -349,11 +353,7 @@ object Utils {
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
     val builder = custom(new AlertDialog.Builder(context))
-    arg match {
-      case Left(x) => builder.setMessage(x)
-      case Right(x) => builder.setMessage(context.getResources().getString(x))
-      case null => // do nothing
-    }
+    getStringOrResource(context,arg).foreach{builder.setMessage(_)}
     val dialog = builder
       .setPositiveButton(android.R.string.ok,null)
       .create
@@ -366,23 +366,53 @@ object Utils {
     func_done:()=>Unit={()=>Unit},
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
-    val builder= new AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = arg match {
-      case Left(txt) => txt
-      case Right(id) => context.getResources.getString(id)
-    }
+    val html = getStringOrResource(context,arg).getOrElse("")
     val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
     txtview.setText(Html.fromHtml(html))
 
     // this makes "<a href='...'></a>" clickable
     txtview.setMovementMethod(LinkMovementMethod.getInstance)
 
-    val dialog = custom(builder)
+    val dialog = custom(new AlertDialog.Builder(context))
       .setPositiveButton(android.R.string.ok,null)
       .setView(view)
       .create
     showDialogAndSetGlobalRef(dialog, func_done)
+  }
+
+  def generalCheckBoxDialog(
+    context:Context,
+    arg_text:Either[String,Int],
+    arg_checkbox:Either[String,Int],
+    func_yes:Option[(CheckBox)=>Unit],
+    func_no:Option[(CheckBox)=>Unit]=None,
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+    ){
+      val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
+      val vtext = view.findViewById(R.id.checkbox_dialog_text).asInstanceOf[TextView]
+      val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+      getStringOrResource(context,arg_text).foreach(vtext.setText(_))
+      getStringOrResource(context,arg_checkbox).foreach(vcheckbox.setText(_))
+      val builder = custom(new AlertDialog.Builder(context))
+      func_yes.foreach{ fy =>
+        builder.setPositiveButton(if(func_no.isEmpty){android.R.string.ok}else{android.R.string.yes},
+          new DialogInterface.OnClickListener(){
+            override def onClick(interface:DialogInterface,which:Int){
+              fy(vcheckbox)
+            }
+        })
+      }
+      func_no.foreach{ fn =>
+        builder.setNegativeButton(android.R.string.no,
+          new DialogInterface.OnClickListener(){
+            override def onClick(interface:DialogInterface,which:Int){
+              fn(vcheckbox)
+            }
+        })
+      }
+      val dialog = builder.setView(view).create
+      showDialogAndSetGlobalRef(dialog)
   }
 
   def listDialog(
