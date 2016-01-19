@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/checkbox_dialog_text"
+        android:paddingLeft="17dip"
+        android:paddingRight="17dip"
         />
     <CheckBox
         android:layout_width="wrap_content"

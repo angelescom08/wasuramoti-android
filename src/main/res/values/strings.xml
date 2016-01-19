@@ -569,8 +569,11 @@
   <string name="conf_use_audio_focus" >Use Audio Focus</string>
   <string name="conf_use_audio_focus_summary">Stop playing when other app starts to play sound.</string>
   <string name="cannot_acquire_audio_focus">Could not acquire audio focus. Quit the other app which is playing sound, or disable it from `Advanced Config`-`Use Audio Focus`</string>
+  <string name="conf_ringer_mode_alert">Silent Mode Alert</string>
+  <string name="conf_ringer_mode_alert_summary">When device is in silent mode, give an alert.</string>
+  <string name="conf_ringer_mode_alert_confirm">This device is now in Silent Mode. Do you really want to play?</string>
   <string name="conf_volume_alert">Volume Alert</string>
   <string name="conf_volume_alert_summary">When device volume is too small, give an alert.</string>
-  <string name="volume_alert_small">Device volume too small</string>
-  <string name="volume_alert_equalizer">Equalizer too small</string>
+  <string name="conf_volume_alert_confirm">Currently, the volume of this device is very small, so you may not hear the sound, Do you really want to play?</string>
+  <string name="never_confirm_again">Don\'t alert this again.</string>
 </resources>

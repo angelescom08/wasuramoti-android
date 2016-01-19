@@ -200,6 +200,12 @@
           android:defaultValue="true"
           />
         <CheckBoxPreference
+          android:key="ringer_mode_alert"
+          android:title="@string/conf_ringer_mode_alert"
+          android:summary="@string/conf_ringer_mode_alert_summary"
+          android:defaultValue="true"
+          />
+        <CheckBoxPreference
           android:key="volume_alert"
           android:title="@string/conf_volume_alert"
           android:summary="@string/conf_volume_alert_summary"

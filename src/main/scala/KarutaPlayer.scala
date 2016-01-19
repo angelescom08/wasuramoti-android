@@ -184,32 +184,42 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def checkDeviceVolume():Boolean = {
+  def isDeviceVolumeTooSmall():Boolean = {
+    val threshold = 0.05f
+    val av = Utils.readPrefAudioVolume
+    if(set_audio_volume && av.nonEmpty){
+      return (av.get < threshold)
+    }else{
+      val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+      if(am != null){
+        val stream_type = Utils.getAudioStreamType
+        val max_volume =  am.getStreamMaxVolume(stream_type)
+        val cur_volume = am.getStreamVolume(stream_type)
+        if(max_volume > 0 && cur_volume.toFloat / max_volume.toFloat < threshold){
+          return true
+        }
+      }
+      return false
+    }
+  }
+
+  def isSilentMode():Boolean = {
     val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(am != null){
-      val stream_type = Utils.getAudioStreamType
-      val max_volume =  am.getStreamMaxVolume(stream_type)
-      val cur_volume = am.getStreamVolume(stream_type)
-      if(max_volume > 0 && cur_volume.toFloat / max_volume.toFloat < 0.05){
-        return false
+      am.getRingerMode match {
+        case AudioManager.RINGER_MODE_SILENT | AudioManager.RINGER_MODE_VIBRATE =>
+          true
+        case _ =>
+          false
       }
+    }else{
+      false
     }
-    return true
   }
+
   def checkEqualizerVolume():Boolean = {
     val eql = Utils.getPrefsEqualizer.flatten
     eql.isEmpty || ! eql.forall{  _ < 0.05}
-  }
-
-  def checkAudioVolume(){
-    if(!checkDeviceVolume){
-      Toast.makeText(activity.getApplicationContext,R.string.volume_alert_small,Toast.LENGTH_SHORT).show()
-      return
-    }
-    if(!checkEqualizerVolume){
-      Toast.makeText(activity.getApplicationContext,R.string.volume_alert_equalizer,Toast.LENGTH_SHORT).show()
-      return
-    }
   }
 
   def requestAudioFocus():Boolean = {
@@ -280,39 +290,68 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       if(Globals.is_playing){
         return
       }
-      if(!requestAudioFocus){
-        activity.runOnUiThread(new Runnable{
-          override def run(){
-            Utils.messageDialog(activity,Right(R.string.cannot_acquire_audio_focus))
-          }
-        })
-        return
-      }
-      if(set_audio_volume){
-        Utils.saveAndSetAudioVolume(activity.getApplicationContext())
-      }
-      if(Globals.prefs.get.getBoolean("volume_alert",true)){
-        checkAudioVolume()
-      }
 
-      Globals.is_playing = true
-
-      Utils.setButtonTextByState(activity.getApplicationContext())
-      if(YomiInfoUtils.showPoemText){
-        if(Utils.readCurNext(activity.getApplicationContext)){
-          activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-        }else if(auto_play && !from_swipe){
-          activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
-        }else{
-          activity.invalidateYomiInfo()
+      val rest_start = () => {
+        if(!requestAudioFocus){
+          activity.runOnUiThread(new Runnable{
+            override def run(){
+              Utils.messageDialog(activity,Right(R.string.cannot_acquire_audio_focus))
+            }
+          })
+          return
         }
+        
+        if(set_audio_volume){
+          Utils.saveAndSetAudioVolume(activity.getApplicationContext())
+        }
+        Globals.is_playing = true
+        Utils.setButtonTextByState(activity.getApplicationContext())
+        if(YomiInfoUtils.showPoemText){
+          if(Utils.readCurNext(activity.getApplicationContext)){
+            activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
+          }else if(auto_play && !from_swipe){
+            activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
+          }else{
+            activity.invalidateYomiInfo()
+          }
+        }
+        if( YomiInfoUtils.showPoemText ){
+          KarutaPlayUtils.startCheckConsistencyTimers()
+        }
+        bundle.putBoolean("auto_play",auto_play)
+        // do the rest in another thread
+        onReallyStart(bundle)
       }
-      if( YomiInfoUtils.showPoemText ){
-        KarutaPlayUtils.startCheckConsistencyTimers()
+      // We don't need to confirm both volume_alert and ringer_mode_alert since volume_alert implies ringer_mode_alert.
+      // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
+      // playing the sound won't bother silent mode.
+      if(!auto_play && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
+        val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_volume_alert) } 
+        Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),
+          (cbox) => {
+            if(cbox.isChecked){
+              val edit = Globals.prefs.get.edit
+              edit.putBoolean("volume_alert",false)
+              edit.commit()
+            }
+            rest_start()
+          }, custom)
+      }else if(!auto_play && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && isSilentMode){
+        val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
+        Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
+          (cbox) => {
+            if(cbox.isChecked){
+              val edit = Globals.prefs.get.edit
+              edit.putBoolean("ringer_mode_alert",false)
+              edit.commit()
+            }
+            rest_start()
+          }, custom)
+        
+      }else{
+        rest_start()
       }
-      bundle.putBoolean("auto_play",auto_play)
-      // do the rest in another thread
-      onReallyStart(bundle)
+
     }
   }
 

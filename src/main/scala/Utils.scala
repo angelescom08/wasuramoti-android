@@ -326,7 +326,6 @@ object Utils {
     context:Context,
     arg:Either[String,Int],
     func_yes:()=>Unit,
-    func_no:()=>Unit={()=>Unit},
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
     val builder = custom(new AlertDialog.Builder(context))
@@ -338,11 +337,7 @@ object Utils {
           func_yes()
         }
       })
-    .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
-        override def onClick(interface:DialogInterface,which:Int){
-          func_no()
-        }
-      })
+    .setNegativeButton(android.R.string.no,null)
     .create
     showDialogAndSetGlobalRef(dialog)
   }
@@ -381,12 +376,11 @@ object Utils {
     showDialogAndSetGlobalRef(dialog, func_done)
   }
 
-  def generalCheckBoxDialog(
+  def generalCheckBoxConfirmDialog(
     context:Context,
     arg_text:Either[String,Int],
     arg_checkbox:Either[String,Int],
-    func_yes:Option[(CheckBox)=>Unit],
-    func_no:Option[(CheckBox)=>Unit]=None,
+    func_yes:(CheckBox)=>Unit,
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
     ){
       val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
@@ -394,24 +388,16 @@ object Utils {
       val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
       getStringOrResource(context,arg_text).foreach(vtext.setText(_))
       getStringOrResource(context,arg_checkbox).foreach(vcheckbox.setText(_))
-      val builder = custom(new AlertDialog.Builder(context))
-      func_yes.foreach{ fy =>
-        builder.setPositiveButton(if(func_no.isEmpty){android.R.string.ok}else{android.R.string.yes},
+      val dialog = custom(new AlertDialog.Builder(context))
+        .setPositiveButton(android.R.string.ok,
           new DialogInterface.OnClickListener(){
             override def onClick(interface:DialogInterface,which:Int){
-              fy(vcheckbox)
+              func_yes(vcheckbox)
             }
         })
-      }
-      func_no.foreach{ fn =>
-        builder.setNegativeButton(android.R.string.no,
-          new DialogInterface.OnClickListener(){
-            override def onClick(interface:DialogInterface,which:Int){
-              fn(vcheckbox)
-            }
-        })
-      }
-      val dialog = builder.setView(view).create
+        .setNegativeButton(android.R.string.no,null)
+        .setView(view)
+        .create
       showDialogAndSetGlobalRef(dialog)
   }
 
@@ -598,9 +584,7 @@ object Utils {
   }
 
   def saveAndSetAudioVolume(context:Context){
-    val pref_audio_volume = Globals.prefs.get.getString("audio_volume","")
-    if(!TextUtils.isEmpty(pref_audio_volume)){
-      val pref_volume = Utils.parseFloat(pref_audio_volume)
+    readPrefAudioVolume.foreach{ pref_volume =>
       val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
         val max_volume = am.getStreamMaxVolume(Utils.getAudioStreamType)
@@ -608,6 +592,15 @@ object Utils {
         Globals.audio_volume_bkup = Some(am.getStreamVolume(Utils.getAudioStreamType))
         am.setStreamVolume(Utils.getAudioStreamType,new_volume,0)
       }
+    }
+  }
+
+  def readPrefAudioVolume():Option[Float] = {
+    val pref_audio_volume = Globals.prefs.get.getString("audio_volume","")
+    if(TextUtils.isEmpty(pref_audio_volume)){
+      None
+    }else{
+      Some(Utils.parseFloat(pref_audio_volume))
     }
   }
 
