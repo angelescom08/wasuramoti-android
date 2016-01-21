@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
-import _root_.android.media.AudioTrack
+import _root_.android.media.{AudioTrack,AudioManager}
 import _root_.android.content.{BroadcastReceiver,Context,Intent}
 import _root_.android.app.{PendingIntent,AlarmManager}
 import _root_.android.widget.Button
@@ -71,7 +71,7 @@ object AudioHelper{
     // must be multiple of channels * sizeof(Short)
     (millisec * decoder.rate.toInt / 1000) * decoder.channels * SHORT_SIZE
   }
-  def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean):Option[KarutaPlayer] = {
+  def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean, fromAuto:Boolean = false):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
     val maybe_reader = ReaderList.makeCurrentReader(app_context)
     if(maybe_reader.isEmpty){
@@ -103,7 +103,7 @@ object AudioHelper{
             // mayInterruptIfRunning must be true to set Thread.currentThread.isInterrupted() == true for AsyncTask's thread
             p.decode_task.cancel(true)
             // TODO: do we have to wait for decode to finish since it is jni ?
-            p.stop
+            p.stop(fromAuto)
           }
 
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
@@ -314,6 +314,8 @@ trait WavBufferDebugTrait{
 }
 
 object KarutaPlayUtils{
+   var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
+
   object Action extends Enumeration{
     type Action = Value
     // TODO: automatically create WakeUp{1..6}
@@ -389,15 +391,6 @@ object KarutaPlayUtils{
       }
     })
   }
-  def doAfterDone(bundle:Bundle){
-    bundle.getString("fromSender") match{
-      case SENDER_MAIN =>
-        doAfterActivity(bundle)
-      case SENDER_CONF =>
-        doAfterConfiguration(bundle)
-    }
-  }
-
   def cancelAutoPlay(context:Context){
     cancelKarutaPlayTimer(context,Action.Auto)
   }
@@ -484,18 +477,20 @@ object KarutaPlayUtils{
       }
       val activity = Globals.player.get.activity
       val context = activity.getApplicationContext
-      val auto = Globals.prefs.get.getBoolean("autoplay_enable",false)
+      val auto = bundle.getBoolean("autoplay",false)
       if(auto || Globals.prefs.get.getBoolean("move_next_after_done",true)){
         activity.moveToNextFuda(!auto,auto)
       }else{
         activity.refreshAndInvalidate()
       }
-      if(auto && Globals.player.isEmpty && Globals.prefs.get.getBoolean("autoplay_repeat",false) &&
-        FudaListHelper.allReadDone(context)
-      ){
-        FudaListHelper.shuffle(context)
-        FudaListHelper.moveToFirst(context)
-        activity.refreshAndInvalidate(auto)
+      if(auto && Globals.player.isEmpty){
+        if(Globals.prefs.get.getBoolean("autoplay_repeat",false) && FudaListHelper.allReadDone(context)){
+          FudaListHelper.shuffle(context)
+          FudaListHelper.moveToFirst(context)
+          activity.refreshAndInvalidate(auto)
+        }else{
+          KarutaPlayUtils.abandonAudioFocus(context)
+        }
       }
     }
   }
@@ -509,6 +504,67 @@ object KarutaPlayUtils{
         }
       }
     }
+  }
+  def requestAudioFocus(context:Context):Boolean = {
+    if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
+      return true
+    }
+    abandonAudioFocus(context)
+    val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+    if(am != null){
+      val af = new AudioManager.OnAudioFocusChangeListener(){
+        override def onAudioFocusChange(focusChange:Int){
+          import AudioManager._
+          focusChange match {
+            case AUDIOFOCUS_GAIN =>
+              recoverVolume()
+            case AUDIOFOCUS_LOSS =>
+              // TODO: It is recommended to completely clean up this player when AUDIOFOCUS_LOSS event.
+              Globals.player.foreach{_.stop()}     
+            case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
+              // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
+              //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
+              //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
+              //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
+              //       So we do nothing here yet.
+              //       See following link:
+              //          http://developer.android.com/training/managing-audio/audio-focus.html
+              //          https://code.google.com/p/android/issues/detail?id=155984
+              //          https://code.google.com/p/android/issues/detail?id=17995
+
+              lowerVolume()
+            case _ =>
+          }
+        }
+      }
+      val res = am.requestAudioFocus(af,Utils.getAudioStreamType,AudioManager.AUDIOFOCUS_GAIN)
+      if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+        audio_focus = Some(af)
+        return true
+      }else{
+        return false
+      }
+    }
+    return true
+  }
+
+  def abandonAudioFocus(context:Context){
+    audio_focus.foreach{af =>
+      if(android.os.Build.VERSION.SDK_INT >= 8){
+        val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+        if(am != null){
+          am.abandonAudioFocus(af)
+          audio_focus = None
+        }
+      } 
+    }
+  }
+  def lowerVolume(){
+    //TODO: implement this
+  }
+
+  def recoverVolume(){
+    //TODO: implement this
   }
 }
 

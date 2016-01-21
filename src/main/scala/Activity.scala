@@ -124,7 +124,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
   def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
-      Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force)
+      Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force, fromAuto)
       Utils.setButtonTextByState(getApplicationContext(), fromAuto)
     }
   }
@@ -476,8 +476,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     super.onStop()
   }
   override def onDestroy(){
-    Globals.player.foreach{_.abandonAudioFocus()}
-    Utils.deleteCache(getApplicationContext(),_=>true)
+    KarutaPlayUtils.abandonAudioFocus(getApplicationContext)
+    Utils.deleteCache(getApplicationContext,_=>true)
     if(OpenSLESPlayer.library_loaded){
       OpenSLESPlayer.slesShutdown()
     }

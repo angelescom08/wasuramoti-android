@@ -42,7 +42,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   var current_yomi_info = None:Option[Int]
   var set_audio_volume = true
   var play_started = None:Option[Long]
-  var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
 
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
@@ -222,77 +221,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     eql.isEmpty || ! eql.forall{  _ < 0.05}
   }
 
-  def requestAudioFocus():Boolean = {
-    if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
-      return true
-    }
-    abandonAudioFocus()
-    val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-    if(am != null){
-      val af = new AudioManager.OnAudioFocusChangeListener(){
-        override def onAudioFocusChange(focusChange:Int){
-          import AudioManager._
-          focusChange match {
-            case AUDIOFOCUS_GAIN =>
-              recoverVolume()
-            case AUDIOFOCUS_LOSS =>
-              // TODO: It is recommended to completely clean up this player when AUDIOFOCUS_LOSS event.
-              stop()     
-            case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
-              // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
-              //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
-              //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
-              //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
-              //       So we do nothing here yet.
-              //       See following link:
-              //          http://developer.android.com/training/managing-audio/audio-focus.html
-              //          https://code.google.com/p/android/issues/detail?id=155984
-              //          https://code.google.com/p/android/issues/detail?id=17995
 
-              lowerVolume()
-            case _ =>
-          }
-        }
-      }
-      val res = am.requestAudioFocus(af,Utils.getAudioStreamType,AudioManager.AUDIOFOCUS_GAIN)
-      if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-        audio_focus = Some(af)
-        return true
-      }else{
-        return false
-      }
-    }
-    return true
-  }
-
-  def abandonAudioFocus(){
-    audio_focus.foreach{af =>
-      if(android.os.Build.VERSION.SDK_INT >= 8){
-        val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-        if(am != null){
-          am.abandonAudioFocus(af)
-          audio_focus = None
-        }
-      } 
-    }
-  }
-
-  def lowerVolume(){
-    //TODO: implement this
-  }
-
-  def recoverVolume(){
-    //TODO: implement this
-  }
-
-  def play(bundle:Bundle,auto_play:Boolean=false,from_swipe:Boolean=false){
+  def play(bundle:Bundle,fromAuto:Boolean=false,fromSwipe:Boolean=false){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
       }
-
       val rest_start = () => {
-        if(!requestAudioFocus){
+        if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity.getApplicationContext)){
           activity.runOnUiThread(new Runnable{
             override def run(){
               Utils.messageDialog(activity,Right(R.string.cannot_acquire_audio_focus))
@@ -309,7 +245,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if(YomiInfoUtils.showPoemText){
           if(Utils.readCurNext(activity.getApplicationContext)){
             activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-          }else if(auto_play && !from_swipe){
+          }else if(fromAuto && !fromSwipe){
             activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
           }else{
             activity.invalidateYomiInfo()
@@ -318,14 +254,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if( YomiInfoUtils.showPoemText ){
           KarutaPlayUtils.startCheckConsistencyTimers()
         }
-        bundle.putBoolean("auto_play",auto_play)
         // do the rest in another thread
         onReallyStart(bundle)
       }
       // We don't need to confirm both volume_alert and ringer_mode_alert since volume_alert implies ringer_mode_alert.
       // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
       // playing the sound won't bother silent mode.
-      if(!auto_play && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
+      if(!fromAuto && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_volume_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),
           (cbox) => {
@@ -336,7 +271,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
             rest_start()
           }, custom)
-      }else if(!auto_play && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && isSilentMode){
+      }else if(!fromAuto && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && isSilentMode){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
           (cbox) => {
@@ -351,7 +286,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }else{
         rest_start()
       }
-
     }
   }
 
@@ -372,7 +306,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
-    abandonAudioFocus()
   }
 
   def doWhenBorder(){
@@ -388,7 +321,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       music_track = None
       doWhenStop()
-      KarutaPlayUtils.doAfterDone(bundle)
+      if(!bundle.getBoolean("autoplay",false)){
+        KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
+      }
+    }
+    bundle.getString("fromSender") match{
+      case KarutaPlayUtils.SENDER_MAIN =>
+        KarutaPlayUtils.doAfterActivity(bundle)
+      case KarutaPlayUtils.SENDER_CONF =>
+        KarutaPlayUtils.doAfterConfiguration(bundle)
     }
   }
 
@@ -503,13 +444,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         KarutaPlayUtils.startBorderTimer(t)
       }
 
-      // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
-      // Therefore there seems no easy way to do a task when AudioTrack has finished playing.
-      // As a workaround, I will start timer that ends when audio length elapsed.
-      // See the following for the bug info:
-      //   https://code.google.com/p/android/issues/detail?id=2563
 
-      // Also, using AudioTrack in static mode seems to have another bug that
+      // Using AudioTrack in static mode seems to have bug that
       // leaks shared memory even after stopped, released, and set to null.
       // You can confirm it by either executing `adb shell dumpsys meminfo karuta.hpnpwd.wasuramoti` and see Ashmem of PSS increases continuously in Android 4.x,
       // or `adb shell su -c "ls -l /proc/<pid>/fd | grep ashmem"` and see that a lot of symbolic link to /dev/ashmem is created.
@@ -520,17 +456,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=17995
       val play_end_time = buffer_length_millisec+200
-      KarutaPlayUtils.startKarutaPlayTimer(
-        activity.getApplicationContext,
-        KarutaPlayUtils.Action.End,
-        play_end_time,
-        {_.putExtra("bundle",bundle)}
-      )
 
       // Try to wake up CPU three times on autoplay mode.
       // As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
       // Therefore this timer is for NEXT play since autoplay_span might be less than five seconds.
-      // Note: auto_play variable means "this playback has been started automatically" so we have to use autoplay_enable preference here.
+      // Note: fromAuto variable means "this playback has been started automatically" so we have to use autoplay_enable preference here.
       // TODO: If the autoplay timer is inexact and fires before the current playing ends, we cannot continue auto play.
       if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN &&
         Globals.prefs.get.getBoolean("autoplay_enable",false)){
@@ -541,7 +471,20 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           play_end_time + auto_delay
           )
         KarutaPlayUtils.startWakeUpTimers(activity.getApplicationContext,play_end_time)
+        bundle.putBoolean("autoplay",true)
       }
+
+      // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
+      // Therefore there seems no easy way to do a task when AudioTrack has finished playing.
+      // As a workaround, I will start timer that ends when audio length elapsed.
+      // See the following for the bug info:
+      //   https://code.google.com/p/android/issues/detail?id=2563
+      KarutaPlayUtils.startKarutaPlayTimer(
+        activity.getApplicationContext,
+        KarutaPlayUtils.Action.End,
+        play_end_time,
+        {_.putExtra("bundle",bundle)}
+      )
 
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
@@ -562,7 +505,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     thread.start()
   }
 
-  def stop(){
+  def stop(fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
       KarutaPlayUtils.cancelKarutaPlayTimer(
         activity.getApplicationContext,KarutaPlayUtils.Action.End
@@ -581,6 +524,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       music_track = None
       play_started = None
       doWhenStop()
+      if(!fromAuto){
+        KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
+      }
     }
   }
   def waitDecode(){
