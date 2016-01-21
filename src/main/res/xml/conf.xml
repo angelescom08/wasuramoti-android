@@ -120,6 +120,26 @@
           android:defaultValue="true"
           />
       </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_behavior">
+        <CheckBoxPreference
+          android:key="use_audio_focus"
+          android:title="@string/conf_use_audio_focus"
+          android:summary="@string/conf_use_audio_focus_summary"
+          android:defaultValue="true"
+          />
+        <CheckBoxPreference
+          android:key="ringer_mode_alert"
+          android:title="@string/conf_ringer_mode_alert"
+          android:summary="@string/conf_ringer_mode_alert_summary"
+          android:defaultValue="true"
+          />
+        <CheckBoxPreference
+          android:key="volume_alert"
+          android:title="@string/conf_volume_alert"
+          android:summary="@string/conf_volume_alert_summary"
+          android:defaultValue="true"
+          />
+      </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_time">
         <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
           android:key="dimlock_minutes"
@@ -193,24 +213,6 @@
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_playback_detail">
-        <CheckBoxPreference
-          android:key="use_audio_focus"
-          android:title="@string/conf_use_audio_focus"
-          android:summary="@string/conf_use_audio_focus_summary"
-          android:defaultValue="true"
-          />
-        <CheckBoxPreference
-          android:key="ringer_mode_alert"
-          android:title="@string/conf_ringer_mode_alert"
-          android:summary="@string/conf_ringer_mode_alert_summary"
-          android:defaultValue="true"
-          />
-        <CheckBoxPreference
-          android:key="volume_alert"
-          android:title="@string/conf_volume_alert"
-          android:summary="@string/conf_volume_alert_summary"
-          android:defaultValue="true"
-          />
         <CheckBoxPreference
           android:key="use_opensles"
           android:title="@string/conf_use_opensles"

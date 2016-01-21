@@ -229,11 +229,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       val rest_start = () => {
         if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity.getApplicationContext)){
-          activity.runOnUiThread(new Runnable{
-            override def run(){
-              Utils.messageDialog(activity,Right(R.string.cannot_acquire_audio_focus))
-            }
-          })
+          Toast.makeText(activity.getApplicationContext,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
           return
         }
         
