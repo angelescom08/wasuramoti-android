@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import _root_.android.media.AudioManager
 import _root_.android.content.{BroadcastReceiver,Context,Intent}
 import _root_.android.app.{PendingIntent,AlarmManager}
-import _root_.android.widget.Button
+import _root_.android.widget.{Button,Toast}
 import _root_.android.os.{Bundle,Handler}
 import _root_.android.net.Uri
 import _root_.android.util.Log
@@ -12,6 +12,7 @@ import _root_.android.view.View
 import scala.collection.mutable
 object KarutaPlayUtils{
    var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
+   var have_to_mute = false:Boolean
 
   object Action extends Enumeration{
     type Action = Value
@@ -90,6 +91,12 @@ object KarutaPlayUtils{
   }
   def cancelAutoPlay(context:Context){
     cancelKarutaPlayTimer(context,Action.Auto)
+  }
+
+  def cancelAllPlay(context:Context){
+    cancelAutoPlay(context)
+    Globals.player.foreach(_.stop())
+    cancelWakeUpTimers(context)
   }
 
   def startBorderTimer(delay:Long){
@@ -216,19 +223,17 @@ object KarutaPlayUtils{
             case AUDIOFOCUS_GAIN =>
               recoverVolume()
             case AUDIOFOCUS_LOSS =>
-              // TODO: It is recommended to completely clean up this player when AUDIOFOCUS_LOSS event.
-              Globals.player.foreach{_.stop()}     
+              cancelAllPlay(context)
+              Toast.makeText(context,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
             case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
               // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
               //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
               //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
-              //       Also, setting AudioTrack's boost level was introduced at API >= 21, and there has no method to get current boost level.
-              //       So we do nothing here yet.
+              //       So we just lower the volume in both cases.
               //       See following link:
               //          http://developer.android.com/training/managing-audio/audio-focus.html
               //          https://code.google.com/p/android/issues/detail?id=155984
               //          https://code.google.com/p/android/issues/detail?id=17995
-
               lowerVolume()
             case _ =>
           }
@@ -257,11 +262,23 @@ object KarutaPlayUtils{
     }
   }
   def lowerVolume(){
-    //TODO: implement this
+    have_to_mute = true
+    Globals.player.foreach{
+      _.music_track.foreach{
+        case Left(atrk) => Utils.setVolumeMute(atrk)
+        case Right(_) => // TODO: implement this
+      }
+    }
   }
 
   def recoverVolume(){
-    //TODO: implement this
+    have_to_mute = false
+    Globals.player.foreach{
+      _.music_track.foreach{
+        case Left(atrk) => Utils.setVolumeNormal(atrk)
+        case Right(_) => // TODO: implement this
+      }
+    }
   }
 }
 

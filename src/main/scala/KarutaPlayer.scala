@@ -251,7 +251,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           KarutaPlayUtils.startCheckConsistencyTimers()
         }
         // do the rest in another thread
-        onReallyStart(bundle)
+        onReallyStart(bundle, fromAuto)
       }
       // We don't need to confirm both volume_alert and ringer_mode_alert since volume_alert implies ringer_mode_alert.
       // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
@@ -329,7 +329,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def onReallyStart(bundle:Bundle){
+  def onReallyStart(bundle:Bundle, fromAuto:Boolean){
     // Since makeMusicTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
     // Note: when calling Utils.messageDialog, you have to use activity.runOnUithread
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
@@ -485,8 +485,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
       music_track.foreach{
-        case Left(atrk) => atrk.play()
-        case Right(_) => OpenSLESPlayer.slesPlay()
+        case Left(atrk) => {
+          if(fromAuto && KarutaPlayUtils.have_to_mute){
+            Utils.setVolumeMute(atrk)
+          }else{
+            KarutaPlayUtils.have_to_mute  = false
+          }
+          atrk.play()
+        }
+        case Right(_) => OpenSLESPlayer.slesPlay() // TODO: mute when have_to_mute
       }
     }}})
     thread.setUncaughtExceptionHandler(

@@ -10,7 +10,7 @@ import _root_.android.preference.{DialogPreference,PreferenceManager}
 import _root_.android.text.{TextUtils,Html}
 import _root_.android.text.method.LinkMovementMethod
 import _root_.android.os.{Environment,SystemClock}
-import _root_.android.media.AudioManager
+import _root_.android.media.{AudioTrack,AudioManager}
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
 import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox}
 import _root_.android.content.pm.PackageManager
@@ -732,6 +732,20 @@ object Utils {
     val poss = container.getCheckedItemPositions()
     val adapter = container.getAdapter().asInstanceOf[ArrayAdapter[T]]
     (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_) }
+  }
+
+  def setVolume(track:AudioTrack,gain:Float){
+    if(android.os.Build.VERSION.SDK_INT >= 21){
+      track.setVolume(gain)
+    }else{
+      track.setStereoVolume(gain,gain)
+    }
+  }
+  def setVolumeMute(track:AudioTrack){
+    setVolume(track,0.0f)
+  }
+  def setVolumeNormal(track:AudioTrack){
+    setVolume(track,1.0f)
   }
 }
 

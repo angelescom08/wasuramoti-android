@@ -116,12 +116,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def cancelAllPlay(){
-    KarutaPlayUtils.cancelAutoPlay(getApplicationContext)
-    Globals.player.foreach(_.stop())
-    KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
-  }
-
   def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force, fromAuto)
@@ -147,7 +141,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
-    cancelAllPlay()
+    KarutaPlayUtils.cancelAllPlay(getApplicationContext)
     Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
