@@ -22,6 +22,7 @@ import _root_.java.util.Locale
 import _root_.java.text.NumberFormat
 
 import scala.collection.mutable
+import _root_.karuta.hpnpwd.audio.OpenSLESPlayer
 
 object Globals {
   val IS_DEBUG = false
@@ -741,11 +742,11 @@ object Utils {
       track.setStereoVolume(gain,gain)
     }
   }
-  def setVolumeMute(track:AudioTrack){
-    setVolume(track,0.0f)
-  }
-  def setVolumeNormal(track:AudioTrack){
-    setVolume(track,1.0f)
+  def setVolumeMute(track:Either[AudioTrack,OpenSLESTrack],is_mute:Boolean){
+    track match {
+      case Left(t) => setVolume(t, if(is_mute){0.0f}else{1.0f})
+      case Right(_) => OpenSLESPlayer.slesMute(is_mute)
+    }
   }
 }
 

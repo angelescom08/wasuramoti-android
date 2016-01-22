@@ -226,14 +226,15 @@ object KarutaPlayUtils{
               cancelAllPlay(context)
               Toast.makeText(context,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
             case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
-              // TODO: The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
-              //       As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
-              //       However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
-              //       So we just lower the volume in both cases.
-              //       See following link:
-              //          http://developer.android.com/training/managing-audio/audio-focus.html
-              //          https://code.google.com/p/android/issues/detail?id=155984
-              //          https://code.google.com/p/android/issues/detail?id=17995
+              // The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
+              // As for AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK event, we should lower the volume, and recover it in next AUDIOFOCUS_GAIN event.
+              // However, current KarutaPlayer does not support pause/resume because of AudioTrack's bug (re-using AudioTrack is completely broken!).
+              // So we just lower the volume in both cases.
+              // TODO: pause/resume when AUDIOFOCUS_LOSS_TRANSIENT/AUDIOFOCUS_GAIN
+              // See following link:
+              //  http://developer.android.com/training/managing-audio/audio-focus.html
+              //  https://code.google.com/p/android/issues/detail?id=155984
+              //  https://code.google.com/p/android/issues/detail?id=17995
               lowerVolume()
             case _ =>
           }
@@ -264,20 +265,14 @@ object KarutaPlayUtils{
   def lowerVolume(){
     have_to_mute = true
     Globals.player.foreach{
-      _.music_track.foreach{
-        case Left(atrk) => Utils.setVolumeMute(atrk)
-        case Right(_) => // TODO: implement this
-      }
+      _.music_track.foreach{Utils.setVolumeMute(_,true)}
     }
   }
 
   def recoverVolume(){
     have_to_mute = false
     Globals.player.foreach{
-      _.music_track.foreach{
-        case Left(atrk) => Utils.setVolumeNormal(atrk)
-        case Right(_) => // TODO: implement this
-      }
+      _.music_track.foreach{Utils.setVolumeMute(_,false)}
     }
   }
 }

@@ -484,17 +484,17 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
-      music_track.foreach{
-        case Left(atrk) => {
-          if(fromAuto && KarutaPlayUtils.have_to_mute){
-            Utils.setVolumeMute(atrk)
-          }else{
-            KarutaPlayUtils.have_to_mute  = false
-          }
-          atrk.play()
+      music_track.foreach{ t => {
+        if(fromAuto && KarutaPlayUtils.have_to_mute){
+          Utils.setVolumeMute(t,true)
+        }else{
+          KarutaPlayUtils.have_to_mute  = false
         }
-        case Right(_) => OpenSLESPlayer.slesPlay() // TODO: mute when have_to_mute
-      }
+        t match {
+          case Left(atrk) => atrk.play()
+          case Right(_) => OpenSLESPlayer.slesPlay()
+        }
+      }}
     }}})
     thread.setUncaughtExceptionHandler(
       new Thread.UncaughtExceptionHandler(){

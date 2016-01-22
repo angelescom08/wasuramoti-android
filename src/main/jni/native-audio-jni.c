@@ -64,6 +64,7 @@ void destroyPlayer(){
       bqPlayerObject = NULL;
       bqPlayerPlay = NULL;
       bqPlayerBufferQueue = NULL;
+      bqPlayerVolume = NULL;
   }
 }
 
@@ -225,6 +226,11 @@ jboolean Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesStop(JNIEnv* env, jclass cl
   stopAndClear();
 }
 
+void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesMute(JNIEnv* env, jclass clazz, jboolean is_mute){
+  if(bqPlayerVolume != NULL){
+    (*bqPlayerVolume)->SetMute(bqPlayerVolume,  (is_mute == JNI_TRUE) ? SL_BOOLEAN_TRUE : SL_BOOLEAN_FALSE);
+  }
+}
 
 // shut down the native audio system
 void Java_karuta_hpnpwd_audio_OpenSLESPlayer_slesShutdown(JNIEnv* env, jclass clazz)

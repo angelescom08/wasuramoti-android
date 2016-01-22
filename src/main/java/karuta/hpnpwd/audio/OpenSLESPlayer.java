@@ -19,4 +19,5 @@ public class OpenSLESPlayer {
   public static native boolean slesPlay();
   public static native boolean slesStop();
   public static native void slesShutdown();
+  public static native void slesMute(boolean is_mute);
 }
