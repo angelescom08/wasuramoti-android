@@ -450,7 +450,7 @@
         </head>
         <body>
           <h3>FAQ</h3>
-          Frequestly asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
+          Frequently asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
           Answer to anonymous question, request, bug report will be published here.<br/>
           <hr/>
           <h3>Anonymous Form</h3>
@@ -549,7 +549,7 @@
   <string name="opensles_init_error">OpenSL ES initialization error. Please disable OpenSL ES.</string>
   <string name="opensles_invalid_audio_format">Current OpenSL ES Player only supports 22050Hz, mono audio.</string>
   <string name="conf_audio_stream_type">Stream Type</string>
-  <string name="conf_audio_stream_type_summary">Also try this option when you cannot play audio.</string>
+  <string name="conf_audio_stream_type_summary">Also try this option when you cannot play audio. However, if you choose other than `Music`, it may conflict with call app, so take care.</string>
   <string-array name="conf_audio_stream_type_entries">
     <item>Music</item>
     <item>Notification</item>
@@ -570,12 +570,12 @@
   <string name="category_behavior">Well Behaved</string>
   <string name="conf_use_audio_focus" >Use Audio Focus</string>
   <string name="conf_use_audio_focus_summary">Stop playing when other app starts to play sound.</string>
-  <string name="stopped_since_audio_focus">Wasuramoti stops playing since other app is playing sound.</string>
+  <string name="stopped_since_audio_focus">Wasuramoti stopped playing since other app is playing sound.</string>
   <string name="conf_ringer_mode_alert">Silent Mode Alert</string>
-  <string name="conf_ringer_mode_alert_summary">If you try to play in silent mode, give an alert.</string>
-  <string name="conf_ringer_mode_alert_confirm">This device is now in Silent Mode. Do you really want to play?</string>
+  <string name="conf_ringer_mode_alert_summary">Confirm before playing when device is in silent mode.</string>
+  <string name="conf_ringer_mode_alert_confirm">This device is now in silent mode. Do you want to play anyway?</string>
   <string name="conf_volume_alert">Volume Alert</string>
-  <string name="conf_volume_alert_summary">If you try to play when volume is too small, give an alert.</string>
-  <string name="conf_volume_alert_confirm">Currently, the volume of this device is very small, so you may not hear the sound, Do you really want to play?</string>
+  <string name="conf_volume_alert_summary">Confirm before playing when device volume is small.</string>
+  <string name="conf_volume_alert_confirm">The device volume is too small to hear the sound. Do you want to play anyway?</string>
   <string name="never_confirm_again">Don\'t alert this again.</string>
 </resources>

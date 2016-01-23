@@ -513,7 +513,7 @@
   <string name="opensles_init_error">OpenSL ESの初期化に失敗しました．OpenSL ESオプションを無効化して下さい．</string>
   <string name="opensles_invalid_audio_format">現在OpenSL ES Playerは22050Hzのモノラル音声しかサポートしていません．</string>
   <string name="conf_audio_stream_type">Stream Type</string>
-  <string name="conf_audio_stream_type_summary">音声を正常に再生できない場合はこれも試してみて下さい</string>
+  <string name="conf_audio_stream_type_summary">音声を正常に再生できない場合はこれも試してみて下さい．ただし「音楽」以外を指定すると通話アプリなどと競合する可能性があるので注意して下さい．</string>
   <string-array name="conf_audio_stream_type_entries">
     <item>音楽</item>
     <item>通知音</item>
@@ -532,6 +532,6 @@
   <string name="conf_ringer_mode_alert_confirm">現在この端末はマナーモードです．本当に再生しますか？</string>
   <string name="conf_volume_alert">音量警告</string>
   <string name="conf_volume_alert_summary">音量が小さい時に再生しようとしたら警告を出す</string>
-  <string name="conf_volume_alert_confirm">現在この端末の音量は最小に設定されています．再生しても聞こえない可能性がありますが本当に再生しますか？</string>
+  <string name="conf_volume_alert_confirm">現在この端末の音量が小さいので聞こえないかもしれません．本当に再生しますか？</string>
   <string name="never_confirm_again">次からはこの警告を出さない</string>
 </resources>

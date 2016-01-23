@@ -184,7 +184,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   def isDeviceVolumeTooSmall():Boolean = {
-    val threshold = 0.05f
+    val threshold = 0.08f
     val av = Utils.readPrefAudioVolume
     if(set_audio_volume && av.nonEmpty){
       return (av.get < threshold)
