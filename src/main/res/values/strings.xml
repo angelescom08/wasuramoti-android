@@ -572,10 +572,10 @@
   <string name="conf_use_audio_focus_summary">Stop playing when other app starts to play sound.</string>
   <string name="stopped_since_audio_focus">Wasuramoti stopped playing since other app is playing sound.</string>
   <string name="conf_ringer_mode_alert">Silent Mode Alert</string>
-  <string name="conf_ringer_mode_alert_summary">Confirm before playing when device is in silent mode.</string>
-  <string name="conf_ringer_mode_alert_confirm">This device is now in silent mode. Do you want to play anyway?</string>
+  <string name="conf_ringer_mode_alert_summary">Confirm before playing when device is in silent mode and earphone is not plugged in.</string>
+  <string name="conf_ringer_mode_alert_confirm">This device is in silent mode and earphone is not plugged in. Do you want to play it anyway?</string>
   <string name="conf_volume_alert">Volume Alert</string>
   <string name="conf_volume_alert_summary">Confirm before playing when device volume is small.</string>
-  <string name="conf_volume_alert_confirm">The device volume is too small to hear the sound. Do you want to play anyway?</string>
+  <string name="conf_volume_alert_confirm">The device volume is too small to hear the sound. Do you want to play it anyway?</string>
   <string name="never_confirm_again">Don\'t alert this again.</string>
 </resources>

@@ -528,8 +528,8 @@
   <string name="conf_use_audio_focus_summary">他のアプリが音を鳴らし始めたら再生を止める</string>
   <string name="stopped_since_audio_focus">他のアプリが音を鳴らしているのでわすらもちの詠みを止めます</string>
   <string name="conf_ringer_mode_alert">マナーモード警告</string>
-  <string name="conf_ringer_mode_alert_summary">マナーモードの時に再生しようとしたら警告を出す</string>
-  <string name="conf_ringer_mode_alert_confirm">現在この端末はマナーモードです．本当に再生しますか？</string>
+  <string name="conf_ringer_mode_alert_summary">マナーモードかつイヤホンが接続していない時に再生しようとしたら警告を出す</string>
+  <string name="conf_ringer_mode_alert_confirm">現在この端末はマナーモードでイヤホンも接続していません．本当に再生しますか？</string>
   <string name="conf_volume_alert">音量警告</string>
   <string name="conf_volume_alert_summary">音量が小さい時に再生しようとしたら警告を出す</string>
   <string name="conf_volume_alert_confirm">現在この端末の音量が小さいので聞こえないかもしれません．本当に再生しますか？</string>

@@ -202,12 +202,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def isSilentMode():Boolean = {
+  def haveToAlertForSilentMode():Boolean = {
     val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(am != null){
       am.getRingerMode match {
         case AudioManager.RINGER_MODE_SILENT | AudioManager.RINGER_MODE_VIBRATE =>
-          true
+          // alert only when is earphone is not plugged in
+          ! am.isWiredHeadsetOn && ! am.isBluetoothScoOn && ! am.isBluetoothA2dpOn
         case _ =>
           false
       }
@@ -267,7 +268,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
             rest_start()
           }, custom)
-      }else if(!fromAuto && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && isSilentMode){
+      }else if(!fromAuto && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
           (cbox) => {
