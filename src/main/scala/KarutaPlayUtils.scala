@@ -13,6 +13,8 @@ import scala.collection.mutable
 object KarutaPlayUtils{
    var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
    var have_to_mute = false:Boolean
+   var already_confirmed_for_volume = false:Boolean
+   var already_confirmed_for_ringer_mode = false:Boolean
 
   object Action extends Enumeration{
     type Action = Value

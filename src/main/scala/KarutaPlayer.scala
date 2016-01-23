@@ -257,10 +257,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // We don't need to confirm both volume_alert and ringer_mode_alert since volume_alert implies ringer_mode_alert.
       // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
       // playing the sound won't bother silent mode.
-      if(!fromAuto && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
+      if(!fromAuto && !KarutaPlayUtils.already_confirmed_for_volume
+        && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_volume_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),
           (cbox) => {
+            KarutaPlayUtils.already_confirmed_for_volume = true
             if(cbox.isChecked){
               val edit = Globals.prefs.get.edit
               edit.putBoolean("volume_alert",false)
@@ -268,10 +270,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
             rest_start()
           }, custom)
-      }else if(!fromAuto && Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
+      }else if(!fromAuto && !KarutaPlayUtils.already_confirmed_for_ringer_mode &&
+        Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
           (cbox) => {
+            KarutaPlayUtils.already_confirmed_for_ringer_mode = true
             if(cbox.isChecked){
               val edit = Globals.prefs.get.edit
               edit.putBoolean("ringer_mode_alert",false)
