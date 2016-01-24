@@ -436,7 +436,7 @@
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>
   <string name="intended_use_recreation_desc">
-    上の句→下の句(2回) の順番で詠み上げます．詠み句は上の句のみ表示されます．
+    上の句→下の句→下の句の順番で詠み上げます．詠み句は上の句のみ表示されます．
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[

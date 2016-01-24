@@ -13,8 +13,8 @@ import scala.collection.mutable
 object KarutaPlayUtils{
    var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
    var have_to_mute = false:Boolean
-   var already_confirmed_for_volume = false:Boolean
-   var already_confirmed_for_ringer_mode = false:Boolean
+   var last_confirmed_for_volume = None:Option[Long]
+   var last_confirmed_for_ringer_mode = None:Option[Long]
 
   object Action extends Enumeration{
     type Action = Value
@@ -275,6 +275,14 @@ object KarutaPlayUtils{
     have_to_mute = false
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,false)}
+    }
+  }
+
+
+  val CONFIRM_THRESHOLD_TIME = 15*60*1000 // 15 minutes
+  def elapsedEnoghSinceLastConfirm(cur_time:Long,prev_time:Option[Long]):Boolean = {
+    prev_time.forall{
+      cur_time - _ > CONFIRM_THRESHOLD_TIME
     }
   }
 }

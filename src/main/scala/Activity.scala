@@ -453,8 +453,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
     }
     this.setVolumeControlStream(Utils.getAudioStreamType)
-    KarutaPlayUtils.already_confirmed_for_volume = false
-    KarutaPlayUtils.already_confirmed_for_ringer_mode = false
   }
   override def onPause(){
     super.onPause()
