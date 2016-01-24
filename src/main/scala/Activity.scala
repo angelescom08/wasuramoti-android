@@ -471,12 +471,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   override def onStop(){
     super.onStop()
   }
+  // don't forget that this method may be called when device is rotated
   override def onDestroy(){
-    KarutaPlayUtils.abandonAudioFocus(getApplicationContext)
     Utils.deleteCache(getApplicationContext,_=>true)
-    if(OpenSLESPlayer.library_loaded){
-      OpenSLESPlayer.slesShutdown()
-    }
     super.onDestroy()
   }
   def startDimLockTimer(){
