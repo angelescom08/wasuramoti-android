@@ -398,10 +398,9 @@
   <string name="fudaset_five_color_orange">Five Colors: Orange</string>
 
   <string name="move_position_title">Moving</string>
-  <string name="move_button_prev">Previous</string>
-  <string name="move_button_next">Next</string>
-  <string name="move_button_prev_ten">- 10</string>
-  <string name="move_button_next_ten">+ 10</string>
+  <string name="move_button_goto_num">Move</string>
+  <string name="move_button_prev">&lt;</string>
+  <string name="move_button_next">&gt;</string>
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_unit">minutes</string>

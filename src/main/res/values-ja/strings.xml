@@ -363,10 +363,7 @@
   <string name="fudaset_five_color_orange">五色かるた: 橙</string>
 
   <string name="move_position_title">札移動</string>
-  <string name="move_button_prev">前の札</string>
-  <string name="move_button_next">次の札</string>
-  <string name="move_button_prev_ten">10個前の札</string>
-  <string name="move_button_next_ten">10個次の札</string>
+  <string name="move_button_goto_num">移動</string>
 
   <string name="timer_minutes_elapsed">分経過しました</string>
   <string name="timer_unit">分</string>
