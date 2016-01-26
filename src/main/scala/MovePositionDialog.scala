@@ -2,10 +2,11 @@ package karuta.hpnpwd.wasuramoti
 
 import _root_.android.app.{AlertDialog,Dialog}
 import _root_.android.os.{Bundle,Handler}
-import _root_.android.view.{View,LayoutInflater,MotionEvent}
-import _root_.android.widget.{TextView,Button}
+import _root_.android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
+import _root_.android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
 import _root_.android.support.v4.app.DialogFragment
-import _root_.android.content.DialogInterface
+import _root_.android.content.{DialogInterface,Context}
+import _root_.android.text.{Editable,TextWatcher}
 
 import java.lang.Runnable
 
@@ -108,6 +109,48 @@ class MovePositionDialog extends DialogFragment{
     val (index_s,total_s) = Utils.makeDisplayedNum(current_index, numbers_to_read)
     view.findViewById(R.id.move_position_total).asInstanceOf[TextView].setText(total_s.toString)
     setCurrentIndex(text)
+
+    val all_list = AllFuda.get(getActivity,R.array.list_full)
+    val author_list = AllFuda.get(getActivity,R.array.author)
+    // TODO: show only poem in fudaset
+    val fudalist = all_list.zip(author_list).zipWithIndex.map{case ((poem,author),index) =>
+      val p = AllFuda.removeInsideParens(poem)
+      val a = AllFuda.removeInsideParens(author)
+      new SearchFudaListItem(p,a,index)
+    }
+    val filter = new Filter(){
+      override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
+        // TODO 
+        null
+      }
+      override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
+        // TODO
+      }
+    }
+    val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist,filter)
+    val list_view = view.findViewById(R.id.move_search_list).asInstanceOf[ListView]
+    list_view.setAdapter(adapter)
+    list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+      override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
+        FudaListHelper.queryIndexFromFudaNum(id.toInt).foreach{index =>{
+          val wa = getActivity.asInstanceOf[WasuramotiActivity]
+          FudaListHelper.putCurrentIndex(wa,index)
+          wa.refreshAndSetButton()
+          wa.invalidateYomiInfo()
+        }}
+        getDialog.dismiss()
+      }
+    })
+    view.findViewById(R.id.move_search_text).asInstanceOf[EditText].addTextChangedListener(new TextWatcher(){
+      override def afterTextChanged(s:Editable){
+        adapter.getFilter.filter(s)
+      }
+      override def beforeTextChanged(s:CharSequence,start:Int,count:Int,after:Int){
+      }
+      override def onTextChanged(s:CharSequence,start:Int,before:Int,count:Int){
+      }
+    })
+
     return builder.create
   }
   def onOk(){
@@ -119,3 +162,28 @@ class MovePositionDialog extends DialogFragment{
   def onNext(text:TextView){incCurrentIndex(text,1)}
 }
 
+class SearchFudaListItem(val poem_text:String, val author:String, val num:Int){
+
+}
+
+class CustomFilteredArrayAdapter(context:Context,objects:Array[SearchFudaListItem],filter:Filter) extends BaseAdapter with Filterable {
+  override def getCount:Int = {
+    objects.length
+  }
+  override def getItem(position:Int):Object = {
+    objects(position)
+  }
+  override def getItemId(position:Int):Long = {
+    objects(position).num
+  }
+  override def getView(position:Int,convertView:View, parent:ViewGroup):View = {
+    val view = Option(convertView).getOrElse{LayoutInflater.from(context).inflate(R.layout.my_simple_list_item_search,null)}
+    val item = objects(position)
+    view.findViewById(android.R.id.text1).asInstanceOf[TextView].setText(item.poem_text)
+    view.findViewById(android.R.id.text2).asInstanceOf[TextView].setText(item.author)
+    view
+  }
+  override def getFilter():Filter = {
+    return filter
+  }
+}

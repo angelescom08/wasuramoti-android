@@ -362,8 +362,10 @@
   <string name="fudaset_five_color_green">五色かるた: 緑</string>
   <string name="fudaset_five_color_orange">五色かるた: 橙</string>
 
-  <string name="move_position_title">札移動</string>
+  <string name="move_position_title">移動 / 検索</string>
   <string name="move_button_goto_num">移動</string>
+
+  <string name="move_search_hint">詠み句または歌人で検索</string>
 
   <string name="timer_minutes_elapsed">分経過しました</string>
   <string name="timer_unit">分</string>

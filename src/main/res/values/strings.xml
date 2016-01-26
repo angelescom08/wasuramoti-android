@@ -397,10 +397,12 @@
   <string name="fudaset_five_color_green">Five Colors: Green</string>
   <string name="fudaset_five_color_orange">Five Colors: Orange</string>
 
-  <string name="move_position_title">Moving</string>
+  <string name="move_position_title">Move / Search</string>
   <string name="move_button_goto_num">Move</string>
   <string name="move_button_prev">&lt;</string>
   <string name="move_button_next">&gt;</string>
+
+  <string name="move_search_hint">Search by author or poem</string>
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_unit">minutes</string>
