@@ -257,18 +257,22 @@ object FudaListHelper{
     .getOrElse(0)
   }
 
-  def getHaveToReadFromDB(cond:String):Set[String] = Globals.db_lock.synchronized{
+  def getHaveToReadFromDBAsInt(cond:String):Set[Int] = {
     val db = Globals.database.get.getReadableDatabase
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"skip "+cond+" AND num > 0",null,null,null,null,null)
     cursor.moveToFirst
     val have_to_read = ( 0 until cursor.getCount ).map{ x=>
-      val r = AllFuda.list(cursor.getInt(0)-1)
+      val r = cursor.getInt(0)
       cursor.moveToNext
       r
     }.toSet
     cursor.close
     //db.close
     have_to_read
+  }
+
+  def getHaveToReadFromDBAsString(cond:String):Set[String] = Globals.db_lock.synchronized{
+    getHaveToReadFromDBAsInt(cond).map{fudanum => AllFuda.list(fudanum-1)}
   }
 
   def getNotYetRead(index:Int):Set[String] = Globals.db_lock.synchronized{
@@ -341,7 +345,7 @@ object FudaListHelper{
   }
 
   def chooseKarafuda():Int={
-    val have_to_read = getHaveToReadFromDB("= 0")
+    val have_to_read = getHaveToReadFromDBAsString("= 0")
     val not_read = AllFuda.list.toSet -- have_to_read
     val kara = TrieUtils.makeKarafuda(have_to_read, not_read, 1)
     AllFuda.getFudaNum(kara.head)

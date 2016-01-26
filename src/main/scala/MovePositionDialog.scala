@@ -8,7 +8,9 @@ import _root_.android.support.v4.app.DialogFragment
 import _root_.android.content.{DialogInterface,Context}
 import _root_.android.text.{Editable,TextWatcher}
 
-import java.lang.Runnable
+import _root_.java.lang.Runnable
+
+import scala.util.Sorting
 
 class MovePositionDialog extends DialogFragment{
   var current_index = 0 // displayed number in TextView differs from real index
@@ -112,12 +114,11 @@ class MovePositionDialog extends DialogFragment{
 
     val all_list = AllFuda.get(getActivity,R.array.list_full)
     val author_list = AllFuda.get(getActivity,R.array.author)
-    // TODO: show only poem in fudaset
-    val fudalist = all_list.zip(author_list).zipWithIndex.map{case ((poem,author),index) =>
-      val p = AllFuda.removeInsideParens(poem)
-      val a = AllFuda.removeInsideParens(author)
-      new SearchFudaListItem(p,a,index)
-    }
+    val fudalist = FudaListHelper.getHaveToReadFromDBAsInt("= 0").map{fudanum =>
+      val poem = AllFuda.removeInsideParens(all_list(fudanum))
+      val author = AllFuda.removeInsideParens(author_list(fudanum))
+      new SearchFudaListItem(poem,author,fudanum)
+    }.toArray
     val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         // TODO 
@@ -129,6 +130,7 @@ class MovePositionDialog extends DialogFragment{
     }
     val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist,filter)
     val list_view = view.findViewById(R.id.move_search_list).asInstanceOf[ListView]
+    adapter.sort()
     list_view.setAdapter(adapter)
     list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
       override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
@@ -160,10 +162,13 @@ class MovePositionDialog extends DialogFragment{
   }
   def onPrev(text:TextView){incCurrentIndex(text,-1)}
   def onNext(text:TextView){incCurrentIndex(text,1)}
+
 }
 
-class SearchFudaListItem(val poem_text:String, val author:String, val num:Int){
-
+class SearchFudaListItem(val poem_text:String, val author:String, val num:Int) extends Ordered[SearchFudaListItem]{
+  override def compare(that:SearchFudaListItem):Int = {
+      num.compare(that.num)
+  }
 }
 
 class CustomFilteredArrayAdapter(context:Context,objects:Array[SearchFudaListItem],filter:Filter) extends BaseAdapter with Filterable {
@@ -185,5 +190,9 @@ class CustomFilteredArrayAdapter(context:Context,objects:Array[SearchFudaListIte
   }
   override def getFilter():Filter = {
     return filter
+  }
+  def sort(){
+    Sorting.quickSort(objects)
+    super.notifyDataSetChanged()
   }
 }

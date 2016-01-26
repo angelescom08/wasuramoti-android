@@ -18,7 +18,7 @@
   <string name="menu_settings">メニュー</string>
   <string name="menu_shuffle">シャッフル</string>
   <string name="menu_shuffle_confirm">本当に札をシャッフルして最初から詠み直しますか？</string>
-  <string name="menu_move">移動</string>
+  <string name="menu_move">移動 / 検索</string>
   <string name="menu_timer">タイマー</string>
   <string name="menu_quick_conf">簡易設定</string>
   <string name="menu_conf">詳細設定</string>
