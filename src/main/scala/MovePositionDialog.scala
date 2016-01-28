@@ -6,7 +6,7 @@ import _root_.android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
 import _root_.android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
 import _root_.android.support.v4.app.DialogFragment
 import _root_.android.content.{DialogInterface,Context}
-import _root_.android.text.{Editable,TextWatcher}
+import _root_.android.text.{Editable,TextWatcher,TextUtils}
 
 import _root_.java.lang.Runnable
 
@@ -188,10 +188,17 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem])
     val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         val results = new Filter.FilterResults
-        val found = PoemSearchUtils.findInIndex(index_poem,constraint.toString)
-        val values = orig.filter{p => found(p.num)}
-        results.values = values
-        results.count = values.size
+        if(TextUtils.isEmpty(constraint)){
+          results.values = orig
+          results.count = orig.size
+        }else{
+          val found_p = PoemSearchUtils.findInIndex(index_poem,constraint.toString)
+          val found_a = PoemSearchUtils.findInIndex(index_author,constraint.toString)
+          val found = found_p ++ found_a
+          val values = orig.filter{p => found(p.num)}
+          results.values = values
+          results.count = values.size
+        }
         results
       }
       override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
@@ -227,13 +234,15 @@ object PoemSearchUtils{
     res.toMap
   }
   def findInIndex(index:Index,phrase:String):Set[Int] = {
-    val found = phrase.sliding(2).map{ s => {
-      index.get(s).map{_.toSet}
-      }}.flatten
-    if(found.isEmpty){
+    //TODO: following method searches all bigram even after `index.get()` returns None
+    val (found,notfound) = phrase.sliding(2).map{ s => {
+        index.get(s).map{_.toSet}
+      }}.span{_.nonEmpty}
+
+    if(notfound.nonEmpty){
       Set()
     }else{
-      found.reduce{(x,y)=>x.intersect(y)}
+      found.flatten.reduce{(x,y)=>x.intersect(y)}
     }
   }
 }
