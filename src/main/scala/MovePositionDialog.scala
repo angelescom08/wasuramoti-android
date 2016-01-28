@@ -11,6 +11,7 @@ import _root_.android.text.{Editable,TextWatcher}
 import _root_.java.lang.Runnable
 
 import scala.util.Sorting
+import scala.collection.mutable
 
 class MovePositionDialog extends DialogFragment{
   var current_index = 0 // displayed number in TextView differs from real index
@@ -119,16 +120,8 @@ class MovePositionDialog extends DialogFragment{
       val author = AllFuda.removeInsideParens(author_list(fudanum))
       new SearchFudaListItem(poem,author,fudanum)
     }.toArray
-    val filter = new Filter(){
-      override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
-        // TODO 
-        null
-      }
-      override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
-        // TODO
-      }
-    }
-    val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist,filter)
+
+    val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist)
     val list_view = view.findViewById(R.id.move_search_list).asInstanceOf[ListView]
     adapter.sort()
     list_view.setAdapter(adapter)
@@ -171,7 +164,10 @@ class SearchFudaListItem(val poem_text:String, val author:String, val num:Int) e
   }
 }
 
-class CustomFilteredArrayAdapter(context:Context,objects:Array[SearchFudaListItem],filter:Filter) extends BaseAdapter with Filterable {
+class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem]) extends BaseAdapter with Filterable {
+  lazy val index_poem = PoemSearchUtils.genIndex(context,R.array.poem_index)
+  lazy val index_author = PoemSearchUtils.genIndex(context,R.array.author_index)
+  var objects = orig
   override def getCount:Int = {
     objects.length
   }
@@ -189,10 +185,55 @@ class CustomFilteredArrayAdapter(context:Context,objects:Array[SearchFudaListIte
     view
   }
   override def getFilter():Filter = {
+    val filter = new Filter(){
+      override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
+        val results = new Filter.FilterResults
+        val found = PoemSearchUtils.findInIndex(index_poem,constraint.toString)
+        val values = orig.filter{p => found(p.num)}
+        results.values = values
+        results.count = values.size
+        results
+      }
+      override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
+        objects = results.values.asInstanceOf[Array[SearchFudaListItem]]
+        // TODO: sort by score: https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
+        if (results.count > 0) {
+          notifyDataSetChanged();
+        } else {
+          notifyDataSetInvalidated();
+        }
+      }
+    }
     return filter
   }
   def sort(){
     Sorting.quickSort(objects)
     super.notifyDataSetChanged()
+  }
+}
+
+object PoemSearchUtils{
+  type Index = Map[String,Array[Int]]
+  def genIndex(context:Context,res_id:Int):Index = {
+    // TODO: generate index only from poems in fudaset
+    val res = mutable.Map[String,Array[Int]]()
+    for(str <- AllFuda.get(context,res_id)){
+      val Array(numlist,ngram) = str.split(" :: ")
+      val nums = numlist.split(",").map{_.toInt}
+      for(s <- ngram.split("/")){
+        res.+=((s,nums))
+      }
+    }
+    res.toMap
+  }
+  def findInIndex(index:Index,phrase:String):Set[Int] = {
+    val found = phrase.sliding(2).map{ s => {
+      index.get(s).map{_.toSet}
+      }}.flatten
+    if(found.isEmpty){
+      Set()
+    }else{
+      found.reduce{(x,y)=>x.intersect(y)}
+    }
   }
 }
