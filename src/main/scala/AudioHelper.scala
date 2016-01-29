@@ -66,7 +66,7 @@ object AudioHelper{
     // must be multiple of channels * sizeof(Short)
     (millisec * decoder.rate.toInt / 1000) * decoder.channels * SHORT_SIZE
   }
-  def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean, fromAuto:Boolean = false):Option[KarutaPlayer] = {
+  def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean, fromAuto:Boolean = false, nextRandom:Option[Int] = None):Option[KarutaPlayer] = {
     val app_context = activity.getApplicationContext()
     val maybe_reader = ReaderList.makeCurrentReader(app_context)
     if(maybe_reader.isEmpty){
@@ -74,7 +74,9 @@ object AudioHelper{
     }
     val current_index = FudaListHelper.getCurrentIndex(app_context)
     val num = if(Utils.isRandom){
-      val cur_num = old_player.map{_.next_num}
+      val cur_num = 
+        nextRandom
+        .orElse(old_player.map{_.next_num})
         .orElse(activity.getCurNumInView)
         .orElse(FudaListHelper.queryRandom)
         .getOrElse(0)

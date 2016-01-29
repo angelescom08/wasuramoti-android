@@ -127,12 +127,17 @@ class MovePositionDialog extends DialogFragment{
     list_view.setAdapter(adapter)
     list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
       override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
-        FudaListHelper.queryIndexFromFudaNum(id.toInt).foreach{index =>{
-          val wa = getActivity.asInstanceOf[WasuramotiActivity]
-          FudaListHelper.putCurrentIndex(wa,index)
-          wa.refreshAndSetButton()
+        val wa = getActivity.asInstanceOf[WasuramotiActivity]
+        if(Utils.isRandom){
+          wa.refreshAndSetButton(nextRandom = Some(id.toInt))
           wa.invalidateYomiInfo()
-        }}
+        }else{
+          FudaListHelper.queryIndexFromFudaNum(id.toInt).foreach{index =>{
+            FudaListHelper.putCurrentIndex(wa,index)
+            wa.refreshAndSetButton()
+            wa.invalidateYomiInfo()
+          }}
+        }
         getDialog.dismiss()
       }
     })

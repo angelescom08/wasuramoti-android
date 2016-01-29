@@ -116,9 +116,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }
   }
 
-  def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false){
+  def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false, nextRandom:Option[Int] = None){
     Globals.global_lock.synchronized{
-      Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,force, fromAuto)
+      Globals.player = AudioHelper.refreshKarutaPlayer(this, Globals.player, force, fromAuto, nextRandom)
       Utils.setButtonTextByState(getApplicationContext(), fromAuto)
     }
   }
