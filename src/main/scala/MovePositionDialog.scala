@@ -196,9 +196,7 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
         val values = if(TextUtils.isEmpty(constraint)){
           orig
         }else{
-          val found_p = PoemSearchUtils.findInIndex(index_poem,constraint.toString)
-          val found_a = PoemSearchUtils.findInIndex(index_author,constraint.toString)
-          val found = found_p ++ found_a
+          val found = PoemSearchUtils.doSearch(Array(index_poem,index_author),constraint)
           orig.filter{p => found(p.num)}
         }
         context.asInstanceOf[Activity].runOnUiThread(new Runnable(){
@@ -251,9 +249,20 @@ object PoemSearchUtils{
     }
     res.toMap
   }
-  def findInIndex(index:Index,phrase:String):Set[Int] = {
+
+  // DalvikVM does not support isHan
+  val REMOVE_PATTEN_JP = """[^\p{Blank}\p{InHiragana}\p{InCJKUnifiedIdeographs}\p{InCJKSymbolsAndPunctuation}]+""".r
+  def preprocessConstraint(chars:CharSequence):String = {
+    REMOVE_PATTEN_JP.replaceAllIn(chars,"")
+  }
+
+  def splitPhrase(phrase:String):Array[String] = {
+    """\p{Blank}+""".r.split(phrase).filter{!TextUtils.isEmpty(_)}
+  }
+
+  def findInIndex(index:Index,keyword:String):Set[Int] = {
     //TODO: following method searches all bigram even after `index.get()` returns None
-    val (found,notfound) = phrase.sliding(2).map{ s => {
+    val (found,notfound) = keyword.sliding(2).map{ s => {
         index.get(s).map{_.toSet}
       }}.span{_.nonEmpty}
 
@@ -262,5 +271,17 @@ object PoemSearchUtils{
     }else{
       found.flatten.reduce{(x,y)=>x.intersect(y)}
     }
+  }
+
+  def doSearch(indices:Array[Index],constraint:CharSequence):Set[Int] = {
+    val phrases = splitPhrase(preprocessConstraint(constraint))
+    if(phrases.isEmpty){
+      return Set()
+    }
+    phrases.map{ p =>
+      indices.map{ index =>
+        findInIndex(index,p)
+      }.reduce{(x,y) => x ++ y}
+    }.reduce{(x,y)=>x.intersect(y)}
   }
 }
