@@ -282,9 +282,10 @@
   <string name="fudasetedit_hint">札セットの名前</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    現代仮名遣いで決まり字まで．空白で区切る．(例: あさじ こい おお) <font color=\"#00CCFF\">[<u>歌番号指定</u>]</font>
+    「一覧」ボタンを押すか，現代仮名遣いで決まり字まで入力して下さい．<font color=\"#00CCFF\">[<u>歌番号指定</u>]</font> もできます．
     ]]>
   </string>
+  <string name="fudasetedit_text_hint">例: あさじ こい おお 21..30</string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>歌番号指定</h3>
@@ -366,8 +367,12 @@
   <string name="move_button_goto_num">移動</string>
 
   <string name="move_search_hint">詠み句または歌人で検索</string>
-  <string name="move_search_notfound">見つかりません</string>
-  <string name="move_search_notfound_poemset">札セット「%s」の中には見つかりません</string>
+  <string name="move_search_notfound">見つかりません．</string>
+
+  <string name="move_search_notfound_extra">注意: %s は検索対象外です．</string>
+  <string name="move_search_notfound_poemset">札セットに含まれない歌</string>
+  <string name="move_search_notfound_memorized">覚えた歌</string>
+  <string name="move_search_notfound_karafuda">空札</string>
 
   <string name="timer_minutes_elapsed">分経過しました</string>
   <string name="timer_unit">分</string>

@@ -191,8 +191,7 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
   }
 
   lazy val TOO_SHORT_PATTERN = """^\p{Alpha}$""".r.pattern
-  override def getFilter():Filter = {
-    val filter = new Filter(){
+  lazy val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         val results = new Filter.FilterResults
         val values = if(TextUtils.isEmpty(constraint) || TOO_SHORT_PATTERN.matcher(constraint).matches){
@@ -206,11 +205,22 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
             if(values.isEmpty){
               list_view.setVisibility(View.GONE)
               notfound_view.setVisibility(View.VISIBLE)
-              val text = if(orig.size == AllFuda.list.size){
-                context.getResources.getString(R.string.move_search_notfound)
+              val crs = context.getResources
+              val bounded_by_fudaset = FudaListHelper.isBoundedByFudaset
+              val has_karafuda = FudaListHelper.getOrQueryNumbersOfKarafuda > 0
+              val has_memorized = FudaListHelper.getOrQueryNumbersOfMemorized > 0
+              val extras = Array(
+                if(bounded_by_fudaset){Some(crs.getString(R.string.move_search_notfound_poemset))}else{None},
+                if(has_karafuda){Some(crs.getString(R.string.move_search_notfound_karafuda))}else{None},
+                if(has_memorized){Some(crs.getString(R.string.move_search_notfound_memorized))}else{None}
+                ).flatten
+
+              val text = crs.getString(R.string.move_search_notfound) +
+              (if(extras.nonEmpty){
+                crs.getString(R.string.move_search_notfound_extra,extras.mkString(", "))
               }else{
-                context.getResources.getString(R.string.move_search_notfound_poemset,Globals.prefs.get.getString("fudaset",""))
-              }
+                ""
+              })
               notfound_view.setText(text)
             }else{
               list_view.setVisibility(View.VISIBLE)
@@ -233,7 +243,9 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
         }
       }
     }
-    return filter
+
+  override def getFilter():Filter = {
+    filter
   }
 }
 

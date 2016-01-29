@@ -322,15 +322,16 @@
   <string name="fudasetedit_hint">Title of Poem Set</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    First characters of poem written in Romanized Japanese. (e.g. asazi, koi, oo) <font color=\"#00CCFF\">[<u>Poem No.</u>]</font>
+    Press `List` button, or input first letters of poem in Romaji. You can also input <font color=\"#00CCFF\">[<u>Poem No.</u>]</font>
     ]]>
   </string>
+  <string name="fudasetedit_text_hint">Example: asaji koi oo 21..30</string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>Select By Poem Number</h3>
     <div><b>ab..cd</b> &rArr; ab, ab+1, ..., cd</div>
-    <div><b>?</b> &rArr; any single character</div>
-    <div><b>*</b> &rArr; any string, including empty string</div>
+    <div><b>?</b> &rArr; any single letter</div>
+    <div><b>*</b> &rArr; any string which has 0 or more length</div>
     <div><b>[xyz]</b> &rArr; x, y or z</div>
     <h3>Examples</h3>
     <div><b>3..14</b> &rArr; 3,4,5, ..., 14</div>
@@ -403,8 +404,12 @@
   <string name="move_button_next">&gt;</string>
 
   <string name="move_search_hint">Search by Romaji</string>
-  <string name="move_search_notfound">Not Found</string>
-  <string name="move_search_notfound_poemset">Not Found in poem set: `%s`</string>
+  <string name="move_search_notfound">Not Found.</string>
+
+  <string name="move_search_notfound_extra">Notice: %s, is not searched.</string>
+  <string name="move_search_notfound_poemset">Poems not in current set</string>
+  <string name="move_search_notfound_memorized">memorized poems</string>
+  <string name="move_search_notfound_karafuda">Karafuda</string>
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_unit">minutes</string>
