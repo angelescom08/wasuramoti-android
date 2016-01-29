@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{AlertDialog,Dialog}
+import _root_.android.app.{AlertDialog,Dialog,Activity}
 import _root_.android.os.{Bundle,Handler}
 import _root_.android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
 import _root_.android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
@@ -120,10 +120,10 @@ class MovePositionDialog extends DialogFragment{
       val author = AllFuda.removeInsideParens(author_list(fudanum))
       new SearchFudaListItem(poem,author,fudanum)
     }.toArray
-
-    val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist)
+    Sorting.quickSort(fudalist)
     val list_view = view.findViewById(R.id.move_search_list).asInstanceOf[ListView]
-    adapter.sort()
+    val notfound_view = view.findViewById(R.id.move_search_notfound).asInstanceOf[TextView] 
+    val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist,list_view,notfound_view)
     list_view.setAdapter(adapter)
     list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
       override def onItemClick(parent:AdapterView[_],view:View,position:Int,id:Long){
@@ -164,41 +164,63 @@ class SearchFudaListItem(val poem_text:String, val author:String, val num:Int) e
   }
 }
 
-class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem]) extends BaseAdapter with Filterable {
+class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
+  list_view:ListView,notfound_view:TextView) extends BaseAdapter with Filterable {
   lazy val index_poem = PoemSearchUtils.genIndex(context,R.array.poem_index)
   lazy val index_author = PoemSearchUtils.genIndex(context,R.array.author_index)
   var objects = orig
-  override def getCount:Int = {
-    objects.length
+  override def getCount():Int = {
+    Option(objects).map{_.length}.getOrElse(0)
   }
   override def getItem(position:Int):Object = {
-    objects(position)
+    Option(objects).map{_(position)}.getOrElse(null)
   }
   override def getItemId(position:Int):Long = {
-    objects(position).num
+    Option(objects).map{_(position).num.toLong}.getOrElse(0)
   }
   override def getView(position:Int,convertView:View, parent:ViewGroup):View = {
-    val view = Option(convertView).getOrElse{LayoutInflater.from(context).inflate(R.layout.my_simple_list_item_search,null)}
-    val item = objects(position)
-    view.findViewById(android.R.id.text1).asInstanceOf[TextView].setText(item.poem_text)
-    view.findViewById(android.R.id.text2).asInstanceOf[TextView].setText(item.author)
-    view
+    if(objects == null){
+      null
+    }else{
+      val view = Option(convertView).getOrElse{LayoutInflater.from(context).inflate(R.layout.my_simple_list_item_search,null)}
+      val item = objects(position)
+      view.findViewById(android.R.id.text1).asInstanceOf[TextView].setText(item.poem_text)
+      view.findViewById(android.R.id.text2).asInstanceOf[TextView].setText(item.author)
+      view
+    }
   }
   override def getFilter():Filter = {
     val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         val results = new Filter.FilterResults
-        if(TextUtils.isEmpty(constraint)){
-          results.values = orig
-          results.count = orig.size
+        val values = if(TextUtils.isEmpty(constraint)){
+          orig
         }else{
           val found_p = PoemSearchUtils.findInIndex(index_poem,constraint.toString)
           val found_a = PoemSearchUtils.findInIndex(index_author,constraint.toString)
           val found = found_p ++ found_a
-          val values = orig.filter{p => found(p.num)}
-          results.values = values
-          results.count = values.size
+          orig.filter{p => found(p.num)}
         }
+        context.asInstanceOf[Activity].runOnUiThread(new Runnable(){
+          override def run(){
+            if(values.isEmpty){
+              list_view.setVisibility(View.GONE)
+              notfound_view.setVisibility(View.VISIBLE)
+              val text = if(orig.size == AllFuda.list.size){
+                context.getResources.getString(R.string.move_search_notfound)
+              }else{
+                context.getResources.getString(R.string.move_search_notfound_poemset,Globals.prefs.get.getString("fudaset",""))
+              }
+              notfound_view.setText(text)
+            }else{
+              list_view.setVisibility(View.VISIBLE)
+              notfound_view.setVisibility(View.GONE)
+              notfound_view.setText("")
+            }
+          }
+        })
+        results.values = values
+        results.count = values.size
         results
       }
       override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
@@ -212,10 +234,6 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem])
       }
     }
     return filter
-  }
-  def sort(){
-    Sorting.quickSort(objects)
-    super.notifyDataSetChanged()
   }
 }
 

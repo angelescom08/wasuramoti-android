@@ -36,8 +36,22 @@
     android:id="@+id/move_search_text"
     android:hint="@string/move_search_hint"
     android:singleLine="true" />
-  <ListView
+  <LinearLayout
     android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:id="@+id/move_search_list"
-    />
+    android:minHeight="200sp"
+    android:orientation="vertical" >
+    <ListView
+      android:layout_width="fill_parent" android:layout_height="fill_parent"
+      android:id="@+id/move_search_list"
+      />
+    <TextView
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:id="@+id/move_search_notfound"
+      android:textSize="16sp"
+      android:textColor="#CCCCCC"
+      android:paddingLeft="6dip" 
+      android:paddingRight="6dip"
+      android:visibility="gone"
+      />
+  </LinearLayout>
 </LinearLayout>

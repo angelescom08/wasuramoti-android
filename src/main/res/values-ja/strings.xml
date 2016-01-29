@@ -366,6 +366,8 @@
   <string name="move_button_goto_num">移動</string>
 
   <string name="move_search_hint">詠み句または歌人で検索</string>
+  <string name="move_search_notfound">見つかりません</string>
+  <string name="move_search_notfound_poemset">札セット「%s」の中には見つかりません</string>
 
   <string name="timer_minutes_elapsed">分経過しました</string>
   <string name="timer_unit">分</string>

@@ -402,7 +402,9 @@
   <string name="move_button_prev">&lt;</string>
   <string name="move_button_next">&gt;</string>
 
-  <string name="move_search_hint">Search by author or poem</string>
+  <string name="move_search_hint">Search by Romaji</string>
+  <string name="move_search_notfound">Not Found</string>
+  <string name="move_search_notfound_poemset">Not Found in poem set: `%s`</string>
 
   <string name="timer_minutes_elapsed">minutes elapsed</string>
   <string name="timer_unit">minutes</string>
