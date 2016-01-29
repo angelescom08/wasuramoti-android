@@ -189,14 +189,16 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
       view
     }
   }
+
+  lazy val TOO_SHORT_PATTERN = """^\p{Alpha}$""".r.pattern
   override def getFilter():Filter = {
     val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         val results = new Filter.FilterResults
-        val values = if(TextUtils.isEmpty(constraint)){
+        val values = if(TextUtils.isEmpty(constraint) || TOO_SHORT_PATTERN.matcher(constraint).matches){
           orig
         }else{
-          val found = PoemSearchUtils.doSearch(Array(index_poem,index_author),constraint)
+          val found = PoemSearchUtils.doSearch(context,Array(index_poem,index_author),constraint)
           orig.filter{p => found(p.num)}
         }
         context.asInstanceOf[Activity].runOnUiThread(new Runnable(){
@@ -252,8 +254,13 @@ object PoemSearchUtils{
 
   // DalvikVM does not support isHan
   val REMOVE_PATTEN_JP = """[^\p{Blank}\p{InHiragana}\p{InCJKUnifiedIdeographs}\p{InCJKSymbolsAndPunctuation}]+""".r
-  def preprocessConstraint(chars:CharSequence):String = {
-    REMOVE_PATTEN_JP.replaceAllIn(chars,"")
+  def preprocessConstraint(context:Context,chars:CharSequence):String = {
+    val str = if(Romanization.is_japanese(context)){
+      chars.toString
+    }else{
+      Romanization.roma_to_jap(chars.toString)
+    }
+    REMOVE_PATTEN_JP.replaceAllIn(str,"")
   }
 
   def splitPhrase(phrase:String):Array[String] = {
@@ -273,8 +280,8 @@ object PoemSearchUtils{
     }
   }
 
-  def doSearch(indices:Array[Index],constraint:CharSequence):Set[Int] = {
-    val phrases = splitPhrase(preprocessConstraint(constraint))
+  def doSearch(context:Context,indices:Array[Index],constraint:CharSequence):Set[Int] = {
+    val phrases = splitPhrase(preprocessConstraint(context,constraint))
     if(phrases.isEmpty){
       return Set()
     }

@@ -32,6 +32,9 @@
     The license is included in apk with file name of `DANCING-SCRIPT-OFL.txt`
   <Roboto Slab>
     The license is included in this apk with file name of `ROBOTO-SLAB-LICENSE.txt`
+  <WanaKanaJava>
+    %% Copyright (c) 2013 Matthew Miller
+    The license is included in this apk with file name of `WANAKANAJAVA-LICENSE.txt`
   ---
   The following libraries and fonts are public domain but thanks anyway:
   <stb_vorbis>

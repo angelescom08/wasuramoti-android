@@ -29,6 +29,9 @@ __BEGIN_CREDITS__
     ライセンス条文はapkファイルの中の `DANCING-SCRIPT-OFL.txt` にあります．
   <Roboto Slab>
     ライセンス条文はapkファイルの中の `ROBOTO-SLAB-LICENSE.txt` にあります．
+  <WanaKanaJava>
+    %% Copyright (c) 2013 Matthew Miller
+    ライセンス条文はapkファイルの中の `WANAKANAJAVA-LICENSE.txt` にあります．
   ---
   下記のライブラリおよびフォントはパブリックドメインですがともあれ感謝です．
   <stb_vorbis>

@@ -5,6 +5,8 @@ import _root_.android.widget.EditText
 import _root_.android.util.AttributeSet
 import _root_.java.util.Locale
 
+import com.wanakanajava.WanaKanaJava
+
 class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(context,attrs){
   def getLocalizationText():String = {
     var text = super.getText().toString()
@@ -19,41 +21,17 @@ class LocalizationEditText(context:Context,attrs:AttributeSet) extends EditText(
 }
 
 object Romanization{
-  // all the characters in AllFuda.replaceFudaNumPattern must be included
-  lazy val PAT_ROMA = """([kstnhmyrwgzdbp]?[aiueo]|[ .0-9?*\[\]]+)""".r
-  lazy val MAP_ROMA_TO_JAP = Array(
-    ("a", "あ"), ("i", "い"), ("u", "う"), ("e", "え"),  ("o","お"),
-    ("ka","か"), ("ki","き"), ("ku","く"), ("ke","け"), ("ko","こ"),
-    ("sa","さ"), ("si","し"), ("su","す"), ("se","せ"), ("so","そ"),
-    ("ta","た"), ("ti","ち"), ("tu","つ"), ("te","て"), ("to","と"),
-    ("na","な"), ("ni","に"), ("nu","ぬ"), ("ne","ね"), ("no","の"),
-    ("ha","は"), ("hi","ひ"), ("hu","ふ"), ("he","へ"), ("ho","ほ"),
-    ("ma","ま"), ("mi","み"), ("mu","む"), ("me","め"), ("mo","も"),
-    ("ya","や"),              ("yu","ゆ"),              ("yo","よ"),
-    ("ra","ら"), ("ri","り"), ("ru","る"), ("re","れ"), ("ro","ろ"),
-    ("wa","わ"),              ("wo","を"),              ("nn","ん"),
-    ("ga","が"), ("gi","ぎ"), ("gu","ぐ"), ("ge","げ"), ("go","ご"),
-    ("za","ざ"), ("zi","じ"), ("zu","ず"), ("ze","ぜ"), ("zo","ぞ"),
-    ("da","だ"), ("di","ぢ"), ("du","づ"), ("de","で"), ("do","ど"),
-    ("ba","ば"), ("bi","び"), ("bu","ぶ"), ("be","べ"), ("bo","ぼ"),
-    ("pa","ぱ"), ("pi","ぴ"), ("pu","ぷ"), ("pe","ぺ"), ("po","ぽ")).toMap
-
-  lazy val MAP_JAP_TO_ROMA = MAP_ROMA_TO_JAP.collect({case x=>x.swap})
-
-  lazy val MAP_ZENKAKU_TO_HANKAKU = Array(
-    ("．","."), ("＊","*"), ("？","?"), ("［","["), ("］","]"),
-    ("０","0"), ("１","1"), ("２","2"), ("３","3"), ("４","4"),
-    ("５","5"), ("６","6"), ("７","7"), ("８","8"), ("９","9")).toMap
+  lazy val WANA_KANA = new WanaKanaJava(true)
+  lazy val MAP_ZENKAKU_TO_HANKAKU = Map(
+    "．"->".", "＊"->"*", "？"->"?", "［"->"[", "］"->"]",
+    "０"->"0", "１"->"1", "２"->"2", "３"->"3", "４"->"4",
+    "５"->"5", "６"->"6", "７"->"7", "８"->"8", "９"->"9")
 
   def jap_to_roma(str:String):String = {
-    str.toCharArray.map(_.toString).map(
-      x => MAP_JAP_TO_ROMA.getOrElse(x,x)
-    ).mkString
+    WANA_KANA.toRomaji(str)
   }
   def roma_to_jap(str:String):String = {
-    PAT_ROMA.findAllIn(str.toLowerCase).map(_.toString).map(
-      x => MAP_ROMA_TO_JAP.getOrElse(x,x)
-    ).mkString + PAT_ROMA.replaceAllIn(str,"")
+    WANA_KANA.toKana(str)
   }
 
   def zenkaku_to_hankaku(str:String) = {
