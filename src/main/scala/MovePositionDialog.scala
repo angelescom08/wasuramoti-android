@@ -190,7 +190,9 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
     }
   }
 
-  lazy val TOO_SHORT_PATTERN = """^\p{Alpha}$""".r.pattern
+  // in Android's Java, regex \p{Alpha} matches to japanese letter
+  //   http://www.ecoop.net/memo/archives/regular-expression-problem-o-android-java.html
+  lazy val TOO_SHORT_PATTERN = """^[a-zA-Z]$""".r.pattern
   lazy val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
         val results = new Filter.FilterResults
