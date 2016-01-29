@@ -12,7 +12,7 @@ import _root_.android.text.method.LinkMovementMethod
 import _root_.android.os.{Environment,SystemClock}
 import _root_.android.media.{AudioTrack,AudioManager}
 import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
-import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox}
+import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
 import _root_.android.content.pm.PackageManager
 import _root_.android.net.Uri
 import _root_.android.graphics.Paint
@@ -746,6 +746,27 @@ object Utils {
     track match {
       case Left(t) => setVolume(t, if(is_mute){0.0f}else{1.0f})
       case Right(_) => OpenSLESPlayer.slesMute(is_mute)
+    }
+  }
+
+  def setRadioTextClickListener(group:RadioGroup){
+    var last_radio_button = None:Option[RadioButton]
+    for(i <- 0 until group.getChildCount){
+      group.getChildAt(i) match {
+        case radio:RadioButton => last_radio_button = Some(radio)
+        case view => {
+          val tag = view.getTag
+          if(Option(tag).exists(_.toString == "radio_text")){
+            last_radio_button.foreach{ btn =>
+              view.setOnClickListener(new View.OnClickListener(){
+                override def onClick(v:View){
+                  group.check(btn.getId)
+                }
+              })
+            }
+          }
+        }
+      }
     }
   }
 }

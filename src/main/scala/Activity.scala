@@ -556,6 +556,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     val builder = new AlertDialog.Builder(this)
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)
     val radio_group = view.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
+    Utils.setRadioTextClickListener(radio_group)
     (Globals.prefs.get.getString("intended_use","") match {
       case "study" => Some(R.id.intended_use_study)
       case "competitive" => Some(R.id.intended_use_competitive)

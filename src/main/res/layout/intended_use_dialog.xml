@@ -36,6 +36,7 @@
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
         android:text="@string/intended_use_recreation_desc"
+        android:tag="radio_text"
         />
       <include layout="@layout/horizontal_rule" />
       <RadioButton
@@ -52,6 +53,7 @@
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
         android:text="@string/intended_use_competitive_desc"
+        android:tag="radio_text"
         />
       <include layout="@layout/horizontal_rule" />
       <RadioButton
@@ -68,6 +70,7 @@
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
         android:text="@string/intended_use_study_desc"
+        android:tag="radio_text"
         />
       <include layout="@layout/horizontal_rule" />
     </RadioGroup>

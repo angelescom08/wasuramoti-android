@@ -30,7 +30,8 @@
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
-        android:text="@string/conf_read_order_value_cur2_next1"/>
+        android:text="@string/conf_read_order_value_cur2_next1"
+        android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur2_next1_next2"
@@ -44,7 +45,8 @@
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
-        android:text="@string/conf_read_order_value_cur2_next1_next2"/>
+        android:text="@string/conf_read_order_value_cur2_next1_next2"
+        android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1_cur2"
@@ -58,7 +60,8 @@
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
-        android:text="@string/conf_read_order_value_cur1_cur2"/>
+        android:text="@string/conf_read_order_value_cur1_cur2"
+        android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1_cur2_cur2"
@@ -72,7 +75,8 @@
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
-        android:text="@string/conf_read_order_value_cur1_cur2_cur2"/>
+        android:text="@string/conf_read_order_value_cur1_cur2_cur2"
+        android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_cur1"
@@ -86,7 +90,8 @@
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
         android:paddingBottom="5dip"
-        android:text="@string/conf_read_order_value_cur1"/>
+        android:text="@string/conf_read_order_value_cur1"
+        android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
       <RadioButton 
         android:id="@+id/conf_read_order_each_custom"
