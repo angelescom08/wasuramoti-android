@@ -370,6 +370,7 @@
   <string name="move_search_notfound">見つかりません．</string>
 
   <string name="move_search_notfound_extra">注意: %s は検索対象外です．</string>
+  <string name="move_search_notfound_extra_delimiter">と</string>
   <string name="move_search_notfound_poemset">札セットに含まれない歌</string>
   <string name="move_search_notfound_memorized">覚えた歌</string>
   <string name="move_search_notfound_karafuda">空札</string>

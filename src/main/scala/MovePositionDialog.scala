@@ -236,7 +236,10 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
 
               val text = crs.getString(R.string.move_search_notfound) +
               (if(extras.nonEmpty){
-                crs.getString(R.string.move_search_notfound_extra,extras.mkString(", "))
+                " " + crs.getString(
+                  R.string.move_search_notfound_extra,extras.mkString(
+                    " " + crs.getString(R.string.move_search_notfound_extra_delimiter) + " "
+                  ))
               }else{
                 ""
               })

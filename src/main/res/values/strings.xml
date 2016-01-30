@@ -406,7 +406,8 @@
   <string name="move_search_hint">Search by Romaji</string>
   <string name="move_search_notfound">Not Found.</string>
 
-  <string name="move_search_notfound_extra">Notice: %s, is not searched.</string>
+  <string name="move_search_notfound_extra">Note: %s are excluded from the list.</string>
+  <string name="move_search_notfound_extra_delimiter">and</string>
   <string name="move_search_notfound_poemset">Poems not in current set</string>
   <string name="move_search_notfound_memorized">memorized poems</string>
   <string name="move_search_notfound_karafuda">Karafuda</string>
