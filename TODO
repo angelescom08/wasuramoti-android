@@ -22,14 +22,23 @@ Priority High:
       - Use both bound and started service - we have to carefully consider lifecycle
       - Show "Now Playing" in notification bar, and Play/Stop button
         - In Android >= 5.x, able to show in lock screen ?
-  * Solve ANR
-    - Add timeout for decoding ?
   * OpenSLESPlayer issues
     - The volume is smaller than AudioTrack.
     - Support other than 22050 mono audio.
   * Forbid deleting last poem set.
   * Add "Enable Equalizer" checkbox.
-  * Append all the table data compressed in anonymous bug report form.
+  * Append all the DB table data compressed in anonymous bug report form.
+  * Use @TargetApi(x)
+  * Sort the poem search result by score
+    - https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
+  * Show move position dialog instead of button list when poem text is pressed
+  * Write `When sound is intermitted at the beginning/end, increase this value`, in `Add silence before/after playing the poem` config.
+  * Able to create poem set which contains range of poem number using GUI
+  * Share poem set groups
+  * Use https://github.com/kazuho/golombset for generating poem set group URI
+  * Add link to http://pjmtdw.github.io/wasuramoti/fudaset.html inside app
+  * Warn that equalizer volume is too small when config
+  * Temporary lower the volume when ACTION_AUDIO_BECOMING_NOISY
 
 Priority Medium-High:
   * Use scalaz, shapeless
@@ -53,7 +62,6 @@ Priority Medium-High:
       - see http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
 
 Priority Medium:
-  * Generate wasuramoti://fudaset/ uri
   * Support MP3 audio.
   * Customize Quick Config
   * Use OpenSL ES instead of AudioTrack since AudioTrack has a lot of bugs.
