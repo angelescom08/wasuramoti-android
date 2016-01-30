@@ -203,6 +203,18 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
         val results = new Filter.FilterResults
         val values = if(TextUtils.isEmpty(constraint) || TOO_SHORT_PATTERN.matcher(constraint).matches){
           orig
+        }else if(android.os.Build.VERSION.SDK_INT <= 8){
+          // Android <= 2.2 has a bug that cannot load large string array from resource file.
+          // It was fixed in https://android.googlesource.com/platform/frameworks/base.git/+/4d4040b7b3c46ea29a42878c14b325f09f0029ad
+          // The error message was:
+          //   ReferenceTable overflow (max=512)
+          //     at android.content.res.AssetManager.getArrayStringResource(Native Method)
+          //     at android.content.res.AssetManager.getResourceStringArray(AssetManager.java:186)
+          //     at android.content.res.Resources.getStringArray(Resources.java:381)
+
+          // One workaround for the bug above is splitting the <string-array>, however, we just use simple search instead
+          val found = PoemSearchUtils.doSearchSimple(context,constraint)
+          orig.filter{p => found(p.num)}
         }else{
           val found = PoemSearchUtils.doSearch(context,Array(index_poem,index_author),constraint)
           orig.filter{p => found(p.num)}
@@ -307,6 +319,21 @@ object PoemSearchUtils{
     phrases.map{ p =>
       indices.map{ index =>
         findInIndex(index,p)
+      }.reduce{(x,y) => x ++ y}
+    }.reduce{(x,y)=>x.intersect(y)}
+  }
+
+  def doSearchSimple(context:Context,constraint:CharSequence):Set[Int] = {
+    val NOT_HIRA = """[^\p{InHiragana}]+""".r
+    val phrases = splitPhrase(preprocessConstraint(context,constraint))
+    if(phrases.isEmpty){
+      return Set()
+    }
+    phrases.map{ p =>
+      Array(R.array.list_full,R.array.author).map{ id =>
+        AllFuda.get(context,id).drop(1).zipWithIndex.collect{
+          case (poem,i) if AllFuda.removeInsideParens(poem).contains(p) || NOT_HIRA.replaceAllIn(poem,"").contains(p) => i+1
+        }.toSet
       }.reduce{(x,y) => x ++ y}
     }.reduce{(x,y)=>x.intersect(y)}
   }

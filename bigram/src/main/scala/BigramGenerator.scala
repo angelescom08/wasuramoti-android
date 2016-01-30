@@ -68,11 +68,11 @@ object BigramGenerator extends App{
   }
   def traverse(ar:Seq[_],prev:Any):Seq[String] = {
     var p = prev
-    ar.flatMap{x => {
+    ar.flatMap{x =>
       val r = matcher(x,p)
       p = x
       r
-    }}
+    }
   }
 
   def printIndex(source:Source,writer:PrintWriter){
