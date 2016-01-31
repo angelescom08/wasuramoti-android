@@ -264,14 +264,8 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    Utils.initGlobals(getApplicationContext())
+    Utils.initGlobals(getApplicationContext)
 
-    //try loading 'libstbvorbis.so'
-    new OggVorbisDecoder()
-    if(!OggVorbisDecoder.library_loaded){
-      Utils.messageDialog(this,Right(R.string.cannot_load_vorbis_library), {() => finish()})
-      return
-    }
     if(YomiInfoUtils.showPoemText && android.os.Build.VERSION.SDK_INT >= 11){
          getWindow.setFlags(
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,

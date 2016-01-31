@@ -141,14 +141,29 @@ object BugReport{
     bld ++= "[build]\n"
     bld ++= s"api_level=${Build.VERSION.SDK_INT}\n"
     bld ++= s"release=${Build.VERSION.RELEASE}\n"
-    bld ++= s"cpu_abi=${Build.CPU_ABI}\n"
+    if(Build.VERSION.SDK_INT >= 21){
+      bld ++= s"supported_abis=${Build.SUPPORTED_ABIS.toList}\n"
+    }else{
+      bld ++= s"cpu_abi=${Build.CPU_ABI}\n"
+      bld ++= s"cpu_abi2=${Build.CPU_ABI2}\n"
+    }
     bld ++= s"brand=${Build.BRAND}\n"
     bld ++= s"manufacturer=${Build.MANUFACTURER}\n"
     bld ++= s"product=${Build.PRODUCT}\n"
     bld ++= s"model=${Build.MODEL}\n"
-    val doWhenError = {e:Exception =>
+    val doWhenError = {e:Throwable =>
       Log.v("wasuramoti","error",e)
       bld ++= s"Error: ${e.toString}\n"
+    }
+
+    try{
+      bld ++= "[stb_vorbis]\n"
+      import karuta.hpnpwd.audio.OggVorbisDecoder
+      OggVorbisDecoder.loadStbVorbis()
+      bld ++= s"loaded=${OggVorbisDecoder.library_loaded}\n"
+      bld ++= s"error=${OggVorbisDecoder.unsatisfied_link_error}\n"
+    }catch{
+      case e:Throwable => doWhenError(e)
     }
 
     try{

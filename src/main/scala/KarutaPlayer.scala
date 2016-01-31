@@ -124,7 +124,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       music_track = Some(Right(new OpenSLESTrack))
     }else{
-      makeAudioTrack(getFirstDecoder)
+      makeAudioTrack(decoder)
     }
   }
 
@@ -377,6 +377,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           abort_playing(Some(R.string.opensles_init_error))
           return
         }
+        case e:java.lang.UnsatisfiedLinkError => {
+          abort_playing(Some(R.string.unsatisfied_link_error))
+          return
+        }
       }
 
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
@@ -548,7 +552,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
     }
   }
-  class OggDecodeTask extends AsyncTask[AnyRef,Void,Either[AudioQueue,Exception]] {
+  class OggDecodeTask extends AsyncTask[AnyRef,Void,Either[AudioQueue,Throwable]] {
     override def onPreExecute(){
       activity.runOnUiThread(new Runnable{
         override def run(){
@@ -558,7 +562,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
       })
     }
-    override def onPostExecute(rval:Either[AudioQueue,Exception]){
+    override def onPostExecute(rval:Either[AudioQueue,Throwable]){
       activity.runOnUiThread(new Runnable{
         override def run(){
           activity.hideProgress
@@ -641,6 +645,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                   throw e
                 }
               }
+              case e:java.lang.UnsatisfiedLinkError => return Right(e)
             }
             if( i != ss.length - 1 ){
               add_to_audio_queue(Right(span_simokami),is_cur)
