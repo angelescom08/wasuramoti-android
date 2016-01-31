@@ -147,6 +147,14 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
       }
     })
   }
+
+  override def onPause(){
+    super.onPause()
+    // We have to close all the dialog to avoid window leak
+    // without this, window leak occurs when rotating the device when dialog is shown.
+    Utils.dismissAlertDialog()
+  }
+  
   override def onDestroy(){
     super.onDestroy()
     listener.foreach{ l =>

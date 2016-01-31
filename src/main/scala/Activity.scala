@@ -464,6 +464,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     run_refresh_text = None
     // Since android:configChanges="orientation" is not set to WasuramotiActivity,
     // we have to close the dialog at onPause() to avoid window leak.
+    // without this, window leak occurs when rotating the device when dialog is shown.
     Utils.dismissAlertDialog()
   }
   override def onStop(){
