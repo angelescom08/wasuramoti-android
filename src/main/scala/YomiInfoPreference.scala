@@ -1,12 +1,12 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.preference.DialogPreference
-import _root_.android.content.{Context,DialogInterface,SharedPreferences}
-import _root_.android.util.AttributeSet
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{SeekBar,CheckBox,Spinner,Button,CompoundButton}
-import _root_.android.os.Bundle
-import _root_.android.app.{AlertDialog,Dialog,Activity}
-import _root_.android.support.v4.app.DialogFragment
+import android.preference.DialogPreference
+import android.content.{Context,DialogInterface,SharedPreferences}
+import android.util.AttributeSet
+import android.view.{View,LayoutInflater}
+import android.widget.{SeekBar,CheckBox,Spinner,Button,CompoundButton}
+import android.os.Bundle
+import android.app.{AlertDialog,Dialog,Activity}
+import android.support.v4.app.DialogFragment
 
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
   var root_view = None:Option[View]

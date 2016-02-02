@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.preference.DialogPreference
-import _root_.android.content.{Context,SharedPreferences,DialogInterface}
-import _root_.android.util.AttributeSet
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.os.Bundle
-import _root_.android.widget.{RadioGroup,RadioButton,Button,EditText,TextView}
-import _root_.android.app.AlertDialog
+import android.preference.DialogPreference
+import android.content.{Context,SharedPreferences,DialogInterface}
+import android.util.AttributeSet
+import android.view.{View,LayoutInflater}
+import android.os.Bundle
+import android.widget.{RadioGroup,RadioButton,Button,EditText,TextView}
+import android.app.AlertDialog
 class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
   val DEFAULT_VALUE = "CUR2_NEXT1"

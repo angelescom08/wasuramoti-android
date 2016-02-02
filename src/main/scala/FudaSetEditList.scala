@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{Dialog,AlertDialog}
-import _root_.android.os.Bundle
-import _root_.android.content.{Context,DialogInterface}
-import _root_.android.view.View
-import _root_.android.widget.{ArrayAdapter,AdapterView,ListView,TextView,Button}
-import _root_.java.util.Comparator
+import android.app.Dialog
+import android.os.Bundle
+import android.content.{Context,DialogInterface}
+import android.view.View
+import android.widget.{ArrayAdapter,AdapterView,ListView,TextView}
+import java.util.Comparator
 
 class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
   object SortMode extends Enumeration {

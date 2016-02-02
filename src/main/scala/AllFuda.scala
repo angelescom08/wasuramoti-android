@@ -1,8 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.java.util.regex.PatternSyntaxException
-import _root_.android.content.Context
-import _root_.android.text.TextUtils
+import android.content.Context
+import android.text.TextUtils
 import scala.collection.mutable
 import scala.util.Try
 

@@ -1,13 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.media.AudioManager
-import _root_.android.content.{BroadcastReceiver,Context,Intent}
-import _root_.android.app.{PendingIntent,AlarmManager}
-import _root_.android.widget.{Button,Toast}
-import _root_.android.os.{Bundle,Handler}
-import _root_.android.net.Uri
-import _root_.android.util.Log
-import _root_.android.view.View
+import android.media.AudioManager
+import android.content.{BroadcastReceiver,Context,Intent}
+import android.app.{PendingIntent,AlarmManager}
+import android.widget.{Button,Toast}
+import android.os.{Bundle,Handler}
+import android.net.Uri
+import android.util.Log
+import android.view.View
 
 import scala.collection.mutable
 object KarutaPlayUtils{
@@ -279,7 +279,7 @@ object KarutaPlayUtils{
   }
 
 
-  val CONFIRM_THRESHOLD_TIME = 15*60*1000 // 15 minutes
+  val CONFIRM_THRESHOLD_TIME = 20*60*1000 // 20 minutes
   def elapsedEnoghSinceLastConfirm(cur_time:Long,prev_time:Option[Long]):Boolean = {
     prev_time.forall{
       cur_time - _ > CONFIRM_THRESHOLD_TIME

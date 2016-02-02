@@ -1,10 +1,10 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.util.AttributeSet
-import _root_.android.content.Context
-import _root_.android.preference.DialogPreference
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{LinearLayout,TextView,SeekBar,Button}
-import _root_.android.media.audiofx.Equalizer
+import android.util.AttributeSet
+import android.content.Context
+import android.preference.DialogPreference
+import android.view.{View,LayoutInflater}
+import android.widget.{LinearLayout,TextView,SeekBar,Button}
+import android.media.audiofx.Equalizer
 
 class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
   var root_view = None:Option[View]

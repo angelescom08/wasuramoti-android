@@ -1,10 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.widget.{Button,TableLayout,TableRow}
-import _root_.android.util.AttributeSet
-import _root_.android.content.Context
-import _root_.android.text.TextUtils
-import _root_.android.view.{View,ViewGroup,Gravity,LayoutInflater}
+import android.widget.{Button,TableLayout,TableRow}
+import android.util.AttributeSet
+import android.content.Context
+import android.text.TextUtils
+import android.view.{View,ViewGroup,Gravity,LayoutInflater}
 
 
 object YomiInfoButtonList{

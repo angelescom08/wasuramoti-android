@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.Context
-import _root_.android.widget.TextView
-import _root_.android.util.AttributeSet
+import android.content.Context
+import android.widget.TextView
+import android.util.AttributeSet
 
 // Android 4.1 and 4.1.1 has following bug:
 //   Calling TextView.setText(Html.fromHtml(...)) for some specific text raises IndexOutOfBoundsException

@@ -1,9 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.{Context,ContentValues}
-import _root_.android.database.CursorIndexOutOfBoundsException
-import _root_.android.database.sqlite.SQLiteDatabase
-import _root_.android.text.TextUtils
+import android.content.{Context,ContentValues}
+import android.database.CursorIndexOutOfBoundsException
+import android.database.sqlite.SQLiteDatabase
+import android.text.TextUtils
 
 import scala.util.Random
 import scala.collection.mutable

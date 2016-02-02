@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.preference.DialogPreference
-import _root_.android.content.Context
-import _root_.android.util.AttributeSet
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Button}
-import _root_.android.media.AudioManager
-import _root_.android.text.{TextUtils,Html}
+import android.preference.DialogPreference
+import android.content.Context
+import android.util.AttributeSet
+import android.view.{View,LayoutInflater}
+import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Button}
+import android.media.AudioManager
+import android.text.{TextUtils,Html}
 import scala.collection.mutable
 
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{

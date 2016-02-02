@@ -1,13 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.AlertDialog
-import _root_.android.content.{Context,DialogInterface}
-import _root_.android.os.Bundle
-import _root_.android.view.{LayoutInflater,View}
-import _root_.android.widget.{TextView,EditText}
-import _root_.android.graphics.Color
-import _root_.android.text.TextUtils
-import _root_.java.io.File
+import android.app.AlertDialog
+import android.content.{Context,DialogInterface}
+import android.os.Bundle
+import android.view.{LayoutInflater,View}
+import android.widget.{TextView,EditText}
+import android.graphics.Color
+import android.text.TextUtils
+import java.io.File
 
 class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){

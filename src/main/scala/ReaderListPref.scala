@@ -3,15 +3,15 @@ package karuta.hpnpwd.wasuramoti
 import scala.collection.mutable.Buffer
 import scala.collection.JavaConversions
 
-import _root_.android.preference.ListPreference
-import _root_.android.content.{Context,DialogInterface}
-import _root_.android.util.AttributeSet
-import _root_.android.app.{AlertDialog,ProgressDialog,Activity}
-import _root_.android.os.{Environment,AsyncTask}
-import _root_.android.view.Gravity
-import _root_.android.widget.ArrayAdapter
-import _root_.java.io.{IOException,File,FileOutputStream}
-import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
+import android.preference.ListPreference
+import android.content.{Context,DialogInterface}
+import android.util.AttributeSet
+import android.app.{AlertDialog,ProgressDialog,Activity}
+import android.os.{Environment,AsyncTask}
+import android.view.Gravity
+import android.widget.ArrayAdapter
+import java.io.{IOException,File,FileOutputStream}
+import karuta.hpnpwd.audio.OggVorbisDecoder
 
 object ReaderList{
   def setDefaultReader(context:Context){

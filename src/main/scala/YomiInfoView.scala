@@ -1,9 +1,9 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.content.Context
-import _root_.android.view.View
-import _root_.android.text.TextUtils
-import _root_.android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
-import _root_.android.util.{Log,AttributeSet}
+import android.content.Context
+import android.view.View
+import android.text.TextUtils
+import android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
+import android.util.{Log,AttributeSet}
 
 import scala.collection.mutable
 import scala.util.hashing.MurmurHash3

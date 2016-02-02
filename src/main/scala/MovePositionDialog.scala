@@ -1,14 +1,14 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{AlertDialog,Dialog,Activity}
-import _root_.android.os.{Bundle,Handler}
-import _root_.android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
-import _root_.android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
-import _root_.android.support.v4.app.DialogFragment
-import _root_.android.content.{DialogInterface,Context}
-import _root_.android.text.{Editable,TextWatcher,TextUtils}
+import android.app.{AlertDialog,Dialog,Activity}
+import android.os.{Bundle,Handler}
+import android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
+import android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
+import android.support.v4.app.DialogFragment
+import android.content.Context
+import android.text.{Editable,TextWatcher,TextUtils}
 
-import _root_.java.lang.Runnable
+import java.lang.Runnable
 
 import scala.util.Sorting
 import scala.collection.mutable
@@ -49,7 +49,7 @@ class MovePositionDialog extends DialogFragment{
       override def run(){
         runnable.counter += 1
         val (dx,delay) = if(runnable.counter > 15){
-          (3,200)
+          (3,150)
         }else if(runnable.counter > 7){
           (2,200)
         }else if(runnable.counter > 2){

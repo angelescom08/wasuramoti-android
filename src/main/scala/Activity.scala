@@ -1,17 +1,18 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{Activity,AlertDialog}
-import _root_.android.media.AudioManager
-import _root_.android.content.{Intent,Context,DialogInterface}
-import _root_.android.util.{Base64,TypedValue,Log}
-import _root_.android.os.{Bundle,Handler,Build,SystemClock}
-import _root_.android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
-import _root_.android.view.animation.{AnimationUtils,Interpolator}
-import _root_.android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
-import _root_.android.support.v7.app.{ActionBarActivity,ActionBar}
-import _root_.org.json.{JSONTokener,JSONObject,JSONArray}
-import _root_.java.lang.Runnable
-import _root_.karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
+import android.app.{Activity,AlertDialog}
+import android.content.{Intent,Context,DialogInterface}
+import android.os.{Bundle,Handler,Build}
+import android.support.v7.app.{ActionBarActivity,ActionBar}
+import android.util.{Base64,TypedValue}
+import android.view.animation.{AnimationUtils,Interpolator}
+import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
+import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
+
+import java.lang.Runnable
+
+import org.json.{JSONTokener,JSONObject,JSONArray}
+
 import scala.collection.mutable
 
 class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{

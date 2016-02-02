@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.karuta.hpnpwd.audio.OggVorbisDecoder
-import _root_.android.media.AudioTrack
-import _root_.android.content.Context
-import _root_.android.view.View
+import karuta.hpnpwd.audio.OggVorbisDecoder
+import android.media.AudioTrack
+import android.content.Context
+import android.view.View
 
-import _root_.java.nio.{ByteOrder,ShortBuffer,ByteBuffer}
+import java.nio.{ByteOrder,ShortBuffer,ByteBuffer}
 
 import scala.collection.mutable
 

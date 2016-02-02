@@ -1,12 +1,12 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.support.v4.app.DialogFragment
-import _root_.android.content.{Context,Intent}
-import _root_.android.view.{View,LayoutInflater,ViewGroup}
-import _root_.android.widget.{TextView,LinearLayout,Button}
-import _root_.android.os.Bundle
-import _root_.android.net.Uri
-import _root_.android.text.{Html,Spanned}
-import _root_.android.app.{AlertDialog,SearchManager,Dialog}
+import android.support.v4.app.DialogFragment
+import android.content.{Context,Intent}
+import android.view.{View,LayoutInflater,ViewGroup}
+import android.widget.{TextView,LinearLayout,Button}
+import android.os.Bundle
+import android.net.Uri
+import android.text.{Html,Spanned}
+import android.app.{AlertDialog,SearchManager,Dialog}
 import scala.collection.mutable
 
 // The constructor of Fragment must be empty since when fragment is recreated,

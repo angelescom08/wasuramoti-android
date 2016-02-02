@@ -1,9 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.Context
-import _root_.android.widget.EditText
-import _root_.android.util.AttributeSet
-import _root_.java.util.Locale
+import android.content.Context
+import android.widget.EditText
+import android.util.AttributeSet
+import java.util.Locale
 
 import com.wanakanajava.WanaKanaJava
 

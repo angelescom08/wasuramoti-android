@@ -1,19 +1,19 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
-import _root_.android.media.{AudioManager,RingtoneManager,Ringtone}
-import _root_.android.os.{Bundle,Vibrator,Parcelable}
-import _root_.android.net.Uri
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.content.{Intent,Context,BroadcastReceiver}
-import _root_.android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
-import _root_.android.provider.Settings
-import _root_.android.text.TextUtils
-import _root_.android.util.Log
-import _root_.android.support.v4.app.{NotificationCompat,TaskStackBuilder}
+import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
+import android.media.{AudioManager,RingtoneManager,Ringtone}
+import android.os.{Bundle,Vibrator,Parcelable}
+import android.net.Uri
+import android.view.{View,LayoutInflater}
+import android.content.{Intent,Context,BroadcastReceiver}
+import android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
+import android.provider.Settings
+import android.text.TextUtils
+import android.util.Log
+import android.support.v4.app.{NotificationCompat,TaskStackBuilder}
 
-import _root_.java.text.SimpleDateFormat
-import _root_.java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Date
 
 import scala.collection.mutable
 

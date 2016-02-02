@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
-import _root_.android.content.{Context,ContentValues}
+import android.database.sqlite.{SQLiteDatabase,SQLiteOpenHelper}
+import android.content.{Context,ContentValues}
 
 object DbUtils{
   def initializeFudaSets(context:Context,db:SQLiteDatabase,delete_all:Boolean=false){

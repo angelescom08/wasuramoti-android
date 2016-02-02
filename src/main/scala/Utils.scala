@@ -1,28 +1,28 @@
 package karuta.hpnpwd.wasuramoti
 
-import scala.io.Source
-import _root_.android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
-import _root_.android.util.Log
-import _root_.android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
-import _root_.android.content.res.{Configuration,Resources}
-import _root_.android.database.sqlite.SQLiteDatabase
-import _root_.android.preference.{DialogPreference,PreferenceManager}
-import _root_.android.text.{TextUtils,Html}
-import _root_.android.text.method.LinkMovementMethod
-import _root_.android.os.{Environment,SystemClock}
-import _root_.android.media.{AudioTrack,AudioManager}
-import _root_.android.view.{LayoutInflater,View,WindowManager,Surface}
-import _root_.android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
-import _root_.android.content.pm.PackageManager
-import _root_.android.net.Uri
-import _root_.android.graphics.Paint
+import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
+import android.content.res.{Configuration,Resources}
+import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
+import android.database.sqlite.SQLiteDatabase
+import android.graphics.Paint
+import android.media.{AudioTrack,AudioManager}
+import android.net.Uri
+import android.os.Environment
+import android.preference.{DialogPreference,PreferenceManager}
+import android.text.method.LinkMovementMethod
+import android.text.{TextUtils,Html}
+import android.util.Log
+import android.view.{LayoutInflater,View,WindowManager,Surface}
+import android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
 
-import _root_.java.io.File
-import _root_.java.util.Locale
-import _root_.java.text.NumberFormat
+import java.io.File
+import java.text.NumberFormat
+import java.util.Locale
+
+import karuta.hpnpwd.audio.OpenSLESPlayer
 
 import scala.collection.mutable
-import _root_.karuta.hpnpwd.audio.OpenSLESPlayer
+import scala.io.Source
 
 object Globals {
   val IS_DEBUG = false

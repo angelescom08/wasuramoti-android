@@ -1,13 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
-import _root_.android.media.{AudioManager,AudioFormat,AudioTrack}
-import _root_.android.os.{AsyncTask,Bundle,SystemClock}
-import _root_.android.media.audiofx.Equalizer
-import _root_.android.widget.{Toast,CheckBox,CompoundButton}
-import _root_.android.util.Log
-import _root_.android.app.AlertDialog
-import _root_.android.content.Context
+import karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
+import android.media.{AudioManager,AudioFormat,AudioTrack}
+import android.os.{AsyncTask,Bundle,SystemClock}
+import android.media.audiofx.Equalizer
+import android.widget.{Toast,CheckBox}
+import android.util.Log
+import android.app.AlertDialog
+import android.content.Context
 
 import scala.collection.mutable
 

@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.os.Bundle
-import _root_.android.content.Context
-import _root_.android.widget.{ArrayAdapter,ListView,EditText}
-import _root_.android.app.AlertDialog
-import _root_.android.text.TextUtils
+import android.view.{View,LayoutInflater}
+import android.os.Bundle
+import android.content.Context
+import android.widget.{ArrayAdapter,ListView,EditText}
+import android.app.AlertDialog
+import android.text.TextUtils
 
 class FudaSetCopyMergeDialog(
   context:Context,

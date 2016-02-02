@@ -392,7 +392,6 @@
   <string name="confirm_action_view_fudaset_done">札セットを%dつ追加しました．</string>
   <string name="confirm_action_view_fudaset_fail">札セット群を取り込むのに失敗しました．</string>
 
-  <string name="cannot_load_vorbis_library">Vorbisライブラリのロード失敗．おそらくこのアプリはご使用の端末を対象にコンパイルされていません．</string>
   <string name="conf_show_credits">謝辞</string>
   <string name="conf_show_credits_summary">使用しているフォントやライブラリなどのライセンス表示</string>
   <string name="category_other">その他</string>
@@ -443,7 +442,7 @@
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>
   <string name="intended_use_recreation_desc">
-    上の句→下の句→下の句の順番で詠み上げます．詠み句は上の句のみ表示されます．
+    上の句→下の句→下の句 の順に詠み上げます．詠み句は上の句のみ表示されます．
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
@@ -452,7 +451,7 @@
   </string>
   <string name="intended_use_study">百人一首の学習</string>
   <string name="intended_use_study_desc">
-    上の句→下の句 の順番で詠み上げます．詠み句は全表示．暗記モードが有効になります．
+    上の句→下の句 の順に詠み上げます．詠み句は全表示．暗記モードが有効になります．
   </string>
   <string name="intended_use_study_footnote">
     <![CDATA[
@@ -461,7 +460,7 @@
   </string>
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_competitive_desc">
-    下の句→上の句 の順番で詠み上げます．詠み句は非表示．序歌が有効になります．
+    下の句→上の句 の順に詠み上げます．詠み句は非表示．序歌が有効になります．
   </string>
   <string name="intended_use_competitive_footnote">
     <![CDATA[

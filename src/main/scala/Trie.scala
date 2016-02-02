@@ -1,5 +1,5 @@
 package karuta.hpnpwd.wasuramoti
-import _root_.android.text.TextUtils
+import android.text.TextUtils
 import scala.collection.mutable
 import scala.collection.mutable.Buffer
 import scala.util.Random

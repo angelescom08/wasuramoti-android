@@ -1,18 +1,18 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.content.{Context,Intent,ComponentName}
-import _root_.android.content.pm.{ResolveInfo,PackageInfo}
-import _root_.android.os.{Build,StatFs}
-import _root_.android.app.{AlertDialog,ActivityManager}
-import _root_.android.util.{Base64,Log}
-import _root_.android.net.Uri
-import _root_.android.view.{View,LayoutInflater}
-import _root_.android.widget.{TextView,Button}
+import android.content.{Context,Intent,ComponentName}
+import android.content.pm.{ResolveInfo,PackageInfo}
+import android.os.{Build,StatFs}
+import android.app.{AlertDialog,ActivityManager}
+import android.util.{Base64,Log}
+import android.net.Uri
+import android.view.{View,LayoutInflater}
+import android.widget.{TextView,Button}
 
-import _root_.java.io.{File,RandomAccessFile}
-import _root_.java.nio.ByteBuffer
-import _root_.java.nio.channels.FileChannel
-import _root_.java.util.zip.CRC32
+import java.io.{File,RandomAccessFile}
+import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
+import java.util.zip.CRC32
 
 import scala.collection.mutable
 

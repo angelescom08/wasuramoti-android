@@ -1,11 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.app.Dialog
-import _root_.android.os.Bundle
-import _root_.android.content.Context
-import _root_.android.text.{TextUtils,Html}
-import _root_.android.view.View
-import _root_.android.widget.{ArrayAdapter,Spinner,EditText,TextView}
+import android.app.Dialog
+import android.os.Bundle
+import android.content.Context
+import android.text.{TextUtils,Html}
+import android.view.View
+import android.widget.{EditText,TextView}
 
 class FudaSetEditDialog(
   context:Context,

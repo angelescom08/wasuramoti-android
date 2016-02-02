@@ -1,13 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import _root_.android.preference.PreferenceActivity
-import _root_.android.os.Bundle
-import _root_.android.view.{View,ViewGroup}
-import _root_.android.widget.{TextView,CheckBox,CompoundButton,LinearLayout}
-import _root_.android.util.{AttributeSet}
-import _root_.android.text.TextUtils
-import _root_.android.content.{Context,SharedPreferences}
-import _root_.android.preference.{Preference,PreferenceManager,EditTextPreference,ListPreference}
+import android.preference.PreferenceActivity
+import android.os.Bundle
+import android.view.{View,ViewGroup}
+import android.widget.{TextView,CheckBox,CompoundButton,LinearLayout}
+import android.util.{AttributeSet}
+import android.text.TextUtils
+import android.content.{Context,SharedPreferences}
+import android.preference.{Preference,EditTextPreference,ListPreference}
 
 import java.util.regex.Pattern
 
