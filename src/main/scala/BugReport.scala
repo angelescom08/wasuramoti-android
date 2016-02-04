@@ -121,7 +121,7 @@ object BugReport{
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setComponent(comp)
         val post_url = context.getResources.getString(R.string.bug_report_url)
-        val bug_report = Base64.encodeToString(BugReport.createBugReport(context).getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
+        val bug_report = BugReport.createBugReport(context)
         val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
         val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
         intent.setData(Uri.parse(dataUri))
@@ -137,127 +137,130 @@ object BugReport{
   }
 
   def createBugReport(context:Context):String = {
-    val bld = new mutable.StringBuilder
-    bld ++= "[build]\n"
-    bld ++= s"api_level=${Build.VERSION.SDK_INT}\n"
-    bld ++= s"release=${Build.VERSION.RELEASE}\n"
+    val bao = new java.io.ByteArrayOutputStream()
+    val base = new android.util.Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
+    val gzip = new java.util.zip.GZIPOutputStream(base)
+    val writer = new java.io.PrintWriter(gzip)
+    writer.println("[build]")
+    writer.println(s"api_level=${Build.VERSION.SDK_INT}")
+    writer.println(s"release=${Build.VERSION.RELEASE}")
     if(Build.VERSION.SDK_INT >= 21){
-      bld ++= s"supported_abis=${Build.SUPPORTED_ABIS.toList}\n"
+      writer.println(s"supported_abis=${Build.SUPPORTED_ABIS.toList}")
     }else{
-      bld ++= s"cpu_abi=${Build.CPU_ABI}\n"
-      bld ++= s"cpu_abi2=${Build.CPU_ABI2}\n"
+      writer.println(s"cpu_abi=${Build.CPU_ABI}")
+      writer.println(s"cpu_abi2=${Build.CPU_ABI2}")
     }
-    bld ++= s"brand=${Build.BRAND}\n"
-    bld ++= s"manufacturer=${Build.MANUFACTURER}\n"
-    bld ++= s"product=${Build.PRODUCT}\n"
-    bld ++= s"model=${Build.MODEL}\n"
+    writer.println(s"brand=${Build.BRAND}")
+    writer.println(s"manufacturer=${Build.MANUFACTURER}")
+    writer.println(s"product=${Build.PRODUCT}")
+    writer.println(s"model=${Build.MODEL}")
     val doWhenError = {e:Throwable =>
       Log.v("wasuramoti","error",e)
-      bld ++= s"Error: ${e.toString}\n"
+      writer.println(s"Error: ${e.toString}")
     }
 
     try{
-      bld ++= "[stb_vorbis]\n"
+      writer.println("[stb_vorbis]")
       import karuta.hpnpwd.audio.OggVorbisDecoder
       OggVorbisDecoder.loadStbVorbis()
-      bld ++= s"loaded=${OggVorbisDecoder.library_loaded}\n"
-      bld ++= s"error=${OggVorbisDecoder.unsatisfied_link_error}\n"
+      writer.println(s"loaded=${OggVorbisDecoder.library_loaded}")
+      writer.println(s"error=${OggVorbisDecoder.unsatisfied_link_error}")
     }catch{
       case e:Throwable => doWhenError(e)
     }
 
     try{
-      bld ++= "[configuration]\n"
+      writer.println("[configuration]")
       val config = context.getResources.getConfiguration
-      bld ++=  s"locale=${config.locale}\n"
-      bld ++=  s"screenLayout=${config.screenLayout}\n"
+      writer.println( s"locale=${config.locale}")
+      writer.println( s"screenLayout=${config.screenLayout}")
     }catch{
       case e:Exception => doWhenError(e)
     }
 
     try{
-      bld ++= "[display_metrics]\n"
+      writer.println("[display_metrics]")
       val metrics = context.getResources.getDisplayMetrics
-      bld ++= s"density=${metrics.density}\n"
-      bld ++= s"scaledDensity=${metrics.scaledDensity}\n"
-      bld ++= s"densityDpi=${metrics.densityDpi}\n"
-      bld ++= s"xdpi=${metrics.xdpi}\n"
-      bld ++= s"ydpi=${metrics.ydpi}\n"
-      bld ++= s"widthPixels=${metrics.widthPixels}\n"
-      bld ++= s"heightPixels=${metrics.heightPixels}\n"
+      writer.println(s"density=${metrics.density}")
+      writer.println(s"scaledDensity=${metrics.scaledDensity}")
+      writer.println(s"densityDpi=${metrics.densityDpi}")
+      writer.println(s"xdpi=${metrics.xdpi}")
+      writer.println(s"ydpi=${metrics.ydpi}")
+      writer.println(s"widthPixels=${metrics.widthPixels}")
+      writer.println(s"heightPixels=${metrics.heightPixels}")
     }catch{
       case e:Exception => doWhenError(e)
     }
 
     var pi = null:PackageInfo
     try{
-      bld ++= "[package_info]\n"
+      writer.println("[package_info]")
       pi = context.getPackageManager.getPackageInfo(context.getPackageName,0)
-      bld ++=  s"version_code=${pi.versionCode}\n"
-      bld ++=  s"version_name=${pi.versionName}\n"
+      writer.println( s"version_code=${pi.versionCode}")
+      writer.println( s"version_name=${pi.versionName}")
     }catch{
       case e:Exception => doWhenError(e)
     }
     if(pi != null){
       try{
-        bld ++= "[application_info]\n"
+        writer.println("[application_info]")
         val ai = pi.applicationInfo
-        bld ++=  s"flags=${ai.flags}\n"
-        bld ++=  s"source_dir=${ai.sourceDir}\n"
-        bld ++=  s"data_dir=${ai.dataDir}\n"
-        bld ++=  s"external_storage=${Utils.getAllExternalStorageDirectories(context)}\n"
+        writer.println( s"flags=${ai.flags}")
+        writer.println( s"source_dir=${ai.sourceDir}")
+        writer.println( s"data_dir=${ai.dataDir}")
+        writer.println( s"external_storage=${Utils.getAllExternalStorageDirectories(context)}")
       }catch{
         case e:Exception => doWhenError(e)
       }
     }
 
     try{
-      bld ++= "[memory_info]\n"
+      writer.println("[memory_info]")
       val rt = Runtime.getRuntime
-      bld ++= s"max_memory=${rt.maxMemory/MEGA}\n"
-      bld ++= s"total_memory=${rt.totalMemory/MEGA.toFloat}\n"
-      bld ++= s"free_memory=${rt.freeMemory/MEGA.toFloat}\n"
+      writer.println(s"max_memory=${rt.maxMemory/MEGA}")
+      writer.println(s"total_memory=${rt.totalMemory/MEGA.toFloat}")
+      writer.println(s"free_memory=${rt.freeMemory/MEGA.toFloat}")
       val am = context.getSystemService(Context.ACTIVITY_SERVICE).asInstanceOf[ActivityManager]
-      bld ++= s"memory_class=${am.getMemoryClass}\n"
+      writer.println(s"memory_class=${am.getMemoryClass}")
       val mi = new ActivityManager.MemoryInfo
       am.getMemoryInfo(mi)
-      bld ++= s"avail_mem=${mi.availMem/MEGA.toFloat}\n"
-      bld ++= s"threshold=${mi.threshold/MEGA.toFloat}\n"
-      bld ++= s"low_memory=${mi.lowMemory}\n"
+      writer.println(s"avail_mem=${mi.availMem/MEGA.toFloat}")
+      writer.println(s"threshold=${mi.threshold/MEGA.toFloat}")
+      writer.println(s"low_memory=${mi.lowMemory}")
 
     }catch{
       case e:Exception => doWhenError(e)
     }
     try{
-      bld ++= "[disk_usage]\n"
+      writer.println("[disk_usage]")
       val (avail,tot) = megabytesAvailable(context.getCacheDir.getPath)
-      bld ++= s"total=${tot}\n"
-      bld ++= s"available=${avail}\n"
+      writer.println(s"total=${tot}")
+      writer.println(s"available=${avail}")
     }catch{
       case e:Exception => doWhenError(e)
     }
 
     try{
-      bld ++= "[cache_dir_info]\n"
-      bld ++= s"cache_dir=${context.getCacheDir}\n"
+      writer.println("[cache_dir_info]")
+      writer.println(s"cache_dir=${context.getCacheDir}")
       val filelist = listFileCRC(context.getCacheDir).mkString("|")
-      bld ++= s"list_file=${filelist}\n"
+      writer.println(s"list_file=${filelist}")
     }catch{
       case e:Exception => doWhenError(e)
     }
     try{
-      bld ++= "[misc]\n"
+      writer.println("[misc]")
       val fd_num = new File("/proc/self/fd").listFiles.length
-      bld ++= s"proc_self_fd_num=$fd_num\n"
+      writer.println(s"proc_self_fd_num=$fd_num")
     }catch{
       case e:Exception => doWhenError(e)
     }
     try{
-      bld ++= "[shared_preference]\n"
+      writer.println("[shared_preference]")
       for(pref <- Array(Globals.prefs.get,context.getSharedPreferences(FudaListHelper.PREFS_NAME,0))){
         val al = pref.getAll
         for(a <- al.keySet.toArray){
-          bld ++= s"${a}=${al.get(a)}\n"
+          writer.println(s"${a}=${al.get(a)}")
         }
       }
     }catch{
@@ -267,7 +270,7 @@ object BugReport{
 
     Globals.db_lock.synchronized{
       try{
-        bld ++= "[sql_table]\n"
+        writer.println("[sql_table]")
         val db = Globals.database.get.getReadableDatabase
         val c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'",null)
         if(c.moveToFirst){
@@ -278,7 +281,7 @@ object BugReport{
             if(table != "fudalist"){
               val c2 = db.rawQuery(s"SELECT * from $table",null)
               if(c2.moveToFirst){
-                bld ++= s"cols_${table}=${c2.getColumnNames.toList.mkString(",")}\n"
+                writer.println(s"cols_${table}=${c2.getColumnNames.toList.mkString(",")}")
                 var rowcount = 0
                 while(!c2.isAfterLast){
                   rowcount += 1
@@ -286,7 +289,7 @@ object BugReport{
                   for(i <- 0 until c2.getColumnCount){
                     cols += c2.getString(i)
                   }
-                  bld ++= s"  ${cols.mkString(",")}\n"
+                  writer.println(s"  ${cols.mkString(",")}")
                   c2.moveToNext
                 }
               }
@@ -301,11 +304,12 @@ object BugReport{
     }
 
     try{
-      bld ++= "[variables]\n"
-      bld ++= s"karuta_player=${Globals.player.map{_.toBugReport}.getOrElse("None")}\n"
+      writer.println("[variables]")
+      writer.println(s"karuta_player=${Globals.player.map{_.toBugReport}.getOrElse("None")}")
     }catch{
       case e:Exception => doWhenError(e)
     }
-    return bld.toString
+    writer.close() // Maybe we don't need this since base stream is ByteArrayOutputStream
+    return bao.toString
   }
 }
