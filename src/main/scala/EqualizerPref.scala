@@ -1,4 +1,5 @@
 package karuta.hpnpwd.wasuramoti
+import android.annotation.TargetApi
 import android.util.AttributeSet
 import android.content.Context
 import android.preference.DialogPreference
@@ -70,6 +71,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     })
   }
 
+  @TargetApi(9) // Equalizer requires API >= 9
   def add_seekbars(view:View,equalizer:Equalizer,inflater:LayoutInflater){
     // SeekBar ALL
     val vw = inflater.inflate(R.layout.equalizer_item, null)
@@ -132,6 +134,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     }
   }
 
+  @TargetApi(9) // Equalizer requires API >= 9
   override def onCreateDialogView():View = {
     super.onCreateDialogView()
     // we have to access to the current dialog inside KarutaPlayUtils.doAfterConfiguration()

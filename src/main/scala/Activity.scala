@@ -8,6 +8,7 @@ import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
+import android.annotation.TargetApi
 
 import java.lang.Runnable
 
@@ -548,6 +549,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       )
     }
   }
+  @TargetApi(8) // android.content.DialogInterface.OnShowListener requires API >= 8
   def changeIntendedUse(first_config:Boolean = true){
     val builder = new AlertDialog.Builder(this)
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)

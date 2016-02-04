@@ -28,7 +28,6 @@ Priority High:
   * Forbid deleting last poem set.
   * Add "Enable Equalizer" checkbox.
   * Append all the DB table data compressed in anonymous bug report form.
-  * Use @TargetApi(x)
   * Sort the poem search result by score
     - https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
   * Show move position dialog instead of button list when poem text is pressed

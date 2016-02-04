@@ -1,6 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
+import android.annotation.TargetApi
 import android.media.{AudioManager,AudioFormat,AudioTrack}
 import android.os.{AsyncTask,Bundle,SystemClock}
 import android.media.audiofx.Equalizer
@@ -155,9 +156,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       mode )))
     makeEqualizer()
   }
+  @TargetApi(9) // Equalizer requires API >= 9
   def makeEqualizer(force:Boolean=false){
     val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer())
-    // Equalizer is supported by API >= 9
     if(android.os.Build.VERSION.SDK_INT < 9 || equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
       return
     }
@@ -301,6 +302,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
+  @TargetApi(9) // Equalizer requires API >= 9
   def doWhenStop(){
     equalizer.foreach(_.release())
     equalizer = None

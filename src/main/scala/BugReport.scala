@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.content.{Context,Intent,ComponentName}
 import android.content.pm.{ResolveInfo,PackageInfo}
 import android.os.{Build,StatFs}
+import android.annotation.TargetApi
 import android.app.{AlertDialog,ActivityManager}
 import android.util.{Base64,Log}
 import android.net.Uri
@@ -95,6 +96,7 @@ object BugReport{
     context.startActivity(intent) 
   }
 
+  @TargetApi(8) // android.util.Base64 requires API >= 8
   def showAnonymousForm(context:Context){
     if( android.os.Build.VERSION.SDK_INT < 8 ){
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
@@ -136,6 +138,7 @@ object BugReport{
     return
   }
 
+  @TargetApi(8) // android.util.Base64 and android.os.Build#CPU_ABI2 requires API >= 8
   def createBugReport(context:Context):String = {
     val bao = new java.io.ByteArrayOutputStream()
     val base = new android.util.Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)

@@ -1,6 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.media.AudioManager
+import android.annotation.TargetApi
 import android.content.{BroadcastReceiver,Context,Intent}
 import android.app.{PendingIntent,AlarmManager}
 import android.widget.{Button,Toast}
@@ -211,6 +212,7 @@ object KarutaPlayUtils{
       }
     }
   }
+  @TargetApi(8) // Audio Focus requires API >= 8
   def requestAudioFocus(context:Context):Boolean = {
     if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
       return true
