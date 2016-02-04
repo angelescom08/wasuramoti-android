@@ -291,9 +291,9 @@
   <!-- CATEGORY_TIME -->
   <string name="category_time">Time</string>
   <string name="conf_wav_begin_read">Beginning of Play</string>
-  <string name="conf_wav_begin_read_summary">Add silence before playing the poem.</string>
+  <string name="conf_wav_begin_read_summary">Add silence before playing the poem. Raise this value if the voice gets cut off at the beginning.</string>
   <string name="conf_wav_end_read">End of Play</string>
-  <string name="conf_wav_end_read_summary">Add silence after playing the poem.</string>
+  <string name="conf_wav_end_read_summary">Add silence after playing the poem. Raise this value if the voice gets cut off at the end.</string>
   <string name="conf_wav_span_simokami">Interval</string>
   <string name="conf_wav_span_simokami_summary">Interval between each half of the poem.</string>
   <string name="conf_dimlock_minutes">Lock Screen</string>
@@ -480,7 +480,7 @@
   <string name="intended_use_desc">Select your intended use:</string>
   <string name="intended_use_recreation">Recreative Karuta</string>
   <string name="intended_use_recreation_desc">
-    Plays in order of 1st - 2nd - 2nd. Only 1st half of poem is displayed.
+    Plays in normal order, with second half of the poem twice. Displays only first half of the poem text.
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
@@ -489,7 +489,7 @@
   </string>
   <string name="intended_use_study">Study 100 Poems</string>
   <string name="intended_use_study_desc">
-    Plays in order of 1st - 2nd. Memorization mode is enabled.
+    Plays in normal order. Displays whole the poem text. Enables memorization mode.
   </string>
   <string name="intended_use_study_footnote">
     <![CDATA[
@@ -498,7 +498,7 @@
   </string>
   <string name="intended_use_competitive">Competitive Karuta</string>
   <string name="intended_use_competitive_desc">
-    Plays in order of 2nd - 1st, and also Joka.
+    Plays in `Kyogi Karuta` order. Hides the poem text. Enables Joka.
   </string>
   <string name="intended_use_competitive_footnote">
     <![CDATA[

@@ -32,7 +32,6 @@ Priority High:
   * Sort the poem search result by score
     - https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
   * Show move position dialog instead of button list when poem text is pressed
-  * Write `When sound is intermitted at the beginning/end, increase this value`, in `Add silence before/after playing the poem` config.
   * Able to create poem set which contains range of poem number using GUI
   * Share poem set groups
   * Use https://github.com/kazuho/golombset for generating poem set group URI
