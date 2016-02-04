@@ -37,6 +37,7 @@ Priority High:
   * Add link to http://pjmtdw.github.io/wasuramoti/fudaset.html inside app
   * Warn that equalizer volume is too small when config
   * Temporary lower the volume when ACTION_AUDIO_BECOMING_NOISY
+  * Encrypt Bug Report
 
 Priority Medium-High:
   * Use scalaz, shapeless

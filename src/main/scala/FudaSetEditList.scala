@@ -7,19 +7,26 @@ import android.view.View
 import android.widget.{ArrayAdapter,AdapterView,ListView,TextView}
 import java.util.Comparator
 
-class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+object FudaSetEditListDialog {
   object SortMode extends Enumeration {
     type SortMode = Value
     val ABC,NUM = Value
     def nextMode(v:SortMode.SortMode) = SortMode((v.id+1)%SortMode.maxId)
   }
-  var sort_mode = SortMode.ABC
-
   object ListItemMode extends Enumeration {
     type ListItemMode = Value
     val FULL,KIMARIJI = Value
     def nextMode(v:ListItemMode.ListItemMode) = ListItemMode((v.id+1)%ListItemMode.maxId)
   }
+  def genDialogMode(sort_mode:SortMode.SortMode,list_item_mode:ListItemMode.ListItemMode):String = {
+    Array(sort_mode.toString,list_item_mode.toString).mkString(",")
+  }
+}
+
+class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+  import FudaSetEditListDialog.{SortMode,ListItemMode,genDialogMode}
+  var sort_mode = SortMode.ABC
+
   var list_item_mode = ListItemMode.KIMARIJI
 
   class FudaListItem(val str:String, val fudanum:Int) {
@@ -87,7 +94,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
     setOnDismissListener(new DialogInterface.OnDismissListener(){
         override def onDismiss(di:DialogInterface){
           Globals.prefs.foreach{ p =>
-            val str = Array(sort_mode.toString,list_item_mode.toString).mkString(",")
+            val str = genDialogMode(sort_mode,list_item_mode)
             p.edit.putString("fudaset_edit_list_dlg_mode",str).commit
           }
         }

@@ -563,6 +563,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     }).foreach{ radio_group.check(_) }
     val that = this
     val listener = new DialogInterface.OnClickListener(){
+      import FudaSetEditListDialog.{SortMode,ListItemMode}
       override def onClick(interface:DialogInterface,which:Int){
         val id = radio_group.getCheckedRadioButtonId
         if(id == -1){
@@ -572,6 +573,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         val changes = id match {
           case R.id.intended_use_competitive => {
             edit.putString("intended_use","competitive")
+            edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.ABC,ListItemMode.KIMARIJI))
             edit.putString("read_order_each","CUR2_NEXT1")
             edit.putBoolean("joka_enable",true)
             edit.putBoolean("memorization_mode",false)
@@ -585,6 +587,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           }
           case R.id.intended_use_study => {
             edit.putString("intended_use","study")
+            edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.NUM,ListItemMode.FULL))
             edit.putString("read_order_each","CUR1_CUR2")
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",true)
@@ -598,6 +601,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
           }
           case R.id.intended_use_recreation => {
             edit.putString("intended_use","recreation")
+            edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.NUM,ListItemMode.FULL))
             edit.putString("read_order_each","CUR1_CUR2_CUR2")
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",false)
