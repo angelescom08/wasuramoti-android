@@ -1,4 +1,5 @@
 Priority High:
+  * Add more [] to index.
   * Use gradle instead of sbt
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
   * Check whether current_index == 102 is valid or not.
@@ -38,6 +39,8 @@ Priority High:
   * Warn that equalizer volume is too small when config
   * Temporary lower the volume when ACTION_AUDIO_BECOMING_NOISY
   * Encrypt Bug Report
+  * Move `Show Poem No. and Kimariji on Top Bar` from detail to display option
+    - Split into two options `Poem No.` and `Kimariji`
 
 Priority Medium-High:
   * Use scalaz, shapeless

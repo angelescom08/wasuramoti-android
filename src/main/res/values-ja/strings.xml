@@ -73,12 +73,12 @@
   <string name="conf_autoplay_summary">前の札を詠み終えたら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
-  <string name="autoplay_repeat">全部詠み終えるとシャッフルして最初から続ける</string>
+  <string name="autoplay_repeat">全部詠み終えたらシャッフルして最初から続ける</string>
 
   <!-- CATEGORY_ORDER -->
   <string name="category_order">順番</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
-  <string name="conf_show_yomi_info_summary">詠まれている歌を文字表示する</string>
+  <string name="conf_show_yomi_info_summary">詠まれている歌を画面に表示する</string>
   <string name="yomi_info_conf_detail_title">詠み句の詳細設定</string>
   <string name="yomi_info_conf_font_title">詠み句のフォント</string>
   <string name="yomi_info_show_text_desc">詠み句を表示</string>
@@ -285,7 +285,7 @@
     「一覧」ボタンを押すか，現代仮名遣いで決まり字まで入力して下さい．<font color=\"#00CCFF\">[<u>歌番号指定</u>]</font> もできます．
     ]]>
   </string>
-  <string name="fudasetedit_text_hint">例: あさじ こい おお 21..30</string>
+  <string name="fudasetedit_text_hint">例: きみ なにわ 21..30</string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>歌番号指定</h3>
@@ -395,10 +395,10 @@
   <string name="conf_show_credits">謝辞</string>
   <string name="conf_show_credits_summary">使用しているフォントやライブラリなどのライセンス表示</string>
   <string name="category_other">その他</string>
-  <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです．</string>
-  <string name="bug_report_not_supported">すみません．この端末からはバグレポートを送れません．</string>
+  <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです</string>
+  <string name="bug_report_not_supported">この端末は匿名フォームに対応していません．すみません．</string>
   <string name="conf_bug_report">サポート窓口</string>
-  <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら</string>
+  <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら．</string>
   <string name="bug_report_subject" >Android版わすらもちについて</string>
   <string name="bug_report_summary" >連絡はEメールもしくは匿名フォームで受け付けています．質問，要望，バグ報告何でもどうぞ．</string>
   <string name="bug_report_mail_addr" >Eメール: </string>
@@ -422,15 +422,13 @@
         <body>
           <h3>FAQ</h3>
           良くある質問: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">公式サイトへのリンク</a><br/>
-          匿名フォームへの質問および要望に対する返答や，バグ報告がバグじゃなくて仕様だった場合などはこちらに記載します．<br/>
+          匿名フォームへの質問や要望などに対する返答はこちらに記載します．<br/>
           <hr/>
           <h3>匿名フォーム</h3>
-          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'本当に送信しますか？\'))\" >
+          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'デバッグに有用な端末の情報を送信しますがよろしいですか？\'))\" >
             匿名の質問，要望，バグ報告はこちら:<br/>
             <textarea name=\"bug_detail\"></textarea><br/>
-            「送信する」をクリックするとデバッグに有用な端末の情報が送信されます．<br/>
-            匿名のバグ報告は開発者側から詳しい症状をお伺いすることができません．<br/>
-            メールで連絡してくれた方が直せる確率は高まります．<br/>
+            匿名のバグ報告には返信できないので，メールで連絡してくれた方が直せる確率は高まります．<br/>
             <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"送信する\">
           </form>
@@ -469,7 +467,7 @@
   </string>
   <string name="intended_use_result">
     <![CDATA[
-      下記のように設定を変更しました．「簡易設定」&rArr;「使用目的変更」で再設定できます．
+      下記のように設定を変更しました．再設定は「簡易設定」&rArr;「使用目的変更」からできます．
     ]]>
   </string>
   <string name="intended_use_result_title">設定完了</string>

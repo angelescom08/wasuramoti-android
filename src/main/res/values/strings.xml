@@ -274,7 +274,7 @@
   <string name="conf_play_after_swipe">Play after Swipe</string>
   <string name="conf_play_after_swipe_summary">Start playing when swiping poem text to left or right.</string>
   <string name="conf_skip_on_longclick">Skip on Long Click</string>
-  <string name="conf_skip_on_longclick_summary">Play next poem when holding down the button.</string>
+  <string name="conf_skip_on_longclick_summary">Play next poem when holding down the button during the play.</string>
   <string name="conf_move_after_first_phrase">Go Next if Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
   <string name="conf_move_next_after_done">Go Next after Done</string>
@@ -325,7 +325,7 @@
     Press `List` button, or input first letters of poem in Romaji. You can also input <font color=\"#00CCFF\">[<u>Poem No.</u>]</font>
     ]]>
   </string>
-  <string name="fudasetedit_text_hint">Example: asaji koi oo 21..30</string>
+  <string name="fudasetedit_text_hint">Example: kimi naniwa 21..30</string>
   <string name="fudasetedit_fudanum_html">
     <![CDATA[
     <h3>Select By Poem Number</h3>
@@ -343,7 +343,7 @@
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>
     <item>Switch Text ( Kimariji / Full )</item>
-    <item>Change Order ( AIUEO / Poem No. )</item>
+    <item>Reorder (Syllabary / Poem No.)</item>
   </string-array>
   <string name="fudaseteditlist_menutitle">Menu</string>
   <string name="fudasetedit_confirm">The set will contain %d poems. Is it ok?</string>
@@ -435,14 +435,14 @@
   <string name="category_other">Others</string>
   <string name="browser_not_found">Web Browser not found in this device</string>
   <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
-  <string name="bug_report_not_supported">Sorry, you cannot send bug report from this device.</string>
+  <string name="bug_report_not_supported">Sorry, anonymous form is not supported in this device.</string>
   <string name="conf_bug_report">Support Form</string>
   <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
   <string name="bug_report_subject" >About Wasuramoti for Android</string>
   <string name="bug_report_summary" >You can contact us by either E-Mail or Anonymous Form. Feel free to ask any question, give a request, and report bug.</string>
   <string name="bug_report_mail_addr" >E-Mail: </string>
   <string name="bug_report_anonymous_form" >Anonymous Form</string>
-  <string name="bug_report_anonymous_form_notice" >Notice: Some browser may not support anonymous form. Sorry.</string>
+  <string name="bug_report_anonymous_form_notice" >Note: Some browser may not support anonymous form.</string>
   <string name="bug_report_html">
     <![CDATA[
       <html>
@@ -459,15 +459,13 @@
         <body>
           <h3>FAQ</h3>
           Frequently asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
-          Answer to anonymous question, request, bug report will be published here.<br/>
+          Answer to anonymous form will be published here.<br/>
           <hr/>
           <h3>Anonymous Form</h3>
-          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'Really Send OK?\'))\" >
+          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'This will send some device information useful for debugging. Is it OK?\'))\" >
             Anonymous question, request, and bug report:<br/>
             <textarea name=\"bug_detail\"></textarea><br/>
-            Clicking `Submit` button will send some information which is useful for debugging.<br/>
-            We cannot ask you the detail of the bug if you send bug report anonymously.<br/>
-            Therefore, contact us by E-Mail if you want higher possibility to fix the bug.<br/>
+            Contact us by E-Mail if you really want to fix the bug, since we cannot reply to this form.<br/>
             <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"Submit\">
           </form>
