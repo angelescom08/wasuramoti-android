@@ -24,13 +24,13 @@
       <include layout="@layout/horizontal_rule" />
       <RadioButton
         android:id="@+id/intended_use_recreation"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/intended_use_recreation"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
@@ -41,13 +41,13 @@
       <include layout="@layout/horizontal_rule" />
       <RadioButton
         android:id="@+id/intended_use_competitive"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/intended_use_competitive"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
@@ -58,13 +58,13 @@
       <include layout="@layout/horizontal_rule" />
       <RadioButton
         android:id="@+id/intended_use_study"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/intended_use_study"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
       <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
         android:paddingLeft="17dip"
