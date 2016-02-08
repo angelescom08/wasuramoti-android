@@ -141,6 +141,7 @@
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
     <item>A.MEMORIZE_SWITCH|Memorized</item>
+    <item>A.REPLAY_LAST|Replay Last Half</item>
     <item>A.DISPLAY_KAMI|1st Half</item>
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
@@ -282,6 +283,8 @@
 
   <!-- CATEGORY_DISPLAY -->
   <string name="category_display">Display</string>
+  <string name="conf_show_replay_last_button">Show Replay Button</string>
+  <string name="conf_show_replay_last_button_summary">Show button which replays last half of the previous poem.</string>
   <string name="conf_show_message_when_moved">Show Msg when Moved</string>
   <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message.</string>
   <string name="message_when_moved">Moved to next poem</string>

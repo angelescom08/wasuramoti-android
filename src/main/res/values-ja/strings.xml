@@ -125,6 +125,7 @@
   <string name="yomi_info_search_kimariji_abbrev">決:</string>
   <string-array name="yomi_info_search_array">
     <item>A.MEMORIZE_SWITCH|覚えた</item>
+    <item>A.REPLAY_LAST|最後の句をもう一度</item>
     <item>A.DISPLAY_KAMI|上の句</item>
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>
@@ -242,6 +243,8 @@
 
   <!-- CATEGORY_DISPLAY -->
   <string name="category_display">表示</string>
+  <string name="conf_show_replay_last_button">リプレイボタンを表示</string>
+  <string name="conf_show_replay_last_button_summary">前の札の最後の句をもう一度再生するためのボタンを表示</string>
   <string name="conf_show_message_when_moved">進んだ時にその旨を表示</string>
   <string name="conf_show_message_when_moved_summary">「次の札へ進みました」を表示する</string>
   <string name="message_when_moved">次の札へ進みました</string>

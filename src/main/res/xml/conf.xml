@@ -108,6 +108,12 @@
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_display">
         <CheckBoxPreference
+          android:key="show_replay_last_button"
+          android:title="@string/conf_show_replay_last_button"
+          android:summary="@string/conf_show_replay_last_button_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
           android:key="show_message_when_moved"
           android:title="@string/conf_show_message_when_moved"
           android:summary="@string/conf_show_message_when_moved_summary"

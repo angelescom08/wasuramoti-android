@@ -13,6 +13,7 @@ import scala.collection.mutable
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
 object YomiInfoSearchDialog{
+  val PREFIX_REPLAY = "A.REPLAY"
   val PREFIX_MEMORIZE = "A.MEMORIZE"
   val PREFIX_DISPLAY = "A.DISPLAY"
   val PREFIX_KIMARIJI = "B.KIMARIJI"
@@ -188,6 +189,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableButton(tag)
+      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_REPLAY+"_")){
+        Globals.prefs.get.getBoolean("show_replay_last_button",false)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_MEMORIZE+"_")){
         Globals.prefs.get.getBoolean("memorization_mode",false)
       }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
@@ -231,6 +234,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
             }
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
+          }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_REPLAY+"_")){
+            KarutaPlayUtils.startReplay()
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>

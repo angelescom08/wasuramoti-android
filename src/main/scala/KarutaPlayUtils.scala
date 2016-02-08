@@ -12,10 +12,10 @@ import android.view.View
 
 import scala.collection.mutable
 object KarutaPlayUtils{
-   var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
-   var have_to_mute = false:Boolean
-   var last_confirmed_for_volume = None:Option[Long]
-   var last_confirmed_for_ringer_mode = None:Option[Long]
+  var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
+  var have_to_mute = false:Boolean
+  var last_confirmed_for_volume = None:Option[Long]
+  var last_confirmed_for_ringer_mode = None:Option[Long]
 
   object Action extends Enumeration{
     type Action = Value
@@ -28,6 +28,7 @@ object KarutaPlayUtils{
   // TODO: Why we cannot use Enumaration here
   val SENDER_MAIN = "SENDER_MAIN"
   val SENDER_CONF = "SENDER_CONF"
+  val SENDER_REPLAY = "SENDER_REPLAY"
 
   // TODO: shold we use single handler and multiple callbacks?
   val border_handler = new Handler() 
@@ -92,6 +93,17 @@ object KarutaPlayUtils{
       }
     })
   }
+
+  def startReplay(){
+    Globals.player.foreach{ pl =>
+      if(pl.replay_audio_queue.nonEmpty){
+        val bundle = new Bundle()
+        bundle.putString("fromSender",KarutaPlayUtils.SENDER_REPLAY)
+        pl.play(bundle)
+      }
+    }
+  }
+
   def cancelAutoPlay(context:Context){
     cancelKarutaPlayTimer(context,Action.Auto)
   }
@@ -177,7 +189,7 @@ object KarutaPlayUtils{
     }
   }
 
-  def doAfterActivity(bundle:Bundle){
+  def doAfterSenderMain(bundle:Bundle){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         return
@@ -201,7 +213,8 @@ object KarutaPlayUtils{
       }
     }
   }
-  def doAfterConfiguration(bundle:Bundle){
+  
+  def doAfterSenderConf(bundle:Bundle){
     Globals.current_config_dialog.foreach{dp=>
       val btn = dp.getDialog.findViewById(R.id.audio_play).asInstanceOf[Button]
       if(btn != null){
@@ -212,6 +225,24 @@ object KarutaPlayUtils{
       }
     }
   }
+
+  def doAfterSenderReplay(bundle:Bundle){
+    Globals.player.foreach{ pl =>
+      pl.activity.refreshAndInvalidate()
+    }
+  }
+
+  def doAfterSender(bundle:Bundle){
+    bundle.getString("fromSender") match{
+      case SENDER_MAIN =>
+        doAfterSenderMain(bundle)
+      case KarutaPlayUtils.SENDER_CONF =>
+        doAfterSenderConf(bundle)
+      case KarutaPlayUtils.SENDER_REPLAY =>
+        doAfterSenderReplay(bundle)
+    }
+  }
+
   @TargetApi(8) // Audio Focus requires API >= 8
   def requestAudioFocus(context:Context):Boolean = {
     if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){

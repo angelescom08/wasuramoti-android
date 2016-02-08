@@ -102,6 +102,8 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
             "wav_begin_read"|"wav_end_read"|"wav_span_simokami"|"wav_threshold"|
             "wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
             Globals.forceRefresh = true
+          case "show_replay_last_button" =>
+            Globals.forceRestart = true
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
             Globals.forceRefresh = true

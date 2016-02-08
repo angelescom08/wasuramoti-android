@@ -56,8 +56,6 @@ object Globals {
 }
 
 object Utils {
-  type AudioQueue = mutable.Queue[Either[WavBuffer,Int]]
-
   abstract class PrefAccept[T <% Ordered[T] ] {
     def from(s:String):T
     def >(a:T,b:T):Boolean = a > b

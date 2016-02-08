@@ -34,8 +34,8 @@ object KarutaPlayerDebug{
 
 case class OpenSLESTrack()
 
-class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
-  type AudioQueue = Utils.AudioQueue
+class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int, val replay_audio_queue:Option[AudioHelper.AudioQueue]) extends BugReportable{
+  type AudioQueue = AudioHelper.AudioQueue
   var cur_millisec = 0:Long
   var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]
   var equalizer = None:Option[Equalizer]
@@ -100,17 +100,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def calcBufferSize():Int = {
-      audio_queue.map{ arg =>{
-          arg match {
-            case Left(w) => w.bufferSizeInBytes()
-            case Right(millisec) => AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec)
-          }
-        }
-      }.sum
-  }
-
-  def makeMusicTrack(){
+  def makeMusicTrack(queue:AudioQueue=audio_queue){
     // getFirstDecoder waits for decoding ends
     val decoder = getFirstDecoder
 
@@ -125,12 +115,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       music_track = Some(Right(new OpenSLESTrack))
     }else{
-      makeAudioTrack(decoder)
+      makeAudioTrack(decoder,queue)
     }
   }
 
-  def makeAudioTrack(decoder:OggVorbisDecoder){
-    val buffer_size_bytes = calcBufferSize
+  def makeAudioTrack(decoder:OggVorbisDecoder,queue:AudioQueue){
+    val buffer_size_bytes = AudioHelper.calcBufferSize(decoder,queue)
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
     }else{
@@ -330,12 +320,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
       }
     }
-    bundle.getString("fromSender") match{
-      case KarutaPlayUtils.SENDER_MAIN =>
-        KarutaPlayUtils.doAfterActivity(bundle)
-      case KarutaPlayUtils.SENDER_CONF =>
-        KarutaPlayUtils.doAfterConfiguration(bundle)
-    }
+    KarutaPlayUtils.doAfterSender(bundle)
   }
 
   def onReallyStart(bundle:Bundle, fromAuto:Boolean){
@@ -355,8 +340,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         stop()
         Utils.setButtonTextByState(activity.getApplicationContext())
       }
+      val current_queue = if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY){
+        replay_audio_queue.getOrElse(mutable.Queue())
+      }else{
+        audio_queue
+      }
       try{
-        makeMusicTrack()
+        makeMusicTrack(current_queue)
       }catch{
         case e:OggDecodeFailException => {
             activity.runOnUiThread(new Runnable{
@@ -386,16 +376,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         }
       }
 
-      val buffer_length_millisec = AudioHelper.calcTotalMillisec(audio_queue)
-      val buf = new Array[Short](calcBufferSize/AudioHelper.SHORT_SIZE)
-      var offset = 0
-      audio_queue.foreach{ arg => {
-          arg match {
-            case Left(w) => offset += w.writeToShortBuffer(buf,offset)
-            case Right(millisec) => offset += AudioHelper.millisecToBufferSizeInBytes(getFirstDecoder(),millisec) / AudioHelper.SHORT_SIZE
-            }
-        }
-      }
+      val buffer_length_millisec = AudioHelper.calcTotalMillisec(current_queue)
+      val buf = AudioHelper.makeBuffer(getFirstDecoder,current_queue)
 
       val decode_and_play_again = () => {
         // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
