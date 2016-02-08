@@ -689,8 +689,14 @@ object Utils {
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
     val Array(prefix,postfix) = tag.split("_")
-    yiv.map{vw =>
-      val rx = if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
+    val is_mem = prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE
+    val (ic_on,ic_off) = if(is_mem){
+      (R.drawable.ic_action_important,R.drawable.ic_action_not_important)
+    }else{
+      (R.drawable.ic_action_brightness_high,R.drawable.ic_action_brightness_low)
+    }
+    yiv.flatMap{vw =>
+      val rx = if(is_mem){
         vw.isMemorized
       }else{
         postfix match{
@@ -701,11 +707,11 @@ object Utils {
         }
       }
       if(rx){
-        R.drawable.ic_action_brightness_high
+        Some(ic_on)
       }else{
-        R.drawable.ic_action_brightness_low
+        None
       }
-    }.getOrElse(R.drawable.ic_action_brightness_low)
+    }.getOrElse(ic_off)
   }
   def alarmManagerSetExact(manager:AlarmManager,typ:Int,triggerAtMillis:Long,operation:PendingIntent){
     if(android.os.Build.VERSION.SDK_INT >= 19){
