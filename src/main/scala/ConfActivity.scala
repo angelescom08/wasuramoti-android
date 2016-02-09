@@ -98,11 +98,12 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
     listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
       override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
         key match{
-          case "read_order_each"|"reader_path"|"read_order_joka"|"joka_enable"|
+          case "reader_path"|"read_order_joka"|"joka_enable"|
             "wav_begin_read"|"wav_end_read"|"wav_span_simokami"|"wav_threshold"|
             "wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
             Globals.forceRefresh = true
-          case "show_replay_last_button" =>
+          case "show_replay_last_button"|"read_order_each" =>
+            // we also have to change text of replay_last_button when read_order_each changed
             Globals.forceRestart = true
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)

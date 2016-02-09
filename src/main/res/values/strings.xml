@@ -141,7 +141,7 @@
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
     <item>A.MEMORIZE_SWITCH|Memorized</item>
-    <item>A.REPLAY_LAST|Replay Last Half</item>
+    <item>A.REPLAY_LAST|Replay ## Half</item>
     <item>A.DISPLAY_KAMI|1st Half</item>
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
@@ -153,6 +153,11 @@
     <item>C.SEARCH_TEXT|Poem</item>
     <item>C.SEARCH_AUTHOR|Author</item>
   </string-array>
+
+  <string name="repeat_last_1st">1st</string>
+  <string name="repeat_last_2nd">2nd</string>
+  <string name="repeat_last_else">Last</string>
+  
   <string name="yomi_info_search_detail_title">Kimariji Log</string>
   <string name="kimariji_changelog_joka">
     `Joka` is an introduction poem which is played before all poems. Therefore it has no Kimariji.

@@ -58,6 +58,12 @@
       android:widgetLayout="@layout/conf_current_value"
       android:defaultValue="upper_1,lower_1"
       />
+    <CheckBoxPreference
+      android:key="show_replay_last_button"
+      android:title="@string/conf_show_replay_last_button"
+      android:summary="@string/conf_show_replay_last_button_summary"
+      android:defaultValue="false"
+      />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_voice">
     <karuta.hpnpwd.wasuramoti.AudioVolumePreference
@@ -107,12 +113,6 @@
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_display">
-        <CheckBoxPreference
-          android:key="show_replay_last_button"
-          android:title="@string/conf_show_replay_last_button"
-          android:summary="@string/conf_show_replay_last_button_summary"
-          android:defaultValue="false"
-          />
         <CheckBoxPreference
           android:key="show_message_when_moved"
           android:title="@string/conf_show_message_when_moved"

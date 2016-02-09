@@ -125,7 +125,7 @@
   <string name="yomi_info_search_kimariji_abbrev">決:</string>
   <string-array name="yomi_info_search_array">
     <item>A.MEMORIZE_SWITCH|覚えた</item>
-    <item>A.REPLAY_LAST|最後の句をもう一度</item>
+    <item>A.REPLAY_LAST|##の句をもう一度</item>
     <item>A.DISPLAY_KAMI|上の句</item>
     <item>A.DISPLAY_SIMO|下の句</item>
     <item>A.DISPLAY_AUTHOR| 歌人</item>
@@ -137,6 +137,11 @@
     <item>C.SEARCH_TEXT|詠み句</item>
     <item>C.SEARCH_AUTHOR|歌人</item>
   </string-array>
+
+  <string name="repeat_last_1st">上</string>
+  <string name="repeat_last_2nd">下</string>
+  <string name="repeat_last_else">前</string>
+  
   <string name="yomi_info_search_detail_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">
     序歌は全ての歌の前に詠まれる歌なので決まり字はありません．
