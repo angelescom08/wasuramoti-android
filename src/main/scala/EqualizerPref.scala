@@ -149,9 +149,10 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     Globals.player match{
       case Some(pl) => {
           try{
-            pl.makeMusicTrack()
+            pl.waitDecodeAndUpdateAudioQueue
+            pl.makeMusicTrack(pl.audio_queue)
           }catch{
-            case e:OggDecodeFailException =>
+            case e:Exception =>
             view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(e.getMessage())
             return view
           }

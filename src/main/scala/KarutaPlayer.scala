@@ -34,7 +34,7 @@ object KarutaPlayerDebug{
 
 case class OpenSLESTrack()
 
-class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int, val replay_audio_queue:Option[AudioHelper.AudioQueue]) extends BugReportable{
+class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
   type AudioQueue = AudioHelper.AudioQueue
   var cur_millisec = 0:Long
   var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]
@@ -100,9 +100,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def makeMusicTrack(queue:AudioQueue=audio_queue){
-    // getFirstDecoder waits for decoding ends
-    val decoder = getFirstDecoder
+  def makeMusicTrack(queue:AudioQueue){
+    val decoder = getFirstDecoder(queue)
 
     if(Globals.prefs.get.getBoolean("use_opensles",false)){
       // TODO: support audio other than 22050 mono
@@ -283,9 +282,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def getFirstDecoder():OggVorbisDecoder = {
-    waitDecode()
-    audio_queue.collectFirst{
+  def getFirstDecoder(queue:AudioQueue):OggVorbisDecoder = {
+    queue.collectFirst{
       case Left(w) => w.decoder
     }.getOrElse{
       throw new AudioQueueEmptyException("")
@@ -341,23 +339,35 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         Utils.setButtonTextByState(activity.getApplicationContext())
       }
       val current_queue = if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY){
-        replay_audio_queue.getOrElse(mutable.Queue())
+        if(KarutaPlayUtils.replay_audio_queue.isEmpty){
+          abort_playing(None)
+          return
+        }
+        KarutaPlayUtils.replay_audio_queue.get
       }else{
+        try{
+          waitDecodeAndUpdateAudioQueue()
+        }catch{
+          case e:OggDecodeFailException => {
+              activity.runOnUiThread(new Runnable{
+                  override def run(){
+                    Utils.messageDialog(activity,Left(Option(e.getMessage).getOrElse("<null>") + "... will restart app."),{
+                        ()=>Utils.restartApplication(activity.getApplicationContext)
+                      })
+                  }
+              })
+              return
+            }
+            case e:java.lang.UnsatisfiedLinkError => {
+              abort_playing(Some(R.string.unsatisfied_link_error))
+              return
+            }
+        }
         audio_queue
       }
       try{
         makeMusicTrack(current_queue)
       }catch{
-        case e:OggDecodeFailException => {
-            activity.runOnUiThread(new Runnable{
-                override def run(){
-                  Utils.messageDialog(activity,Left(Option(e.getMessage).getOrElse("<null>") + "... will restart app."),{
-                      ()=>Utils.restartApplication(activity.getApplicationContext)
-                    })
-                }
-            })
-            return
-          }
         case e:AudioQueueEmptyException => {
           abort_playing(None)
           return
@@ -370,14 +380,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           abort_playing(Some(R.string.opensles_init_error))
           return
         }
-        case e:java.lang.UnsatisfiedLinkError => {
-          abort_playing(Some(R.string.unsatisfied_link_error))
-          return
-        }
       }
 
       val buffer_length_millisec = AudioHelper.calcTotalMillisec(current_queue)
-      val buf = AudioHelper.makeBuffer(getFirstDecoder,current_queue)
+      val buf = AudioHelper.makeBuffer(getFirstDecoder(current_queue),current_queue)
 
       val decode_and_play_again = () => {
         // Since refreshKarutaPlayer is synchronized in global_lock, we should do it in another thread
@@ -527,7 +533,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
     }
   }
-  def waitDecode(){
+  def waitDecodeAndUpdateAudioQueue(){
     Globals.global_lock.synchronized{
       if(audio_queue.isEmpty){
         decode_task.get match{

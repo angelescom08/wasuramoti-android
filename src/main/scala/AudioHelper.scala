@@ -145,8 +145,8 @@ object AudioHelper{
             // TODO: do we have to wait for decode to finish since it is jni ?
             p.stop(fromAuto)
           }
-
-          Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num,pickLastPhrase(old_player)))
+          KarutaPlayUtils.replay_audio_queue = pickLastPhrase(old_player)
+          Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{
           old_player
         }

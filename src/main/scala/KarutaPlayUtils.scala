@@ -16,6 +16,7 @@ object KarutaPlayUtils{
   var have_to_mute = false:Boolean
   var last_confirmed_for_volume = None:Option[Long]
   var last_confirmed_for_ringer_mode = None:Option[Long]
+  var replay_audio_queue = None:Option[AudioHelper.AudioQueue]
 
   object Action extends Enumeration{
     type Action = Value
@@ -96,7 +97,7 @@ object KarutaPlayUtils{
 
   def startReplay(){
     Globals.player.foreach{ pl =>
-      if(pl.replay_audio_queue.nonEmpty){
+      KarutaPlayUtils.replay_audio_queue.foreach{ raq =>
         val bundle = new Bundle()
         bundle.putString("fromSender",KarutaPlayUtils.SENDER_REPLAY)
         pl.play(bundle)
