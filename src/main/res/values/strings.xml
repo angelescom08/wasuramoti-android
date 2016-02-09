@@ -448,11 +448,17 @@
   <string name="bug_report_anonymous_form_notice" >Note: Some browser may not support anonymous form.</string>
   <string name="bug_report_html">
     <![CDATA[
+      <!DOCTYPE html>
       <html>
         <head>
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
           <title>Wasuramoti Anonymous Form</title>
           <style type=\"text/css\">
+            h3{
+              border-left: 0.8em solid teal;
+              border-bottom: 1px solid teal;
+              padding-left: 0.3em;
+            }
             textarea{
               width: 24em;
               height: 6em;
@@ -460,19 +466,16 @@
           </style>
         </head>
         <body>
-          <h3>FAQ</h3>
-          Frequently asked question: <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">Link to official page</a><br/>
-          Answer to anonymous form will be published here.<br/>
-          <hr/>
+          <h3>Frequently Asked Questions</h3>
+            Answer to anonymous form will be published to <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">[FAQ]</a>.<br>
           <h3>Anonymous Form</h3>
           <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'This will send some device information useful for debugging. Is it OK?\'))\" >
-            Anonymous question, request, and bug report:<br/>
-            <textarea name=\"bug_detail\"></textarea><br/>
-            Contact us by E-Mail if you really want to fix the bug, since we cannot reply to this form.<br/>
+            Anonymous question, request, and bug report:<br>
+            <textarea name=\"bug_detail\"></textarea><br>
+            Contact us by E-Mail if you really want to fix the bug, since we cannot reply to this form.<br>
             <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"Submit\">
           </form>
-        </body>
         </body>
       </html>
     ]]>

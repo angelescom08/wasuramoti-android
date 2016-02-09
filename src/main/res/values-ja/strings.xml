@@ -416,6 +416,11 @@
           <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
           <title>わすらもち匿名フォーム</title>
           <style type=\"text/css\">
+            h3{
+              border-left: 0.8em solid teal;
+              border-bottom: 1px solid teal;
+              padding-left: 0.3em;
+            }
             textarea{
               width: 24em;
               height: 6em;
@@ -423,15 +428,13 @@
           </style>
         </head>
         <body>
-          <h3>FAQ</h3>
-          良くある質問: <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">公式サイトへのリンク</a><br/>
-          匿名フォームへの質問や要望などに対する返答はこちらに記載します．<br/>
-          <hr/>
+          <h3>良くある質問</h3>
+            匿名フォームへの質問や要望などに対する返答は <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">[こちら]</a> に記載します．<br>
           <h3>匿名フォーム</h3>
           <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'デバッグに有用な端末の情報を送信しますがよろしいですか？\'))\" >
             匿名の質問，要望，バグ報告はこちら:<br/>
-            <textarea name=\"bug_detail\"></textarea><br/>
-            匿名のバグ報告には返信できないので，メールで連絡してくれた方が直せる確率は高まります．<br/>
+            <textarea name=\"bug_detail\"></textarea><br>
+            匿名のバグ報告には返信できないので，メールで連絡してくれた方が直せる確率は高まります．<br>
             <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
             <input type=\"submit\" value=\"送信する\">
           </form>
