@@ -577,12 +577,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
             edit.putString("read_order_each","CUR2_NEXT1")
             edit.putBoolean("joka_enable",true)
             edit.putBoolean("memorization_mode",false)
+            edit.putBoolean("show_replay_last_button",false)
             YomiInfoUtils.hidePoemText(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_hide),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
               (R.string.intended_use_joka,R.string.intended_use_joka_on),
-              (R.string.conf_memorization_title,R.string.message_disabled)
+              (R.string.conf_memorization_title,R.string.message_disabled),
+              (R.string.intended_use_replay,R.string.intended_use_replay_off)
             )
           }
           case R.id.intended_use_study => {
@@ -591,12 +593,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
             edit.putString("read_order_each","CUR1_CUR2")
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",true)
+            edit.putBoolean("show_replay_last_button",false)
             YomiInfoUtils.showFull(edit)
              Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_full),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2),
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
-              (R.string.conf_memorization_title,R.string.message_enabled)
+              (R.string.conf_memorization_title,R.string.message_enabled),
+              (R.string.intended_use_replay,R.string.intended_use_replay_off)
             )
           }
           case R.id.intended_use_recreation => {
@@ -605,12 +609,14 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
             edit.putString("read_order_each","CUR1_CUR2_CUR2")
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",false)
+            edit.putBoolean("show_replay_last_button",true)
             YomiInfoUtils.showOnlyFirst(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2_cur2),
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
-              (R.string.conf_memorization_title,R.string.message_disabled)
+              (R.string.conf_memorization_title,R.string.message_disabled),
+              (R.string.intended_use_replay,R.string.intended_use_replay_on)
             )
           }
           case _ => Array() // do nothing
@@ -625,13 +631,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         FudaListHelper.updateSkipList(getApplicationContext)
         Globals.forceRefresh = true
 
-        var html = "<big>" + getResources.getString(R.string.intended_use_result) + "<br>-------<br>" + changes.map({case(k,v)=>
+        var html = "<big>" + getResources.getString(R.string.intended_use_result) + "</big><br>-------<br>" + changes.map({case(k,v)=>
           val kk = getResources.getString(k)
           val vv = getResources.getString(v)
           s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
-        }).mkString("<br>") + "</big>"
+        }).mkString("<br>")  
         footnote.foreach{
-          html += "<big><br>-------<br>" + getResources.getString(_) + "</big>"
+          html += "<br>-------<br><big>" + getResources.getString(_) + "</big>"
         }
         val hcustom = (builder:AlertDialog.Builder) => {
           builder.setTitle(R.string.intended_use_result_title)

@@ -451,16 +451,16 @@
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>
   <string name="intended_use_recreation_desc">
-    上の句→下の句→下の句 の順に詠み上げます．詠み句は上の句のみ表示されます．
+    上の句→下の句→下の句 の順に詠む．画面には上の句のみ表示．リプレイボタンが表示される．
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
-      詠み句の表示方法や詠み順などを個別に変更したい場合は「詳細設定」からできます．
+     「下の句をもう一度」ボタンを押すと最後に詠まれた歌の下の句をもう一度再生できます．
     ]]>
   </string>
   <string name="intended_use_study">百人一首の学習</string>
   <string name="intended_use_study_desc">
-    上の句→下の句 の順に詠み上げます．詠み句は全表示．暗記モードが有効になります．
+    上の句→下の句 の順に詠む．詠み句は全表示．暗記モードが有効になる．
   </string>
   <string name="intended_use_study_footnote">
     <![CDATA[
@@ -469,7 +469,7 @@
   </string>
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_competitive_desc">
-    下の句→上の句 の順に詠み上げます．詠み句は非表示．序歌が有効になります．
+    下の句→上の句 の順に詠む，詠み句は非表示．序歌が有効になる．
   </string>
   <string name="intended_use_competitive_footnote">
     <![CDATA[
@@ -487,6 +487,9 @@
   <string name="intended_use_joka">序歌</string>
   <string name="intended_use_joka_on">詠む</string>
   <string name="intended_use_joka_off">詠まない</string>
+  <string name="intended_use_replay">リプレイボタン</string>
+  <string name="intended_use_replay_on">表示</string>
+  <string name="intended_use_replay_off">非表示</string>
   <string name="from_oom_message">
     ごめんなさい．わすらもちはメモリ不足により強制終了しました．\n
     これが頻繁に起こるようでしたら「詳細設定」→「バグ報告」を送ってみて下さい．\n
