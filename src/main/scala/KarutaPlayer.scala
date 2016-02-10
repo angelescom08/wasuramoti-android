@@ -43,6 +43,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   var current_yomi_info = None:Option[Int]
   var set_audio_volume = true
   var play_started = None:Option[Long]
+  var is_replay = false
 
   val audio_queue = new AudioQueue() // file or silence in millisec
   // Executing SQLite query in doInBackground causes `java.lang.IllegalStateException: Cannot perform this operation because the connection pool has been closed'
@@ -329,6 +330,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           abort_playing(None)
           return
         }
+        is_replay = true
         KarutaPlayUtils.replay_audio_queue.get
       }else{
         try{
@@ -349,6 +351,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
               return
             }
         }
+        is_replay = false
         audio_queue
       }
       try{
@@ -507,7 +510,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(abandonAudioFocus){
       KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
     }
-    if(isDuringOrAfterLastPhrase){
+    if(isDuringOrAfterLastPhrase && !is_replay){
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
     }
     play_started = None // have to set None after calling isDuringOrAfterLastPhrase() since it uses this value

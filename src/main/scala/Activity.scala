@@ -739,7 +739,9 @@ trait MainButtonTrait{
         val have_to_go_next = (
           from_main_button &&
           Globals.prefs.get.getBoolean("move_after_first_phrase",true) &&
-          player.isAfterFirstPhrase)
+          ! player.is_replay &&
+          player.isAfterFirstPhrase
+        )
         player.stop()
         KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
         if(have_to_go_next){
