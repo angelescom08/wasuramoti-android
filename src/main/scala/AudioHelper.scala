@@ -90,22 +90,19 @@ object AudioHelper{
     (millisec * decoder.rate.toInt / 1000) * decoder.channels * SHORT_SIZE
   }
 
-  def pickLastPhrase(player:Option[KarutaPlayer]):Option[AudioQueue] = {
-    player.flatMap{ pl =>
-      if(Globals.prefs.get.getBoolean("show_replay_last_button",false)){
-        val aq = pl.audio_queue
-        val l = aq.headOption.filter(_.isRight)
-        val m = aq.reverse.find(_.isLeft)
-        val r = aq.lastOption.filter(_.isRight)
-        val ar = mutable.Queue(l,m,r).flatten
-        if(ar.nonEmpty){
-          Some(ar)
-        }else{
-          None
-        }
+  def pickLastPhrase(aq:AudioQueue):Option[AudioQueue] = {
+    if(Globals.prefs.get.getBoolean("show_replay_last_button",false)){
+      val l = aq.headOption.filter(_.isRight)
+      val m = aq.reverse.find(_.isLeft)
+      val r = aq.lastOption.filter(_.isRight)
+      val ar = mutable.Queue(l,m,r).flatten
+      if(ar.nonEmpty){
+        Some(ar)
       }else{
         None
       }
+    }else{
+      None
     }
   }
 
@@ -145,7 +142,6 @@ object AudioHelper{
             // TODO: do we have to wait for decode to finish since it is jni ?
             p.stop(fromAuto)
           }
-          KarutaPlayUtils.replay_audio_queue = pickLastPhrase(old_player)
           Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
         }else{
           old_player

@@ -78,12 +78,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     bld.toString
   }
 
-  def isAfterFirstPoem():Boolean = {
+  def isAfterFirstPhrase():Boolean = {
     play_started.exists{ x =>
       val elapsed = SystemClock.elapsedRealtime - x
       var counter = 0 // TODO: can we do the following without counter ?
       var joka_counter = 0 // Joka is treated as only one phrase in total
-      val first_poem_length = audio_queue.takeWhile{
+      val first_phrase_length = audio_queue.takeWhile{
         case Left(wav_buffer) =>
           if(wav_buffer.num > 0){
             counter += 1
@@ -96,7 +96,18 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         case Left(wav_buffer) => wav_buffer.audioLength
         case Right(length) => length
       }.sum
-      elapsed > first_poem_length
+      elapsed > first_phrase_length
+    }
+  }
+
+  def isDuringOrAfterLastPhrase():Boolean = {
+    play_started.exists{ x =>
+      val elapsed = SystemClock.elapsedRealtime - x
+      val phrase_length = audio_queue.reverse.dropWhile(_.isRight).reverse.dropRight(1).map{
+        case Left(wav_buffer) => wav_buffer.audioLength
+        case Right(length) => length
+      }.sum
+      elapsed > phrase_length
     }
   }
 
@@ -496,6 +507,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(abandonAudioFocus){
       KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
     }
+    if(isDuringOrAfterLastPhrase){
+      KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
+    }
+    play_started = None // have to set None after calling isDuringOrAfterLastPhrase() since it uses this value
   }
 
 
@@ -517,7 +532,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           OpenSLESPlayer.slesStop()
       }
       music_track = None
-      play_started = None
       commonJobWhenFinished(!fromAuto)
     }
   }
