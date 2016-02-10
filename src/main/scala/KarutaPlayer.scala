@@ -248,8 +248,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
       // playing the sound won't bother silent mode.
       val cur_time = java.lang.System.currentTimeMillis
-      val fromMain = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN
-      if(fromMain && !fromAuto && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_volume)
+      val haveToAlert = !fromAuto &&
+         Array(KarutaPlayUtils.SENDER_MAIN,KarutaPlayUtils.SENDER_REPLAY).contains(bundle.getString("fromSender"))
+      if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_volume)
         && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_volume_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),
@@ -262,7 +263,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
             }
             rest_start()
           }, custom)
-      }else if(fromMain && !fromAuto && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_ringer_mode) &&
+      }else if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_ringer_mode) &&
         Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
         val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
         Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
