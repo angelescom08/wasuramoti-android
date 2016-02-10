@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/replay_last_button"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:text="Replay Last Phrase"
+  android:textSize="@dimen/read_button_text_normal"
+  android:background="@android:color/black"
+  android:textColor="@android:color/white"
+  android:contentDescription="ReplayButton"
+/>

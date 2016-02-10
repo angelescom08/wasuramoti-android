@@ -35,4 +35,12 @@
       <include layout="@layout/main_button" />
     </FrameLayout>
   </LinearLayout>
+  <ViewStub
+      android:id="@+id/replay_last_button_stub"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="0.06"
+      android:layout="@layout/replay_last_button"
+      android:layout_marginTop="4dp"
+    />
 </LinearLayout>

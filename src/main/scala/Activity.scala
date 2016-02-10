@@ -233,6 +233,22 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       frag_stub.setLayoutParams(lp)
     }
 
+    val replay_stub = findViewById(R.id.replay_last_button_stub).asInstanceOf[ViewStub]
+    if(!YomiInfoUtils.showPoemText && Globals.prefs.get.getBoolean("show_replay_last_button",false)){
+      replay_stub.inflate()
+      val btn = findViewById(R.id.replay_last_button)
+      btn.setOnClickListener(new View.OnClickListener(){
+        override def onClick(v:View){
+           KarutaPlayUtils.startReplay()
+        }
+      })
+    }else{
+      // Android 2.1 does not ignore ViewStub's layout_weight
+      val lp = replay_stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+      lp.weight = 0.0f
+      replay_stub.setLayoutParams(lp)
+    }
+
     Globals.setButtonText = Some( txt =>
       handler.post(new Runnable(){
         override def run(){
