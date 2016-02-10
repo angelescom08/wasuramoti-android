@@ -291,35 +291,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  @TargetApi(9) // Equalizer requires API >= 9
-  def doWhenStop(){
-    equalizer.foreach(_.release())
-    equalizer = None
-    Globals.is_playing = false
-    current_yomi_info = None
-    if(set_audio_volume){
-      Utils.restoreAudioVolume(activity.getApplicationContext())
-    }
-  }
-
   def doWhenBorder(){
     current_yomi_info = Some(R.id.yomi_info_view_next)
     activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
-  }
-
-  def doWhenDone(bundle:Bundle){
-    Globals.global_lock.synchronized{
-      music_track.foreach{
-        case Left(x) => {x.stop();x.release()}
-        case Right(_) => OpenSLESPlayer.slesStop()
-      }
-      music_track = None
-      doWhenStop()
-      if(!bundle.getBoolean("autoplay",false)){
-        KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
-      }
-    }
-    KarutaPlayUtils.doAfterSender(bundle)
   }
 
   def onReallyStart(bundle:Bundle, fromAuto:Boolean){
@@ -510,6 +484,22 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     thread.start()
   }
 
+  @TargetApi(9) // Equalizer requires API >= 9
+  def commonJobWhenFinished(abandonAudioFocus:Boolean){
+    equalizer.foreach(_.release())
+    equalizer = None
+    Globals.is_playing = false
+    current_yomi_info = None
+    if(set_audio_volume){
+      Utils.restoreAudioVolume(activity.getApplicationContext())
+    }
+    if(abandonAudioFocus){
+      KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
+    }
+  }
+
+
+  // called when playing is interrupted by user or any other reason
   def stop(fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
       KarutaPlayUtils.cancelKarutaPlayTimer(
@@ -528,12 +518,23 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }
       music_track = None
       play_started = None
-      doWhenStop()
-      if(!fromAuto){
-        KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
-      }
+      commonJobWhenFinished(!fromAuto)
     }
   }
+
+  // called after playing is finished without any interruption
+  def doWhenDone(bundle:Bundle){
+    Globals.global_lock.synchronized{
+      music_track.foreach{
+        case Left(x) => {x.stop();x.release()}
+        case Right(_) => OpenSLESPlayer.slesStop()
+      }
+      music_track = None
+      commonJobWhenFinished(!bundle.getBoolean("autoplay",false))
+    }
+    KarutaPlayUtils.doAfterSender(bundle)
+  }
+
   def waitDecodeAndUpdateAudioQueue(){
     Globals.global_lock.synchronized{
       if(audio_queue.isEmpty){
