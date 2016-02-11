@@ -752,6 +752,15 @@ object Utils {
       case Right(_) => OpenSLESPlayer.slesMute(is_mute)
     }
   }
+  def replayButtonText(res:Resources):String = {
+    val nums = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").filter{"12".contains(_)}.reverse.distinct
+    val rid = nums match {
+      case "12" => R.string.repeat_last_1st
+      case "21" => R.string.repeat_last_2nd
+      case _ => R.string.repeat_last_else
+    }
+    res.getString(R.string.repeat_button_format,res.getString(rid))
+  }
 
   def setRadioTextClickListener(group:RadioGroup){
     var last_radio_button = None:Option[RadioButton]

@@ -271,13 +271,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){
         getSwitchModeButtonText(label,init_torifuda_mode)
       }else if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
-        val nums = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1").filter{"12".contains(_)}.reverse.distinct
-        val rid = nums match {
-          case "12" => R.string.repeat_last_1st
-          case "21" => R.string.repeat_last_2nd
-          case _ => R.string.repeat_last_else
-        }
-        s.replaceFirst("##",getActivity.getResources.getString(rid))
+        Utils.replayButtonText(getResources)
       }else{
         s
       }

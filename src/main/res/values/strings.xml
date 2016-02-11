@@ -141,7 +141,7 @@
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
     <item>A.MEMORIZE_SWITCH|Memorized</item>
-    <item>A.REPLAY_LAST|Replay ## Half</item>
+    <item>A.REPLAY_LAST|repeat_button_format</item>
     <item>A.DISPLAY_KAMI|1st Half</item>
     <item>A.DISPLAY_SIMO|2nd Half</item>
     <item>A.DISPLAY_AUTHOR|Author</item>
@@ -154,6 +154,7 @@
     <item>C.SEARCH_AUTHOR|Author</item>
   </string-array>
 
+  <string name="repeat_button_format">Replay %s Half</string>
   <string name="repeat_last_1st">1st</string>
   <string name="repeat_last_2nd">2nd</string>
   <string name="repeat_last_else">Last</string>

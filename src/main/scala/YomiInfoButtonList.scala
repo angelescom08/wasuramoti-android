@@ -40,7 +40,6 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
     button
   }
   def addButtons(context:Context,yiv:Option[YomiInfoView], text_and_tags:Array[(String,String,Boolean)]){
-
     if(Utils.isScreenWide(context)){
       for(ar<-text_and_tags.grouped(2)){
         val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[TableRow]
