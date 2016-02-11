@@ -238,9 +238,10 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       replay_stub.inflate()
       val btn = findViewById(R.id.replay_last_button).asInstanceOf[Button]
       btn.setText(Utils.replayButtonText(getResources))
+      val that = this
       btn.setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
-           KarutaPlayUtils.startReplay()
+           KarutaPlayUtils.startReplay(that)
         }
       })
     }else{

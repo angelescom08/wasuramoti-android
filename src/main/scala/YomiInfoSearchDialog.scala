@@ -235,7 +235,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
           }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
-            KarutaPlayUtils.startReplay()
+            KarutaPlayUtils.startReplay(getActivity.asInstanceOf[WasuramotiActivity])
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>

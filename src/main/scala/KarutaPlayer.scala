@@ -514,6 +514,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
     }
     play_started = None // have to set None after calling isDuringOrAfterLastPhrase() since it uses this value
+    if(reader == null){
+      // player was created from startReplay(), so it does not have valid audio_queue
+      // so we cleanup it to avoid playing by main button.
+      Globals.player = None
+    }
   }
 
 
