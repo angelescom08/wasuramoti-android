@@ -322,6 +322,21 @@ object KarutaPlayUtils{
       cur_time - _ > CONFIRM_THRESHOLD_TIME
     }
   }
+
+  def setReplayButtonEnabled(activity:WasuramotiActivity,force:Option[Boolean]=None){
+    val btn = Option(activity.findViewById(R.id.replay_last_button))
+    .orElse(
+      Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
+        Option(x.findViewWithTag("A.REPLAY_LAST"))
+      ))
+    btn.foreach{ b =>
+      activity.runOnUiThread(new Runnable(){
+        override def run(){
+          b.setEnabled(force.getOrElse(replay_audio_queue.nonEmpty))
+        }
+      })
+    }
+  }
 }
 
 class KarutaPlayReceiver extends BroadcastReceiver {

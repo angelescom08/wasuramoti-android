@@ -6,7 +6,7 @@
   android:layout_height="fill_parent"
   android:text="Replay Last Phrase"
   android:textSize="@dimen/read_button_text_normal"
+  style="?android:attr/buttonBarButtonStyle"
   android:background="@android:color/black"
-  android:textColor="@android:color/white"
   android:contentDescription="ReplayButton"
 />

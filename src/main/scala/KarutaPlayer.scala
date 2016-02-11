@@ -240,6 +240,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           Utils.saveAndSetAudioVolume(activity.getApplicationContext())
         }
         Globals.is_playing = true
+        KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
         Utils.setButtonTextByState(activity.getApplicationContext())
         if(YomiInfoUtils.showPoemText){
           if(Utils.readCurNext(activity.getApplicationContext)){
@@ -519,6 +520,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // so we cleanup it to avoid playing by main button.
       Globals.player = None
     }
+    KarutaPlayUtils.setReplayButtonEnabled(activity)
   }
 
 
