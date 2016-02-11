@@ -456,7 +456,15 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
       Utils.setButtonTextByState(getApplicationContext)
     }
-    invalidateYomiInfo()
+    if(Globals.player.forall(!_.is_replay)){
+      invalidateYomiInfo()
+    }else{
+      Globals.player.foreach{ p =>
+        KarutaPlayUtils.replay_audio_queue.foreach{ q =>
+          p.forceYomiInfoView(q)
+        }
+      }
+    }
     startDimLockTimer()
     setLongClickButtonOnResume()
     setLongClickYomiInfoOnResume()

@@ -240,9 +240,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           Utils.saveAndSetAudioVolume(activity.getApplicationContext())
         }
         Globals.is_playing = true
+        is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
         KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
         Utils.setButtonTextByState(activity.getApplicationContext())
-        if(YomiInfoUtils.showPoemText){
+        // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
+        if(YomiInfoUtils.showPoemText && !is_replay){
           if(Utils.readCurNext(activity.getApplicationContext)){
             activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
           }else if(fromAuto && !fromSwipe){
@@ -250,8 +252,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           }else{
             activity.invalidateYomiInfo()
           }
-        }
-        if( YomiInfoUtils.showPoemText ){
           KarutaPlayUtils.startCheckConsistencyTimers()
         }
         // do the rest in another thread
@@ -309,6 +309,19 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
   }
 
+  def forceYomiInfoView(q:AudioQueue){
+    val num = q.find(_.isLeft).get.left.get.num
+    val vw = activity.findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
+    if(vw != null){
+      activity.runOnUiThread(new Runnable(){
+        override def run(){
+          vw.updateCurNum(Some(num))
+          vw.invalidate()
+        }
+      })
+    }
+  }
+
   def onReallyStart(bundle:Bundle, fromAuto:Boolean){
     // Since makeMusicTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
     // Note: when calling Utils.messageDialog, you have to use activity.runOnUithread
@@ -326,13 +339,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         stop()
         Utils.setButtonTextByState(activity.getApplicationContext())
       }
-      val current_queue = if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY){
+      val current_queue = if(is_replay){
         if(KarutaPlayUtils.replay_audio_queue.isEmpty){
           abort_playing(None)
           return
         }
-        is_replay = true
-        KarutaPlayUtils.replay_audio_queue.get
+        val q = KarutaPlayUtils.replay_audio_queue.get
+        forceYomiInfoView(q)
+        q
       }else{
         try{
           waitDecodeAndUpdateAudioQueue()
@@ -352,7 +366,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
               return
             }
         }
-        is_replay = false
         audio_queue
       }
       try{
@@ -521,6 +534,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Globals.player = None
     }
     KarutaPlayUtils.setReplayButtonEnabled(activity)
+    if(is_replay){
+      // restore normal poem text which is changed by forceYomiInfoView()
+      activity.invalidateYomiInfo()
+    }
+    is_replay = false
   }
 
 
