@@ -363,6 +363,7 @@
   <string name="message_karafuda_num">空札%d枚</string>
   <string name="message_memorized_num">%d首覚えた</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
+  <string name="message_readindex_replay">前の句 / %d 首</string>
   <string name="message_readindex_done">完了: %d 首</string>
 
   <string name="fudaset_title_all">全部の札</string>

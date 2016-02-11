@@ -398,6 +398,7 @@
   <string name="message_karafuda_num">Kara: %d</string>
   <string name="message_memorized_num">Mem: %d</string>
   <string name="message_readindex_random">Random / %d</string>
+  <string name="message_readindex_replay">Replay / %d</string>
   <string name="message_readindex_done">Done: %d</string>
 
   <string name="fudaset_title_all">All Poem</string>

@@ -143,9 +143,14 @@ object FudaListHelper{
         context.getResources.getString(R.string.message_readindex_done,
           new java.lang.Integer(total_s))
       }else if(Globals.prefs.get.getBoolean("show_current_index",true)){
-        context.getResources.getString(R.string.message_readindex_shuffle,
-          new java.lang.Integer(index_s),
-          new java.lang.Integer(total_s))
+        if(Globals.player.exists(_.is_replay)){
+          context.getResources.getString(R.string.message_readindex_replay,
+            new java.lang.Integer(total_s))
+        }else{
+          context.getResources.getString(R.string.message_readindex_shuffle,
+            new java.lang.Integer(index_s),
+            new java.lang.Integer(total_s))
+        }
       }else{
         context.getResources.getString(R.string.message_readindex_onlytotal,
           new java.lang.Integer(total_s))

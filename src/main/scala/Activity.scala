@@ -475,7 +475,13 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       }
     }
     this.setVolumeControlStream(Utils.getAudioStreamType)
-    KarutaPlayUtils.setReplayButtonEnabled(this)
+    KarutaPlayUtils.setReplayButtonEnabled(this,
+      if(Globals.is_playing){
+        Some(false)
+      }else{
+        None
+      }
+    )
   }
   override def onPause(){
     super.onPause()
