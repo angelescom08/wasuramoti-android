@@ -1,10 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.widget.{Button,TableLayout,TableRow}
+import android.widget.{Button,LinearLayout}
 import android.util.AttributeSet
 import android.content.Context
 import android.text.TextUtils
-import android.view.{View,ViewGroup,Gravity,LayoutInflater}
+import android.view.{View,ViewGroup,LayoutInflater}
 
 
 object YomiInfoButtonList{
@@ -13,7 +13,7 @@ object YomiInfoButtonList{
   }
 }
 
-class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout(context,attrs) {
+class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends LinearLayout(context,attrs) {
   var m_on_click_listener:YomiInfoButtonList.OnClickListener = null
   def setOnClickListener(listener:YomiInfoButtonList.OnClickListener){
     m_on_click_listener = listener
@@ -42,20 +42,18 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends TableLayout
   def addButtons(context:Context,yiv:Option[YomiInfoView], text_and_tags:Array[(String,String,Boolean)]){
     if(Utils.isScreenWide(context)){
       for(ar<-text_and_tags.grouped(2)){
-        val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[TableRow]
+        val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[LinearLayout]
         for((text,tag,enabled)<-ar if ! TextUtils.isEmpty(text)){
           val button = genButton(yiv,tag,text,enabled)
-          val params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
+          val params = new LinearLayout.LayoutParams(0,ViewGroup.LayoutParams.MATCH_PARENT,1.0f)
           lay.addView(button,params)
         }
-        val lparam = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,1.0f)
-        lay.setGravity(Gravity.CENTER)
-        addView(lay,lparam)
+        val lparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0,1.0f)
+        addView(lay,lparams)
       }
     }else{
       for((text,tag,enabled)<-text_and_tags if ! TextUtils.isEmpty(text)){
         val button = genButton(yiv,tag,text,enabled)
-        button.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
         addView(button)
       }
     }
