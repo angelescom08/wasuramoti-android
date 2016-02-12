@@ -97,7 +97,8 @@ object BugReport{
     intent.setType("message/rfc822")
     intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
     intent.putExtra(Intent.EXTRA_SUBJECT,subject)
-    val file = Utils.getProvidedFile(context,Utils.PROVIDED_BUG_REPORT,true)
+    val filename = Utils.formatDate("bug_report_%s.gz")
+    val file = Utils.getProvidedFile(context,filename,true)
     val ostream = new FileOutputStream(file)
     try{
       writeBugReportToGzip(context,ostream)
@@ -120,7 +121,8 @@ object BugReport{
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
       return
     }
-    val file = Utils.getProvidedFile(context,Utils.PROVIDED_ANONYMOUS_FORM,true)
+    val filename = Utils.formatDate("anonymous_form_%s.html")
+    val file = Utils.getProvidedFile(context,filename,true)
     val post_url = context.getResources.getString(R.string.bug_report_url)
     val bug_report = BugReport.writeBugReportToBase64(context)
     val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)

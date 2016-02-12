@@ -23,6 +23,7 @@ import karuta.hpnpwd.audio.OpenSLESPlayer
 
 import scala.collection.mutable
 import scala.io.Source
+import scala.util.Try
 
 object Globals {
   val IS_DEBUG = false
@@ -561,25 +562,27 @@ object Utils {
     }
   }
 
-  val PROVIDED_ANONYMOUS_FORM = "anonymous_form.html"
-  val PROVIDED_BUG_REPORT = "bug_report.gz"
+  def formatDate(format:String):String = {
+    val ds = (new java.text.SimpleDateFormat("yyyyMMdd")).format(new java.util.Date)
+    format.format(ds)
+  }
+
+  val PROVIDED_DIR = "provided"
   def getProvidedFile(context:Context,filename:String,createDir:Boolean):File = {
-    val provided = "provided"
     if(createDir){
-      val dir = new File(context.getCacheDir,provided)
+      val dir = new File(context.getCacheDir,PROVIDED_DIR)
       if(!dir.exists){
         dir.mkdir()
       }
     }
-    new File(context.getCacheDir,provided+"/"+filename)
+    new File(context.getCacheDir,PROVIDED_DIR+"/"+filename)
   }
 
   def deleteProvidedFile(context:Context){
-    for(fn <- Array(PROVIDED_ANONYMOUS_FORM,PROVIDED_BUG_REPORT)){
-      try{
-        getProvidedFile(context,fn,false).delete()
-      }catch{
-        case _:Exception => None
+    Try{
+      val files = new File(context.getCacheDir,PROVIDED_DIR).listFiles
+      for(f <- files){
+        Try(f.delete())
       }
     }
   }
@@ -594,11 +597,7 @@ object Utils {
       if(files != null){
         for(f <- files){
           if(match_func(f.getAbsolutePath)){
-            try{
-              f.delete()
-            }catch{
-              case _:Exception => None
-            }
+            Try(f.delete())
           }
         }
       }
