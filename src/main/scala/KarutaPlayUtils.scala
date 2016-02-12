@@ -327,7 +327,7 @@ object KarutaPlayUtils{
     val btn = Option(activity.findViewById(R.id.replay_last_button))
     .orElse(
       Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
-        Option(x.findViewWithTag("A.REPLAY_LAST"))
+        Option(x.findViewWithTag(YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"))
       ))
     btn.foreach{ b =>
       activity.runOnUiThread(new Runnable(){

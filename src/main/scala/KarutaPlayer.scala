@@ -101,17 +101,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     }
   }
 
-  def isDuringOrAfterLastPhrase():Boolean = {
-    play_started.exists{ x =>
-      val elapsed = SystemClock.elapsedRealtime - x
-      val phrase_length = audio_queue.reverse.dropWhile(_.isRight).reverse.dropRight(1).map{
-        case Left(wav_buffer) => wav_buffer.audioLength
-        case Right(length) => length
-      }.sum
-      elapsed > phrase_length
-    }
-  }
-
   def makeMusicTrack(queue:AudioQueue){
     val decoder = getFirstDecoder(queue)
 
@@ -524,10 +513,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(abandonAudioFocus){
       KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
     }
-    if(isDuringOrAfterLastPhrase && !is_replay){
+    if(isAfterFirstPhrase && !is_replay){
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
     }
-    play_started = None // have to set None after calling isDuringOrAfterLastPhrase() since it uses this value
+    play_started = None // have to set None after calling isAfterFirstPhrase() since it uses this value
     if(reader == null){
       // player was created from startReplay(), so it does not have valid audio_queue
       // so we cleanup it to avoid playing by main button.

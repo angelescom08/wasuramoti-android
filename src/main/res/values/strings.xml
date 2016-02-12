@@ -140,18 +140,18 @@
   <string name="title_bar_poem_num">@string/yomi_info_search_poem_num_abbrev</string>
   <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
   <string-array name="yomi_info_search_array">
-    <item>A.MEMORIZE_SWITCH|Memorized</item>
-    <item>A.REPLAY_LAST|repeat_button_format</item>
-    <item>A.DISPLAY_KAMI|1st Half</item>
-    <item>A.DISPLAY_SIMO|2nd Half</item>
-    <item>A.DISPLAY_AUTHOR|Author</item>
-    <item>A.DISPLAY_FURIGANA|Furigana</item>
-    <item>B.SWITCH_LANG|Translate</item>
-    <item>B.SWITCH_ROMAJI|Romaji</item>
-    <item>B.SWITCH_MODE|Torifuda;Yomifuda</item>
-    <item>B.KIMARIJI_LOG|Kimariji</item>
-    <item>C.SEARCH_TEXT|Poem</item>
-    <item>C.SEARCH_AUTHOR|Author</item>
+    <item>I.MEMORIZE_SWITCH|Memorized</item>
+    <item>K.REPLAY_LAST|repeat_button_format</item>
+    <item>L.DISPLAY_KAMI|1st Half</item>
+    <item>L.DISPLAY_SIMO|2nd Half</item>
+    <item>L.DISPLAY_AUTHOR|Author</item>
+    <item>L.DISPLAY_FURIGANA|Furigana</item>
+    <item>N.SWITCH_LANG|Translate</item>
+    <item>N.SWITCH_ROMAJI|Romaji</item>
+    <item>N.SWITCH_MODE|Torifuda;Yomifuda</item>
+    <item>N.KIMARIJI_LOG|Kimariji</item>
+    <item>P.SEARCH_TEXT|Poem</item>
+    <item>P.SEARCH_AUTHOR|Author</item>
   </string-array>
 
   <string name="repeat_button_format">Replay %s Half</string>

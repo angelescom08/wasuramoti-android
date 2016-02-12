@@ -13,12 +13,12 @@ import scala.collection.mutable
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
 object YomiInfoSearchDialog{
-  val PREFIX_REPLAY = "A.REPLAY"
-  val PREFIX_MEMORIZE = "A.MEMORIZE"
-  val PREFIX_DISPLAY = "A.DISPLAY"
-  val PREFIX_KIMARIJI = "B.KIMARIJI"
-  val PREFIX_SWITCH = "B.SWITCH"
-  val PREFIX_SEARCH = "C.SEARCH"
+  val PREFIX_MEMORIZE = "I.MEMORIZE"
+  val PREFIX_REPLAY = "K.REPLAY"
+  val PREFIX_DISPLAY = "L.DISPLAY"
+  val PREFIX_SWITCH = "N.SWITCH"
+  val PREFIX_KIMARIJI = "N.KIMARIJI"
+  val PREFIX_SEARCH = "P.SEARCH"
   def newInstance(is_dialog:Boolean,fudanum:Option[Int]):YomiInfoSearchDialog = {
     val fragment = new YomiInfoSearchDialog()
     val args = new Bundle()
