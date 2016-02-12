@@ -481,6 +481,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if(fromAuto && KarutaPlayUtils.have_to_mute){
           Utils.setVolumeMute(t,true)
         }else{
+          // TODO: warn that it have to mute, however, note that current `have_to_mute` flag is inaccurate
+          //       since it cannot capture the event after abandonAudioFocus
           KarutaPlayUtils.have_to_mute  = false
           Utils.runOnUiThread(activity,()=>
               Utils.setButtonTextByState(activity.getApplicationContext)

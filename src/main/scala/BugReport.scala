@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.content.{Context,Intent,ComponentName}
-import android.content.pm.{ResolveInfo,PackageInfo}
+import android.content.{Context,Intent}
+import android.content.pm.PackageInfo
 import android.os.{Build,StatFs}
 import android.annotation.TargetApi
 import android.app.{AlertDialog,ActivityManager}
@@ -18,6 +18,7 @@ import java.nio.channels.FileChannel
 import java.util.zip.{CRC32,GZIPOutputStream}
 
 import scala.collection.mutable
+import scala.util.Try
 
 trait BugReportable{
   def toBugReport():String
@@ -97,16 +98,18 @@ object BugReport{
     intent.setType("message/rfc822")
     intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
     intent.putExtra(Intent.EXTRA_SUBJECT,subject)
-    val filename = Utils.formatDate("bug_report_%s.gz")
-    val file = Utils.getProvidedFile(context,filename,true)
-    val ostream = new FileOutputStream(file)
-    try{
-      writeBugReportToGzip(context,ostream)
-    }finally{
-      ostream.close()
+    Try{
+      val filename = Utils.formatDate("bug_report_%s.gz")
+      val file = Utils.getProvidedFile(context,filename,true)
+      val ostream = new FileOutputStream(file)
+      try{
+        writeBugReportToGzip(context,ostream)
+      }finally{
+        ostream.close()
+      }
+      val attachment = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
+      intent.putExtra(Intent.EXTRA_STREAM,attachment)
     }
-    val attachment = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
-    intent.putExtra(Intent.EXTRA_STREAM,attachment)
     val msg = context.getResources.getString(R.string.choose_mailer)
     try{
       context.startActivity(Intent.createChooser(intent,msg))
@@ -283,7 +286,7 @@ object BugReport{
       writer.println("[shared_preference]")
       for(pref <- Array(Globals.prefs.get,context.getSharedPreferences(FudaListHelper.PREFS_NAME,0))){
         val al = pref.getAll
-        for(a <- al.keySet.toArray){
+        for(a <- al.keySet.toArray.toList.map{_.toString}.sorted){
           writer.println(s"${a}=${al.get(a)}")
         }
       }

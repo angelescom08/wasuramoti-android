@@ -306,9 +306,7 @@ object KarutaPlayUtils{
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,true)}
     }
-    Utils.runOnUiThread(context,()=>
-      Utils.setButtonTextByState(context)
-    )
+    Utils.setButtonTextByState(context)
   }
 
   def recoverVolume(context:Context){
@@ -316,9 +314,7 @@ object KarutaPlayUtils{
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,false)}
     }
-    Utils.runOnUiThread(context,()=>
-      Utils.setButtonTextByState(context)
-    )
+    Utils.setButtonTextByState(context)
   }
 
 
