@@ -555,4 +555,6 @@
   <string name="conf_volume_alert_confirm">現在この端末の音量が小さいので聞こえないかもしれません．本当に再生しますか？</string>
   <string name="never_confirm_again">次からはこの警告を出さない</string>
   <string name="unsatisfied_link_error">音声ライブラリの読み込みに失敗しました．「詳細設定」→「サポート窓口」からバグ報告してくれると直せるかもしれません．</string>
+  <string name="choose_browser">ブラウザ選択</string>
+  <string name="activity_not_found_for_html">選択したアプリはHTMLに対応していないです</string>
 </resources>

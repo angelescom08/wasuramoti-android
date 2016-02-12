@@ -5,15 +5,17 @@ import android.content.pm.{ResolveInfo,PackageInfo}
 import android.os.{Build,StatFs}
 import android.annotation.TargetApi
 import android.app.{AlertDialog,ActivityManager}
-import android.util.{Base64,Log}
+import android.util.{Log,Base64,Base64OutputStream}
 import android.net.Uri
 import android.view.{View,LayoutInflater}
 import android.widget.{TextView,Button}
 
-import java.io.{File,RandomAccessFile}
+import android.support.v4.content.FileProvider
+
+import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream}
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.util.zip.CRC32
+import java.util.zip.{CRC32,GZIPOutputStream}
 
 import scala.collection.mutable
 
@@ -102,48 +104,30 @@ object BugReport{
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
       return
     }
-    val pm = context.getPackageManager
-    // dummy data to get list of activities
-    val i_temp = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.google.com/"))
-    val list = scala.collection.JavaConversions.asScalaBuffer[ResolveInfo](pm.queryIntentActivities(i_temp,0))
-    if(list.isEmpty){
-      Utils.messageDialog(context,Right(R.string.browser_not_found))
-    }else{
-      val defaultActivities = list.filter{ info =>
-        val filters = new java.util.ArrayList[android.content.IntentFilter]()
-        val activities = new java.util.ArrayList[android.content.ComponentName]()
-        pm.getPreferredActivities(filters,activities,info.activityInfo.packageName)
-        ! activities.isEmpty
-      }
-      // TODO: show activity chooser
-      (defaultActivities ++ list).exists{ ri =>
-        val comp = new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name)
-        val intent = pm.getLaunchIntentForPackage(ri.activityInfo.packageName)
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setComponent(comp)
-        val post_url = context.getResources.getString(R.string.bug_report_url)
-        val bug_report = BugReport.createBugReport(context)
-        val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
-        val dataUri = "data:text/html;charset=utf-8;base64," + Base64.encodeToString(html.getBytes("UTF-8"),Base64.DEFAULT | Base64.NO_WRAP)
-        intent.setData(Uri.parse(dataUri))
-        try{
-          context.startActivity(intent)
-          true
-        }catch{
-          case _:android.content.ActivityNotFoundException => false
-        }
-      }
+    val file = Utils.getProvidedFile(context,Utils.PROVIDED_ANONYMOUS_FORM,true)
+    val post_url = context.getResources.getString(R.string.bug_report_url)
+    val bug_report = BugReport.createBugReport(context)
+    val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
+    val writer = new PrintWriter(file)
+    writer.write(html)
+    writer.close()
+    val uri = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
+    val intent = new Intent(Intent.ACTION_VIEW,uri)
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    val msg = context.getResources.getString(R.string.choose_browser)
+    try{
+      context.startActivity(Intent.createChooser(intent,msg))
+    }catch{
+      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
     }
-    return
   }
 
   @TargetApi(8) // android.util.Base64 and android.os.Build#CPU_ABI2 requires API >= 8
   def createBugReport(context:Context):String = {
-    val bao = new java.io.ByteArrayOutputStream()
-    val base = new android.util.Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
-    val gzip = new java.util.zip.GZIPOutputStream(base)
-    val writer = new java.io.PrintWriter(gzip)
+    val bao = new ByteArrayOutputStream()
+    val base = new Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
+    val gzip = new GZIPOutputStream(base)
+    val writer = new PrintWriter(gzip)
     writer.println("[build]")
     writer.println(s"api_level=${Build.VERSION.SDK_INT}")
     writer.println(s"release=${Build.VERSION.RELEASE}")

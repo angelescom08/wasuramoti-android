@@ -561,16 +561,33 @@ object Utils {
     }
   }
 
+  val PROVIDED_ANONYMOUS_FORM = "anonymous_form.html"
+  def getProvidedFile(context:Context,filename:String,createDir:Boolean):File = {
+    val provided = "provided"
+    if(createDir){
+      val dir = new File(context.getCacheDir,provided)
+      if(!dir.exists){
+        dir.mkdir()
+      }
+    }
+    new File(context.getCacheDir,provided+"/"+filename)
+  }
+
   def deleteCache(context:Context,match_func:String=>Boolean){
+    try{
+      getProvidedFile(context,PROVIDED_ANONYMOUS_FORM,false).delete()
+    }catch{
+      case _:Exception => None
+    }
     if(android.os.Build.VERSION.SDK_INT >= 9){
       // context.getCacheDir is only used in Asset.withAssetOrFile
       return
     }
     this.synchronized{
-      val files = context.getCacheDir().listFiles()
+      val files = context.getCacheDir.listFiles
       if(files != null){
         for(f <- files){
-          if(match_func(f.getAbsolutePath())){
+          if(match_func(f.getAbsolutePath)){
             try{
               f.delete()
             }catch{

@@ -24,6 +24,17 @@ android:versionName="0.9.7" android:versionCode="68" >
         </activity>
         <activity android:launchMode="singleTop" android:theme="@style/Theme.AppCompat" android:name=".ConfActivity" android:configChanges="orientation|keyboardHidden"/>
         <activity android:launchMode="singleTop" android:theme="@style/Theme.AppCompat" android:name=".NotifyTimerActivity" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden"/>
+
+        <!-- see http://developer.android.com/reference/android/support/v4/content/FileProvider.html -->
+        <provider
+          android:name="android.support.v4.content.FileProvider"
+          android:authorities="karuta.hpnpwd.wasuramoti.fileprovider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+          <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_provider_paths" />
+        </provider>
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
