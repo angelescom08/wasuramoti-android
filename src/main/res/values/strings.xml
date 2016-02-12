@@ -601,6 +601,8 @@
   <string name="conf_volume_alert_confirm">The device volume is too small to hear the sound. Do you want to play it anyway?</string>
   <string name="never_confirm_again">Don\'t alert this again.</string>
   <string name="unsatisfied_link_error">Failed to load audio library. To fix the bug, please contact us from `Advanced Config` -> `Support Form`</string>
+  <string name="choose_mailer">Choose Mailer</string>
   <string name="choose_browser">Choose Browser</string>
   <string name="activity_not_found_for_html">The chosen application does not support opening HTML.</string>
+  <string name="activity_not_found_for_mail">The chosen application does not support sending E-Mail.</string>
 </resources>

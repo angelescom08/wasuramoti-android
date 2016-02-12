@@ -12,7 +12,7 @@ import android.widget.{TextView,Button}
 
 import android.support.v4.content.FileProvider
 
-import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream}
+import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream,FileOutputStream,OutputStream}
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.util.zip.{CRC32,GZIPOutputStream}
@@ -93,9 +93,25 @@ object BugReport{
   def sendMailToDeveloper(context:Context){
     val address = context.getResources.getString(R.string.developer_mail_addr)
     val subject = context.getResources.getString(R.string.bug_report_subject)
-    val uri = s"mailto:${address}?subject=${Uri.encode(subject)}"
-    val intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(uri))
-    context.startActivity(intent) 
+    val intent = new Intent(Intent.ACTION_SEND)
+    intent.setType("message/rfc822")
+    intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
+    intent.putExtra(Intent.EXTRA_SUBJECT,subject)
+    val file = Utils.getProvidedFile(context,Utils.PROVIDED_BUG_REPORT,true)
+    val ostream = new FileOutputStream(file)
+    try{
+      writeBugReportToGzip(context,ostream)
+    }finally{
+      ostream.close()
+    }
+    val attachment = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
+    intent.putExtra(Intent.EXTRA_STREAM,attachment)
+    val msg = context.getResources.getString(R.string.choose_mailer)
+    try{
+      context.startActivity(Intent.createChooser(intent,msg))
+    }catch{
+      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_mail))
+    }
   }
 
   @TargetApi(8) // android.util.Base64 requires API >= 8
@@ -106,11 +122,14 @@ object BugReport{
     }
     val file = Utils.getProvidedFile(context,Utils.PROVIDED_ANONYMOUS_FORM,true)
     val post_url = context.getResources.getString(R.string.bug_report_url)
-    val bug_report = BugReport.createBugReport(context)
+    val bug_report = BugReport.writeBugReportToBase64(context)
     val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
     val writer = new PrintWriter(file)
-    writer.write(html)
-    writer.close()
+    try{
+      writer.write(html)
+    }finally{
+      writer.close()
+    }
     val uri = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
     val intent = new Intent(Intent.ACTION_VIEW,uri)
     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -121,13 +140,29 @@ object BugReport{
       case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
     }
   }
-
-  @TargetApi(8) // android.util.Base64 and android.os.Build#CPU_ABI2 requires API >= 8
-  def createBugReport(context:Context):String = {
+  @TargetApi(8) // android.util.Base64 requires API >= 8
+  def writeBugReportToBase64(context:Context):String = {
     val bao = new ByteArrayOutputStream()
-    val base = new Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
-    val gzip = new GZIPOutputStream(base)
+    val base64 = new Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
+    try{
+      writeBugReportToGzip(context,base64)
+    }finally{
+      base64.close()
+    }
+    bao.toString
+  }
+
+  def writeBugReportToGzip(context:Context,ostream:OutputStream){
+    val gzip = new GZIPOutputStream(ostream)
     val writer = new PrintWriter(gzip)
+    try{
+      writeBugReportToWriter(context,writer)
+    }finally{
+      writer.close()
+    }
+  }
+  @TargetApi(8) // android.os.Build#CPU_ABI2 requires API >= 8
+  def writeBugReportToWriter(context:Context,writer:PrintWriter){
     writer.println("[build]")
     writer.println(s"api_level=${Build.VERSION.SDK_INT}")
     writer.println(s"release=${Build.VERSION.RELEASE}")
@@ -296,7 +331,5 @@ object BugReport{
     }catch{
       case e:Exception => doWhenError(e)
     }
-    writer.close() // Maybe we don't need this since base stream is ByteArrayOutputStream
-    return bao.toString
   }
 }

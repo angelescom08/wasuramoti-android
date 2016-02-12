@@ -562,6 +562,7 @@ object Utils {
   }
 
   val PROVIDED_ANONYMOUS_FORM = "anonymous_form.html"
+  val PROVIDED_BUG_REPORT = "bug_report.gz"
   def getProvidedFile(context:Context,filename:String,createDir:Boolean):File = {
     val provided = "provided"
     if(createDir){
@@ -573,14 +574,19 @@ object Utils {
     new File(context.getCacheDir,provided+"/"+filename)
   }
 
-  def deleteCache(context:Context,match_func:String=>Boolean){
-    try{
-      getProvidedFile(context,PROVIDED_ANONYMOUS_FORM,false).delete()
-    }catch{
-      case _:Exception => None
+  def deleteProvidedFile(context:Context){
+    for(fn <- Array(PROVIDED_ANONYMOUS_FORM,PROVIDED_BUG_REPORT)){
+      try{
+        getProvidedFile(context,fn,false).delete()
+      }catch{
+        case _:Exception => None
+      }
     }
+  }
+
+  def deleteCache(context:Context,match_func:String=>Boolean){
     if(android.os.Build.VERSION.SDK_INT >= 9){
-      // context.getCacheDir is only used in Asset.withAssetOrFile
+      // In Android >= 2.3, we directly decode ogg file from asset without copying to cacheDir()
       return
     }
     this.synchronized{

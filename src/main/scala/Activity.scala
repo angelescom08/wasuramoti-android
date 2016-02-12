@@ -501,6 +501,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   // don't forget that this method may be called when device is rotated
   override def onDestroy(){
+    Utils.deleteProvidedFile(getApplicationContext)
     Utils.deleteCache(getApplicationContext,_=>true)
     super.onDestroy()
   }
