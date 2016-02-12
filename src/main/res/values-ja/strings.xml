@@ -559,4 +559,5 @@
   <string name="choose_browser">ブラウザ選択</string>
   <string name="activity_not_found_for_html">選択したアプリはHTMLに対応していません</string>
   <string name="activity_not_found_for_mail">選択したアプリはメールに対応していません</string>
+  <string name="muted_of_audio_focus">---\n他のアプリが音を\n鳴らしているため\n無音で再生します\n---</string>
 </resources>

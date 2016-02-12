@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
-import android.os.Environment
+import android.os.{Environment,Handler}
 import android.preference.{DialogPreference,PreferenceManager}
 import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
@@ -535,6 +535,8 @@ object Utils {
       _(
         if(NotifyTimerUtils.notify_timers.nonEmpty){
           NotifyTimerUtils.makeTimerText(context)
+        }else if(Globals.is_playing && KarutaPlayUtils.have_to_mute){
+          context.getResources.getString(R.string.muted_of_audio_focus)
         }else{
           val res = context.getResources
           if(invalidateQueryCacheExceptKarafuda){
@@ -782,6 +784,15 @@ object Utils {
       case _ => R.string.repeat_last_else
     }
     res.getString(R.string.repeat_button_format,res.getString(rid))
+  }
+
+  // see https://developer.android.com/training/multiple-threads/communicate-ui.html
+  def runOnUiThread(context:Context,func:()=>Unit){
+    new Handler(context.getMainLooper).post(new Runnable(){
+      override def run(){
+        func()
+      }
+    })
   }
 
   def setRadioTextClickListener(group:RadioGroup){

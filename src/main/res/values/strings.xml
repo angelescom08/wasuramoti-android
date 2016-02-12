@@ -605,4 +605,5 @@
   <string name="choose_browser">Choose Browser</string>
   <string name="activity_not_found_for_html">The chosen application does not support opening HTML.</string>
   <string name="activity_not_found_for_mail">The chosen application does not support sending E-Mail.</string>
+  <string name="muted_of_audio_focus">---\nOther app is playing,\nso we mute the voice.\n---</string>
 </resources>

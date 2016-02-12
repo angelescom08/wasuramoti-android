@@ -260,7 +260,7 @@ object KarutaPlayUtils{
           import AudioManager._
           focusChange match {
             case AUDIOFOCUS_GAIN =>
-              recoverVolume()
+              recoverVolume(context)
             case AUDIOFOCUS_LOSS =>
               cancelAllPlay(context)
               Toast.makeText(context,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
@@ -274,7 +274,7 @@ object KarutaPlayUtils{
               //  http://developer.android.com/training/managing-audio/audio-focus.html
               //  https://code.google.com/p/android/issues/detail?id=155984
               //  https://code.google.com/p/android/issues/detail?id=17995
-              lowerVolume()
+              lowerVolume(context)
             case _ =>
           }
         }
@@ -301,18 +301,24 @@ object KarutaPlayUtils{
       } 
     }
   }
-  def lowerVolume(){
+  def lowerVolume(context:Context){
     have_to_mute = true
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,true)}
     }
+    Utils.runOnUiThread(context,()=>
+      Utils.setButtonTextByState(context)
+    )
   }
 
-  def recoverVolume(){
+  def recoverVolume(context:Context){
     have_to_mute = false
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,false)}
     }
+    Utils.runOnUiThread(context,()=>
+      Utils.setButtonTextByState(context)
+    )
   }
 
 

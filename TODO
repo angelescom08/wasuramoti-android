@@ -1,4 +1,5 @@
 Priority High:
+  * Avoid holding reference to WasuramotiActivity in Karutaplayer, and use Utils.runOnUiThread instead
   * Add more [] to index.
   * Use gradle instead of sbt
   * Warn that karafuda mode is disabled in memorization mode more user friendly.

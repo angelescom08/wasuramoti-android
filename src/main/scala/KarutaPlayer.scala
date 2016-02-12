@@ -482,6 +482,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           Utils.setVolumeMute(t,true)
         }else{
           KarutaPlayUtils.have_to_mute  = false
+          Utils.runOnUiThread(activity,()=>
+              Utils.setButtonTextByState(activity.getApplicationContext)
+          )
         }
         t match {
           case Left(atrk) => atrk.play()
