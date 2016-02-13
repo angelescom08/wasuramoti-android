@@ -200,7 +200,7 @@ object BugReport{
       writer.println("[configuration]")
       val config = context.getResources.getConfiguration
       writer.println( s"locale=${config.locale}")
-      writer.println( s"screenLayout=${config.screenLayout}")
+      writer.println( s"screenLayout=0x${config.screenLayout.toHexString}")
     }catch{
       case e:Exception => doWhenError(e)
     }
@@ -232,7 +232,7 @@ object BugReport{
       try{
         writer.println("[application_info]")
         val ai = pi.applicationInfo
-        writer.println( s"flags=${ai.flags}")
+        writer.println( s"flags=0x${ai.flags.toHexString}")
         writer.println( s"source_dir=${ai.sourceDir}")
         writer.println( s"data_dir=${ai.dataDir}")
         writer.println( s"external_storage=${Utils.getAllExternalStorageDirectories(context)}")

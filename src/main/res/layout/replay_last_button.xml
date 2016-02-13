@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/replay_last_button"
+  style="?android:attr/buttonBarStyle"
+  android:background="@android:color/black"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:text="Replay Last Phrase"
-  android:textSize="@dimen/read_button_text_normal"
-  style="?android:attr/buttonBarButtonStyle"
-  android:background="@android:color/black"
-  android:contentDescription="ReplayButton"
-/>
+  >
+  <Button
+    android:id="@+id/replay_last_button"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:text="Replay Last Phrase"
+    android:textSize="@dimen/read_button_text_normal"
+    style="?android:attr/buttonBarButtonStyle"
+    android:contentDescription="ReplayButton"
+    />
+</LinearLayout>

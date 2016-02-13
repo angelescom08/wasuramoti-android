@@ -448,6 +448,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
         // Therefore, we have to reset the KarutaPlayer's activity
         p.activity = this
       }
+      if(Globals.forceRefresh){
+        KarutaPlayUtils.replay_audio_queue = None
+      }
       if(Globals.player.isEmpty || Globals.forceRefresh){
         if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
           FudaListHelper.moveToFirst(this)

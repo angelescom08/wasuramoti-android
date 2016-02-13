@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
 import android.content.res.{Configuration,Resources}
-import android.content.pm.{ResolveInfo,PackageManager}
+import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Paint
