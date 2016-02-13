@@ -567,15 +567,25 @@ object Utils {
     }
   }
 
-  def formatDate(format:String):String = {
-    val ds = (new java.text.SimpleDateFormat("yyyyMMdd")).format(new java.util.Date)
-    format.format(ds)
+  sealed trait ProvidedName { def template:String }
+  case object ProvidedAnonymousForm extends ProvidedName { val template = "anonymous_form_%s.html" }
+  case object ProvidedBugReport extends ProvidedName { val template = "bug_report_%s.gz" }
+
+  def getProvidedName(name:ProvidedName):String = {
+    val ds = if(HAVE_TO_GRANT_CONTENT_PERMISSION){
+      // fix content url
+      "wasuramoti"
+    }else{
+      (new java.text.SimpleDateFormat("yyyyMMdd")).format(new java.util.Date)
+    }
+    name.template.format(ds)
   }
 
   val FILE_PROVIDER_DIR = "provided"
   val FILE_PROVIDER_AUTHORITY = "karuta.hpnpwd.wasuramoti.fileprovider"
   val provided_uris = new mutable.Queue[Uri]()
-  def getProvidedFile(context:Context,filename:String,createDir:Boolean):File = {
+  def getProvidedFile(context:Context,name:ProvidedName,createDir:Boolean):File = {
+    val filename = getProvidedName(name)
     if(createDir){
       val dir = new File(context.getCacheDir,FILE_PROVIDER_DIR)
       if(!dir.exists){
@@ -586,20 +596,17 @@ object Utils {
   }
 
   def getProvidedUri(context:Context,file:File):Uri = {
-    val r = FileProvider.getUriForFile(context,FILE_PROVIDER_AUTHORITY,file)
-    provided_uris += r
-    r
+    FileProvider.getUriForFile(context,FILE_PROVIDER_AUTHORITY,file)
   }
 
-  def deleteProvidedFile(context:Context){
+  def isRecentProvidedFile(file:File):Boolean = {
+    Array(getProvidedName(ProvidedAnonymousForm),getProvidedName(ProvidedBugReport)).contains(file.getName)
+  }
+
+  def cleanProvidedFile(context:Context,all:Boolean){
     Try{
-      // TODO: maybe this has a possibility to left garbage, wo sould query content resolver and get list of provided uris
-      for(uri <- provided_uris){
-        Try{ context.revokeUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION ) }
-        Try{ context.getContentResolver.delete(uri,null,null) }
-      }
       val files = new File(context.getCacheDir,FILE_PROVIDER_DIR).listFiles
-      for(f <- files){
+      for(f <- files if all || !isRecentProvidedFile(f) ){
         Try(f.delete())
       }
     }
@@ -812,13 +819,18 @@ object Utils {
   }
 
 
-  // support-v4 version 19.1.0 and Android < 4.4 (or maybe Android < 4.2) has a bug (?) that , you get
+  // When API < 16, setting provided coontent uri as EXTRA_STREAM gives us following exception
   //   java.lang.SecurityException: Permission Denial: opening provider android.support.v4.content.FileProvider from ProcessRecord{...} (pid=xxx, uid=yyy) requires null or null
-  // when you set provided coontent uri as EXTRA_STREAM 
-  // Therefore we have to call Context.grantUriPermission() to all the packages which has the possibility to be chosen from the user.
+  // To avoid this, have to call Context.grantUriPermission() to all the packages which has the possibility to be chosen from the user.
+  // From API >= 16, the uri inside EXTRA_STREAM is automatically wrapped as ClipData, so we don't have to do that nasty thing.
+  // However, managing grantUriPermission/revokeUriPermission correctly is hard task [*1], and the popularity of API < 16 is only 5.3%, we just fix the path of getProvidedUri
+  // [*1] It is easy doing clean up in startActivityForResult(), however, onActivityResult() is not always called. e.g. user killed the app by task manager.
+  //      Also, note that if we don't call revokeUriPermission, garbage residues in `adb shell dumpsys | grep UriPermission`
   // See:
   //   http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+  //   http://stackoverflow.com/questions/13435654/how-to-grant-temporary-access-to-custom-content-provider-using-flag-grant-read-u
   //   https://code.google.com/p/android/issues/detail?id=76683
+  val HAVE_TO_GRANT_CONTENT_PERMISSION = android.os.Build.VERSION.SDK_INT < 16 
   def grantUriPermissionsForExtraStream(context:Context,intent:Intent,uri:Uri){
     import collection.JavaConversions._
     for(res <- context.getPackageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){

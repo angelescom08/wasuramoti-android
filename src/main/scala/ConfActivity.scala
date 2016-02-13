@@ -6,10 +6,12 @@ import android.view.{View,ViewGroup}
 import android.widget.{TextView,CheckBox,CompoundButton,LinearLayout}
 import android.util.{AttributeSet}
 import android.text.TextUtils
-import android.content.{Context,SharedPreferences}
+import android.content.{Context,SharedPreferences,Intent}
 import android.preference.{Preference,EditTextPreference,ListPreference}
 
 import java.util.regex.Pattern
+
+import scala.util.Try
 
 trait PreferenceCustom extends Preference{
   self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
@@ -162,12 +164,12 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
   }
   
   // don't forget that this method may be called when device is rotated
-  // also not that this is not called when app is terminated by user using `swipe out from app list`
+  // also not that this is not called when app is terminated by user using task manager.
   // See:
   //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
   //   http://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
   override def onDestroy(){
-    Utils.deleteProvidedFile(getApplicationContext)
+    super.onDestroy()
     // TODO: do not call unregisterOnSharedPreferenceChangeListener here, but somewhere else
     listener.foreach{ l =>
       Globals.prefs.foreach{ p =>
@@ -175,7 +177,21 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
         listener = None
       }
     }
-    super.onDestroy()
+  }
+
+  // Note: this will not be called if app was terminated in background
+  override def onActivityResult(reqCode:Int, resCode:Int, data:Intent){
+    super.onActivityResult(reqCode,resCode,data)
+    if(reqCode == BugReport.CLEAN_PROVIDED_REQUEST){
+      if(Utils.HAVE_TO_GRANT_CONTENT_PERMISSION){
+        Try{
+          val file = Utils.getProvidedFile(this,Utils.ProvidedBugReport,false)
+          val attachment = Utils.getProvidedUri(this,file)
+          this.revokeUriPermission(attachment,Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+      }
+      Utils.cleanProvidedFile(this,true)
+    }
   }
 }
 

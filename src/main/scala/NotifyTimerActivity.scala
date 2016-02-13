@@ -89,6 +89,7 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   }
 
   override def onActivityResult(requestCode:Int, resultCode:Int, intent:Intent){
+    super.onActivityResult(requestCode, resultCode, intent)
     if(resultCode == Activity.RESULT_OK){
       val uri:Uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
       if(uri != null){

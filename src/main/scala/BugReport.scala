@@ -23,6 +23,7 @@ trait BugReportable{
 }
 
 object BugReport{
+  val CLEAN_PROVIDED_REQUEST = 1
   val MEGA = 1024 * 1024
   def megabytesAvailable(path:String):(Float,Float) = {
     val stat = new StatFs(path);
@@ -97,8 +98,7 @@ object BugReport{
     intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
     intent.putExtra(Intent.EXTRA_SUBJECT,subject)
     Try{
-      val filename = Utils.formatDate("bug_report_%s.gz")
-      val file = Utils.getProvidedFile(context,filename,true)
+      val file = Utils.getProvidedFile(context,Utils.ProvidedBugReport,true)
       val ostream = new FileOutputStream(file)
       try{
         writeBugReportToGzip(context,ostream)
@@ -106,12 +106,14 @@ object BugReport{
         ostream.close()
       }
       val attachment = Utils.getProvidedUri(context,file)
-      Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
+      if(Utils.HAVE_TO_GRANT_CONTENT_PERMISSION){
+        Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
+      }
       intent.putExtra(Intent.EXTRA_STREAM,attachment)
     }
     val msg = context.getResources.getString(R.string.choose_mailer)
     try{
-      context.startActivity(Intent.createChooser(intent,msg))
+      context.asInstanceOf[ConfActivity].startActivityForResult(Intent.createChooser(intent,msg),CLEAN_PROVIDED_REQUEST)
     }catch{
       case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_mail))
     }
@@ -123,8 +125,7 @@ object BugReport{
       Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
       return
     }
-    val filename = Utils.formatDate("anonymous_form_%s.html")
-    val file = Utils.getProvidedFile(context,filename,true)
+    val file = Utils.getProvidedFile(context,Utils.ProvidedAnonymousForm,true)
     val post_url = context.getResources.getString(R.string.bug_report_url)
     val bug_report = BugReport.writeBugReportToBase64(context)
     val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
@@ -139,7 +140,7 @@ object BugReport{
     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     val msg = context.getResources.getString(R.string.choose_browser)
     try{
-      context.startActivity(Intent.createChooser(intent,msg))
+      context.asInstanceOf[ConfActivity].startActivityForResult(Intent.createChooser(intent,msg),CLEAN_PROVIDED_REQUEST)
     }catch{
       case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
     }

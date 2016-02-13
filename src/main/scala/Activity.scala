@@ -498,16 +498,17 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
   override def onStop(){
     super.onStop()
+    Utils.cleanProvidedFile(this,false)
   }
 
   // don't forget that this method may be called when device is rotated
-  // also not that this is not called when app is terminated by user using `swipe out from app list`
+  // also not that this is not called when app is terminated by user using task manager.
   // See:
   //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
   //   http://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
   override def onDestroy(){
-    Utils.deleteCache(getApplicationContext,_=>true)
     super.onDestroy()
+    Utils.deleteCache(getApplicationContext,_=>true)
   }
   def startDimLockTimer(){
     Globals.global_lock.synchronized{
