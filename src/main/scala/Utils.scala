@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
 import android.content.res.{Configuration,Resources}
+import android.content.pm.{ResolveInfo,PackageManager}
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Paint
@@ -14,6 +15,8 @@ import android.text.{TextUtils,Html}
 import android.util.Log
 import android.view.{LayoutInflater,View,WindowManager,Surface}
 import android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
+
+import android.support.v4.content.FileProvider
 
 import java.io.File
 import java.text.NumberFormat
@@ -569,20 +572,33 @@ object Utils {
     format.format(ds)
   }
 
-  val PROVIDED_DIR = "provided"
+  val FILE_PROVIDER_DIR = "provided"
+  val FILE_PROVIDER_AUTHORITY = "karuta.hpnpwd.wasuramoti.fileprovider"
+  val provided_uris = new mutable.Queue[Uri]()
   def getProvidedFile(context:Context,filename:String,createDir:Boolean):File = {
     if(createDir){
-      val dir = new File(context.getCacheDir,PROVIDED_DIR)
+      val dir = new File(context.getCacheDir,FILE_PROVIDER_DIR)
       if(!dir.exists){
         dir.mkdir()
       }
     }
-    new File(context.getCacheDir,PROVIDED_DIR+"/"+filename)
+    new File(context.getCacheDir,FILE_PROVIDER_DIR+"/"+filename)
+  }
+
+  def getProvidedUri(context:Context,file:File):Uri = {
+    val r = FileProvider.getUriForFile(context,FILE_PROVIDER_AUTHORITY,file)
+    provided_uris += r
+    r
   }
 
   def deleteProvidedFile(context:Context){
     Try{
-      val files = new File(context.getCacheDir,PROVIDED_DIR).listFiles
+      // TODO: maybe this has a possibility to left garbage, wo sould query content resolver and get list of provided uris
+      for(uri <- provided_uris){
+        Try{ context.revokeUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION ) }
+        Try{ context.getContentResolver.delete(uri,null,null) }
+      }
+      val files = new File(context.getCacheDir,FILE_PROVIDER_DIR).listFiles
       for(f <- files){
         Try(f.delete())
       }
@@ -793,6 +809,21 @@ object Utils {
         func()
       }
     })
+  }
+
+
+  // support-v4 version 19.1.0 and Android < 4.4 (or maybe Android < 4.2) has a bug (?) that , you get
+  //   java.lang.SecurityException: Permission Denial: opening provider android.support.v4.content.FileProvider from ProcessRecord{...} (pid=xxx, uid=yyy) requires null or null
+  // when you set provided coontent uri as EXTRA_STREAM 
+  // Therefore we have to call Context.grantUriPermission() to all the packages which has the possibility to be chosen from the user.
+  // See:
+  //   http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+  //   https://code.google.com/p/android/issues/detail?id=76683
+  def grantUriPermissionsForExtraStream(context:Context,intent:Intent,uri:Uri){
+    import collection.JavaConversions._
+    for(res <- context.getPackageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+      context.grantUriPermission(res.activityInfo.packageName,uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
   }
 
   def setRadioTextClickListener(group:RadioGroup){

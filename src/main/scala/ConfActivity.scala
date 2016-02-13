@@ -161,14 +161,21 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait {
     Utils.dismissAlertDialog()
   }
   
+  // don't forget that this method may be called when device is rotated
+  // also not that this is not called when app is terminated by user using `swipe out from app list`
+  // See:
+  //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
+  //   http://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
   override def onDestroy(){
-    super.onDestroy()
+    Utils.deleteProvidedFile(getApplicationContext)
+    // TODO: do not call unregisterOnSharedPreferenceChangeListener here, but somewhere else
     listener.foreach{ l =>
       Globals.prefs.foreach{ p =>
         p.unregisterOnSharedPreferenceChangeListener(l)
         listener = None
       }
     }
+    super.onDestroy()
   }
 }
 

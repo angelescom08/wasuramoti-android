@@ -10,8 +10,6 @@ import android.net.Uri
 import android.view.{View,LayoutInflater}
 import android.widget.{TextView,Button}
 
-import android.support.v4.content.FileProvider
-
 import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream,FileOutputStream,OutputStream}
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -107,7 +105,8 @@ object BugReport{
       }finally{
         ostream.close()
       }
-      val attachment = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
+      val attachment = Utils.getProvidedUri(context,file)
+      Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
       intent.putExtra(Intent.EXTRA_STREAM,attachment)
     }
     val msg = context.getResources.getString(R.string.choose_mailer)
@@ -135,7 +134,7 @@ object BugReport{
     }finally{
       writer.close()
     }
-    val uri = FileProvider.getUriForFile(context,"karuta.hpnpwd.wasuramoti.fileprovider",file)
+    val uri = Utils.getProvidedUri(context,file)
     val intent = new Intent(Intent.ACTION_VIEW,uri)
     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     val msg = context.getResources.getString(R.string.choose_browser)
