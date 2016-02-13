@@ -8,7 +8,7 @@ import android.app.{AlertDialog,ActivityManager}
 import android.util.{Log,Base64,Base64OutputStream}
 import android.net.Uri
 import android.view.{View,LayoutInflater}
-import android.widget.{TextView,Button}
+import android.widget.{TextView,Button,Toast}
 
 import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream,FileOutputStream,OutputStream}
 import java.nio.ByteBuffer
@@ -75,6 +75,13 @@ object BugReport{
     mail.setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         sendMailToDeveloper(context) 
+      }
+    })
+    mail.setOnLongClickListener(new View.OnLongClickListener(){
+      override def onLongClick(v:View):Boolean = {
+        Utils.copyToClipBoard(context,"wasuramoti developer mail address",context.getResources.getString(R.string.developer_mail_addr))
+        Toast.makeText(context,R.string.copied_to_clipboard,Toast.LENGTH_SHORT).show()
+        return true
       }
     })
     val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]

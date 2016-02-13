@@ -1,5 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
+import android.annotation.TargetApi
 import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
 import android.content.res.{Configuration,Resources}
 import android.content.pm.PackageManager
@@ -835,6 +836,20 @@ object Utils {
     import collection.JavaConversions._
     for(res <- context.getPackageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
       context.grantUriPermission(res.activityInfo.packageName,uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+  }
+
+  @TargetApi(11)
+  def copyToClipBoard(context:Context,label:String,text:String){
+    if(android.os.Build.VERSION.SDK_INT >= 11){
+      val clip = context.getSystemService(Context.CLIPBOARD_SERVICE)
+        .asInstanceOf[android.content.ClipboardManager]
+      val data = android.content.ClipData.newPlainText(label,text)
+      clip.setPrimaryClip(data)
+    }else{
+      val clip = context.getSystemService(Context.CLIPBOARD_SERVICE)
+        .asInstanceOf[android.text.ClipboardManager]
+      clip.setText(text)
     }
   }
 

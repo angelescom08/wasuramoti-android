@@ -36,6 +36,8 @@
           android:text="@string/developer_mail_addr"
           android:textAppearance="?android:attr/textAppearanceMedium"
           android:textColor="#00FFFF"
+          android:paddingTop="8dip"
+          android:paddingBottom="11dip"
           />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />
