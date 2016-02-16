@@ -113,6 +113,7 @@ typedef struct
 ///////////   FUNCTIONS USEABLE WITH ALL INPUT MODES
 
 typedef struct stb_vorbis stb_vorbis;
+typedef struct AAssetOrFILE AAssetOrFILE;
 
 typedef struct
 {
@@ -356,6 +357,14 @@ enum STBVorbisError
    VORBIS_seek_failed,
 };
 
+
+AAssetOrFILE * afopen(AAssetManager *mgr, const char * filename);
+void afclose(AAssetOrFILE *af);
+long aftell(AAssetOrFILE *af);
+long aflen(AAssetOrFILE *af);
+int afseek(AAssetOrFILE *af, long offset, int whence);
+int afgetc(AAssetOrFILE *af);
+size_t afread(void *buf, size_t size, size_t nmemb, AAssetOrFILE *af);
 
 #ifdef __cplusplus
 }
@@ -707,11 +716,11 @@ typedef struct
    uint32 last_decoded_sample;
 } ProbedPage;
 
-typedef struct
+struct AAssetOrFILE
 {
   FILE *file;
   AAsset *asset;
-} AAssetOrFILE;
+};
 
 struct stb_vorbis
 {
@@ -852,7 +861,19 @@ static int error(vorb *f, enum STBVorbisError e)
 
 
 // API for AAssetOrFILE
-static void afclose(AAssetOrFILE *af){
+AAssetOrFILE * afopen(AAssetManager *mgr, const char * filename){
+   AAssetOrFILE *af = (AAssetOrFILE *)malloc(sizeof(AAssetOrFILE));
+   if(mgr != NULL){
+     af->file = NULL;
+     af->asset = DynAssetManager_open(mgr, filename, AASSET_MODE_RANDOM);
+   }else{
+     af->asset = NULL;
+     af->file = fopen(filename, "rb");
+   }
+   return af;
+}
+
+void afclose(AAssetOrFILE *af){
   if(af->file != NULL){
     fclose(af->file);
   }else if(af->asset != NULL){
@@ -862,7 +883,7 @@ static void afclose(AAssetOrFILE *af){
   af = NULL;
 }
 
-static long aftell(AAssetOrFILE *af){
+long aftell(AAssetOrFILE *af){
   if(af->file != NULL){
     return ftell(af->file);
   }else if(af->asset != NULL){
@@ -871,7 +892,7 @@ static long aftell(AAssetOrFILE *af){
   return -1;
 }
 
-static long aflen(AAssetOrFILE *af){
+long aflen(AAssetOrFILE *af){
   if(af->file != NULL){
     unsigned int cur = ftell(af->file);
     fseek(af->file, 0, SEEK_END);
@@ -884,7 +905,7 @@ static long aflen(AAssetOrFILE *af){
   return -1;
 }
 
-static int afseek(AAssetOrFILE *af, long offset, int whence){
+int afseek(AAssetOrFILE *af, long offset, int whence){
   if(af->file != NULL){
     return fseek(af->file, offset, whence);
   }else if(af->asset != NULL){
@@ -897,14 +918,14 @@ static int afseek(AAssetOrFILE *af, long offset, int whence){
   }
 }
 
-static int afgetc(AAssetOrFILE *af){
+int afgetc(AAssetOrFILE *af){
   if(af->file != NULL){
     return fgetc(af->file);
   }else if(af->asset != NULL){
-    char b;
+    unsigned char b;
     int r = DynAsset_read(af->asset, &b, 1);
     if( r == 1 ){
-      return b;
+      return (int)b;
     }else{
       return EOF;
     }
@@ -912,7 +933,7 @@ static int afgetc(AAssetOrFILE *af){
   return EOF;
 }
 
-static size_t afread(void *buf, size_t size, size_t nmemb, AAssetOrFILE *af){
+size_t afread(void *buf, size_t size, size_t nmemb, AAssetOrFILE *af){
   if(af->file != NULL){
     return fread(buf, size, nmemb, af->file);
   }else if(af->asset != NULL){
@@ -5058,14 +5079,7 @@ static stb_vorbis * open_asset_or_file(AAssetOrFILE *afile, int close_on_free, i
 
 stb_vorbis * stb_vorbis_open_asset_or_file(AAssetManager *mgr, const char *filename, int *error, stb_vorbis_alloc *alloc)
 {
-   AAssetOrFILE *af = (AAssetOrFILE *)malloc(sizeof(AAssetOrFILE));
-   if(mgr != NULL){
-     af->file = NULL;
-     af->asset = DynAssetManager_open(mgr, filename, AASSET_MODE_RANDOM);
-   }else{
-     af->asset = NULL;
-     af->file = fopen(filename, "rb");
-   }
+   AAssetOrFILE * af = afopen(mgr,filename);
    if (af->file || af->asset) 
       return open_asset_or_file(af, TRUE, error, alloc);
    if (error) *error = VORBIS_file_open_failure;

@@ -109,3 +109,45 @@ int decode_asset_or_file(JNIEnv *env, AAssetManager *mgr, const char* fin_path, 
   close_all();
   return(0);
 }
+
+static void writeBytes(JNIEnv *env,jobject output_stream, const char * str){
+  int len = strlen(str);
+  jbyteArray data = (*env)->NewByteArray(env,len);
+  if(data != NULL){
+    (*env)->SetByteArrayRegion(env,data,0,len,str);
+    jclass outClass = (*env)->FindClass(env, "java/io/OutputStream");
+    jmethodID mWriteStream = (*env)->GetMethodID(env,outClass,"write","([B)V");
+    (*env)->CallVoidMethod(env,output_stream,mWriteStream,data);
+  }
+  (*env)->DeleteLocalRef(env,data);
+}
+
+
+int testApi(JNIEnv *env, jobject ostream, AAssetManager * mgr, const char * fin_path){
+  char buf[64];
+  AAssetOrFILE * af = afopen(mgr,fin_path);
+  long len = aflen(af);
+  int i = 0;
+  sprintf(buf,"aflen: %ld\nafgetc:",len);
+  writeBytes(env,ostream,buf);
+  for(i = 0; i < len; i++){
+    int c = afgetc(af);
+    sprintf(buf," %d",c);
+    writeBytes(env,ostream,buf);
+  }
+  sprintf(buf,"\naftell: %ld\n", aftell(af));
+  writeBytes(env,ostream,buf);
+  sprintf(buf,"afseek: %d\n", afseek(af,0,SEEK_SET));
+  writeBytes(env,ostream,buf);
+  unsigned char * rb = malloc(len);
+  sprintf(buf,"afread: %d ->", afread(rb,len,1,af));
+  writeBytes(env,ostream,buf);
+  for(i = 0; i < len; i++){
+    sprintf(buf," %u",rb[i]);
+    writeBytes(env,ostream,buf);
+  }
+  free(rb);
+  
+  afclose(af);
+  return 0;
+}

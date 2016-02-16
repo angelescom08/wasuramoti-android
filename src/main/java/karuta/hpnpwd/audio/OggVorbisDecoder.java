@@ -4,6 +4,8 @@ import android.util.Log;
 import android.content.Context;
 import android.content.res.AssetManager;
 import java.nio.ShortBuffer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 
 public class OggVorbisDecoder {
   public static boolean library_loaded = false;
@@ -47,8 +49,16 @@ public class OggVorbisDecoder {
     return (s == null) ? null : ShortBuffer.wrap(s);
   }
 
+  public static String reportApi(Context context, String asset_path){
+    ByteArrayOutputStream bao = new ByteArrayOutputStream();
+    AssetManager mgr = context.getAssets();
+    testApi(bao, mgr, asset_path);
+    return bao.toString();
+  }
+
   // implemented in src/main/jni/wav_ogg_file_codec_jni.c
   public native short[] decodeFile(String file_path);
   public native short[] decodeAsset(AssetManager asset_manager, String asset_path);
   public static native boolean initDynAsset();
+  public static native void testApi(OutputStream stream,AssetManager asset_manager, String asset_path);
 }
