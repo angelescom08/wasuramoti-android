@@ -16,7 +16,6 @@ import java.nio.channels.FileChannel
 import java.util.zip.{CRC32,GZIPOutputStream}
 
 import scala.collection.mutable
-import scala.util.Try
 
 trait BugReportable{
   def toBugReport():String
@@ -104,7 +103,7 @@ object BugReport{
     intent.setType("message/rfc822")
     intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
     intent.putExtra(Intent.EXTRA_SUBJECT,subject)
-    Try{
+    try{
       val file = Utils.getProvidedFile(context,Utils.ProvidedBugReport,true)
       val ostream = new FileOutputStream(file)
       try{
@@ -117,6 +116,8 @@ object BugReport{
         Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
       }
       intent.putExtra(Intent.EXTRA_STREAM,attachment)
+    }catch{
+      case _:Throwable => None
     }
     val msg = context.getResources.getString(R.string.choose_mailer)
     try{
@@ -173,7 +174,7 @@ object BugReport{
       writer.close()
     }
   }
-  @TargetApi(8) // android.os.Build#CPU_ABI2 requires API >= 8
+  @TargetApi(21) // android.os.Build#SUPPORTED_ABIS requires API >= 21
   def writeBugReportToWriter(context:Context,writer:PrintWriter){
     writer.println("[build]")
     writer.println(s"api_level=${Build.VERSION.SDK_INT}")
@@ -182,7 +183,9 @@ object BugReport{
       writer.println(s"supported_abis=${Build.SUPPORTED_ABIS.toList}")
     }else{
       writer.println(s"cpu_abi=${Build.CPU_ABI}")
-      writer.println(s"cpu_abi2=${Build.CPU_ABI2}")
+      if(Build.VERSION.SDK_INT >= 8){
+        writer.println(s"cpu_abi2=${Build.CPU_ABI2}")
+      }
     }
     writer.println(s"brand=${Build.BRAND}")
     writer.println(s"manufacturer=${Build.MANUFACTURER}")

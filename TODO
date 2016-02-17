@@ -12,7 +12,7 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "Currently Playing" in notification area.
   * Show "You can scroll yomi info button list" TIPS
-  * Use scala.util.Try instead of try ... catch
+  * Use scala.util.Try instead of try ... catch -> Note: fatal exception would not be catched with Try
   * Acquire audio focus for notification timer.
   * Support Android 6.0
     * Apply runtime permission
