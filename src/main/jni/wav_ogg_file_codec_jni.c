@@ -105,6 +105,9 @@ Java_karuta_hpnpwd_audio_OggVorbisDecoder_decodeAsset(
 void Java_karuta_hpnpwd_audio_OggVorbisDecoder_testApi(JNIEnv* env, jclass thiz,
     jobject output_stream, jobject asset_manager, jstring fin_path
     ){
+      if(DynAssetManager_fromJava == NULL){
+        return;
+      }
       const char *native_fin_path = (*env)->GetStringUTFChars(env, fin_path, 0);
       AAssetManager *mgr = (AAssetManager *)DynAssetManager_fromJava(env, asset_manager);
       testApi(env, output_stream, mgr, native_fin_path);

@@ -116,8 +116,12 @@ static void writeBytes(JNIEnv *env,jobject output_stream, const char * str){
   if(data != NULL){
     (*env)->SetByteArrayRegion(env,data,0,len,str);
     jclass outClass = (*env)->FindClass(env, "java/io/OutputStream");
-    jmethodID mWriteStream = (*env)->GetMethodID(env,outClass,"write","([B)V");
-    (*env)->CallVoidMethod(env,output_stream,mWriteStream,data);
+    if(outClass != NULL){
+      jmethodID mWriteStream = (*env)->GetMethodID(env,outClass,"write","([B)V");
+      if(mWriteStream != NULL){
+        (*env)->CallVoidMethod(env,output_stream,mWriteStream,data);
+      }
+    }
   }
   (*env)->DeleteLocalRef(env,data);
 }
@@ -126,6 +130,9 @@ static void writeBytes(JNIEnv *env,jobject output_stream, const char * str){
 int testApi(JNIEnv *env, jobject ostream, AAssetManager * mgr, const char * fin_path){
   char buf[64];
   AAssetOrFILE * af = afopen(mgr,fin_path);
+  if(af == NULL){
+    return 1;
+  }
   long len = aflen(af);
   int i = 0;
   sprintf(buf,"aflen: %ld\nafgetc:",len);
@@ -147,7 +154,6 @@ int testApi(JNIEnv *env, jobject ostream, AAssetManager * mgr, const char * fin_
     writeBytes(env,ostream,buf);
   }
   free(rb);
-  
   afclose(af);
   return 0;
 }

@@ -870,17 +870,23 @@ AAssetOrFILE * afopen(AAssetManager *mgr, const char * filename){
      af->asset = NULL;
      af->file = fopen(filename, "rb");
    }
+   if(af->asset == NULL && af->file == NULL){
+     free(af);
+     return NULL;
+   }
    return af;
 }
 
 void afclose(AAssetOrFILE *af){
+  if(af == NULL){
+    return;
+  }
   if(af->file != NULL){
     fclose(af->file);
   }else if(af->asset != NULL){
     DynAsset_close(af->asset);
   }
   free(af);
-  af = NULL;
 }
 
 long aftell(AAssetOrFILE *af){
@@ -5080,7 +5086,7 @@ static stb_vorbis * open_asset_or_file(AAssetOrFILE *afile, int close_on_free, i
 stb_vorbis * stb_vorbis_open_asset_or_file(AAssetManager *mgr, const char *filename, int *error, stb_vorbis_alloc *alloc)
 {
    AAssetOrFILE * af = afopen(mgr,filename);
-   if (af->file || af->asset) 
+   if (af != NULL)
       return open_asset_or_file(af, TRUE, error, alloc);
    if (error) *error = VORBIS_file_open_failure;
    return NULL;

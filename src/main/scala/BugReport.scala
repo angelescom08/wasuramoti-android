@@ -199,6 +199,7 @@ object BugReport{
       OggVorbisDecoder.loadStbVorbis()
       writer.println(s"loaded=${OggVorbisDecoder.library_loaded}")
       writer.println(s"error=${OggVorbisDecoder.unsatisfied_link_error}")
+      writer.println(s"verify=[\n${OggVorbisDecoder.reportApi(context,"data/verify.dat")}]")
     }catch{
       case e:Throwable => doWhenError(e)
     }
