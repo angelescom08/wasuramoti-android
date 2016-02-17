@@ -713,8 +713,7 @@ object Utils {
     val pending_intent = PendingIntent.getActivity(context, pending_id, start_activity, PendingIntent.FLAG_CANCEL_CURRENT)
     val mgr = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
     if(mgr != null){
-      // don't need to be setExact()
-      mgr.set(AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
+      alarmManagerSetExact(mgr, AlarmManager.RTC, System.currentTimeMillis+100, pending_intent)
       System.exit(0)
     }
   }
@@ -759,6 +758,8 @@ object Utils {
       }
     }.getOrElse(ic_off)
   }
+  // Don't forget that Android >= 5.1 takes at least five seconds to trigger even using setExact
+  //   https://code.google.com/p/android/issues/detail?id=161516
   def alarmManagerSetExact(manager:AlarmManager,typ:Int,triggerAtMillis:Long,operation:PendingIntent){
     if(android.os.Build.VERSION.SDK_INT >= 19){
       manager.setExact(typ,triggerAtMillis,operation)

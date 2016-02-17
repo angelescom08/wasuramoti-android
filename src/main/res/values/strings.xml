@@ -607,4 +607,5 @@
   <string name="activity_not_found_for_mail">The chosen application does not support sending E-Mail.</string>
   <string name="muted_of_audio_focus">---\nOther app is playing,\nso we mute the voice.\n---</string>
   <string name="copied_to_clipboard">Copied to clipboard</string>
+  <string name="ogg_decode_failed">Audio Decode Failed. Maybe restarting the app may solve the problem. However, give us bug report if this occurs frequently.</string>
 </resources>

@@ -317,11 +317,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
     val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
-      val abort_playing = (mid:Option[Int]) => {
+      val abort_playing = (mid:Option[Either[String,Int]]) => {
         mid.foreach{mm =>
           activity.runOnUiThread(new Runnable{
             override def run(){
-              Utils.messageDialog(activity,Right(mm))
+              Utils.messageDialog(activity,mm)
             }
          })
         }
@@ -341,17 +341,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           waitDecodeAndUpdateAudioQueue()
         }catch{
           case e:OggDecodeFailException => {
-              activity.runOnUiThread(new Runnable{
-                  override def run(){
-                    Utils.messageDialog(activity,Left(Option(e.getMessage).getOrElse("<null>") + "... will restart app."),{
-                        ()=>Utils.restartApplication(activity.getApplicationContext)
-                      })
-                  }
-              })
+              val msg = activity.getResources.getString(R.string.ogg_decode_failed) + "\n---\n" + Option(e.getMessage).getOrElse("<null>")
+              abort_playing(Some(Left(msg)))
               return
             }
             case e:java.lang.UnsatisfiedLinkError => {
-              abort_playing(Some(R.string.unsatisfied_link_error))
+              abort_playing(Some(Right(R.string.unsatisfied_link_error)))
               return
             }
         }
@@ -365,11 +360,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           return
         }
         case e:OpenSLESInvalidAudioFormatException => {
-          abort_playing(Some(R.string.opensles_invalid_audio_format))
+          abort_playing(Some(Right(R.string.opensles_invalid_audio_format)))
           return
         }
         case e:OpenSLESInitException => {
-          abort_playing(Some(R.string.opensles_init_error))
+          abort_playing(Some(Right(R.string.opensles_init_error)))
           return
         }
       }
@@ -669,7 +664,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
                         Utils.messageDialog(activity,Left(msg),{()=>throw new AlreadyReportedException(e.getMessage)})
                       }
                   })
-                  return Right(new OggDecodeFailException("ogg decode failed with IOException: "+e.getMessage))
+                  return Right(new OggDecodeFailException("IOException: "+e.getMessage))
                 }else{
                   throw e
                 }

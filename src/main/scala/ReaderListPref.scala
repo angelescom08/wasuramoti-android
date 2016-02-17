@@ -183,11 +183,11 @@ abstract class Reader(context:Context,val path:String){
         case Left(asset) => decoder.decodeAssetToShortBuffer(context,asset)
         case Right(file) => decoder.decodeFileToShortBuffer(file.getAbsolutePath())
       }
-      if(buffer != null){
+      if(buffer != null && decoder.data_length > 0){
         val wav = new WavBuffer(buffer,decoder,num,kamisimo)
         func(wav)
       }else{
-        throw new OggDecodeFailException("ogg decode failed: "+asset_or_file.fold(identity,_.getName))
+        throw new OggDecodeFailException("decode failed: "+asset_or_file.fold(identity,_.getName))
       }
     })
   }
