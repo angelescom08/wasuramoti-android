@@ -5,7 +5,7 @@ import android.annotation.TargetApi
 import android.content.{BroadcastReceiver,Context,Intent}
 import android.app.{PendingIntent,AlarmManager}
 import android.widget.{Button,Toast}
-import android.os.{Bundle,Handler}
+import android.os.{Bundle,Handler,PowerManager}
 import android.net.Uri
 import android.util.Log
 import android.view.View
@@ -13,6 +13,7 @@ import android.view.View
 import scala.collection.mutable
 object KarutaPlayUtils{
   var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
+  var wake_lock = None:Option[PowerManager#WakeLock]
   var have_to_mute = false:Boolean
   var last_confirmed_for_volume = None:Option[Long]
   var last_confirmed_for_ringer_mode = None:Option[Long]
@@ -156,7 +157,8 @@ object KarutaPlayUtils{
           FudaListHelper.moveToFirst(context)
           activity.refreshAndInvalidate(auto)
         }else{
-          KarutaPlayUtils.abandonAudioFocus(context)
+          abandonAudioFocus(context)
+          releaseWakeLock()
         }
       }
       if(auto && !Globals.player.isEmpty){
@@ -265,6 +267,26 @@ object KarutaPlayUtils{
     Utils.setButtonTextByState(context)
   }
 
+  def acquireWakeLock(context:Context){
+    releaseWakeLock()
+    val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
+    if(pm == null){
+      return
+    }
+    val lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"karuta.hpnpwd.wasuramoti.KarutaPlayUtils")
+    lock.setReferenceCounted(false)
+    lock.acquire()
+    wake_lock = Some(lock)
+  }
+
+  def releaseWakeLock(){
+    wake_lock.foreach{ lock =>
+      if(lock.isHeld){
+        lock.release()
+      }
+    }
+    wake_lock = None
+  }
 
   val CONFIRM_THRESHOLD_TIME = 20*60*1000 // 20 minutes
   def elapsedEnoghSinceLastConfirm(cur_time:Long,prev_time:Option[Long]):Boolean = {

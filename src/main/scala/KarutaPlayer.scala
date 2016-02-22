@@ -224,6 +224,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           Toast.makeText(activity.getApplicationContext,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
           return
         }
+        if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN && Globals.prefs.get.getBoolean("autoplay_enable",false)){
+          bundle.putBoolean("autoplay",true)
+        }
+        if(!fromAuto && bundle.getBoolean("autoplay",false)){
+          KarutaPlayUtils.acquireWakeLock(activity.getApplicationContext)
+        }
         
         if(set_audio_volume){
           Utils.saveAndSetAudioVolume(activity.getApplicationContext())
@@ -441,11 +447,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       //   https://code.google.com/p/android/issues/detail?id=17995
       val play_end_time = buffer_length_millisec+200
 
-      if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN &&
-        Globals.prefs.get.getBoolean("autoplay_enable",false)){
-        bundle.putBoolean("autoplay",true)
-      }
-
       // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
       // Therefore there seems no easy way to do a task when AudioTrack has finished playing.
       // As a workaround, I will start timer that ends when audio length elapsed.
@@ -485,7 +486,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   }
 
   @TargetApi(9) // Equalizer requires API >= 9
-  def commonJobWhenFinished(abandonAudioFocus:Boolean){
+  def commonJobWhenFinished(releaseAudioFocusAndWakeLock:Boolean){
     equalizer.foreach(_.release())
     equalizer = None
     Globals.is_playing = false
@@ -493,8 +494,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     if(set_audio_volume){
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
-    if(abandonAudioFocus){
+    if(releaseAudioFocusAndWakeLock){
       KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
+      KarutaPlayUtils.releaseWakeLock()
     }
     if(isAfterFirstPhrase && !is_replay){
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
