@@ -456,6 +456,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
 
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
+      Globals.last_play_started = play_started
       music_track.foreach{ t => {
         if(fromAuto && KarutaPlayUtils.have_to_mute){
           Utils.setVolumeMute(t,true)
