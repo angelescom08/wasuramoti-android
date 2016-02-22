@@ -268,17 +268,19 @@ object KarutaPlayUtils{
     Utils.setButtonTextByState(context)
   }
 
-  def acquireWakeLock(context:Context){
-    releaseWakeLock()
+  def acquireWakeLock(context:Context,timeout:Long){
     val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
     if(pm == null){
       return
     }
-    val lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"karuta.hpnpwd.wasuramoti.KarutaPlayUtils")
-    lock.setReferenceCounted(false)
-    lock.acquire()
-    startSafetyTimer()
-    wake_lock = Some(lock)
+    if(wake_lock.isEmpty){
+      wake_lock = Some{
+        val lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"karuta.hpnpwd.wasuramoti.KarutaPlayUtils")
+        lock.setReferenceCounted(false)
+        lock
+      }
+    }
+    wake_lock.get.acquire(timeout)
   }
 
   def releaseWakeLock(){
@@ -288,31 +290,6 @@ object KarutaPlayUtils{
       }
     }
     wake_lock = None
-    cancelSafetyTimer()
-  }
-
-  // Just for sure that wake lock is released when not played for long time since last play
-  // TODO: we should use PowerManager#acquire(long timeout) instead
-  //       Note that old android seems to have bug that cannot release wake lock which has both timeout and reference counted
-  //       https://code.google.com/p/android/issues/detail?id=11622
-  def startSafetyTimer(){
-    val interval = 120 * 1000 // 120 seconds
-    lazy val runnable:Runnable = new Runnable(){
-      override def run(){
-        if(Globals.last_play_started.forall( SystemClock.elapsedRealtime - _ > interval)){
-          // this condition shold never met if releaseWakeLock is correctly called after playback 
-          releaseWakeLock()
-        }else{
-          wake_lock_safety_handler.postDelayed(runnable,interval)
-        }
-      }
-    }
-    wake_lock_safety_handler.postDelayed(runnable,interval)
-
-  }
-
-  def cancelSafetyTimer(){
-    wake_lock_safety_handler.removeCallbacksAndMessages(null)
   }
 
   val CONFIRM_THRESHOLD_TIME = 20*60*1000 // 20 minutes

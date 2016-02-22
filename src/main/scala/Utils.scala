@@ -50,7 +50,6 @@ object Globals {
   var player = None:Option[KarutaPlayer]
   var setButtonText = None:Option[String=>Unit]
   var is_playing = false
-  var last_play_started = None:Option[Long]
   var forceRefresh = false
   var forceRestart = false
   var audio_volume_bkup = None:Option[Int]

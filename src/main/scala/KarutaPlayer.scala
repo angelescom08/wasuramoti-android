@@ -227,9 +227,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
         if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN && Globals.prefs.get.getBoolean("autoplay_enable",false)){
           bundle.putBoolean("autoplay",true)
         }
-        if(!fromAuto && bundle.getBoolean("autoplay",false)){
-          KarutaPlayUtils.acquireWakeLock(activity.getApplicationContext)
-        }
         
         if(set_audio_volume){
           Utils.saveAndSetAudioVolume(activity.getApplicationContext())
@@ -454,9 +451,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       //   https://code.google.com/p/android/issues/detail?id=2563
       KarutaPlayUtils.startEndTimer(play_end_time,bundle)
 
+      if(bundle.getBoolean("autoplay",false)){
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        Utils.runOnUiThread(activity,()=>
+          // add five extra seconds of next wake lock timeout
+          KarutaPlayUtils.acquireWakeLock(activity.getApplicationContext,play_end_time + auto_delay + 5000)
+        )
+      }
+
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
-      Globals.last_play_started = play_started
       music_track.foreach{ t => {
         if(fromAuto && KarutaPlayUtils.have_to_mute){
           Utils.setVolumeMute(t,true)
