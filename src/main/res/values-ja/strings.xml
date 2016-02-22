@@ -453,7 +453,7 @@
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>
   <string name="intended_use_recreation_desc">
-    上の句→下の句→下の句 の順に詠む．画面には上の句のみ表示．リプレイボタンが表示される．
+    上の句→下の句→下の句 の順に詠む．画面は上の句のみ表示．リプレイボタンを表示する．
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
@@ -462,7 +462,7 @@
   </string>
   <string name="intended_use_study">百人一首の学習</string>
   <string name="intended_use_study_desc">
-    上の句→下の句 の順に詠む．詠み句は全表示．暗記モードが有効になる．
+    上の句→下の句 の順に詠む．詠み句は全表示．暗記モードを有効にする．
   </string>
   <string name="intended_use_study_footnote">
     <![CDATA[
@@ -471,7 +471,7 @@
   </string>
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_competitive_desc">
-    下の句→上の句 の順に詠む，詠み句は非表示．序歌が有効になる．
+    下の句→上の句 の順に詠む，詠み句は非表示．最初に必ず序歌を詠む．
   </string>
   <string name="intended_use_competitive_footnote">
     <![CDATA[

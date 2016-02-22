@@ -27,7 +27,7 @@
           android:layout_height="wrap_content"
           android:textAppearance="?android:attr/textAppearanceMedium"
           android:text="@string/bug_report_mail_addr"
-          android:paddingRight="3sp"
+          android:layout_marginRight="7sp"
           />
       <TextView
           android:id="@+id/developer_mail_addr"
