@@ -18,11 +18,6 @@ object KarutaPlayUtils{
   var last_confirmed_for_ringer_mode = None:Option[Long]
   var replay_audio_queue = None:Option[AudioHelper.AudioQueue]
 
-  object Action extends Enumeration{
-    type Action = Value
-    // TODO: automatically create WakeUp{1..6}
-    val Auto,End,WakeUp1,WakeUp2,WakeUp3,WakeUp4,WakeUp5,WakeUp6 = Value
-  }
   // I could not figure out why, but if we call Bundle.putSerializable to Enumeration,
   // it returns null when getting it by getSerializable. Therefore we use String instead.
   // In the previous version of Scala, there was no problem, so what's wrong?
@@ -31,39 +26,14 @@ object KarutaPlayUtils{
   val SENDER_CONF = "SENDER_CONF"
   val SENDER_REPLAY = "SENDER_REPLAY"
 
-  // TODO: shold we use single handler and multiple callbacks?
+  // TODO: Handler runs on thread that is created. does these really created on UI thread, or shuld we create on Activity.onCreate ?
   val border_handler = new Handler() 
+  val end_handler = new Handler()
+  val auto_handler = new Handler()
   val check_consistency_handler = new Handler()
 
   val karuta_play_schema = "wasuramoti://karuta_play/"
-  def getPendingIntent(context:Context,action:Action.Action,task:Intent=>Unit={_=>Unit}):PendingIntent = {
-    val intent = new Intent(context, classOf[KarutaPlayReceiver])
-    val id = action.id + 1
-    intent.setAction(action.toString)
-    intent.setData(Uri.parse(karuta_play_schema+action.toString))
-    task(intent)
-    PendingIntent.getBroadcast(context,id,intent,PendingIntent.FLAG_CANCEL_CURRENT)
-  }
 
-  def cancelKarutaPlayTimer(context:Context,action:Action.Action){
-    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-    if(alarm_manager == null){
-      return
-    }
-    val pendingIntent = getPendingIntent(context,action)
-    alarm_manager.cancel(pendingIntent)
-  }
-
-  def startKarutaPlayTimer(context:Context,action:Action.Action,millisec:Long,task:Intent=>Unit={_=>Unit}){
-    val alarm_manager = context.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-    if(alarm_manager == null){
-      Log.v("wasuramoti","WARNING: ALARM_SERVICE is not supported on this device.")
-      return
-    }
-    val pendingIntent = getPendingIntent(context,action,task)
-    val limit_millis = System.currentTimeMillis + millisec
-    Utils.alarmManagerSetExact(alarm_manager, AlarmManager.RTC_WAKEUP, limit_millis, pendingIntent)
-  }
   def setAudioPlayButton(view:View,context:Context,before_play:Option[KarutaPlayer=>Unit]=None){
     val btn = view.findViewById(R.id.audio_play).asInstanceOf[Button]
     val handler = new Handler()
@@ -108,17 +78,13 @@ object KarutaPlayUtils{
     }
   }
 
-  def cancelAutoPlay(context:Context){
-    cancelKarutaPlayTimer(context,Action.Auto)
-  }
-
-  def cancelAllPlay(context:Context){
-    cancelAutoPlay(context)
+  def cancelAllPlay(){
+    cancelAutoTimer()
     Globals.player.foreach(_.stop())
-    cancelWakeUpTimers(context)
   }
 
   def startBorderTimer(delay:Long){
+    cancelBorderTimer()
     border_handler.postDelayed(new Runnable(){
       override def run(){
         Globals.player.foreach{_.doWhenBorder()}
@@ -130,7 +96,34 @@ object KarutaPlayUtils{
     border_handler.removeCallbacksAndMessages(null)
   }
 
+  def startEndTimer(delay:Long,bundle:Bundle){
+    cancelEndTimer()
+    end_handler.postDelayed(new Runnable(){
+      override def run(){
+        Globals.player.foreach{_.doWhenDone(bundle)}
+      }
+    },delay)
+  }
+
+  def cancelEndTimer(){
+    end_handler.removeCallbacksAndMessages(null)
+  }
+
+  def startAutoTimer(delay:Long){
+    cancelAutoTimer()
+    auto_handler.postDelayed(new Runnable(){
+      override def run(){
+        Globals.player.foreach{_.activity.doPlay(auto_play=true)}
+      }
+    },delay)
+  }
+
+  def cancelAutoTimer(){
+    auto_handler.removeCallbacksAndMessages(null)
+  }
+
   def startCheckConsistencyTimers(){
+    cancelCheckConsistencyTimers()
     for(delay <- Array(600,1200,1800,2400)){
       check_consistency_handler.postDelayed(new Runnable(){
         override def run(){
@@ -142,55 +135,6 @@ object KarutaPlayUtils{
 
   def cancelCheckConsistencyTimers(){
     check_consistency_handler.removeCallbacksAndMessages(null)
-  }
-
-  var wake_up_timer_group_switch = true
-
-  // Canonical way to keep CPU awake on auto play, in battery mode, is adding WAKE_LOCK permission and
-  // to use WakefulBroadcastReceiver or PowerManager.
-  // see:
-  //   http://stackoverflow.com/questions/8713361/keep-a-service-running-even-when-phone-is-asleep
-  //
-  // However, we want to avoid add new permission to the utmost. So we will try a little bit tricky hack as follows.
-  // As for current (Android 2.3 .. 5.0) android implementation, It seems that CPU goes into sleep after end of onReceive() function.
-  // However KarutaPlayer.onReallyStart() creates a new thread (in order to avoid ANR Timeout), and returns immediately before calling next timer.
-  // So we will try to wake up CPU using AlarmManager.setExact(RTC_WAKEUP,...) after this function ends.
-  // This method works quite well in all of my devices including Nexus 7, Kindle Fire, and so on.
-  def startWakeUpTimers(context:Context,play_end_time:Long){
-    // If we call startKarutaPlayTimer with same action id, the previous timer will be overwrited.
-    // We need to run maximum of two groups of timers simultaneously because this timer is for NEXT play
-    val actions = if(wake_up_timer_group_switch){
-      Array(
-        Action.WakeUp1,
-        Action.WakeUp2,
-        Action.WakeUp3
-        )
-    }else{
-      Array(
-        Action.WakeUp4,
-        Action.WakeUp5,
-        Action.WakeUp6
-        )
-    }
-    val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-    for((act,t) <- actions.zip(Array(800,1600,2400))){
-      val delay = play_end_time + auto_delay + t
-      startKarutaPlayTimer(context,act,delay)
-    }
-    wake_up_timer_group_switch ^= true
-  }
-  def cancelWakeUpTimers(context:Context){
-    for(action <- Array(
-      Action.WakeUp1,
-      Action.WakeUp2,
-      Action.WakeUp3,
-      Action.WakeUp4,
-      Action.WakeUp5,
-      Action.WakeUp6
-    )
-    ){
-      cancelKarutaPlayTimer(context,action)
-    }
   }
 
   def doAfterSenderMain(bundle:Bundle){
@@ -214,6 +158,10 @@ object KarutaPlayUtils{
         }else{
           KarutaPlayUtils.abandonAudioFocus(context)
         }
+      }
+      if(auto && !Globals.player.isEmpty){
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        startAutoTimer(auto_delay)
       }
     }
   }
@@ -262,7 +210,7 @@ object KarutaPlayUtils{
             case AUDIOFOCUS_GAIN =>
               recoverVolume(context)
             case AUDIOFOCUS_LOSS =>
-              cancelAllPlay(context)
+              cancelAllPlay()
               Toast.makeText(context,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
             case AUDIOFOCUS_LOSS_TRANSIENT | AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =>
               // The recommended behavior of AUDIOFOCUS_LOSS_TRANSIENT event is to pause the audio, and resume in next AUDIOFOCUS_GAIN event.
@@ -337,21 +285,6 @@ object KarutaPlayUtils{
           b.setEnabled(force.getOrElse(replay_audio_queue.nonEmpty))
         }
       })
-    }
-  }
-}
-
-class KarutaPlayReceiver extends BroadcastReceiver {
-  import KarutaPlayUtils.Action._
-  override def onReceive(context:Context, intent:Intent){
-    withName(intent.getAction) match{
-      case Auto =>
-        Globals.player.foreach{_.activity.doPlay(auto_play=true)}
-      case End =>
-        val bundle = intent.getParcelableExtra("bundle").asInstanceOf[Bundle]
-        Globals.player.foreach{_.doWhenDone(bundle)}
-      case WakeUp1 | WakeUp2 | WakeUp3 | WakeUp4 | WakeUp5 | WakeUp6 =>
-        // Do nothing, just wake up device
     }
   }
 }

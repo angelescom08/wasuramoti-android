@@ -143,7 +143,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
   }
 
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
-    KarutaPlayUtils.cancelAllPlay(getApplicationContext)
+    KarutaPlayUtils.cancelAllPlay()
     Utils.setButtonTextByState(getApplicationContext())
     item.getItemId match {
       case R.id.menu_shuffle => {
@@ -760,7 +760,7 @@ trait MainButtonTrait{
         return
       }
       val player = Globals.player.get
-      KarutaPlayUtils.cancelAutoPlay(getApplicationContext)
+      KarutaPlayUtils.cancelAutoTimer()
       if(Globals.is_playing){
         val have_to_go_next = (
           from_main_button &&
@@ -769,7 +769,6 @@ trait MainButtonTrait{
           player.isAfterFirstPhrase
         )
         player.stop()
-        KarutaPlayUtils.cancelWakeUpTimers(getApplicationContext)
         if(have_to_go_next){
           moveToNextFuda()
         }else{

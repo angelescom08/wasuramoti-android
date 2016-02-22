@@ -441,20 +441,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       //   https://code.google.com/p/android/issues/detail?id=17995
       val play_end_time = buffer_length_millisec+200
 
-      // Try to wake up CPU three times on autoplay mode.
-      // As for Android >= 5.1, the AlarmManager.setExact's minimum trigger time is five seconds in future,
-      // Therefore this timer is for NEXT play since autoplay_span might be less than five seconds.
-      // Note: fromAuto variable means "this playback has been started automatically" so we have to use autoplay_enable preference here.
-      // TODO: If the autoplay timer is inexact and fires before the current playing ends, we cannot continue auto play.
       if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN &&
         Globals.prefs.get.getBoolean("autoplay_enable",false)){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        KarutaPlayUtils.startKarutaPlayTimer(
-          activity.getApplicationContext,
-          KarutaPlayUtils.Action.Auto,
-          play_end_time + auto_delay
-          )
-        KarutaPlayUtils.startWakeUpTimers(activity.getApplicationContext,play_end_time)
         bundle.putBoolean("autoplay",true)
       }
 
@@ -463,12 +451,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       // As a workaround, I will start timer that ends when audio length elapsed.
       // See the following for the bug info:
       //   https://code.google.com/p/android/issues/detail?id=2563
-      KarutaPlayUtils.startKarutaPlayTimer(
-        activity.getApplicationContext,
-        KarutaPlayUtils.Action.End,
-        play_end_time,
-        {_.putExtra("bundle",bundle)}
-      )
+      KarutaPlayUtils.startEndTimer(play_end_time,bundle)
 
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
@@ -534,9 +517,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
   // called when playing is interrupted by user or any other reason
   def stop(fromAuto:Boolean = false){
     Globals.global_lock.synchronized{
-      KarutaPlayUtils.cancelKarutaPlayTimer(
-        activity.getApplicationContext,KarutaPlayUtils.Action.End
-      )
+      KarutaPlayUtils.cancelEndTimer()
       KarutaPlayUtils.cancelBorderTimer()
       KarutaPlayUtils.cancelCheckConsistencyTimers()
       music_track.foreach{
