@@ -608,5 +608,6 @@
   <string name="muted_of_audio_focus">---\nOther app is playing,\nso we mute the voice.\n---</string>
   <string name="copied_to_clipboard">Copied to clipboard</string>
   <string name="ogg_decode_failed">Audio Decode Failed. Maybe restarting the app may solve the problem. However, give us bug report if this occurs frequently.</string>
-  <string name="alert_ver_0_9_9">Since Wasuramoti ver 0.9.9, we changed the method of auto play to make sure it continues playing when screen is off. \nTherefore, this app may be detected as `Battery Consuming App`. However, this app would not actually consume so much battery.</string>
+  <string name="conf_auto_play_warning">Note: If you use auto play, this app may be detected as `Battery Consuming App`. \nHowever, it would not actually consume so much battery.</string>
+  <string name="alert_ver_0_9_9">Since Wasuramoti ver 0.9.9, we made it sure to continue auto play when screen is off. \nTherefore, this app may be detected as `Battery Consuming App`. However, it would not actually consume so much battery.</string>
 </resources>

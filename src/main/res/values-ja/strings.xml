@@ -220,7 +220,7 @@
   <string name="conf_num_1">1回</string>
   <string name="conf_num_2">2回</string>
 
-  <string name="conf_joka_caveat">※実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意</string>
+  <string name="conf_joka_caveat">※ 実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意</string>
 
   <!-- CATEGORY_VOICE -->
   <string name="category_voice">音源</string>
@@ -379,7 +379,7 @@
   <string name="move_search_hint">詠み句または歌人で検索</string>
   <string name="move_search_notfound">見つかりません．</string>
 
-  <string name="move_search_notfound_extra">注意: %s は検索対象外です．</string>
+  <string name="move_search_notfound_extra">※ %s は検索対象外です．</string>
   <string name="move_search_notfound_extra_delimiter">と</string>
   <string name="move_search_notfound_poemset">札セットに含まれない歌</string>
   <string name="move_search_notfound_memorized">覚えた歌</string>
@@ -521,7 +521,7 @@
     序歌は暗記モードの対象外です．
   </string>
   <string name="memorization_warn_karafuda">
-    注意: 暗記モードでは空札は無効化されます．
+    ※ 暗記モードでは空札は無効化されます．
   </string>
   <string name="memorization_warn_yomi_info_view">
     暗記モードでは詠み句表示が有効化されます.
@@ -562,5 +562,6 @@
   <string name="muted_of_audio_focus">---\n他のアプリが音を\n鳴らしているため\n無音で再生します\n---</string>
   <string name="copied_to_clipboard">クリップボードにコピーしました</string>
   <string name="ogg_decode_failed">音声デコード失敗．アプリを再起動すると直るかもしれませんが，これが頻繁に起こるならバグ報告して下さい．</string>
-  <string name="alert_ver_0_9_9">わすらもち ver 0.9.9 にて画面がオフの時の自動再生を確実に行うようにしました．\nそのため「バッテリを消耗させるアプリ」として検出されることもありますが，実際は大してバッテリ消費はしてないはずです．</string>
+  <string name="conf_auto_play_warning">※ 自動再生すると「バッテリを消耗させるアプリ」として検出されることもありますが，実際には大してバッテリ消費はしてないはずです．</string>
+  <string name="alert_ver_0_9_9">わすらもち ver 0.9.9 にて画面がオフの時の自動再生を確実に行うようにしました．\nそのため「バッテリを消耗させるアプリ」として検出されることもありますが，実際には大してバッテリ消費はしてないはずです．</string>
 </resources>

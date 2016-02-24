@@ -53,11 +53,12 @@
               android:progress="50"
               android:layout_marginBottom="6dip"
                />
-      <TextView
-        android:layout_height="wrap_content" android:layout_width="wrap_content"
-        android:text="@string/memorization_warn_karafuda"
-        />
-    
     </LinearLayout>
+    <include layout="@layout/horizontal_rule" />
+    <TextView
+      android:layout_height="wrap_content" android:layout_width="wrap_content"
+      android:text="@string/memorization_warn_karafuda"
+      android:layout_marginBottom="4dip"
+      />
   </LinearLayout>
 </ScrollView>
