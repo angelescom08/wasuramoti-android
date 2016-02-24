@@ -1,7 +1,7 @@
 <manifest 
 xmlns:android="http://schemas.android.com/apk/res/android"
 package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
-android:versionName="0.9.8" android:versionCode="69" >
+android:versionName="0.9.9" android:versionCode="70" >
     <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19" ></uses-sdk>
     <!-- hardwareAccelerated is turned on programatically only when poem text is enabled -->
