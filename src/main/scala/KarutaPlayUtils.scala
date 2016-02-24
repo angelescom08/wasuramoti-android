@@ -280,7 +280,17 @@ object KarutaPlayUtils{
         lock
       }
     }
-    wake_lock.get.acquire(timeout)
+    if(android.os.Build.VERSION.SDK_INT >= 15){
+      // timeout is just for sure in case that wake lock is not correctly released at audio stop.
+      wake_lock.get.acquire(timeout)
+    }else{
+      // Android < 4.0.1 has a bug that previous timeout releaser would not be canceled in next acquire,
+      // Therefore we won't use PowerManager#acquire(timeout) for those versions of android.
+      // It won't be a matter as far as wake lock is correctly released at audio stop.
+      // The bug was fixed in:
+      //   https://android.googlesource.com/platform/frameworks/base/+/d7350e3a56daa44e2d2c6e5175e6430492cf0dc9
+      wake_lock.get.acquire()
+    }
   }
 
   def releaseWakeLock(){
