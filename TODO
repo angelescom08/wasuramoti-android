@@ -1,10 +1,28 @@
+Code Refactoring:
+  * Use camel case.
+  * Avoid holding reference to WasuramotiActivity in Karutaplayer, and use Utils.runOnUiThread instead.
+  * Use scala.util.Try instead of try ... catch -> Note: fatal exception would not be catched with scala.util.Try.
+  * Move fromAuto and fromSwipe inside bundle in KarutaPlayer
+  * Rename JNI files
+   - split folders into ogg decoding and Open SLES Player.
+  * Replace `YomiInfoSearchDialog` to `YomiInfoDetailDialog`
+   - also replace `yomi_info_search` to `yomi_info_detail`
+  * Call unregisterOnSharedPreferenceChangeListener in somewhere not from onDestroy
+   - onDestroy is only called when device is rotated or Activity is finished
+   - that means that it would be not called when moved from ConfActivity -> WasuramotiActivity ?
+  * Include bug_report.cgi and some other related scripts inside this repository
+   - raise error if there's no detail
+  * Migrate to newer android-sdk-plugin.
+
+End of Life:
+  * [2017-02-23] Remove Globals.have_to_alert_ver_0_9_9 and R.string.alert_ver_0_9_9
+  * [2017-02-23] Finish support for Android 2.1
+   - use match_parent instead of fill_parent
+   - you don't have to set layout_weight = 0 for non inflated ViewStub
+
 Priority High:
-  * Avoid holding reference to WasuramotiActivity in Karutaplayer, and use Utils.runOnUiThread instead
   * Add more [] to index.
-  * Use gradle instead of sbt
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
-  * Check whether current_index == 102 is valid or not.
-  * Check whether we need MODIFY_AUDIO_SETTINGS or not.
   * Show some information on audio volume config
     - current play state
     - current volume
@@ -12,38 +30,47 @@ Priority High:
   * Show "Wasuramoti Timer Started" on notification area.
   * Show "Currently Playing" in notification area.
   * Show "You can scroll yomi info button list" TIPS
-  * Use scala.util.Try instead of try ... catch -> Note: fatal exception would not be catched with Try
-  * Acquire audio focus for notification timer.
   * Support Android 6.0
     * Apply runtime permission
       - https://developer.android.com/training/permissions/requesting.html
-    * Add WAKE_LOCK permission to keep device wake up instead of sending WakeUp1, WakeUp2, WakeUp3 action using AlarmManager.setExact
-      - https://developer.android.com/training/scheduling/wakelock.html
     * Use Service
       - http://developer.android.com/guide/components/services.html
       - Use both bound and started service - we have to carefully consider lifecycle
       - Show "Now Playing" in notification bar, and Play/Stop button
         - In Android >= 5.x, able to show in lock screen ?
+    * Use MediaPlayer.setDataSource(MediaDataSource dataSource)
   * OpenSLESPlayer issues
     - The volume is smaller than AudioTrack.
     - Support other than 22050 mono audio.
-  * Forbid deleting last poem set.
   * Add "Enable Equalizer" checkbox.
   * Append all the DB table data compressed in anonymous bug report form.
   * Sort the poem search result by score
     - https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
-  * Show move position dialog instead of button list when poem text is pressed
+  * Show move position dialog instead of button list when poem text is long pressed
   * Able to create poem set which contains range of poem number using GUI
   * Share poem set groups
-  * Use https://github.com/kazuho/golombset for generating poem set group URI
+   - Use https://github.com/kazuho/golombset for generating poem set group URI
   * Add link to http://pjmtdw.github.io/wasuramoti/fudaset.html inside app
   * Warn that equalizer volume is too small when config
   * Temporary lower the volume when ACTION_AUDIO_BECOMING_NOISY
-  * Encrypt Bug Report
   * Move `Show Poem No. and Kimariji on Top Bar` from detail to display option
     - Split into two options `Poem No.` and `Kimariji`
+  * Add app version to mail of support form.
+  * Customize order and avaliability of each poem info buttons.
+  * Avoid holding PARTIAL_WAKE_LOCK during whole play
+   - AudioTrack and MediaPlayer holds PARTIAL_WAKE_LOCK inside AndioFlider service (At least for Android >= 4.1),
+     so we don't have to hold wake lock when audio is playing.
+   - Instead, acquire wake lock when play ends, and release before play starts.
+   - Since AudioTrack cannot trigger any listener when completion, we may have to use MediaPlayer.senOnCompletionLister instead.
+   - What should we do for OpenSLES player ?
+   - Should we use WakefulBroadcastReceiver ?
 
 Priority Medium-High:
+  * Forbid deleting last poem set.
+  * Encrypt Bug Report
+  * Replay button is not disabled which is shown when poem text is long pressed.
+  * Cannot show support form and e-mail in Kindle Fire HD.
+  * Acquire audio focus for notification timer.
   * Use scalaz, shapeless
   * Set contentDescription for all the buttons
   * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
@@ -51,7 +78,6 @@ Priority Medium-High:
   * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
   * Support equalizer in OpenSLESPlayer.
   * Check that OpenSLESPlayer work on large endian architecture.
-  * Add option to use android.media.MediaPlayer instead of AudioTrack or OpenSL ES
   * Show font example.
   * Change the color of author, poem text, and furigana.
   * Save poem text as image.
