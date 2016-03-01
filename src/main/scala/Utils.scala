@@ -560,7 +560,7 @@ object Utils {
               }
             }else{
               if(fromAuto && Globals.player.nonEmpty){
-                val sec = Globals.prefs.get.getLong("autoplay_span",5).toInt
+                val sec = Globals.prefs.get.getLong("autoplay_span",3).toInt
                 res.getString(R.string.now_stopped_auto,new java.lang.Integer(sec))
               }else{
                 res.getString(R.string.now_stopped)

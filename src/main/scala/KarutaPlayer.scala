@@ -471,11 +471,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       }}
 
       if(bundle.getBoolean("autoplay",false)){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        // add five extra seconds of next wake lock timeout
-        val EXTRA_TIMEOUT = 5000
-        // acquire lock 0.5 seconds before play ends
-        val EARLY_LOCK = 500
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 3)*1000
+        // add three extra seconds of next wake lock timeout
+        val EXTRA_TIMEOUT = 3000
+        // acquire lock 0.3 seconds before play ends
+        val EARLY_LOCK = 300
         if(KarutaPlayUtils.haveToFullyWakeLock){
           // acquire wake lock uses timeout handler, so maybe we have to run on UI thread ?
           Utils.runOnUiThread(activity,()=>

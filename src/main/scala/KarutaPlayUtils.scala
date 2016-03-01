@@ -189,7 +189,7 @@ object KarutaPlayUtils{
         }
       }
       if(auto && !Globals.player.isEmpty){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 3)*1000
         startAutoTimer(auto_delay)
       }
     }

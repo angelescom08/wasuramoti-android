@@ -130,7 +130,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
 }
 
 class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  val DEFAULT_VALUE = 5
+  val DEFAULT_VALUE = 3
   var root_view = None:Option[View]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   def getWidgets(view:View) = {
