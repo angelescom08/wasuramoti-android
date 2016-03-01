@@ -32,7 +32,7 @@ object KarutaPlayUtils{
   val end_handler = new Handler()
   val auto_handler = new Handler()
   val check_consistency_handler = new Handler()
-  val wake_lock_safety_handler = new Handler()
+  val wake_lock_handler = new Handler()
 
   val karuta_play_schema = "wasuramoti://karuta_play/"
 
@@ -124,6 +124,27 @@ object KarutaPlayUtils{
     auto_handler.removeCallbacksAndMessages(null)
   }
 
+  def haveToFullyWakeLock():Boolean = {
+    // Since Android >= 4.0.3 (not sure), AudioTrack and OpenSLES holds PARTIAL_WAKE_LOCK via AudioFlinger service.
+    // So we don't have to hold our own wake lock when audio is playing.
+    // You can confirm it in
+    //   $ adb shell dumpsys power
+    //   $ adb shell dumpsys media.audio_flinger
+    android.os.Build.VERSION.SDK_INT < 15
+  }
+
+  def startWakeLockTimer(context:Context,delay:Long,timeout:Long){
+    cancelWakeLockTimer()
+    wake_lock_handler.postDelayed(new Runnable(){
+      override def run(){
+        acquireWakeLock(context,timeout)
+      }
+    },delay)
+  }
+  def cancelWakeLockTimer(){
+    wake_lock_handler.removeCallbacksAndMessages(null)
+  }
+
   def startCheckConsistencyTimers(){
     cancelCheckConsistencyTimers()
     for(delay <- Array(600,1200,1800,2400)){
@@ -137,6 +158,12 @@ object KarutaPlayUtils{
 
   def cancelCheckConsistencyTimers(){
     check_consistency_handler.removeCallbacksAndMessages(null)
+  }
+
+  def releaseResourcesHeldDuringAutoPlay(context:Context){
+    abandonAudioFocus(context)
+    cancelWakeLockTimer()
+    releaseWakeLock()
   }
 
   def doAfterSenderMain(bundle:Bundle){
@@ -158,8 +185,7 @@ object KarutaPlayUtils{
           FudaListHelper.moveToFirst(context)
           activity.refreshAndInvalidate(auto)
         }else{
-          abandonAudioFocus(context)
-          releaseWakeLock()
+          releaseResourcesHeldDuringAutoPlay(context)
         }
       }
       if(auto && !Globals.player.isEmpty){

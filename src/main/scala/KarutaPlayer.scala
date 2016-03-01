@@ -451,14 +451,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       //   https://code.google.com/p/android/issues/detail?id=2563
       KarutaPlayUtils.startEndTimer(play_end_time,bundle)
 
-      if(bundle.getBoolean("autoplay",false)){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
-        Utils.runOnUiThread(activity,()=>
-          // add five extra seconds of next wake lock timeout
-          KarutaPlayUtils.acquireWakeLock(activity.getApplicationContext,play_end_time + auto_delay + 5000)
-        )
-      }
-
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
       music_track.foreach{ t => {
@@ -477,6 +469,25 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
           case Right(_) => OpenSLESPlayer.slesPlay()
         }
       }}
+
+      if(bundle.getBoolean("autoplay",false)){
+        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 5)*1000
+        // add five extra seconds of next wake lock timeout
+        val EXTRA_TIMEOUT = 5000
+        // acquire lock 0.5 seconds before play ends
+        val EARLY_LOCK = 500
+        if(KarutaPlayUtils.haveToFullyWakeLock){
+          // acquire wake lock uses timeout handler, so maybe we have to run on UI thread ?
+          Utils.runOnUiThread(activity,()=>
+            KarutaPlayUtils.acquireWakeLock(activity.getApplicationContext,play_end_time + auto_delay + EXTRA_TIMEOUT)
+          )
+        }else{
+          // we only have to acquire wake lock in play to play span since AudioFlinger does the wake lock.
+          KarutaPlayUtils.releaseWakeLock()
+          KarutaPlayUtils.startWakeLockTimer(activity.getApplicationContext,buffer_length_millisec - EARLY_LOCK, auto_delay + EARLY_LOCK + EXTRA_TIMEOUT)
+        }
+      }
+
     }}})
     thread.setUncaughtExceptionHandler(
       new Thread.UncaughtExceptionHandler(){
@@ -500,8 +511,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       Utils.restoreAudioVolume(activity.getApplicationContext())
     }
     if(releaseAudioFocusAndWakeLock){
-      KarutaPlayUtils.abandonAudioFocus(activity.getApplicationContext)
-      KarutaPlayUtils.releaseWakeLock()
+      KarutaPlayUtils.releaseResourcesHeldDuringAutoPlay(activity.getApplicationContext)
     }
     if(isAfterFirstPhrase && !is_replay){
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
