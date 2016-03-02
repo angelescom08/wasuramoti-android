@@ -553,7 +553,7 @@ object Utils {
           FudaListHelper.makeReadIndexMessage(context) + "\n" +
           (
             if(Globals.is_playing){
-              if(Globals.prefs.get.getBoolean("autoplay_enable",false)){
+              if(Globals.prefs.get.getBoolean("autoplay_enable",false) && !Globals.player.exists(_.is_replay)){
                 res.getString(R.string.now_auto_playing)
               }else{
                 res.getString(R.string.now_playing)
