@@ -518,7 +518,7 @@
   </string>
   <string name="intended_use_result">
     <![CDATA[
-      Settings changed as follows. You can reconfigure it from `Quick Config` &rArr; `Change Intended Use`.
+      Configured as follows. It can be reconfigured from `Quick Config` &rArr; `Change Intended Use`.
     ]]>
   </string>
   <string name="intended_use_result_title">Config Done</string>
@@ -532,7 +532,7 @@
   <string name="intended_use_replay_off">Hide</string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
-    If this occurs frequently, please send `Bug Report` from `Advanced Config`.\n
+    If this occurs frequently, please contact us from `Support Form` in `Advanced Config`.\n
     [Note]: \n
     * Using stereo or 44100 Hz audio file uses lot of memory. Mono, 22050 Hz is recommended.\n
     * In `Play Order of Each Poem`, setting long sequence for `Custom` uses a lot of memory, so make it short.

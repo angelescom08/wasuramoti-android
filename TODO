@@ -1,5 +1,5 @@
 Code Refactoring:
-  * Use camel case.
+  * Use camel case for variable names.
   * Avoid holding reference to WasuramotiActivity in Karutaplayer, and use Utils.runOnUiThread instead.
   * Use scala.util.Try instead of try ... catch -> Note: fatal exception would not be catched with scala.util.Try.
   * Move fromAuto and fromSwipe inside bundle in KarutaPlayer
@@ -19,18 +19,10 @@ End of Life:
   * [2017-02-23] Finish support for Android 2.1
    - use match_parent instead of fill_parent
    - you don't have to set layout_weight = 0 for non inflated ViewStub
+  * [2017-02-23] Remove `skip_on_longclick` option.
 
-Priority High:
-  * Add more [] to index.
-  * Warn that karafuda mode is disabled in memorization mode more user friendly.
-  * Show some information on audio volume config
-    - current play state
-    - current volume
-  * Display license text inside the app.
-  * Show "Wasuramoti Timer Started" on notification area.
-  * Show "Currently Playing" in notification area.
-  * Show "You can scroll yomi info button list" TIPS
-  * Support Android 6.0
+Future Android:
+  [Android 6.0]
     * Apply runtime permission
       - https://developer.android.com/training/permissions/requesting.html
     * Use Service
@@ -38,7 +30,25 @@ Priority High:
       - Use both bound and started service - we have to carefully consider lifecycle
       - Show "Now Playing" in notification bar, and Play/Stop button
         - In Android >= 5.x, able to show in lock screen ?
+      - ASUS Auto-start Manager may refuse to start Service ?
     * Use MediaPlayer.setDataSource(MediaDataSource dataSource)
+  [Android N]
+    * Screen Zoom
+      - https://developer.android.com/preview/behavior-changes.html#screen-zoom
+    * Font Size Change
+      - https://developer.android.com/preview/behavior-changes.html#other
+    * Multi-Window
+      - https://developer.android.com/preview/features/multi-window.html
+
+Priority High:
+  * Add more [] to index.
+  * Show some information on audio volume config
+    - current play state
+    - current volume
+  * Display license text inside the app.
+  * Show "Wasuramoti Timer Started" on notification area.
+  * Show "Currently Playing" in notification area.
+  * Show "You can scroll yomi info button list" TIPS
   * OpenSLESPlayer issues
     - The volume is smaller than AudioTrack.
     - Support other than 22050 mono audio.
@@ -59,6 +69,7 @@ Priority High:
   * Customize order and avaliability of each poem info buttons.
 
 Priority Medium-High:
+  * Warn that karafuda mode is disabled in memorization mode more user friendly.
   * Forbid deleting last poem set.
   * Encrypt Bug Report
   * Replay button is not disabled which is shown when poem text is long pressed.
