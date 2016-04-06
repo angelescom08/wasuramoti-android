@@ -142,7 +142,7 @@ object AudioHelper{
             // TODO: do we have to wait for decode to finish since it is jni ?
             p.stop(fromAuto)
           }
-          Some(new KarutaPlayer(activity,maybe_reader.get,cur_num,next_num))
+          Some(new KarutaPlayer(activity,maybe_reader,cur_num,next_num))
         }else{
           old_player
         }

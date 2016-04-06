@@ -34,7 +34,7 @@ object KarutaPlayerDebug{
 
 case class OpenSLESTrack()
 
-class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num:Int,val next_num:Int) extends BugReportable{
+class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reader],val cur_num:Int,val next_num:Int) extends BugReportable{
   type AudioQueue = AudioHelper.AudioQueue
   var cur_millisec = 0:Long
   var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]
@@ -70,7 +70,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
     val bld = new mutable.StringBuilder
     bld ++= s"cur_num:${cur_num},"
     bld ++= s"next_num:${next_num},"
-    bld ++= s"reader_path:${reader.path},"
+    bld ++= s"reader_path:${maybe_reader.map(_.path)},"
     bld ++= s"equalizer_seq:${equalizer_seq},"
     bld ++= s"current_yomi_info:${current_yomi_info},"
     bld ++= s"set_audio_volume:${set_audio_volume},"
@@ -517,7 +517,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       KarutaPlayUtils.replay_audio_queue = AudioHelper.pickLastPhrase(audio_queue)
     }
     play_started = None // have to set None after calling isAfterFirstPhrase() since it uses this value
-    if(reader == null){
+    if(maybe_reader.isEmpty){
       // player was created from startReplay(), so it does not have valid audio_queue
       // so we cleanup it to avoid playing by main button.
       Globals.player = None
@@ -608,6 +608,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val reader:Reader,val cur_num
       try{
         Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG).exists{s=>path.endsWith(s)})
         val res_queue = new AudioQueue()
+        if(maybe_reader.isEmpty){
+          return Left(res_queue)
+        }
+        val reader = maybe_reader.get
         val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
         cur_millisec = 0
         def add_to_audio_queue(w:Either[WavBuffer,Int],is_cur:Boolean){

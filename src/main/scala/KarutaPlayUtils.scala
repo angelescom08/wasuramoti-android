@@ -69,7 +69,8 @@ object KarutaPlayUtils{
 
   def startReplay(activity:WasuramotiActivity){
     if(Globals.player.isEmpty){
-      Globals.player = Some(new KarutaPlayer(activity,null,0,0))
+      // create dummy karuta player
+      Globals.player = Some(new KarutaPlayer(activity,None,0,0))
     }
     Globals.player.foreach{ pl =>
       KarutaPlayUtils.replay_audio_queue.foreach{ raq =>
