@@ -30,13 +30,16 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
       Some(for( i <- 0 until nb ) yield {
-        val seek = view.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]
-        val half = seek.getMax / 2
-        val prog = seek.getProgress
-        if(prog >= half - 2 && prog <= half + 2){
-          None
-        }else{
-          Some(seek.getProgress.toFloat/seek.getMax.toFloat)
+        // since the timing of number_of_bands is set and set_all_seekbar differs,
+        // there might be a case that we cannot find seekbar which corresponds to band number
+        Option(view.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]).flatMap{ seek =>
+          val half = seek.getMax / 2
+          val prog = seek.getProgress
+          if(prog >= half - 2 && prog <= half + 2){
+            None
+          }else{
+            Some(seek.getProgress.toFloat/seek.getMax.toFloat)
+          }
         }
       })
     }.getOrElse(Seq())

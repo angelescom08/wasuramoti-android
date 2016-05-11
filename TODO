@@ -64,6 +64,8 @@ Priority High:
     - Split into two options `Poem No.` and `Kimariji`
   * Add app version to mail of support form.
   * Customize order and avaliability of each poem info buttons.
+  * Add timeout for Utls.walkdir()
+    - Change to Iterative Deepening Depth First Search ?
 
 Priority Medium-High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
