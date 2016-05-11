@@ -127,12 +127,7 @@ object BugReport{
     }
   }
 
-  @TargetApi(8) // android.util.Base64 requires API >= 8
   def showAnonymousForm(context:Context){
-    if( android.os.Build.VERSION.SDK_INT < 8 ){
-      Utils.messageDialog(context,Right(R.string.bug_report_not_supported))
-      return
-    }
     val file = Utils.getProvidedFile(context,Utils.ProvidedAnonymousForm,true)
     val post_url = context.getResources.getString(R.string.bug_report_url)
     val bug_report = BugReport.writeBugReportToBase64(context)
@@ -153,7 +148,6 @@ object BugReport{
       case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
     }
   }
-  @TargetApi(8) // android.util.Base64 requires API >= 8
   def writeBugReportToBase64(context:Context):String = {
     val bao = new ByteArrayOutputStream()
     val base64 = new Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)
@@ -183,9 +177,7 @@ object BugReport{
       writer.println(s"supported_abis=${Build.SUPPORTED_ABIS.toList}")
     }else{
       writer.println(s"cpu_abi=${Build.CPU_ABI}")
-      if(Build.VERSION.SDK_INT >= 8){
-        writer.println(s"cpu_abi2=${Build.CPU_ABI2}")
-      }
+      writer.println(s"cpu_abi2=${Build.CPU_ABI2}")
     }
     writer.println(s"brand=${Build.BRAND}")
     writer.println(s"manufacturer=${Build.MANUFACTURER}")

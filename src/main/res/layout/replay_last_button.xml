@@ -3,13 +3,13 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   style="?android:attr/buttonBarStyle"
   android:background="@android:color/black"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
   >
   <Button
     android:id="@+id/replay_last_button"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:text="Replay Last Phrase"
     android:textSize="@dimen/read_button_text_normal"
     style="?android:attr/buttonBarButtonStyle"

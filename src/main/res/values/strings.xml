@@ -445,7 +445,6 @@
   <string name="category_other">Others</string>
   <string name="browser_not_found">Web Browser not found in this device</string>
   <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
-  <string name="bug_report_not_supported">Sorry, anonymous form is not supported in this device.</string>
   <string name="conf_bug_report">Support Form</string>
   <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
   <string name="bug_report_subject" >About Wasuramoti for Android</string>

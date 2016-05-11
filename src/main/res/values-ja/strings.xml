@@ -406,7 +406,6 @@
   <string name="conf_show_credits_summary">使用しているフォントやライブラリなどのライセンス表示</string>
   <string name="category_other">その他</string>
   <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです</string>
-  <string name="bug_report_not_supported">この端末は匿名フォームに対応していません．すみません．</string>
   <string name="conf_bug_report">サポート窓口</string>
   <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら．</string>
   <string name="bug_report_subject" >Android版わすらもちについて</string>
@@ -471,7 +470,7 @@
   </string>
   <string name="intended_use_competitive">競技かるた</string>
   <string name="intended_use_competitive_desc">
-    下の句→上の句 の順に詠む，詠み句は非表示．最初に必ず序歌を詠む．
+    下の句→上の句 の順に詠む．詠み句は非表示．最初に必ず序歌を詠む．
   </string>
   <string name="intended_use_competitive_footnote">
     <![CDATA[

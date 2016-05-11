@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="#222222"
               android:tag="main_linear_layout"
               >
   <ViewStub
         android:id="@+id/yomi_info_stub"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.72"
         android:layout="@layout/yomi_info_triple"
         android:layout_marginBottom="3dp"
         />
   <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.28"
         >
     <ViewStub
           android:id="@+id/yomi_info_search_stub"
           android:layout_width="0dp"
-          android:layout_height="fill_parent"
+          android:layout_height="match_parent"
           android:layout_weight="@dimen/main_left_weight"
           android:layout="@layout/yomi_info_fragment"
           android:layout_marginRight="3dp"
           />
     <FrameLayout
         android:layout_width="0dp"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="@dimen/main_right_weight"
         >
       <include layout="@layout/main_button" />
@@ -37,7 +37,7 @@
   </LinearLayout>
   <ViewStub
       android:id="@+id/replay_last_button_stub"
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="0.06"
       android:layout="@layout/replay_last_button"

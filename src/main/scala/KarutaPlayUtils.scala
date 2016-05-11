@@ -1,7 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.media.AudioManager
-import android.annotation.TargetApi
 import android.content.{BroadcastReceiver,Context,Intent}
 import android.app.{PendingIntent,AlarmManager}
 import android.widget.{Button,Toast}
@@ -225,9 +224,8 @@ object KarutaPlayUtils{
     }
   }
 
-  @TargetApi(8) // Audio Focus requires API >= 8
   def requestAudioFocus(context:Context):Boolean = {
-    if(! Globals.prefs.get.getBoolean("use_audio_focus",true) || android.os.Build.VERSION.SDK_INT < 8){
+    if(! Globals.prefs.get.getBoolean("use_audio_focus",true)){
       return true
     }
     abandonAudioFocus(context)
@@ -270,13 +268,11 @@ object KarutaPlayUtils{
 
   def abandonAudioFocus(context:Context){
     audio_focus.foreach{af =>
-      if(android.os.Build.VERSION.SDK_INT >= 8){
-        val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-        if(am != null){
-          am.abandonAudioFocus(af)
-          audio_focus = None
-        }
-      } 
+      val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+      if(am != null){
+        am.abandonAudioFocus(af)
+        audio_focus = None
+      }
     }
   }
   def lowerVolume(context:Context){

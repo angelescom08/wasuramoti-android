@@ -16,9 +16,6 @@ Code Refactoring:
 
 End of Life:
   * [2017-02-23] Remove Globals.have_to_alert_ver_0_9_9 and R.string.alert_ver_0_9_9
-  * [2017-02-23] Finish support for Android 2.1
-   - use match_parent instead of fill_parent
-   - you don't have to set layout_weight = 0 for non inflated ViewStub
   * [2017-02-23] Remove `skip_on_longclick` option.
 
 Future Android:

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:layout_width="match_parent" android:layout_height="match_parent"
   android:fillViewport="true" >
-<LinearLayout android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+<LinearLayout android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical" >
   <CheckBox
     android:id="@+id/yomi_info_show_text"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/yomi_info_show_text_desc"
     />
-  <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
     android:id="@+id/yomi_info_conf_layout"
     android:orientation="vertical"
     >
@@ -54,9 +54,9 @@
       </LinearLayout>
     </LinearLayout>
     <View
-      android:layout_width="fill_parent" android:layout_height="10dip" />
+      android:layout_width="match_parent" android:layout_height="10dip" />
     <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
       <TextView
@@ -67,13 +67,13 @@
         />
       <SeekBar android:id="@+id/yomi_info_furigana_width"
               android:layout_height="32sp"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:max="@integer/yomi_info_furigana_width_max"
               android:progress="@integer/yomi_info_furigana_width_default"
                />
     </LinearLayout>
     <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
       <Button android:layout_width="wrap_content" android:layout_height="wrap_content"

@@ -8,7 +8,6 @@ import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
-import android.annotation.TargetApi
 
 import java.lang.Runnable
 
@@ -55,11 +54,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
 
 
   def importFudaset(dataString:String){
-    if(android.os.Build.VERSION.SDK_INT < 8){
-      // Base64 was added in API >= 8
-      Utils.messageDialog(this,Left("Sorry. Importing group of poem sets is supported in Android >= 2.2"))
-      return
-    }
     try{
       val data = dataString.split("/").last
       val bytes = Base64.decode(data,Base64.URL_SAFE)
@@ -211,11 +205,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       stub.inflate()
       read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
       read_button.setBackgroundResource(R.drawable.main_button)
-    }else{
-      // Android 2.1 does not ignore ViewStub's layout_weight
-      val lp = stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-      lp.weight = 0.0f
-      stub.setLayoutParams(lp)
     }
 
     val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
@@ -226,11 +215,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       frag_stub.inflate()
       val fragment = YomiInfoSearchDialog.newInstance(false,Some(0))
       getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
-    }else if(frag_stub != null){
-      // Android 2.1 does not ignore ViewStub's layout_weight
-      val lp = frag_stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-      lp.weight = 0.0f
-      frag_stub.setLayoutParams(lp)
     }
 
     val replay_stub = findViewById(R.id.replay_last_button_stub).asInstanceOf[ViewStub]
@@ -244,11 +228,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
            KarutaPlayUtils.startReplay(that)
         }
       })
-    }else{
-      // Android 2.1 does not ignore ViewStub's layout_weight
-      val lp = replay_stub.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-      lp.weight = 0.0f
-      replay_stub.setLayoutParams(lp)
     }
 
     Globals.setButtonText = Some( txt =>
@@ -596,7 +575,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       )
     }
   }
-  @TargetApi(8) // android.content.DialogInterface.OnShowListener requires API >= 8
   def changeIntendedUse(first_config:Boolean = true){
     val builder = new AlertDialog.Builder(this)
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)
@@ -702,7 +680,7 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
       builder.setNegativeButton(android.R.string.no,null)
     }
     val dialog = builder.create
-    if(first_config && android.os.Build.VERSION.SDK_INT >= 8){
+    if(first_config){
       dialog.setOnShowListener(new DialogInterface.OnShowListener(){
         override def onShow(interface:DialogInterface){
           val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <karuta.hpnpwd.wasuramoti.YomiInfoLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/yomi_info"
-  android:layout_width="fill_parent" android:layout_height="fill_parent"
+  android:layout_width="match_parent" android:layout_height="match_parent"
   android:fillViewport="true"
   android:scrollbars="none"
   android:contentDescription="yomi_info"
   android:background="@android:color/black"
   >
-  <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                 android:id="@+id/yomi_info_double"
                 android:orientation="horizontal" >
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_next"
-      android:layout_height="fill_parent"
+      android:layout_height="match_parent"
       android:layout_width="wrap_content"
       />
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_cur"
-      android:layout_height="fill_parent"
+      android:layout_height="match_parent"
       android:layout_width="wrap_content"
       />
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_prev"
-      android:layout_height="fill_parent"
+      android:layout_height="match_parent"
       android:layout_width="wrap_content"
       />
   </LinearLayout>

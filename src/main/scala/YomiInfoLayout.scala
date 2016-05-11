@@ -94,7 +94,6 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
       return
     }
     val that = this
-    // as for android 2.1, we have to execute the following in post(...) method
     post(new Runnable(){
         override def run(){
           for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
