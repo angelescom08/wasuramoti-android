@@ -22,6 +22,8 @@ Future Android:
   [Android 6.0]
     * Apply runtime permission
       - https://developer.android.com/training/permissions/requesting.html
+    * Instead of searching wasuramoti_reader using Utils.walkdir(), use Storage Access Framework
+      - https://developer.android.com/guide/topics/providers/document-provider.html
     * Use Service
       - http://developer.android.com/guide/components/services.html
       - Use both bound and started service - we have to carefully consider lifecycle
@@ -39,6 +41,8 @@ Future Android:
 
 Priority High:
   * Add more [] to index.
+  * Use Seekbar for moving poem
+  * Search by poem number
   * Show some information on audio volume config
     - current play state
     - current volume
@@ -64,7 +68,7 @@ Priority High:
     - Split into two options `Poem No.` and `Kimariji`
   * Add app version to mail of support form.
   * Customize order and avaliability of each poem info buttons.
-  * Add timeout for Utls.walkdir()
+  * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
 
 Priority Medium-High:
