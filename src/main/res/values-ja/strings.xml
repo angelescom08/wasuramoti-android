@@ -285,6 +285,8 @@
   <string name="fudaset_copymerge_title">札セットの複製/合成</string>
   <string name="fudaset_copymerge_notchecked">少なくとも一つの札セットを選択して下さい</string>
 
+  <string name="fudaset_reorder">並べ替え</string>
+
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの作成/編集</string>
   <string name="fudasetedit_name">名前</string>

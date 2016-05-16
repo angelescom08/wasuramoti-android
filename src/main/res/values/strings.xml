@@ -325,6 +325,8 @@
   <string name="fudaset_copymerge_title">Copy/Merge Poem Set</string>
   <string name="fudaset_copymerge_notchecked">Please choose at least one poem set.</string>
 
+  <string name="fudaset_reorder">Reorder</string>
+
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
   <string name="fudasetedit_title">New/Edit Poem Set</string>
   <string name="fudasetedit_name">Title</string>

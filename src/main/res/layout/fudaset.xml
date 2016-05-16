@@ -40,5 +40,11 @@
          android:text="@string/fudaset_copymerge"
          android:id="@+id/button_fudaset_copymerge"
          />
+  <Button
+         android:layout_height="wrap_content"
+         android:layout_width="192sp"
+         android:text="@string/fudaset_reorder"
+         android:id="@+id/button_fudaset_reorder"
+         />
 </LinearLayout>
 </ScrollView>

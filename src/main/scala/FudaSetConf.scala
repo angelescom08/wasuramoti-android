@@ -28,7 +28,8 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
       R.id.button_fudaset_edit -> editFudaSet _,
       R.id.button_fudaset_new ->  newFudaSet _,
       R.id.button_fudaset_delete ->  deleteFudaSet _,
-      R.id.button_fudaset_copymerge -> copymergeFudaSet _
+      R.id.button_fudaset_copymerge -> copymergeFudaSet _,
+      R.id.button_fudaset_reorder -> reorderFudaSet _
     )
   override def onClick(view:View){
     buttonMapping.get(view.getId).foreach{_()}
@@ -137,5 +138,8 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
   }}
   def copymergeFudaSet(){
     new FudaSetCopyMergeDialog(context, addFudaSetToSpinner).show()
+  }
+  def reorderFudaSet(){
+    new FudaSetReOrderDialog(context).show()
   }
 }
