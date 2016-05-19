@@ -50,6 +50,23 @@ class FudaSetReOrderDialog(
       (list.getChildAt(index-1),list.getChildAt(index+1))
     }
 
+    def doWhenDrop(v:View,data:ClipData){
+      val index_from = data.getItemAt(0).getText.toString.toInt
+      val index_temp = list.indexOfChild(v)
+      if((index_temp - index_from).abs == 1){
+        return
+      }
+
+      val v_btn = list.getChildAt(index_from)
+      val v_bar = list.getChildAt(index_from+1)
+      list.removeView(v_btn)
+      list.removeView(v_bar)
+
+      val index_to = list.indexOfChild(v)
+      list.addView(v_btn,index_to)
+      list.addView(v_bar,index_to)
+    }
+
     val borderDragListener = new View.OnDragListener{
           override def onDrag(v:View, event:DragEvent):Boolean = {
             event.getAction match {
@@ -58,7 +75,7 @@ class FudaSetReOrderDialog(
               case DragEvent.ACTION_DRAG_EXITED | DragEvent.ACTION_DRAG_ENDED =>
                 setBorderColor(v,BAR_COLOR_DEFAULT)
               case DragEvent.ACTION_DROP =>
-                println(s"drop: ${v.getId}")
+                doWhenDrop(v,event.getClipData)
               case _ => 
             }
             true
@@ -68,7 +85,7 @@ class FudaSetReOrderDialog(
           override def onDrag(v:View, event:DragEvent):Boolean = {
             event.getAction match{
               case DragEvent.ACTION_DRAG_LOCATION =>
-                val (borderPrev,borderNext) = getPrevNextBorder(v)
+                val (borderPrev,borderNext) = getPrevNextBorder(v) // TODO cache these variables ?
                 if(event.getY <= v.getHeight / 2){
                   setBorderColor(borderPrev,BAR_COLOR_ACTIVE)
                   setBorderColor(borderNext,BAR_COLOR_DEFAULT)
@@ -83,7 +100,13 @@ class FudaSetReOrderDialog(
               case DragEvent.ACTION_DRAG_ENDED =>
                 setTextColorOrDefault(v.asInstanceOf[TextView],None)
               case DragEvent.ACTION_DROP =>
-                println(s"drop: ${v.getId}")
+                val (borderPrev,borderNext) = getPrevNextBorder(v)
+                if(event.getY <= v.getHeight / 2){
+                  doWhenDrop(borderPrev,event.getClipData)
+                }else{
+                  doWhenDrop(borderNext,event.getClipData)
+                }
+
               case _ =>
             }
             true
@@ -92,17 +115,16 @@ class FudaSetReOrderDialog(
 
     val buttonLongClickListener = new View.OnLongClickListener(){
           override def onLongClick(v:View):Boolean = {
-            val data = ClipData.newPlainText("text",v.asInstanceOf[TextView].getText)
+            val data = ClipData.newPlainText("child_index",list.indexOfChild(v).toString)
             v.startDrag(data, new View.DragShadowBuilder(v), v, 0)
             setTextColorOrDefault(v.asInstanceOf[TextView],Some(TEXT_COLOR_ACTIVE))
             true
           }
         }
-    def addBorder():View = {
+    def addBorder() = {
       val v = LayoutInflater.from(context).inflate(R.layout.horizontal_rule_droppable, null)
       v.setOnDragListener(borderDragListener)
       list.addView(v)
-      v
     }
     addBorder()
     for(fs <- FudaListHelper.selectFudasetAll){
