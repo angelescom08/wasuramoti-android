@@ -41,67 +41,81 @@ class FudaSetReOrderDialog(
     }
   }
 
-  def addBorder(list:ViewGroup):View = {
-    val v = LayoutInflater.from(context).inflate(R.layout.horizontal_rule_droppable, null)
-    v.setOnDragListener(new View.OnDragListener{
-        override def onDrag(v:View, event:DragEvent):Boolean = {
-          event.getAction match {
-            case DragEvent.ACTION_DRAG_ENTERED =>
-              setBorderColor(v,BAR_COLOR_ACTIVE)
-            case DragEvent.ACTION_DRAG_EXITED | DragEvent.ACTION_DRAG_ENDED =>
-              setBorderColor(v,BAR_COLOR_DEFAULT)
-            case _ => 
-          }
-          true
-    }})
-    list.addView(v)
-    v
-  }
-
   override def onCreate(state:Bundle){
-    val view = LayoutInflater.from(context).inflate(R.layout.fudaset_reorder, null)
-    val list = view.findViewById(R.id.fudaset_list).asInstanceOf[ViewGroup]
-    var lastBorder = addBorder(list)
+    val root = LayoutInflater.from(context).inflate(R.layout.fudaset_reorder, null)
+    val list = root.findViewById(R.id.fudaset_list).asInstanceOf[ViewGroup]
+
+    def getPrevNextBorder(v:View):(View,View) = {
+      val index = list.indexOfChild(v)
+      (list.getChildAt(index-1),list.getChildAt(index+1))
+    }
+
+    val borderDragListener = new View.OnDragListener{
+          override def onDrag(v:View, event:DragEvent):Boolean = {
+            event.getAction match {
+              case DragEvent.ACTION_DRAG_ENTERED =>
+                setBorderColor(v,BAR_COLOR_ACTIVE)
+              case DragEvent.ACTION_DRAG_EXITED | DragEvent.ACTION_DRAG_ENDED =>
+                setBorderColor(v,BAR_COLOR_DEFAULT)
+              case DragEvent.ACTION_DROP =>
+                println(s"drop: ${v.getId}")
+              case _ => 
+            }
+            true
+      }}
+
+    val buttonDragListener = new View.OnDragListener{
+          override def onDrag(v:View, event:DragEvent):Boolean = {
+            event.getAction match{
+              case DragEvent.ACTION_DRAG_LOCATION =>
+                val (borderPrev,borderNext) = getPrevNextBorder(v)
+                if(event.getY <= v.getHeight / 2){
+                  setBorderColor(borderPrev,BAR_COLOR_ACTIVE)
+                  setBorderColor(borderNext,BAR_COLOR_DEFAULT)
+                }else{
+                  setBorderColor(borderPrev,BAR_COLOR_DEFAULT)
+                  setBorderColor(borderNext,BAR_COLOR_ACTIVE)
+                }
+              case DragEvent.ACTION_DRAG_EXITED =>
+                val (borderPrev,borderNext) = getPrevNextBorder(v)
+                setBorderColor(borderPrev,BAR_COLOR_DEFAULT)
+                setBorderColor(borderNext,BAR_COLOR_DEFAULT)
+              case DragEvent.ACTION_DRAG_ENDED =>
+                setTextColorOrDefault(v.asInstanceOf[TextView],None)
+              case DragEvent.ACTION_DROP =>
+                println(s"drop: ${v.getId}")
+              case _ =>
+            }
+            true
+          }
+        }
+
+    val buttonLongClickListener = new View.OnLongClickListener(){
+          override def onLongClick(v:View):Boolean = {
+            val data = ClipData.newPlainText("text",v.asInstanceOf[TextView].getText)
+            v.startDrag(data, new View.DragShadowBuilder(v), v, 0)
+            setTextColorOrDefault(v.asInstanceOf[TextView],Some(TEXT_COLOR_ACTIVE))
+            true
+          }
+        }
+    def addBorder():View = {
+      val v = LayoutInflater.from(context).inflate(R.layout.horizontal_rule_droppable, null)
+      v.setOnDragListener(borderDragListener)
+      list.addView(v)
+      v
+    }
+    addBorder()
     for(fs <- FudaListHelper.selectFudasetAll){
       val btn = new Button(context)
       btn.setText(fs.title)
       list.addView(btn)
-      val borderPrev = lastBorder // have to trap variable in closure
-      val borderNext = addBorder(list)
-      btn.setOnLongClickListener(new View.OnLongClickListener(){
-        override def onLongClick(v:View):Boolean = {
-          val data = ClipData.newPlainText("text",fs.title)
-          v.startDrag(data, new View.DragShadowBuilder(v), v, 0)
-          setTextColorOrDefault(v.asInstanceOf[TextView],Some(TEXT_COLOR_ACTIVE))
-          true
-        }
-      })
-      btn.setOnDragListener(new View.OnDragListener{
-        override def onDrag(v:View, event:DragEvent):Boolean = {
-          event.getAction match{
-            case DragEvent.ACTION_DRAG_LOCATION =>
-              if(event.getY <= v.getHeight / 2){
-                setBorderColor(borderPrev,BAR_COLOR_ACTIVE)
-                setBorderColor(borderNext,BAR_COLOR_DEFAULT)
-              }else{
-                setBorderColor(borderPrev,BAR_COLOR_DEFAULT)
-                setBorderColor(borderNext,BAR_COLOR_ACTIVE)
-              }
-            case DragEvent.ACTION_DRAG_EXITED =>
-              setBorderColor(borderPrev,BAR_COLOR_DEFAULT)
-              setBorderColor(borderNext,BAR_COLOR_DEFAULT)
-            case DragEvent.ACTION_DRAG_ENDED =>
-              setTextColorOrDefault(v.asInstanceOf[TextView],None)
-            case _ =>
-          }
-          true
-        }
-      })
-      lastBorder = borderNext
+      btn.setOnLongClickListener(buttonLongClickListener)
+      btn.setOnDragListener(buttonDragListener)
+      addBorder()
     }
-    setViewAndButton(view) 
+    setViewAndButton(root) 
     super.onCreate(state)
   }
 
-}
 
+}
