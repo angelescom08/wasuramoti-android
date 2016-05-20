@@ -13,11 +13,12 @@ object DbUtils{
   def insertAllAndGoshoku(context:Context,db:SQLiteDatabase){
     val cv = new ContentValues()
     Utils.withTransaction(db, () => {
-      for( (name_id,list) <- Seq((R.string.fudaset_title_all,1 to 100)) ++ AllFuda.goshoku ){
+      for( ((name_id,list),index) <-(Seq((R.string.fudaset_title_all,1 to 100)) ++ AllFuda.goshoku).zipWithIndex ){
         TrieUtils.makeKimarijiSetFromNumList(list).foreach(_ match {case (str,_) => {
           cv.put("title",context.getResources().getString(name_id))
           cv.put("body",str)
           cv.put("set_size",new java.lang.Integer(list.length))
+          cv.put("set_order",new java.lang.Integer(index+1))
         }})
         db.insert(Globals.TABLE_FUDASETS,null,cv)
       }
@@ -49,9 +50,15 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
         db.execSQL("UPDATE "+Globals.TABLE_FUDALIST+" SET memorized=0;")
       })
     }
+    if(oldv < 5){
+      Utils.withTransaction(db, () => {
+        db.execSQL("ALTER TABLE "+Globals.TABLE_FUDASETS+" ADD COLUMN set_order INTEGER;")
+        db.execSQL("UPDATE "+Globals.TABLE_FUDASETS+" SET set_order=id;")
+      })
+    }
   }
   override def onCreate(db:SQLiteDatabase){
-     db.execSQL("CREATE TABLE "+Globals.TABLE_FUDASETS+" (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT, set_size INTEGER);")
+     db.execSQL("CREATE TABLE "+Globals.TABLE_FUDASETS+" (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT, set_size INTEGER, set_order INTEGER);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_FUDALIST+" (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER, memorized INTEGER);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_READFILTER+" (id INTEGER PRIMARY KEY, readers_id INTEGER, num INTEGER, volume NUMERIC, pitch NUMECIR, speed NUMERIC);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_READERS+" (id INTEGER PRIMARY KEY, path TEXT);")

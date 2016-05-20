@@ -51,6 +51,7 @@ class FudaSetReOrderDialog(
     }
 
     def doWhenDrop(v:View,data:ClipData){
+      setBorderColor(v,BAR_COLOR_DEFAULT)
       val index_from = data.getItemAt(0).getText.toString.toInt
       val index_temp = list.indexOfChild(v)
       if((index_temp - index_from).abs == 1){

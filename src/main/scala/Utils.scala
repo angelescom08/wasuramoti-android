@@ -36,7 +36,7 @@ object Globals {
   val TABLE_READFILTER = "readfilter"
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
-  val DATABASE_VERSION = 4
+  val DATABASE_VERSION = 5
   val PREFERENCE_VERSION = 8
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
@@ -725,6 +725,11 @@ object Utils {
     cv.put("body",kimari)
     cv.put("set_size",new java.lang.Integer(st_size))
     val r = if(is_add){
+      val cursor = db.query(Globals.TABLE_FUDASETS,Array("ifnull(max(set_order),0)"),null,null,null,null,null,null)
+      cursor.moveToFirst
+      val max_order = cursor.getInt(0)
+      cursor.close
+      cv.put("set_order",new java.lang.Integer(max_order+1))
       db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
     }else{
       db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig_title)) > 0
