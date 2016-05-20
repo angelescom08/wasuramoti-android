@@ -65,9 +65,13 @@ class FudaSetReOrderDialog(context:Context,
       (list.getChildAt(index-1),list.getChildAt(index+1))
     }
 
-    def doWhenDrop(v:View,data:ClipData){
+    def doWhenDrop = (v:View,data:ClipData) => {
       setBorderColor(v,BAR_COLOR_DEFAULT)
       val index_from = data.getItemAt(0).getText.toString.toInt
+      doWhenDropAlt(v,index_from)
+    }
+
+    def doWhenDropAlt(v:View,index_from:Int){
       val index_temp = list.indexOfChild(v)
       if((index_temp - index_from).abs == 1){
         return
@@ -83,7 +87,7 @@ class FudaSetReOrderDialog(context:Context,
       list.addView(v_bar,index_to)
     }
 
-    val borderDragListener = new View.OnDragListener{
+    lazy val borderDragListener = new View.OnDragListener{
           override def onDrag(v:View, event:DragEvent):Boolean = {
             event.getAction match {
               case DragEvent.ACTION_DRAG_ENTERED =>
@@ -97,7 +101,7 @@ class FudaSetReOrderDialog(context:Context,
             true
       }}
 
-    val buttonDragListener = new View.OnDragListener{
+    lazy val buttonDragListener = new View.OnDragListener{
           override def onDrag(v:View, event:DragEvent):Boolean = {
             event.getAction match{
               case DragEvent.ACTION_DRAG_LOCATION =>
@@ -129,7 +133,7 @@ class FudaSetReOrderDialog(context:Context,
           }
         }
 
-    val buttonLongClickListener = new View.OnLongClickListener(){
+    lazy val buttonLongClickListener = new View.OnLongClickListener(){
           override def onLongClick(v:View):Boolean = {
             val data = ClipData.newPlainText("child_index",list.indexOfChild(v).toString)
             v.startDrag(data, new View.DragShadowBuilder(v), v, 0)
@@ -137,17 +141,46 @@ class FudaSetReOrderDialog(context:Context,
             true
           }
         }
+
+    // only for API < 11
+    var startSwapFrom = None:Option[Int]
+    lazy val buttonClickListener = new View.OnClickListener(){
+          override def onClick(v:View) = {
+            startSwapFrom match {
+              case Some(n) =>
+                setTextColorOrDefault(list.getChildAt(n).asInstanceOf[TextView],None)
+                val (borderPrev,borderNext) = getPrevNextBorder(v)
+                val cur = list.indexOfChild(v)
+                if(cur < n){
+                  doWhenDropAlt(borderPrev,n)
+                }else{
+                  doWhenDropAlt(borderNext,n)
+                }
+                startSwapFrom = None
+              case None =>
+                setTextColorOrDefault(v.asInstanceOf[TextView],Some(Color.argb(0xFF,0xA5,0x2A,0x2A)))
+                startSwapFrom = Some(list.indexOfChild(v))
+            }
+          }
+    }
+
     def addBorder() = {
       val v = LayoutInflater.from(context).inflate(R.layout.horizontal_rule_droppable, null)
-      v.setOnDragListener(borderDragListener)
+      if(android.os.Build.VERSION.SDK_INT >= 11){
+        v.setOnDragListener(borderDragListener)
+      }
       list.addView(v)
     }
     addBorder()
     for(fs <- FudaListHelper.selectFudasetAll){
       val btn = new Button(context)
       btn.setText(fs.title)
-      btn.setOnLongClickListener(buttonLongClickListener)
-      btn.setOnDragListener(buttonDragListener)
+      if(android.os.Build.VERSION.SDK_INT >= 11){
+        btn.setOnLongClickListener(buttonLongClickListener)
+        btn.setOnDragListener(buttonDragListener)
+      }else{
+        btn.setOnClickListener(buttonClickListener)
+      }
       btn.setTag(R.id.tag_fudaset_id,fs.id)
       list.addView(btn)
       addBorder()
