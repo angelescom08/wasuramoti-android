@@ -72,25 +72,30 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     // Therefore we set the layout here.
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
 
-    val persisted = getPersistedString("")
     adapter = Some(new ArrayAdapter[FudaSetWithSize](context,android.R.layout.simple_spinner_item,listItems))
     // adapter.get.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
-    listItems.clear()
-    for((fs,i) <- FudaListHelper.selectFudasetAll.zipWithIndex){
-      listItems.add(new FudaSetWithSize(fs.title,fs.set_size))
-      if(fs.title == persisted){
-        spin.setSelection(i)
-      }
-    }
-    adapter.get.notifyDataSetChanged()
+    refreshListItems
     for(id <- buttonMapping.keys){
       view.findViewById(id).setOnClickListener(this)
     }
     return view
   }
+
+  def refreshListItems(){
+    val persisted = getPersistedString("")
+    listItems.clear()
+    for((fs,i) <- FudaListHelper.selectFudasetAll.zipWithIndex){
+      listItems.add(new FudaSetWithSize(fs.title,fs.set_size))
+      if(fs.title == persisted){
+        spinner.get.setSelection(i)
+      }
+    }
+    adapter.get.notifyDataSetChanged()
+  }
+
   def addFudaSetToSpinner(fs:FudaSetWithSize){
     adapter.get.add(fs)
     adapter.get.notifyDataSetChanged
@@ -140,6 +145,6 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     new FudaSetCopyMergeDialog(context, addFudaSetToSpinner).show()
   }
   def reorderFudaSet(){
-    new FudaSetReOrderDialog(context).show()
+    new FudaSetReOrderDialog(context, refreshListItems).show()
   }
 }

@@ -2,16 +2,17 @@ package karuta.hpnpwd.wasuramoti
 
 import android.view.{View,LayoutInflater,ViewGroup,DragEvent}
 import android.os.Bundle
-import android.content.{ClipData,Context}
+import android.content.{ClipData,Context,ContentValues}
 import android.widget.{ArrayAdapter,ListView,EditText,TextView}
 import android.app.AlertDialog
 import android.text.TextUtils
 import android.widget.Button
 import android.graphics.Color
 
-class FudaSetReOrderDialog(
-  context:Context
-  ) extends AlertDialog(context) with CustomAlertDialogTrait{
+class FudaSetReOrderDialog(context:Context,
+  callback:()=>Unit
+  )
+  extends AlertDialog(context) with CustomAlertDialogTrait{
 
   val BAR_COLOR_ACTIVE = Color.CYAN
   val BAR_COLOR_DEFAULT = Color.argb(255,0x44,0x44,0x44)
@@ -19,8 +20,22 @@ class FudaSetReOrderDialog(
   val TEXT_COLOR_ACTIVE = Color.GRAY
   var TEXT_COLOR_DEFAULT = None:Option[Int]
 
+
   override def doWhenClose(view:View){
-    //TODO
+    val list = view.findViewById(R.id.fudaset_list).asInstanceOf[ViewGroup]
+    val fudaset_ids = (0 until list.getChildCount).map{ i=>
+      Option(list.getChildAt(i).getTag(R.id.tag_fudaset_id))
+    }.flatten
+    val db = Globals.database.get.getWritableDatabase
+    Utils.withTransaction(db, ()=>{
+      for((fudaset_id,index) <- fudaset_ids.zipWithIndex){
+        val cv = new ContentValues
+        cv.put("set_order",new java.lang.Integer(index+1))
+        db.update(Globals.TABLE_FUDASETS,cv,"id = ?", Array(fudaset_id.toString))
+      }
+    })
+    db.close()
+    callback()
   }
 
   def setBorderColor(v:View,color:Int){
@@ -131,9 +146,10 @@ class FudaSetReOrderDialog(
     for(fs <- FudaListHelper.selectFudasetAll){
       val btn = new Button(context)
       btn.setText(fs.title)
-      list.addView(btn)
       btn.setOnLongClickListener(buttonLongClickListener)
       btn.setOnDragListener(buttonDragListener)
+      btn.setTag(R.id.tag_fudaset_id,fs.id)
+      list.addView(btn)
       addBorder()
     }
     setViewAndButton(root) 
