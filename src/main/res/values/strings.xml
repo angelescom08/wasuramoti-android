@@ -326,6 +326,8 @@
   <string name="fudaset_copymerge_notchecked">Please choose at least one poem set.</string>
 
   <string name="fudaset_reorder">Reorder</string>
+  <string name="fudaset_reorder_title">Reorder Poem Set</string>
+  <string name="fudaset_reorder_description">Click one button to begin move, click another button to end move.</string>
 
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
   <string name="fudasetedit_title">New/Edit Poem Set</string>

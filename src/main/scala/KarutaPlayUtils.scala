@@ -1,12 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.media.AudioManager
-import android.content.{BroadcastReceiver,Context,Intent}
-import android.app.{PendingIntent,AlarmManager}
+import android.content.Context
 import android.widget.{Button,Toast}
-import android.os.{Bundle,Handler,PowerManager,SystemClock}
-import android.net.Uri
-import android.util.Log
+import android.os.{Bundle,Handler,PowerManager}
 import android.view.View
 
 import scala.collection.mutable

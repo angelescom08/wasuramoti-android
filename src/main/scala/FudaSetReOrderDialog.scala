@@ -3,9 +3,8 @@ package karuta.hpnpwd.wasuramoti
 import android.view.{View,LayoutInflater,ViewGroup,DragEvent}
 import android.os.Bundle
 import android.content.{ClipData,Context,ContentValues}
-import android.widget.{ArrayAdapter,ListView,EditText,TextView}
+import android.widget.TextView
 import android.app.AlertDialog
-import android.text.TextUtils
 import android.widget.Button
 import android.graphics.Color
 
@@ -185,6 +184,7 @@ class FudaSetReOrderDialog(context:Context,
       list.addView(btn)
       addBorder()
     }
+    setTitle(R.string.fudaset_reorder_title)
     setViewAndButton(root) 
     super.onCreate(state)
   }
