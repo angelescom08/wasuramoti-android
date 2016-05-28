@@ -292,7 +292,7 @@
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの作成/編集</string>
   <string name="fudasetedit_name">名前</string>
-  <string name="fudasetedit_hint">札セットの名前</string>
+  <string name="fudasetedit_hint">新しい札セット名</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
     「一覧」ボタンを押すか，現代仮名遣いで決まり字まで入力して下さい．<font color=\"#00CCFF\">[<u>歌番号指定</u>]</font> もできます．

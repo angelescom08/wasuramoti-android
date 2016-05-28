@@ -38,6 +38,8 @@ Future Android:
       - https://developer.android.com/preview/behavior-changes.html#other
     * Multi-Window
       - https://developer.android.com/preview/features/multi-window.html
+    * Support Picure in Picture Mode
+      - https://developer.android.com/preview/features/picture-in-picture.html
 
 Priority High:
   * Add more [] to index.
@@ -70,6 +72,7 @@ Priority High:
   * Customize order and avaliability of each poem info buttons.
   * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
+  * Also move to prev/next poem when 1/3 of the view is tapped.
 
 Priority Medium-High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
