@@ -581,10 +581,10 @@ object FudaListHelper{
     db.close()
   } }
 
-  def resetMemorizedAll(){ Globals.db_lock.synchronized {
+  def resetMemorized(cond:String){ Globals.db_lock.synchronized {
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () => {
-        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = 0")
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET memorized = 0 ${cond}")
     })
     db.close()
   } }

@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 import android.preference.DialogPreference
 import android.content.Context
 import android.util.AttributeSet
-import android.view.{View,LayoutInflater}
+import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Button}
 import android.media.AudioManager
 import android.text.{TextUtils,Html}
@@ -106,6 +106,43 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     }
     super.onDialogClosed(positiveResult)
   }
+
+  def genPanel(onlyInFudaset:Boolean):View = {
+    val (count,count_not,reset_cond,title) = if(onlyInFudaset){
+      val c = FudaListHelper.queryNumbersToRead("= 2")
+      val cn = FudaListHelper.queryNumbersToRead("= 0")
+      val rc = "WHERE skip = 2"
+      val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
+      (c,cn,rc,tt)
+    }else{
+      val c = FudaListHelper.countNumbersInFudaList("memorized = 1 AND num > 0")
+      val cn = FudaListHelper.countNumbersInFudaList("memorized = 0 AND num >0")
+      val rc = ""
+      val tt = context.getResources.getString(R.string.memorization_all_poem)
+      (c,cn,rc,tt)
+    }
+
+    val panel = LayoutInflater.from(context).inflate(R.layout.memorization_panel,null)
+    val count_view = panel.findViewWithTag("memorized_count").asInstanceOf[TextView]
+    count_view.setText(count.toString)
+    val count_view_not = panel.findViewWithTag("not_memorized_count").asInstanceOf[TextView]
+    count_view_not.setText(count_not.toString)
+    val title_view = panel.findViewWithTag("memorization_panel_title").asInstanceOf[TextView]
+    title_view.setText(title)
+
+    val btn_reset = panel.findViewWithTag("reset_memorized").asInstanceOf[Button]
+    btn_reset.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
+            FudaListHelper.resetMemorized(reset_cond)
+            FudaListHelper.updateSkipList(context)
+            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+          })
+        }
+    })
+    panel
+  }
+
   override def onCreateDialogView():View = {
     super.onCreateDialogView()
     val view = LayoutInflater.from(context).inflate(R.layout.memorization_conf,null)
@@ -114,16 +151,12 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     view.findViewById(R.id.memorization_desc_container).asInstanceOf[TextView].setText(Html.fromHtml(html))
     val enable = getWidgets(view)
     enable.setChecked(getPersistedBoolean(false))
-    val btn_reset = view.findViewById(R.id.memorization_mode_reset).asInstanceOf[Button]
-    btn_reset.setOnClickListener(new View.OnClickListener(){
-        override def onClick(view:View){
-          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
-            FudaListHelper.resetMemorizedAll()
-            FudaListHelper.updateSkipList(context)
-            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-          })
-        }
-    })
+
+    val container = view.findViewById(R.id.memorization_panel_container).asInstanceOf[ViewGroup]
+    if(FudaListHelper.isBoundedByFudaset){
+      container.addView(genPanel(true))
+    }
+    container.addView(genPanel(false))
     view
   }
 

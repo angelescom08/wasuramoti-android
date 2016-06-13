@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content" android:layout_height="wrap_content"
+  android:background="@drawable/round_border" android:padding="10dip" android:layout_marginTop="10dip"
+  android:orientation="vertical" >
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+  android:textColor="#FFFF00"
+  android:tag="memorization_panel_title"
+  />
+<include layout="@layout/horizontal_rule" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent" android:layout_height="wrap_content"
+  android:orientation="horizontal" >
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="@string/memorization_memorized"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:paddingRight="6dip"
+    />
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:tag="memorized_count"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="#99FF99"
+    />
+</LinearLayout>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+  android:text="@string/memorization_mode_reset"
+  android:tag="reset_memorized"
+  />
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+  android:text="@string/memorization_mode_save"
+  android:tag="save_memorized"
+  />
+<include layout="@layout/horizontal_rule" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent" android:layout_height="wrap_content"
+  android:orientation="horizontal" >
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="@string/memorization_not_memorized"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:paddingRight="6dip"
+    />
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:tag="not_memorized_count"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="#FF9999"
+    />
+</LinearLayout>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+  android:text="@string/memorization_mode_save"
+  android:tag="save_not_memorized"
+  />
+</LinearLayout>

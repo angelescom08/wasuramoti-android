@@ -503,7 +503,11 @@
     * 「札ごとの詠み順」において「カスタム」に長い文字列を指定するとメモリを消費するので短くして下さい．
   </string>
   <string name="memorization_mode_enable">暗記モードを有効</string>
-  <string name="memorization_mode_reset">覚えた歌をリセット</string>
+  <string name="memorization_mode_reset">リセット</string>
+  <string name="memorization_mode_save">札セットとして保存</string>
+  <string name="memorization_memorized">覚えた:</string>
+  <string name="memorization_not_memorized">覚えてない:</string>
+  <string name="memorization_all_poem">** 全ての札 **</string>
   <string name="conf_memorization_title">暗記モード</string>
   <string name="conf_memorization_summary">「覚えた」ボタンを使って効率的に学習</string>
   <string name="memorization_desc">
@@ -511,11 +515,11 @@
       <font color=\"#00FF99\">[暗記モードの使い方]</font><br>
       &middot; 歌を覚えたら<font color=\"#FFFF00\">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
       &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
-      &middot; このページにある<font color=\"#FFFF00\">「覚えた歌をリセット」</font>を押すと全ての歌が覚えていない状態に戻ります．<br>
+      &middot; このページにある<font color=\"#FFFF00\">「リセット」</font>を押すと覚えていない状態に戻せます．<br>
     ]]>
   </string>
   <string name="memorization_mode_reset_confirm">
-    覚えた歌を全てリセットして良いですか？
+    覚えた歌をリセットして良いですか？
   </string>
   <string name="memorization_mode_reset_done">
     覚えた歌のリセット完了

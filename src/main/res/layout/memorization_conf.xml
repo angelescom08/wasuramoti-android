@@ -10,15 +10,18 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_mode_enable"
     />
-  <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:text="@string/memorization_mode_reset"
-    android:id="@+id/memorization_mode_reset"
-    />
   <include layout="@layout/horizontal_rule" />
   <karuta.hpnpwd.wasuramoti.PatchedTextView
     android:id="@+id/memorization_desc_container"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:textColor="#FFFFFF"
+    />
+  <include layout="@layout/horizontal_rule" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/memorization_panel_container"
     />
 </LinearLayout>
 </ScrollView>

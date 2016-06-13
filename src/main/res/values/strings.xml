@@ -541,7 +541,11 @@
     * In `Play Order of Each Poem`, setting long sequence for `Custom` uses a lot of memory, so make it short.
   </string>
   <string name="memorization_mode_enable">Enable Memorization Mode</string>
-  <string name="memorization_mode_reset">Reset Memorized Poems</string>
+  <string name="memorization_mode_reset">Reset</string>
+  <string name="memorization_mode_save">Save as Poem Set</string>
+  <string name="memorization_memorized">Memorized:</string>
+  <string name="memorization_not_memorized">Not Yet:</string>
+  <string name="memorization_all_poem">** All Poem **</string>
   <string name="conf_memorization_title">Memorization Mode</string>
   <string name="conf_memorization_summary">Use `Memorized` button for assistance of remembering the poems.</string>
   <string name="memorization_desc">
@@ -549,11 +553,11 @@
       <font color=\"#00FF99\">[How to Use Memorization Mode]</font><br>
       &middot; If you remembered the poem, press <font color=\"#FFFF00\">`Memorized`</font> and go next. Otherwise, just skip it.<br>
       &middot; Memorized poems are hidden from the list, so remember the rest. <br>
-      &middot; You can reset the memorized state from <font color=\"#FFFF00\">`Reset Memorized Poems`</font> in this page.<br>
+      &middot; You can reset the memorized state from <font color=\"#FFFF00\">`Reset`</font> in this page.<br>
     ]]>
   </string>
   <string name="memorization_mode_reset_confirm">
-    Really reset all the memorized poems?
+    Really reset the memorized poems?
   </string>
   <string name="memorization_mode_reset_done">
     Finished resetting memorized poem.
