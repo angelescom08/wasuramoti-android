@@ -3,7 +3,7 @@ import android.content.Context
 import android.view.{View,MotionEvent,ViewTreeObserver}
 import android.widget.HorizontalScrollView
 import android.graphics.Typeface
-import android.util.AttributeSet
+import android.util.{AttributeSet,Log}
 import android.os.CountDownTimer
 
 import scala.collection.mutable
@@ -65,6 +65,11 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
           val v = findViewById(vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
+            if(Globals.IS_DEBUG){
+              val th1 = Math.abs(dx).toFloat / v.getWidth.toFloat
+              val th2 = Utils.pxToDp(Math.abs(dx))
+              Log.d("wasuramoti_debug", s"scroll rate=${th1}, dp=${th2}")
+            }
             val threshold = Math.min((v.getWidth * YomiInfoConf.SCROLL_THRESHOLD).toInt, Utils.dpToPx(YomiInfoConf.SCROLL_THRESHOLD_DIP).toInt)
             val nvid = if(Math.abs(dx) > threshold){
               if(dx > 0){
