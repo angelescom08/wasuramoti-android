@@ -502,6 +502,7 @@
     * ステレオや 44100 Hz の音声ファイルはメモリを消費するのでモノラルの 22050 Hz の音声ファイルを推奨します．\n
     * 「札ごとの詠み順」において「カスタム」に長い文字列を指定するとメモリを消費するので短くして下さい．
   </string>
+
   <string name="memorization_mode_enable">暗記モードを有効</string>
   <string name="memorization_mode_reset">リセット</string>
   <string name="memorization_mode_save">札セットとして保存</string>
@@ -511,21 +512,16 @@
   <string name="conf_memorization_title">暗記モード</string>
   <string name="conf_memorization_summary">「覚えた」ボタンを使って効率的に学習</string>
   <string name="memorization_desc">暗記モードでは「覚えた」札は非表示になります</string>
-  <string name="memorization_mode_reset_confirm">
-    覚えた歌をリセットして良いですか？
-  </string>
-  <string name="memorization_mode_reset_done">
-    覚えた歌のリセット完了
-  </string>
-  <string name="memorization_warn_joka">
-    序歌は暗記モードの対象外です．
-  </string>
-  <string name="memorization_warn_karafuda">
-    ※ 暗記モードでは空札は無効化されます．
-  </string>
-  <string name="memorization_warn_yomi_info_view">
-    暗記モードでは詠み句表示が有効化されます.
-  </string>
+  <string name="memorization_mode_reset_confirm">覚えた歌をリセットして良いですか？</string>
+  <string name="memorization_mode_reset_done">覚えた歌のリセット完了</string>
+  <string name="memorization_warn_joka">序歌は暗記モードの対象外です．</string>
+  <string name="memorization_warn_karafuda">※ 暗記モードでは空札は無効化されます．</string>
+  <string name="memorization_warn_yomi_info_view">暗記モードでは詠み句表示が有効化されます.</string>
+  <string name="memorization_fudaset_reset">作成した札セットの「覚えた」状態をリセット</string>
+  <string name="memorization_fudaset_title_memorized">覚えた歌を札セットとして保存</string>
+  <string name="memorization_fudaset_title_notyet">覚えてない歌を札セットとして保存</string>
+  <string name="memorization_fudaset_created">札セットを作りました</string>
+  
   <string name="category_playback_detail">再生の詳細</string>
   <string name="conf_use_opensles">OpenSL ES を使う</string>
   <string name="conf_use_opensles_summary">音声を正常に再生できない場合はこれを試してみて下さい</string>

@@ -1,17 +1,18 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.preference.DialogPreference
+import android.os.Bundle
 import android.content.Context
 import android.util.AttributeSet
+import android.text.TextUtils
+import android.app.AlertDialog
 import android.view.{View,LayoutInflater,ViewGroup}
-import android.widget.{TextView,CheckBox,Button}
+import android.widget.{TextView,CheckBox,Button,EditText}
 import scala.collection.mutable
 
 class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  val TAG_DEFAULT_MEMORIZED = "memorized_count"
-  val TAG_DEFAULT_NOT_YET = "not_memorized_count"
-  val TAG_POSTFIX_ALL = "_all"
-  val TAG_POSTFIX_FUDASET = "_fudaset"
+  val TAG_PANEL_ALL = "panel_all"
+  val TAG_PANEL_FUDASET = "panel_fudaset"
   var root_view = None:Option[View]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def getAbbrValue():String={
@@ -55,60 +56,91 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     super.onDialogClosed(positiveResult)
   }
 
-  def setMemCount(view:View,onlyInFudaset:Boolean){
-    val (postfix,count,count_not) = if(onlyInFudaset){
+  def setMemCountAndButtonHandler(panel:View,onlyInFudaset:Boolean) = {
+    val (count,count_not,reset_cond) = if(onlyInFudaset){
       val c = FudaListHelper.queryNumbersToRead("= 2")
       val cn = FudaListHelper.queryNumbersToRead("= 0")
-      (TAG_POSTFIX_FUDASET,c,cn)
+      val rc = "WHERE skip = 2"
+      (c,cn,rc)
     }else{
-      val c = FudaListHelper.countNumbersInFudaList("memorized = 1 AND num > 0")
-      val cn = FudaListHelper.countNumbersInFudaList("memorized = 0 AND num >0")
-      (TAG_POSTFIX_ALL,c,cn)
+      val c = FudaListHelper.queryNumbersToReadAlt("memorized = 1")
+      val cn = FudaListHelper.queryNumbersToReadAlt("memorized = 0")
+      val rc = ""
+      (c,cn,rc)
     }
-    Option(view.findViewWithTag(TAG_DEFAULT_MEMORIZED+postfix)).foreach{ v =>
+    Option(panel.findViewWithTag("memorized_count")).foreach{ v =>
       v.asInstanceOf[TextView].setText(count.toString)
     }
-    Option(view.findViewWithTag(TAG_DEFAULT_NOT_YET+postfix)).foreach{ v =>
+    Option(panel.findViewWithTag("not_memorized_count")).foreach{ v =>
       v.asInstanceOf[TextView].setText(count_not.toString)
     }
-  }
-  def setMemCountAll(){
-    root_view.foreach{rv =>
-      if(FudaListHelper.isBoundedByFudaset){
-        setMemCount(rv,true)
+    Option(panel.findViewWithTag("save_memorized")).foreach{ v =>
+      if(count > 0){
+        v.setEnabled(true)
+        v.setOnClickListener(new View.OnClickListener(){
+            override def onClick(view:View){
+              new MemorizationFudaSetDialog(context,onlyInFudaset,true,setMemCountAndButtonHandlerAll).show()
+            }
+        })
+      }else{
+        v.setEnabled(false)
       }
-      setMemCount(rv,false)
+    }
+    Option(panel.findViewWithTag("save_not_memorized")).foreach{ v =>
+      if(count_not > 0){
+        v.setEnabled(true)
+        v.setOnClickListener(new View.OnClickListener(){
+            override def onClick(view:View){
+              new MemorizationFudaSetDialog(context,onlyInFudaset,false,setMemCountAndButtonHandlerAll).show()
+            }
+        })
+      }else{
+        v.setEnabled(false)
+     }}
+    Option(panel.findViewWithTag("reset_memorized")).foreach{ v =>
+      if(count > 0){
+        v.setEnabled(true)
+        v.setOnClickListener(new View.OnClickListener(){
+            override def onClick(view:View){
+              Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
+                FudaListHelper.resetMemorized(reset_cond)
+                FudaListHelper.updateSkipList(context)
+                Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+                setMemCountAndButtonHandlerAll()
+              })}})
+      }else{
+        v.setEnabled(false)
+      }
+    }
+    
+  }
+  def setMemCountAndButtonHandlerAll(){
+    root_view.foreach{rv =>
+      Option(rv.findViewWithTag(TAG_PANEL_FUDASET)).foreach{ panel =>
+        setMemCountAndButtonHandler(panel,true)
+      }
+      Option(rv.findViewWithTag(TAG_PANEL_ALL)).foreach{ panel =>
+        setMemCountAndButtonHandler(panel,false)
+      }
     }
   }
 
   def genPanel(onlyInFudaset:Boolean):View = {
-    val (postfix,reset_cond,title) = if(onlyInFudaset){
-      val rc = "WHERE skip = 2"
+    val (tag,title) = if(onlyInFudaset){
       val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
-      (TAG_POSTFIX_FUDASET,rc,tt)
+      (TAG_PANEL_FUDASET,tt)
     }else{
-      val rc = ""
       val tt = context.getResources.getString(R.string.memorization_all_poem)
-      (TAG_POSTFIX_ALL,rc,tt)
+      (TAG_PANEL_ALL,tt)
     }
 
     val panel = LayoutInflater.from(context).inflate(R.layout.memorization_panel,null)
-    panel.findViewWithTag(TAG_DEFAULT_MEMORIZED).setTag(TAG_DEFAULT_MEMORIZED+postfix)
-    panel.findViewWithTag(TAG_DEFAULT_NOT_YET).setTag(TAG_DEFAULT_NOT_YET+postfix)
-    setMemCount(panel,onlyInFudaset)
+    panel.setTag(tag)
+    setMemCountAndButtonHandler(panel,onlyInFudaset)
 
     val title_view = panel.findViewWithTag("memorization_panel_title").asInstanceOf[TextView]
     title_view.setText(title)
 
-    val btn_reset = panel.findViewWithTag("reset_memorized").asInstanceOf[Button]
-    btn_reset.setOnClickListener(new View.OnClickListener(){
-        override def onClick(view:View){
-          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
-            FudaListHelper.resetMemorized(reset_cond)
-            FudaListHelper.updateSkipList(context)
-            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-            setMemCountAll()
-          })}})
     panel
   }
 
@@ -127,5 +159,49 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     view
   }
 
+}
+
+class MemorizationFudaSetDialog(context:Context,
+  onlyInFudaset:Boolean,
+  memorized:Boolean,
+  callback:()=>Unit)
+  extends AlertDialog(context) with CustomAlertDialogTrait{
+
+  override def doWhenClose(view:View){
+    val title_view = view.findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
+    val title = title_view.getText.toString
+    if(TextUtils.isEmpty(title)){
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
+      return
+    }
+    val ids = (onlyInFudaset,memorized) match{
+      case (true,true) =>
+        FudaListHelper.getHaveToReadFromDBAsInt("= 2")
+      case (true,false) =>
+        FudaListHelper.getHaveToReadFromDBAsInt("= 0")
+      case (false,true) =>
+        FudaListHelper.getHaveToReadFromDBAsIntAlt("memorized = 1")
+      case (false,false) =>
+        FudaListHelper.getHaveToReadFromDBAsIntAlt("memorized = 0")
+    }
+    TrieUtils.makeKimarijiSetFromNumList(ids.toSeq) match{
+      case None => // do nothing, this should not happen
+      case Some((kimari,st_size))=>
+        Utils.writeFudaSetToDB(title,kimari,st_size,true)
+        Utils.messageDialog(context,Right(R.string.memorization_fudaset_created))
+    }
+    callback()
+  }
+  override def onCreate(state:Bundle){
+    val root = LayoutInflater.from(context).inflate(R.layout.memorization_fudaset, null)
+    val title_id = if(memorized){
+      R.string.memorization_fudaset_title_memorized
+    }else{
+      R.string.memorization_fudaset_title_notyet
+    }
+    setTitle(title_id)
+    setViewAndButton(root)
+    super.onCreate(state) 
+  }
 }
 

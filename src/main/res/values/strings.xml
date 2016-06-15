@@ -540,6 +540,7 @@
     * Using stereo or 44100 Hz audio file uses lot of memory. Mono, 22050 Hz is recommended.\n
     * In `Play Order of Each Poem`, setting long sequence for `Custom` uses a lot of memory, so make it short.
   </string>
+
   <string name="memorization_mode_enable">Enable Memorization Mode</string>
   <string name="memorization_mode_reset">Reset</string>
   <string name="memorization_mode_save">Save as Poem Set</string>
@@ -549,21 +550,16 @@
   <string name="conf_memorization_title">Memorization Mode</string>
   <string name="conf_memorization_summary">Use `Memorized` button for assistance of remembering the poems.</string>
   <string name="memorization_desc">Memorized poems are hidden in this mode.</string>
-  <string name="memorization_mode_reset_confirm">
-    Really reset the memorized poems?
-  </string>
-  <string name="memorization_mode_reset_done">
-    Finished resetting memorized poem.
-  </string>
-  <string name="memorization_warn_joka">
-    Joka is not subjected to memorization mode.
-  </string>
-  <string name="memorization_warn_karafuda">
-    Note: Karafuda is disabled on memorization mode.
-  </string>
-  <string name="memorization_warn_yomi_info_view">
-    Poem text will be enabled in memorization mode.
-  </string>
+  <string name="memorization_mode_reset_confirm">Really reset the memorized poems?</string>
+  <string name="memorization_mode_reset_done">Finished resetting memorized poem.</string>
+  <string name="memorization_warn_joka">Joka is not subjected to memorization mode.</string>
+  <string name="memorization_warn_karafuda">Note: Karafuda is disabled on memorization mode.</string>
+  <string name="memorization_warn_yomi_info_view">Poem text will be enabled in memorization mode.</string>
+  <string name="memorization_fudaset_reset">Reset the `Memorized` poems in the fudaset.</string>
+  <string name="memorization_fudaset_title_memorized">Save Memorized Poems as Poem Set</string>
+  <string name="memorization_fudaset_title_notyet">Save Non-Memorized Poems as Poem Set</string>
+  <string name="memorization_fudaset_created">Poem set created.</string>
+  
   <string name="category_playback_detail">Playback Detail</string>
   <string name="conf_use_opensles">Use OpenSL ES</string>
   <string name="conf_use_opensles_summary">If you cannot play audio correctly. try this option.</string>

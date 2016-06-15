@@ -186,9 +186,14 @@ object FudaListHelper{
   }
   
   // [0,100]
-  def queryNumbersToRead(cond:String):Int = {
-    countNumbersInFudaList(s"skip $cond AND num > 0")
+  def queryNumbersToReadAlt(anycond:String):Int = {
+    countNumbersInFudaList(s"$anycond AND num > 0")
   }
+  // [0,100]
+  def queryNumbersToRead(skipcond:String):Int = {
+    queryNumbersToReadAlt(s"skip $skipcond")
+  }
+
 
   // [0,102] 
   def queryCurrentIndexWithSkip(context:Context):Int = {
@@ -262,9 +267,9 @@ object FudaListHelper{
     .getOrElse(0)
   }
 
-  def getHaveToReadFromDBAsInt(cond:String):Set[Int] = {
+  def getHaveToReadFromDBAsIntAlt(anycond:String):Set[Int] = {
     val db = Globals.database.get.getReadableDatabase
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),"skip "+cond+" AND num > 0",null,null,null,null,null)
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num"),s"$anycond AND num > 0",null,null,null,null,null)
     cursor.moveToFirst
     val have_to_read = ( 0 until cursor.getCount ).map{ x=>
       val r = cursor.getInt(0)
@@ -276,8 +281,12 @@ object FudaListHelper{
     have_to_read
   }
 
-  def getHaveToReadFromDBAsString(cond:String):Set[String] = Globals.db_lock.synchronized{
-    getHaveToReadFromDBAsInt(cond).map{fudanum => AllFuda.list(fudanum-1)}
+  def getHaveToReadFromDBAsInt(skipcond:String):Set[Int] = {
+    getHaveToReadFromDBAsIntAlt(s"skip $skipcond")
+  }
+
+  def getHaveToReadFromDBAsString(skipcond:String):Set[String] = Globals.db_lock.synchronized{
+    getHaveToReadFromDBAsInt(skipcond).map{fudanum => AllFuda.list(fudanum-1)}
   }
 
   def getNotYetRead(index:Int):Set[String] = Globals.db_lock.synchronized{
