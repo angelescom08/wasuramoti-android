@@ -64,6 +64,10 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
 }
 
 class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  val TAG_DEFAULT_MEMORIZED = "memorized_count"
+  val TAG_DEFAULT_NOT_YET = "not_memorized_count"
+  val TAG_POSTFIX_ALL = "_all"
+  val TAG_POSTFIX_FUDASET = "_fudaset"
   var root_view = None:Option[View]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def getAbbrValue():String={
@@ -107,26 +111,48 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     super.onDialogClosed(positiveResult)
   }
 
-  def genPanel(onlyInFudaset:Boolean):View = {
-    val (count,count_not,reset_cond,title) = if(onlyInFudaset){
+  def setMemCount(view:View,onlyInFudaset:Boolean){
+    val (postfix,count,count_not) = if(onlyInFudaset){
       val c = FudaListHelper.queryNumbersToRead("= 2")
       val cn = FudaListHelper.queryNumbersToRead("= 0")
-      val rc = "WHERE skip = 2"
-      val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
-      (c,cn,rc,tt)
+      (TAG_POSTFIX_FUDASET,c,cn)
     }else{
       val c = FudaListHelper.countNumbersInFudaList("memorized = 1 AND num > 0")
       val cn = FudaListHelper.countNumbersInFudaList("memorized = 0 AND num >0")
+      (TAG_POSTFIX_ALL,c,cn)
+    }
+    Option(view.findViewWithTag(TAG_DEFAULT_MEMORIZED+postfix)).foreach{ v =>
+      v.asInstanceOf[TextView].setText(count.toString)
+    }
+    Option(view.findViewWithTag(TAG_DEFAULT_NOT_YET+postfix)).foreach{ v =>
+      v.asInstanceOf[TextView].setText(count_not.toString)
+    }
+  }
+  def setMemCountAll(){
+    root_view.foreach{rv =>
+      if(FudaListHelper.isBoundedByFudaset){
+        setMemCount(rv,true)
+      }
+      setMemCount(rv,false)
+    }
+  }
+
+  def genPanel(onlyInFudaset:Boolean):View = {
+    val (postfix,reset_cond,title) = if(onlyInFudaset){
+      val rc = "WHERE skip = 2"
+      val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
+      (TAG_POSTFIX_FUDASET,rc,tt)
+    }else{
       val rc = ""
       val tt = context.getResources.getString(R.string.memorization_all_poem)
-      (c,cn,rc,tt)
+      (TAG_POSTFIX_ALL,rc,tt)
     }
 
     val panel = LayoutInflater.from(context).inflate(R.layout.memorization_panel,null)
-    val count_view = panel.findViewWithTag("memorized_count").asInstanceOf[TextView]
-    count_view.setText(count.toString)
-    val count_view_not = panel.findViewWithTag("not_memorized_count").asInstanceOf[TextView]
-    count_view_not.setText(count_not.toString)
+    panel.findViewWithTag(TAG_DEFAULT_MEMORIZED).setTag(TAG_DEFAULT_MEMORIZED+postfix)
+    panel.findViewWithTag(TAG_DEFAULT_NOT_YET).setTag(TAG_DEFAULT_NOT_YET+postfix)
+    setMemCount(panel,onlyInFudaset)
+
     val title_view = panel.findViewWithTag("memorization_panel_title").asInstanceOf[TextView]
     title_view.setText(title)
 
@@ -137,9 +163,8 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
             FudaListHelper.resetMemorized(reset_cond)
             FudaListHelper.updateSkipList(context)
             Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-          })
-        }
-    })
+            setMemCountAll()
+          })}})
     panel
   }
 
