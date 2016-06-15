@@ -10,11 +10,9 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_mode_enable"
     />
-  <include layout="@layout/horizontal_rule" />
-  <karuta.hpnpwd.wasuramoti.PatchedTextView
-    android:id="@+id/memorization_desc_container"
+  <TextView
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:textColor="#FFFFFF"
+    android:text="@string/memorization_desc"
     />
   <include layout="@layout/horizontal_rule" />
   <LinearLayout

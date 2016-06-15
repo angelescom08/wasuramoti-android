@@ -510,14 +510,7 @@
   <string name="memorization_all_poem">** 全ての札 **</string>
   <string name="conf_memorization_title">暗記モード</string>
   <string name="conf_memorization_summary">「覚えた」ボタンを使って効率的に学習</string>
-  <string name="memorization_desc">
-    <![CDATA[
-      <font color=\"#00FF99\">[暗記モードの使い方]</font><br>
-      &middot; 歌を覚えたら<font color=\"#FFFF00\">「覚えた」</font>ボタンを押して，後回しにするならそのまま次へ進んで下さい．<br>
-      &middot; 覚えた歌は非表示になるので残っている歌を頑張って覚えて下さい．<br>
-      &middot; このページにある<font color=\"#FFFF00\">「リセット」</font>を押すと覚えていない状態に戻せます．<br>
-    ]]>
-  </string>
+  <string name="memorization_desc">暗記モードでは「覚えた」札は非表示になります</string>
   <string name="memorization_mode_reset_confirm">
     覚えた歌をリセットして良いですか？
   </string>

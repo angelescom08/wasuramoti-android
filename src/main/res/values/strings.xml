@@ -548,14 +548,7 @@
   <string name="memorization_all_poem">** All Poem **</string>
   <string name="conf_memorization_title">Memorization Mode</string>
   <string name="conf_memorization_summary">Use `Memorized` button for assistance of remembering the poems.</string>
-  <string name="memorization_desc">
-    <![CDATA[
-      <font color=\"#00FF99\">[How to Use Memorization Mode]</font><br>
-      &middot; If you remembered the poem, press <font color=\"#FFFF00\">`Memorized`</font> and go next. Otherwise, just skip it.<br>
-      &middot; Memorized poems are hidden from the list, so remember the rest. <br>
-      &middot; You can reset the memorized state from <font color=\"#FFFF00\">`Reset`</font> in this page.<br>
-    ]]>
-  </string>
+  <string name="memorization_desc">Memorized poems are hidden in this mode.</string>
   <string name="memorization_mode_reset_confirm">
     Really reset the memorized poems?
   </string>

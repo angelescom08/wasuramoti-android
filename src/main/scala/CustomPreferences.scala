@@ -147,8 +147,6 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     super.onCreateDialogView()
     val view = LayoutInflater.from(context).inflate(R.layout.memorization_conf,null)
     root_view = Some(view)
-    val html = context.getResources.getString(R.string.memorization_desc)
-    view.findViewById(R.id.memorization_desc_container).asInstanceOf[TextView].setText(Html.fromHtml(html))
     val enable = getWidgets(view)
     enable.setChecked(getPersistedBoolean(false))
 
