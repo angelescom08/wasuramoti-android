@@ -559,6 +559,7 @@
   <string name="memorization_fudaset_title_memorized">Save Memorized Poems as Poem Set</string>
   <string name="memorization_fudaset_title_notyet">Save Non-Memorized Poems as Poem Set</string>
   <string name="memorization_fudaset_created">Poem set created.</string>
+  <string name="memorization_fudaset_empty">Cannot create empty poem set.</string>
   
   <string name="category_playback_detail">Playback Detail</string>
   <string name="conf_use_opensles">Use OpenSL ES</string>

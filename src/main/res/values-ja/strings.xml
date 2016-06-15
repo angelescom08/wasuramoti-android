@@ -521,6 +521,7 @@
   <string name="memorization_fudaset_title_memorized">覚えた歌を札セットとして保存</string>
   <string name="memorization_fudaset_title_notyet">覚えてない歌を札セットとして保存</string>
   <string name="memorization_fudaset_created">札セットを作りました</string>
+  <string name="memorization_fudaset_empty">空の札セットは作れません</string>
   
   <string name="category_playback_detail">再生の詳細</string>
   <string name="conf_use_opensles">OpenSL ES を使う</string>

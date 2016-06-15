@@ -56,87 +56,83 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     super.onDialogClosed(positiveResult)
   }
 
-  def setMemCountAndButtonHandler(panel:View,onlyInFudaset:Boolean) = {
-    val (count,count_not,reset_cond) = if(onlyInFudaset){
+  def setMemCount(panel:View,onlyInFudaset:Boolean) = {
+    val (count,count_not) = if(onlyInFudaset){
       val c = FudaListHelper.queryNumbersToRead("= 2")
       val cn = FudaListHelper.queryNumbersToRead("= 0")
-      val rc = "WHERE skip = 2"
-      (c,cn,rc)
+      (c,cn)
     }else{
       val c = FudaListHelper.queryNumbersToReadAlt("memorized = 1")
       val cn = FudaListHelper.queryNumbersToReadAlt("memorized = 0")
       val rc = ""
-      (c,cn,rc)
+      (c,cn)
     }
     Option(panel.findViewWithTag("memorized_count")).foreach{ v =>
       v.asInstanceOf[TextView].setText(count.toString)
     }
     Option(panel.findViewWithTag("not_memorized_count")).foreach{ v =>
       v.asInstanceOf[TextView].setText(count_not.toString)
-    }
-    Option(panel.findViewWithTag("save_memorized")).foreach{ v =>
-      if(count > 0){
-        v.setEnabled(true)
-        v.setOnClickListener(new View.OnClickListener(){
-            override def onClick(view:View){
-              new MemorizationFudaSetDialog(context,onlyInFudaset,true,setMemCountAndButtonHandlerAll).show()
-            }
-        })
-      }else{
-        v.setEnabled(false)
-      }
-    }
-    Option(panel.findViewWithTag("save_not_memorized")).foreach{ v =>
-      if(count_not > 0){
-        v.setEnabled(true)
-        v.setOnClickListener(new View.OnClickListener(){
-            override def onClick(view:View){
-              new MemorizationFudaSetDialog(context,onlyInFudaset,false,setMemCountAndButtonHandlerAll).show()
-            }
-        })
-      }else{
-        v.setEnabled(false)
-     }}
-    Option(panel.findViewWithTag("reset_memorized")).foreach{ v =>
-      if(count > 0){
-        v.setEnabled(true)
-        v.setOnClickListener(new View.OnClickListener(){
-            override def onClick(view:View){
-              Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
-                FudaListHelper.resetMemorized(reset_cond)
-                FudaListHelper.updateSkipList(context)
-                Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-                setMemCountAndButtonHandlerAll()
-              })}})
-      }else{
-        v.setEnabled(false)
-      }
-    }
-    
+    } 
   }
-  def setMemCountAndButtonHandlerAll(){
+  def setMemCountAll(){
     root_view.foreach{rv =>
       Option(rv.findViewWithTag(TAG_PANEL_FUDASET)).foreach{ panel =>
-        setMemCountAndButtonHandler(panel,true)
+        setMemCount(panel,true)
       }
       Option(rv.findViewWithTag(TAG_PANEL_ALL)).foreach{ panel =>
-        setMemCountAndButtonHandler(panel,false)
+        setMemCount(panel,false)
       }
     }
   }
 
   def genPanel(onlyInFudaset:Boolean):View = {
-    val (tag,title) = if(onlyInFudaset){
+    val (tag,title,reset_cond) = if(onlyInFudaset){
       val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
-      (TAG_PANEL_FUDASET,tt)
+      val rc = "WHERE skip = 2"
+      (TAG_PANEL_FUDASET,tt,rc)
     }else{
       val tt = context.getResources.getString(R.string.memorization_all_poem)
-      (TAG_PANEL_ALL,tt)
+      val rc = ""
+      (TAG_PANEL_ALL,tt,rc)
     }
 
     val panel = LayoutInflater.from(context).inflate(R.layout.memorization_panel,null)
     panel.setTag(tag)
-    setMemCountAndButtonHandler(panel,onlyInFudaset)
+    setMemCount(panel,onlyInFudaset)
+
+    Option(panel.findViewWithTag("save_memorized")).foreach{ v =>
+      v.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          if(panel.findViewWithTag("memorized_count").asInstanceOf[TextView].getText.toString.toInt > 0){
+            new MemorizationFudaSetDialog(context,onlyInFudaset,true,setMemCountAll).show()
+          }else{
+            Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
+          }
+        }
+      })
+    }
+    Option(panel.findViewWithTag("save_not_memorized")).foreach{ v =>
+      v.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          if(panel.findViewWithTag("not_memorized_count").asInstanceOf[TextView].getText.toString.toInt > 0){
+            new MemorizationFudaSetDialog(context,onlyInFudaset,false,setMemCountAll).show()
+          }else{
+            Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
+          }
+        }
+      })
+    }
+    Option(panel.findViewWithTag("reset_memorized")).foreach{ v =>
+      v.setOnClickListener(new View.OnClickListener(){
+        override def onClick(view:View){
+          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
+            FudaListHelper.resetMemorized(reset_cond)
+            FudaListHelper.updateSkipList(context)
+            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+            setMemCountAll()
+          })}})
+    }
+
 
     val title_view = panel.findViewWithTag("memorization_panel_title").asInstanceOf[TextView]
     title_view.setText(title)
