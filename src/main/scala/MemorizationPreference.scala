@@ -99,7 +99,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     panel.findViewById(R.id.memorization_panel_save_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         if(panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
-          new MemorizationFudaSetDialog(context,onlyInFudaset,true,setMemCountAll).show()
+          new MemorizationFudaSetDialog(context,onlyInFudaset,true,reset_cond,setMemCountAll).show()
         }else{
           Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
@@ -109,7 +109,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     panel.findViewById(R.id.memorization_panel_save_not_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         if(panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
-          new MemorizationFudaSetDialog(context,onlyInFudaset,false,setMemCountAll).show()
+          new MemorizationFudaSetDialog(context,onlyInFudaset,false,reset_cond,setMemCountAll).show()
         }else{
           Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
@@ -151,6 +151,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
 class MemorizationFudaSetDialog(context:Context,
   onlyInFudaset:Boolean,
   memorized:Boolean,
+  reset_cond:String,
   callback:()=>Unit)
   extends AlertDialog(context) with CustomAlertDialogTrait{
 
@@ -175,9 +176,13 @@ class MemorizationFudaSetDialog(context:Context,
       case None => // do nothing, this should not happen
       case Some((kimari,st_size))=>
         Utils.writeFudaSetToDB(title,kimari,st_size,true)
+        if(Option(view.findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
+          FudaListHelper.resetMemorized(reset_cond)
+          FudaListHelper.updateSkipList(context)
+        }
+        callback()
         Utils.messageDialog(context,Right(R.string.memorization_fudaset_created))
     }
-    callback()
   }
   override def onCreate(state:Bundle){
     val root = LayoutInflater.from(context).inflate(R.layout.memorization_fudaset, null)
@@ -187,6 +192,15 @@ class MemorizationFudaSetDialog(context:Context,
       R.string.memorization_fudaset_title_notyet
     }
     setTitle(title_id)
+
+    val cb = root.findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]
+    if(memorized){
+      cb.setChecked(true)
+    }else{
+      cb.setChecked(false)
+      cb.setVisibility(View.GONE)
+    }
+
     setViewAndButton(root)
     super.onCreate(state) 
   }

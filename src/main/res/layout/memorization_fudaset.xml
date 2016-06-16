@@ -20,7 +20,6 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:id="@+id/memorization_fudaset_reset"
     android:text="@string/memorization_fudaset_reset"
-    android:checked="true"
     />
 </LinearLayout>
 </ScrollView>
