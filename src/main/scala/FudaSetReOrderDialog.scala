@@ -38,7 +38,7 @@ class FudaSetReOrderDialog(context:Context,
   }
 
   def setBorderColor(v:View,color:Int){
-    v.findViewWithTag("horizontal_rule_droppable_body").setBackgroundColor(color)
+    v.findViewById(R.id.horizontal_rule_droppable_body).setBackgroundColor(color)
   }
 
   def setTextColorOrDefault(v:TextView,color:Option[Int]){

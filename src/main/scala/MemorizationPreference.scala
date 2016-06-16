@@ -67,8 +67,8 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
       val rc = ""
       (c,cn)
     }
-    panel.findViewWithTag("memorized_count").asInstanceOf[TextView].setText(count.toString)
-    panel.findViewWithTag("not_memorized_count").asInstanceOf[TextView].setText(count_not.toString)
+    panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].setText(count.toString)
+    panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].setText(count_not.toString)
   }
   def setMemCountAll(){
     root_view.foreach{rv =>
@@ -96,9 +96,9 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     panel.setTag(tag)
     setMemCount(panel,onlyInFudaset)
 
-    panel.findViewWithTag("save_memorized").setOnClickListener(new View.OnClickListener(){
+    panel.findViewById(R.id.memorization_panel_save_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        if(panel.findViewWithTag("memorized_count").asInstanceOf[TextView].getText.toString.toInt > 0){
+        if(panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
           new MemorizationFudaSetDialog(context,onlyInFudaset,true,setMemCountAll).show()
         }else{
           Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
@@ -106,9 +106,9 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
       }
     })
     
-    panel.findViewWithTag("save_not_memorized").setOnClickListener(new View.OnClickListener(){
+    panel.findViewById(R.id.memorization_panel_save_not_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        if(panel.findViewWithTag("not_memorized_count").asInstanceOf[TextView].getText.toString.toInt > 0){
+        if(panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
           new MemorizationFudaSetDialog(context,onlyInFudaset,false,setMemCountAll).show()
         }else{
           Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
@@ -116,7 +116,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
       }
     })
     
-    panel.findViewWithTag("reset_memorized").setOnClickListener(new View.OnClickListener(){
+    panel.findViewById(R.id.memorization_panel_reset_memorized).setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
           Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
             FudaListHelper.resetMemorized(reset_cond)
@@ -125,7 +125,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
             setMemCountAll()
           })}})
 
-    val title_view = panel.findViewWithTag("memorization_panel_title").asInstanceOf[TextView]
+    val title_view = panel.findViewById(R.id.memorization_panel_title).asInstanceOf[TextView]
     title_view.setText(title)
 
     panel

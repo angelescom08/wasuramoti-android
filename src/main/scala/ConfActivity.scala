@@ -14,7 +14,7 @@ import java.util.regex.Pattern
 trait PreferenceCustom extends Preference{
   self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
   abstract override def onBindView(v:View) {
-    v.findViewWithTag("conf_current_value").asInstanceOf[TextView].setText(getAbbrValue())
+    v.findViewById(R.id.conf_current_value).asInstanceOf[TextView].setText(getAbbrValue())
     super.onBindView(v)
   }
   def getAbbrValue():String = {

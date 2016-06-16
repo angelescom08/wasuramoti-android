@@ -5,7 +5,7 @@
   android:orientation="vertical" >
 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
   android:textColor="#FFFF00"
-  android:tag="memorization_panel_title"
+  android:id="@+id/memorization_panel_title"
   />
 <include layout="@layout/horizontal_rule" />
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,18 +17,18 @@
     android:paddingRight="6dip"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:tag="memorized_count"
+    android:id="@+id/memorization_panel_memorized_count"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:textColor="#99FF99"
     />
 </LinearLayout>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
   android:text="@string/memorization_mode_reset"
-  android:tag="reset_memorized"
+  android:id="@+id/memorization_panel_reset_memorized"
   />
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
   android:text="@string/memorization_mode_save"
-  android:tag="save_memorized"
+  android:id="@+id/memorization_panel_save_memorized"
   />
 <include layout="@layout/horizontal_rule" />
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,13 +40,13 @@
     android:paddingRight="6dip"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:tag="not_memorized_count"
+    android:id="@+id/memorization_panel_not_memorized_count"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:textColor="#FF9999"
     />
 </LinearLayout>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
   android:text="@string/memorization_mode_save"
-  android:tag="save_not_memorized"
+  android:id="@+id/memorization_panel_save_not_memorized"
   />
 </LinearLayout>
