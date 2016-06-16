@@ -136,10 +136,14 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     val view = LayoutInflater.from(context).inflate(R.layout.memorization_conf,null)
     root_view = Some(view)
     val enable = getWidgets(view)
-    enable.setChecked(getPersistedBoolean(false))
+    val memorization_mode = getPersistedBoolean(false)
+    enable.setChecked(memorization_mode)
 
     val container = view.findViewById(R.id.memorization_panel_container).asInstanceOf[ViewGroup]
-    if(FudaListHelper.isBoundedByFudaset){
+    if(memorization_mode && FudaListHelper.isBoundedByFudaset){
+      // We only show the panel which is bounded by poem set only when memorization mode is turned on.
+      // That is because `skip` column is not set to 2 when memorization mode is off.
+      // TODO: show the following panel also when memorization mode is on.
       container.addView(genPanel(true))
     }
     container.addView(genPanel(false))
