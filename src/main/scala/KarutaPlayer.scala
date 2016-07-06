@@ -640,7 +640,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
             // TODO: what should we return ?
             return Left(new AudioQueue())
           }
-          if(reader.exists(read_num,kami_simo)){
+          if(reader.canRead(read_num,kami_simo)._1){
             try{
               val key = (read_num,kami_simo)
               if(decoded_wavs.contains(key)){

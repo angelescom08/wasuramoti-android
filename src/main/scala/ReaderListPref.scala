@@ -19,7 +19,7 @@ object ReaderList{
       for(p <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
         val reader_path = "INT:" + p
         val reader = makeReader(context,reader_path)
-        if(reader.existsAll() match {case (b,m) => b}){
+        if(reader.canReadAll() match {case (b,m) => b}){
           Globals.prefs.get.edit.putString("reader_path",reader_path).commit
           return
         }
@@ -125,7 +125,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     if(positiveResult){
       val prev_value = getValue()
       super.onDialogClosed(positiveResult)
-      val (ok,message) = ReaderList.makeReader(context,getValue()).existsAll()
+      val (ok,message) = ReaderList.makeReader(context,getValue()).canReadAll()
       if(!ok){
         Utils.messageDialog(context,Left(message))
         setValue(prev_value)
@@ -164,13 +164,13 @@ abstract class Reader(context:Context,val path:String){
   type AssetOrFile = Either[String,File]
   def basename:String = new File(path).getName()
   def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
-  def exists(num:Int, kamisimo:Int):Boolean //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
+  def canRead(num:Int, kamisimo:Int):(Boolean,String) //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
   def audioFileExists(cur_num:Int, next_num:Int):Boolean = {
     val maxn = AllFuda.list.length + 1
     val pairs = AudioHelper.genReadNumKamiSimoPairs(context,cur_num,next_num)
       .filter{_._1 != maxn}
       .map{case (rn,sk,_) => (rn,sk)}.toSet
-    pairs.nonEmpty && pairs.forall{case(rn,sk) => exists(rn,sk)}
+    pairs.nonEmpty && pairs.forall{case(rn,sk) => canRead(rn,sk)._1}
   }
   def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){
@@ -188,10 +188,12 @@ abstract class Reader(context:Context,val path:String){
       }
     })
   }
-  def existsAll():(Boolean,String) = {
+  def canReadAll():(Boolean,String) = {
     for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
-      if(!exists(num,kamisimo)){
-        return(false, addSuffix(basename,num,kamisimo) + " not found")
+      canRead(num,kamisimo) match {
+        case (false,reason) => 
+          return(false, context.getResources.getString(R.string.cannot_read_audio,addSuffix(basename,num,kamisimo)) + "\n" + reason)
+        case (true,_) => // do nothing
       }
     }
     (true,"")
@@ -200,13 +202,13 @@ abstract class Reader(context:Context,val path:String){
 class Asset(context:Context,path:String) extends Reader(context,path){
   def getAssetPath(num:Int, kamisimo:Int):String = Globals.ASSETS_READER_DIR+"/"+path+"/"+addSuffix(path,num,kamisimo)
 
-  override def exists(num:Int, kamisimo:Int):Boolean = {
+  override def canRead(num:Int, kamisimo:Int):(Boolean,String) = {
     try{
       val fp = context.getAssets.open(getAssetPath(num,kamisimo))
       fp.close()
-      true
+      (true,null)
     }catch{
-      case _:IOException => false
+      case e:IOException => (false,e.getMessage)
     }
   }
   override def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit){
@@ -231,8 +233,18 @@ class Asset(context:Context,path:String) extends Reader(context,path){
 abstract class ExtAbsBase(context:Context,path:String) extends Reader(context,path){
   def getFile(num:Int,kamisimo:Int):File
 
-  override def exists(num:Int, kamisimo:Int):Boolean = {
-    getFile(num,kamisimo).exists()
+  override def canRead(num:Int, kamisimo:Int):(Boolean,String) = {
+    val file = getFile(num,kamisimo)
+    if(file.canRead){
+      (true,null)
+    }else{
+      val reason_id = if(file.exists){
+        R.string.cannot_read_audio_reason_maybe_permission
+      }else{
+        R.string.cannot_read_audio_reason_not_found
+      }
+      (false,context.getResources.getString(reason_id,file.getPath))
+    }
   }
   override def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit){
     func(Right(getFile(num,kamisimo)))
