@@ -27,11 +27,8 @@ object ReaderList{
     }
   }
   def makeCurrentReader(context:Context):Option[Reader] = {
-    val path = Globals.prefs.get.getString("reader_path",null)
-    if(path == null){
-      None
-    }else{
-      Some(makeReader(context,path))
+    Option(Globals.prefs.get.getString("reader_path",null)).map{
+       makeReader(context,_)
     }
   }
   def makeReader(context:Context,path:String):Reader = {

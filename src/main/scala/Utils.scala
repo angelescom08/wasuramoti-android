@@ -826,7 +826,7 @@ object Utils {
   }
 
 
-  // When API < 16, setting provided coontent uri as EXTRA_STREAM gives us following exception
+  // When API < 16, setting provided content uri as EXTRA_STREAM gives us following exception
   //   java.lang.SecurityException: Permission Denial: opening provider android.support.v4.content.FileProvider from ProcessRecord{...} (pid=xxx, uid=yyy) requires null or null
   // To avoid this, have to call Context.grantUriPermission() to all the packages which has the possibility to be chosen from the user.
   // From API >= 16, the uri inside EXTRA_STREAM is automatically wrapped as ClipData, so we don't have to do that nasty thing.
