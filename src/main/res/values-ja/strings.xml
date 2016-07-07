@@ -8,6 +8,7 @@
   <string name="button_cancel">取り消し</string>
   <string name="button_help">ヘルプ</string>
   <string name="button_config">設定</string>
+  <string name="button_test">テスト</string>
   <string name="button_config_detail">詳細設定</string>
   <string name="now_playing">再生中</string>
   <string name="now_auto_playing">自動再生中</string>
@@ -561,6 +562,9 @@
   <string name="ogg_decode_failed">音声デコード失敗．アプリを再起動すると直るかもしれませんが，これが頻繁に起こるならバグ報告して下さい．</string>
   <string name="conf_auto_play_warning">※ 自動再生すると「バッテリを消耗させるアプリ」として検出されることもありますが，実際には大してバッテリ消費はしてないはずです．</string>
   <string name="alert_ver_0_9_9">わすらもち ver 0.9.9 にて画面がオフの時の自動再生を確実に行うようにしました．\nそのため「バッテリを消耗させるアプリ」として検出されることもありますが，実際には大してバッテリ消費はしてないはずです．</string>
+
+  <string name="audio_decode_test_title">音声のデコードテスト</string>
+
   <!-- canReadError -->
   <string name="cannot_read_audio">「%s」の読み込み失敗.</string>
   <string name="cannot_read_audio_reason_not_found">「%s」というファイルは存在しません．</string>

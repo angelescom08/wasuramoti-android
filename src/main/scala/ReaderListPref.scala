@@ -8,8 +8,8 @@ import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
 import android.app.{AlertDialog,ProgressDialog,Activity}
 import android.os.{Environment,AsyncTask}
-import android.view.Gravity
-import android.widget.ArrayAdapter
+import android.view.{Gravity,View}
+import android.widget.{ArrayAdapter,Button}
 import java.io.{IOException,File,FileOutputStream}
 import karuta.hpnpwd.audio.OggVorbisDecoder
 
@@ -146,6 +146,15 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
     new SearchDirectoryTask().execute(new AnyRef())
+
+    val ctitle = android.view.LayoutInflater.from(context).inflate(R.layout.reader_list_pref_title,null)
+    ctitle.findViewById(R.id.btn_audio_decode_test).asInstanceOf[Button].setOnClickListener(new View.OnClickListener(){
+      override def onClick(view:View){
+        new AudioDecodeTestDialog(context).show
+      }
+    })
+    builder.setCustomTitle(ctitle)
+
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
