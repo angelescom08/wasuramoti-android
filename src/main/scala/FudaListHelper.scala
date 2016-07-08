@@ -550,7 +550,7 @@ object FudaListHelper{
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)
     }
-    // TODO: Since Reader.audioFileExists is more strict than before,
+    // TODO: Since Reader.bothReadable is more strict than before,
     //       Globals.player will be empty for these cases, and might not have to check these conditions.
     if(r == Some(AllFuda.list.length + 1) ||
       ! Utils.readFirstFuda && r == Some(0)

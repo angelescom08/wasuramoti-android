@@ -107,9 +107,11 @@ object AudioHelper{
   }
 
   def refreshKarutaPlayer(activity:WasuramotiActivity,old_player:Option[KarutaPlayer],force:Boolean, fromAuto:Boolean = false, nextRandom:Option[Int] = None):Option[KarutaPlayer] = {
+    Globals.player_none_reason = None
     val app_context = activity.getApplicationContext()
     val maybe_reader = ReaderList.makeCurrentReader(app_context)
     if(maybe_reader.isEmpty){
+      Globals.player_none_reason = Some(app_context.getResources.getString(R.string.player_none_reason_no_reader))
       return None
     }
     val current_index = FudaListHelper.getCurrentIndex(app_context)
@@ -131,7 +133,9 @@ object AudioHelper{
     }
     num.flatMap{case(cur_num,next_num) =>{
         val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != ((cur_num, next_num)) }
-        if(!maybe_reader.get.audioFileExists(cur_num,next_num)){
+        val (readable,reason) = maybe_reader.get.bothReadable(cur_num,next_num)
+        if(!readable){
+          Globals.player_none_reason = Some(reason)
           None
         }else if(force || Globals.forceRefresh || num_changed){
           Globals.forceRefresh = false

@@ -174,12 +174,22 @@ abstract class Reader(context:Context,val path:String){
   def basename:String = new File(path).getName()
   def addSuffix(str:String,num:Int, kamisimo:Int):String = str+"_%03d_%d.ogg".format(num,kamisimo)
   def canRead(num:Int, kamisimo:Int):(Boolean,String) //TODO: not only check the existance of .ogg but also vaild .ogg file with identical sample rate
-  def audioFileExists(cur_num:Int, next_num:Int):Boolean = {
+  def bothReadable(cur_num:Int, next_num:Int):(Boolean,String) = {
     val maxn = AllFuda.list.length + 1
-    val pairs = AudioHelper.genReadNumKamiSimoPairs(context,cur_num,next_num)
+    val pr = AudioHelper.genReadNumKamiSimoPairs(context,cur_num,next_num)
       .filter{_._1 != maxn}
-      .map{case (rn,sk,_) => (rn,sk)}.toSet
-    pairs.nonEmpty && pairs.forall{case(rn,sk) => canRead(rn,sk)._1}
+      .map{case(rn,sk,_) => (rn,sk)}
+      .toSet
+    val pairs = pr.map{case(rn,sk) => canRead(rn,sk)}
+    if(pairs.isEmpty){
+      (false,context.getResources.getString(R.string.player_none_reason_dont_have_to_read))
+    }else{
+      if(pairs.forall{_._1}){
+        (true,null)
+      }else{
+        (false,context.getResources.getString(R.string.player_none_reason_not_readable) + " " + pairs.filter{_._2 != null}.map{_._2}.mkString("\n"))
+      }
+    }
   }
   def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit):Unit
   def withDecodedWav(num:Int, kamisimo:Int, func:(WavBuffer)=>Unit){

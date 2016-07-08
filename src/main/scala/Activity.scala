@@ -737,8 +737,10 @@ trait MainButtonTrait{
             })
           }
           Utils.messageDialog(self,Right(R.string.all_read_done),custom=custom)
+        }else if(Globals.player_none_reason.nonEmpty){
+          Utils.messageDialog(self,Left(Globals.player_none_reason.get))
         }else{
-          Utils.messageDialog(self,Right(R.string.reader_not_found))
+          Utils.messageDialog(self,Right(R.string.player_none_reason_unknown))
         }
         return
       }

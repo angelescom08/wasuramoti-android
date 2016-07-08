@@ -358,7 +358,12 @@
     </p>
     ]]>
   </string>
-  <string name="reader_not_found">詠み手の音声ファイルがありません</string>
+
+  <string name="player_none_reason_unknown">原因不明ですがなぜか再生準備に失敗しました</string>
+  <string name="player_none_reason_no_reader">詠み手が設定されていません</string>
+  <string name="player_none_reason_dont_have_to_read">詠むべき札がありません</string>
+  <string name="player_none_reason_not_readable">音声ファイルを読み込めません: </string>
+
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
   <string name="all_memorized">全て覚え終えました．メニューの「詳細設定」から暗記モードをリセットするか，別の札セットを選択して下さい．</string>
 

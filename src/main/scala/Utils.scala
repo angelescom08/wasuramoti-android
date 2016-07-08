@@ -48,6 +48,7 @@ object Globals {
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
+  var player_none_reason = None:Option[String]
   var setButtonText = None:Option[String=>Unit]
   var is_playing = false
   var forceRefresh = false
