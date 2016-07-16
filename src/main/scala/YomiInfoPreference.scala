@@ -211,11 +211,12 @@ class QuickConfigDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val listener = new DialogInterface.OnClickListener{
       override def onClick(dialog:DialogInterface,which:Int){
+        val act = getActivity.asInstanceOf[WasuramotiActivity]
         which match{
           case 5 =>
             // Change Intended Use
             dismiss
-            getActivity.asInstanceOf[WasuramotiActivity].changeIntendedUse(false)
+            act.changeIntendedUse(false)
             return
           case 4 =>
             // Translation
@@ -232,7 +233,7 @@ class QuickConfigDialog extends DialogFragment{
                   edit.putBoolean("yomi_info_author",false)
                 }
                 edit.commit
-                Utils.restartActivity(activity)
+                act.reloadFragment
               }
             }
             dismiss
@@ -263,7 +264,7 @@ class QuickConfigDialog extends DialogFragment{
         }
         edit.commit
         dismiss
-        Utils.restartActivity(getActivity)
+        act.reloadFragment
       }
     }
     val builder = new AlertDialog.Builder(getActivity)

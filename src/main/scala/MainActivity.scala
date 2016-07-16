@@ -42,8 +42,7 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
       return
     }
     val dataString = intent.getDataString
-    // we don't need the current intent anymore so replace it with default intent
-    // Note: this intent will be used in Utils.restartActivity()
+    // we don't need the current intent anymore so replace it with default intent so that getIntent returns plain intent.
     setIntent(new Intent(this,this.getClass))
     dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
       case "fudaset" => importFudaset(dataString)
@@ -52,6 +51,9 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     }
   }
 
+  def reloadFragment(){
+    getSupportFragmentManager.beginTransaction.replace(R.id.main_fragment, new WasuramotiFragment).commit
+  }
 
   def importFudaset(dataString:String){
     try{
@@ -371,7 +373,7 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     Utils.setStatusBarForLolipop(this)
     if(Globals.forceRestart){
       Globals.forceRestart = false
-      Utils.restartActivity(this)
+      reloadFragment()
     }
     restartRefreshTimer()
     Globals.global_lock.synchronized{
@@ -621,7 +623,7 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
           builder.setTitle(R.string.intended_use_result_title)
         }
         Utils.generalHtmlDialog(that,Left(html),()=>{
-          Utils.restartActivity(that)
+          reloadFragment()
         },custom = hcustom)
       }
     }
