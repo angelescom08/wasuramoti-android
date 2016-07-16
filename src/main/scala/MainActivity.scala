@@ -15,7 +15,7 @@ import org.json.{JSONTokener,JSONObject,JSONArray}
 
 import scala.collection.mutable
 
-class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with ActivityDebugTrait{
+class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with MainButtonTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -198,53 +198,6 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
     return true
   }
 
-  def switchViewAndReloadHandler(){
-    val read_button = findViewById(R.id.read_button).asInstanceOf[Button]
-    val stub = findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
-    if(YomiInfoUtils.showPoemText){
-      stub.inflate()
-      read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
-      read_button.setBackgroundResource(R.drawable.main_button)
-    }
-
-    val frag_stub = findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
-    if(frag_stub != null &&
-      YomiInfoUtils.showPoemText &&
-      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
-    ){
-      frag_stub.inflate()
-      val fragment = YomiInfoSearchDialog.newInstance(false,Some(0))
-      getSupportFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
-    }
-
-    val replay_stub = findViewById(R.id.replay_last_button_stub).asInstanceOf[ViewStub]
-    if(!YomiInfoUtils.showPoemText && Globals.prefs.get.getBoolean("show_replay_last_button",false)){
-      replay_stub.inflate()
-      val btn = findViewById(R.id.replay_last_button).asInstanceOf[Button]
-      btn.setText(Utils.replayButtonText(getResources))
-      val that = this
-      btn.setOnClickListener(new View.OnClickListener(){
-        override def onClick(v:View){
-           KarutaPlayUtils.startReplay(that)
-        }
-      })
-    }
-
-    Globals.setButtonText = Some( txt =>
-      handler.post(new Runnable(){
-        override def run(){
-          val lines = txt.split("\n")
-          val max_chars = lines.map{_.length}.max // TODO: treat japanese characters as two characters.
-          if((lines.length >= 4 || max_chars >= 16) && YomiInfoUtils.showPoemText){
-            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
-          }
-          read_button.setMinLines(lines.length)
-          read_button.setMaxLines(lines.length+1) // We accept exceeding one row
-          read_button.setText(txt)
-        }
-      }))
-  }
-
   def setCustomActionBar(){
     val actionbar = getSupportActionBar
     val actionview = getLayoutInflater.inflate(R.layout.actionbar_custom,null)
@@ -270,9 +223,9 @@ class WasuramotiActivity extends ActionBarActivity with MainButtonTrait with Act
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
-    setContentView(R.layout.main)
+    setContentView(R.layout.main_activity)
+    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, new WasuramotiFragment).commit
     getSupportActionBar.setHomeButtonEnabled(true)
-    switchViewAndReloadHandler()
     setCustomActionBar()
     if(Globals.IS_DEBUG){
       setTitle(getResources().getString(R.string.app_name) + " DEBUG")
