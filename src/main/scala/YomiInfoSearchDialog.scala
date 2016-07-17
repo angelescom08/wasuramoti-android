@@ -20,8 +20,8 @@ object YomiInfoSearchDialog{
   val PREFIX_KIMARIJI = "N.KIMARIJI"
   val PREFIX_SEARCH = "P.SEARCH"
   def newInstance(is_dialog:Boolean,fudanum:Option[Int]):YomiInfoSearchDialog = {
-    val fragment = new YomiInfoSearchDialog()
-    val args = new Bundle()
+    val fragment = new YomiInfoSearchDialog
+    val args = new Bundle
     args.putSerializable("fudanum",fudanum)
     args.putBoolean("is_dialog",is_dialog)
     fragment.setArguments(args)

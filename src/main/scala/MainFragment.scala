@@ -16,6 +16,17 @@ import org.json.{JSONTokener,JSONObject,JSONArray}
 
 import scala.collection.mutable
 
+
+object WasuramotiFragment{
+  def newInstance(have_to_init:Boolean):WasuramotiFragment={
+    val fragment = new WasuramotiFragment
+    val args = new Bundle
+    args.putBoolean("have_to_init",have_to_init)
+    fragment.setArguments(args)
+    return fragment
+  }
+}
+
 class WasuramotiFragment extends Fragment{
   override def onCreateView(inflater:LayoutInflater,parent:ViewGroup,state:Bundle):View = {
     return inflater.inflate(R.layout.main_fragment, parent, false)
@@ -23,6 +34,10 @@ class WasuramotiFragment extends Fragment{
 
   override def onViewCreated(root:View, state:Bundle){
     switchViewAndReloadHandler(root)
+    if(getArguments.getBoolean("have_to_init")){
+      val wa = getActivity.asInstanceOf[WasuramotiActivity]
+      wa.doWhenResume()
+    }
   }
 
   def switchViewAndReloadHandler(root:View){

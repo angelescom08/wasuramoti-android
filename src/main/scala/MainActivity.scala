@@ -52,7 +52,8 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
   }
 
   def reloadFragment(){
-    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, new WasuramotiFragment).commit
+    val fragment = WasuramotiFragment.newInstance(true)
+    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, fragment).commit
   }
 
   def importFudaset(dataString:String){
@@ -226,7 +227,9 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
     setContentView(R.layout.main_activity)
-    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, new WasuramotiFragment).commit
+    // since onResume is always called after onCreate, we don't have to set have_to_init
+    val fragment = WasuramotiFragment.newInstance(false)
+    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, fragment).commit
     getSupportActionBar.setHomeButtonEnabled(true)
     setCustomActionBar()
     if(Globals.IS_DEBUG){
@@ -364,17 +367,12 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
       return
     }
   }
-  override def onResume(){
-    super.onResume()
-    if( Globals.prefs.isEmpty ){
-      // onCreate returned before loading preference
-      return
-    }
-    Utils.setStatusBarForLolipop(this)
-    if(Globals.forceRestart){
-      Globals.forceRestart = false
-      reloadFragment()
-    }
+
+
+  // This function is called inside WasuramotiActivity.onResume()  and WasuramotiFragment.onViewCreated()
+  // However, some codes are not required when calling from onViewCreated
+  // TODO: move redundant code to onResume
+  def doWhenResume(){
     restartRefreshTimer()
     Globals.global_lock.synchronized{
       Globals.player.foreach{ p =>
@@ -405,8 +403,31 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     startDimLockTimer()
     setLongClickButtonOnResume()
     setLongClickYomiInfoOnResume()
-    handleActionView()
     // TODO: remove `Globals.have_to_alert_ver_0_9_9` and `R.string.alert_ver_0_9_9` at 2017-02-23
+    this.setVolumeControlStream(Utils.getAudioStreamType)
+    KarutaPlayUtils.setReplayButtonEnabled(this,
+      if(Globals.is_playing){
+        Some(false)
+      }else{
+        None
+      }
+    )
+  }
+
+  override def onResume(){
+    super.onResume()
+    if( Globals.prefs.isEmpty ){
+      // onCreate returned before loading preference
+      return
+    }
+    Utils.setStatusBarForLolipop(this)
+    if(Globals.forceRestart){
+      Globals.forceRestart = false
+      reloadFragment()
+    }else{
+      doWhenResume()
+    }
+    handleActionView()
     if(Globals.have_to_alert_ver_0_9_9){
       Utils.messageDialog(this,Right(R.string.alert_ver_0_9_9))
       Globals.have_to_alert_ver_0_9_9 = false
@@ -416,14 +437,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
         changeIntendedUse(true)
       }
     }
-    this.setVolumeControlStream(Utils.getAudioStreamType)
-    KarutaPlayUtils.setReplayButtonEnabled(this,
-      if(Globals.is_playing){
-        Some(false)
-      }else{
-        None
-      }
-    )
   }
   override def onPause(){
     super.onPause()
