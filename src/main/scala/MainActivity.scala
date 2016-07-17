@@ -223,11 +223,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext)
 
-    if(YomiInfoUtils.showPoemText && android.os.Build.VERSION.SDK_INT >= 11){
-         getWindow.setFlags(
-           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-    }
     setContentView(R.layout.main_activity)
     
     // since onResume is always called after onCreate, we don't have to set have_to_resume_task = true
@@ -377,27 +372,9 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
 
 
   // This function is called inside WasuramotiActivity.onResume()  and WasuramotiFragment.onViewCreated()
-  // However, some codes are not required when calling from onViewCreated
-  // TODO: move redundant code to onResume
+  // Only put codes which have to do after onViewCreated() here, and put rest in onResume()
   def doWhenResume(){
-    restartRefreshTimer()
-    Globals.global_lock.synchronized{
-      Globals.player.foreach{ p =>
-        // When screen is rotated, the activity is destroyed and new one is created.
-        // Therefore, we have to reset the KarutaPlayer's activity
-        p.activity = this
-      }
-      if(Globals.forceRefresh){
-        KarutaPlayUtils.replay_audio_queue = None
-      }
-      if(Globals.player.isEmpty || Globals.forceRefresh){
-        if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
-          FudaListHelper.moveToFirst(this)
-        }
-        Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
-      }
-      Utils.setButtonTextByState(getApplicationContext)
-    }
+    Utils.setButtonTextByState(getApplicationContext)
     if(Globals.player.forall(!_.is_replay)){
       invalidateYomiInfo()
     }else{
@@ -407,10 +384,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
         }
       }
     }
-    startDimLockTimer()
-    setLongClickButtonOnResume()
-    setLongClickYomiInfoOnResume()
-    // TODO: remove `Globals.have_to_alert_ver_0_9_9` and `R.string.alert_ver_0_9_9` at 2017-02-23
     this.setVolumeControlStream(Utils.getAudioStreamType)
     KarutaPlayUtils.setReplayButtonEnabled(this,
       if(Globals.is_playing){
@@ -434,7 +407,26 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     }else{
       doWhenResume()
     }
+    Globals.global_lock.synchronized{
+      Globals.player.foreach{ p =>
+        // When screen is rotated, the activity is destroyed and new one is created.
+        // Therefore, we have to reset the KarutaPlayer's activity
+        p.activity = this
+      }
+      if(Globals.forceRefresh){
+        KarutaPlayUtils.replay_audio_queue = None
+      }
+      if(Globals.player.isEmpty || Globals.forceRefresh){
+        if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
+          FudaListHelper.moveToFirst(this)
+        }
+        Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
+      }
+    }
     handleActionView()
+    restartRefreshTimer()
+    startDimLockTimer()
+    // TODO: remove `Globals.have_to_alert_ver_0_9_9` and `R.string.alert_ver_0_9_9` at 2017-02-23
     if(Globals.have_to_alert_ver_0_9_9){
       Utils.messageDialog(this,Right(R.string.alert_ver_0_9_9))
       Globals.have_to_alert_ver_0_9_9 = false
@@ -507,49 +499,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     }
   }
 
-  def setLongClickYomiInfoOnResume(){
-    for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
-      val view = findViewById(id).asInstanceOf[YomiInfoView]
-      if(view != null){
-        view.setOnLongClickListener(
-          new View.OnLongClickListener(){
-            override def onLongClick(v:View):Boolean = {
-              if(view.cur_num.nonEmpty){
-                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num)
-                dlg.show(getSupportFragmentManager,"yomi_info_search")
-              }
-              return true
-            }
-          }
-        )
-      }
-    }
-  }
-  def setLongClickButtonOnResume(){
-    val btn = findViewById(R.id.read_button).asInstanceOf[Button]
-    if(btn != null){
-      btn.setOnLongClickListener(
-        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
-          new View.OnLongClickListener(){
-            override def onLongClick(v:View):Boolean = {
-              Globals.global_lock.synchronized{
-                if(Globals.is_playing){
-                  Globals.player.foreach{p=>
-                    p.stop()
-                    moveToNextFuda()
-                    doPlay()
-                  }
-                }
-              }
-              return true
-            }
-          }
-        }else{
-          null
-        }
-      )
-    }
-  }
   def changeIntendedUse(first_config:Boolean = true){
     val builder = new AlertDialog.Builder(this)
     val view = getLayoutInflater.inflate(R.layout.intended_use_dialog,null)

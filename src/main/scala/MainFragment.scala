@@ -36,6 +36,13 @@ class WasuramotiFragment extends Fragment{
     val wa = getActivity.asInstanceOf[WasuramotiActivity]
     switchViewAndReloadHandler(root)
     wa.setCustomActionBar()
+    setLongClickYomiInfo(root)
+    setLongClickButton(root)
+    if(YomiInfoUtils.showPoemText && android.os.Build.VERSION.SDK_INT >= 11){
+         getActivity.getWindow.setFlags(
+           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+    }
     if(getArguments.getBoolean("have_to_resume_task")){
       wa.doWhenResume()
     }
@@ -85,6 +92,50 @@ class WasuramotiFragment extends Fragment{
           read_button.setText(txt)
         }
       }))
+  }
+  def setLongClickYomiInfo(root:View){
+    for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
+      val view = root.findViewById(id).asInstanceOf[YomiInfoView]
+      if(view != null){
+        view.setOnLongClickListener(
+          new View.OnLongClickListener(){
+            override def onLongClick(v:View):Boolean = {
+              if(view.cur_num.nonEmpty){
+                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num)
+                dlg.show(getChildFragmentManager,"yomi_info_search")
+              }
+              return true
+            }
+          }
+        )
+      }
+    }
+  }
+  def setLongClickButton(root:View){
+    val btn = root.findViewById(R.id.read_button).asInstanceOf[Button]
+    if(btn != null){
+      btn.setOnLongClickListener(
+        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
+          new View.OnLongClickListener(){
+            override def onLongClick(v:View):Boolean = {
+              Globals.global_lock.synchronized{
+                if(Globals.is_playing){
+                  Globals.player.foreach{p=>
+                    p.stop()
+                    val wa = getActivity.asInstanceOf[WasuramotiActivity]
+                    wa.moveToNextFuda()
+                    wa.doPlay()
+                  }
+                }
+              }
+              return true
+            }
+          }
+        }else{
+          null
+        }
+      )
+    }
   }
 
 }
