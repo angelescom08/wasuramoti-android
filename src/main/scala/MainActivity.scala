@@ -52,7 +52,7 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
   }
 
   def reloadFragment(){
-    getSupportFragmentManager.beginTransaction.replace(R.id.main_fragment, new WasuramotiFragment).commit
+    getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, new WasuramotiFragment).commit
   }
 
   def importFudaset(dataString:String){
