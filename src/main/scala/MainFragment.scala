@@ -18,10 +18,10 @@ import scala.collection.mutable
 
 
 object WasuramotiFragment{
-  def newInstance(have_to_init:Boolean):WasuramotiFragment={
+  def newInstance(have_to_resume_task:Boolean):WasuramotiFragment={
     val fragment = new WasuramotiFragment
     val args = new Bundle
-    args.putBoolean("have_to_init",have_to_init)
+    args.putBoolean("have_to_resume_task",have_to_resume_task)
     fragment.setArguments(args)
     return fragment
   }
@@ -33,9 +33,10 @@ class WasuramotiFragment extends Fragment{
   }
 
   override def onViewCreated(root:View, state:Bundle){
+    val wa = getActivity.asInstanceOf[WasuramotiActivity]
     switchViewAndReloadHandler(root)
-    if(getArguments.getBoolean("have_to_init")){
-      val wa = getActivity.asInstanceOf[WasuramotiActivity]
+    wa.setCustomActionBar()
+    if(getArguments.getBoolean("have_to_resume_task")){
       wa.doWhenResume()
     }
   }

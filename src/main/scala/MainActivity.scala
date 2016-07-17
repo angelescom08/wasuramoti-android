@@ -214,6 +214,8 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     ){
       bar_kima.inflate()
       actionbar.setDisplayShowTitleEnabled(false)
+    }else{
+      actionbar.setDisplayShowTitleEnabled(true)
     }
   }
 
@@ -227,11 +229,12 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
     setContentView(R.layout.main_activity)
-    // since onResume is always called after onCreate, we don't have to set have_to_init
+    
+    // since onResume is always called after onCreate, we don't have to set have_to_resume_task = true
     val fragment = WasuramotiFragment.newInstance(false)
+
     getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, fragment).commit
     getSupportActionBar.setHomeButtonEnabled(true)
-    setCustomActionBar()
     if(Globals.IS_DEBUG){
       setTitle(getResources().getString(R.string.app_name) + " DEBUG")
       val layout = getWindow.getDecorView.findViewWithTag("main_linear_layout").asInstanceOf[LinearLayout]
