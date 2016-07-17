@@ -329,9 +329,13 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     if(yomi_cur != null){
       val fudanum = yomi_cur.cur_num
       bar_poem_info_num = fudanum
-      val yomi_dlg = getSupportFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog]
-      if(yomi_dlg != null && Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
-        yomi_dlg.setFudanum(fudanum)
+      if(Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)){
+        for(
+             main <- Option(getSupportFragmentManager.findFragmentById(R.id.activity_placeholder).asInstanceOf[WasuramotiFragment]);
+             yomi_dlg <- Option(main.getChildFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog])
+         ){
+               yomi_dlg.setFudanum(fudanum)
+         }
       }
       val cv = getSupportActionBar.getCustomView
       if(cv != null && Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)){
