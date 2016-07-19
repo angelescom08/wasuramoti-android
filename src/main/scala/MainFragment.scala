@@ -38,11 +38,6 @@ class WasuramotiFragment extends Fragment{
     wa.setCustomActionBar()
     setLongClickYomiInfo(root)
     setLongClickButton(root)
-    if(YomiInfoUtils.showPoemText && android.os.Build.VERSION.SDK_INT >= 11){
-         getActivity.getWindow.setFlags(
-           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-           WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-    }
     if(getArguments.getBoolean("have_to_resume_task")){
       wa.doWhenResume()
     }
