@@ -370,10 +370,22 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     }
   }
 
-
-  // This function is called inside WasuramotiActivity.onResume()  and WasuramotiFragment.onViewCreated()
-  // Only put codes which have to do after onViewCreated() here, and put rest in onResume()
+  // code which have to be done:
+  // (a) after reloadFragment() or in onResume() ... put it inside WasuramotiActivity.doWhenResume()
+  // (b) after reloadFragment() or after onCreate() ... put it inside WasuramotiFragment.onViewCreated()
+  // (c) only in onResume() ... put it inside WasuramotiActivity.onResume()
   def doWhenResume(){
+    Globals.global_lock.synchronized{
+      if(Globals.forceRefresh){
+        KarutaPlayUtils.replay_audio_queue = None
+      }
+      if(Globals.player.isEmpty || Globals.forceRefresh){
+        if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
+          FudaListHelper.moveToFirst(this)
+        }
+        Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
+      }
+    }
     Utils.setButtonTextByState(getApplicationContext)
     if(Globals.player.forall(!_.is_replay)){
       invalidateYomiInfo()
@@ -412,15 +424,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
         // When screen is rotated, the activity is destroyed and new one is created.
         // Therefore, we have to reset the KarutaPlayer's activity
         p.activity = this
-      }
-      if(Globals.forceRefresh){
-        KarutaPlayUtils.replay_audio_queue = None
-      }
-      if(Globals.player.isEmpty || Globals.forceRefresh){
-        if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
-          FudaListHelper.moveToFirst(this)
-        }
-        Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
       }
     }
     handleActionView()
