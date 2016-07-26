@@ -153,11 +153,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
               }
               wa.refreshAndSetButton()
               wa.invalidateYomiInfo()
-
-              val play_after_swipe = Globals.prefs.get.getBoolean("play_after_swipe",false)
-              if(play_after_swipe && Globals.player.nonEmpty){
-                wa.doPlay(from_swipe=true)
-              }
+              Utils.playAfterMove(wa)
             }
           })
       if(smooth){

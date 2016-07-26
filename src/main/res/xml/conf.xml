@@ -26,12 +26,20 @@
       android:summary="@string/conf_karafuda_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_auto">
     <karuta.hpnpwd.wasuramoti.AutoPlayPreference
       android:key="autoplay"
       android:title="@string/conf_autoplay"
       android:summary="@string/conf_autoplay_summary"
       android:widgetLayout="@layout/conf_current_value"
       unit="@string/conf_unit_second"
+      />
+    <CheckBoxPreference
+      android:key="play_after_swipe"
+      android:title="@string/conf_play_after_swipe"
+      android:summary="@string/conf_play_after_swipe_summary"
+      android:defaultValue="false"
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_order" android:key="category_order">
@@ -87,12 +95,6 @@
       android:summary="@string/subscreen_others"
       >
       <PreferenceCategory android:title="@string/category_move">
-        <CheckBoxPreference
-          android:key="play_after_swipe"
-          android:title="@string/conf_play_after_swipe"
-          android:summary="@string/conf_play_after_swipe_summary"
-          android:defaultValue="false"
-          />
         <CheckBoxPreference
           android:key="skip_on_longclick"
           android:title="@string/conf_skip_on_longclick"

@@ -867,6 +867,12 @@ object Utils {
       }
     }
   }
+
+  def playAfterMove(wa:WasuramotiActivity){
+    if(Globals.player.nonEmpty && Globals.prefs.get.getBoolean("play_after_swipe",false)){
+      wa.doPlay(from_swipe=true)
+    }
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

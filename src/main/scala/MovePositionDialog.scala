@@ -139,6 +139,7 @@ class MovePositionDialog extends DialogFragment{
           }}
         }
         getDialog.dismiss()
+        Utils.playAfterMove(wa)
       }
     })
     view.findViewById(R.id.move_search_text).asInstanceOf[EditText].addTextChangedListener(new TextWatcher(){
@@ -154,9 +155,11 @@ class MovePositionDialog extends DialogFragment{
     return builder.create
   }
   def onOk(){
+    val wa = getActivity.asInstanceOf[WasuramotiActivity]
     FudaListHelper.updateCurrentIndexWithSkip(getActivity,Some(current_index))
-    getActivity.asInstanceOf[WasuramotiActivity].refreshAndInvalidate()
+    wa.refreshAndInvalidate()
     getDialog.dismiss()
+    Utils.playAfterMove(wa)
   }
   def onPrev(text:TextView){incCurrentIndex(text,-1)}
   def onNext(text:TextView){incCurrentIndex(text,1)}
