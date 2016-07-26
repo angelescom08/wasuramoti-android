@@ -56,12 +56,19 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
         db.execSQL("UPDATE "+Globals.TABLE_FUDASETS+" SET set_order=id;")
       })
     }
+    if(oldv < 6){
+      Utils.withTransaction(db, () => {
+        // we dont have to do UPDATE .. SET new columns since this table was never used
+        db.execSQL("ALTER TABLE "+Globals.TABLE_READERS+" ADD COLUMN joka_upper INTEGER;")
+        db.execSQL("ALTER TABLE "+Globals.TABLE_READERS+" ADD COLUMN joka_lower INTEGER;")
+      })
+    }
   }
   override def onCreate(db:SQLiteDatabase){
      db.execSQL("CREATE TABLE "+Globals.TABLE_FUDASETS+" (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT, set_size INTEGER, set_order INTEGER);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_FUDALIST+" (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER, memorized INTEGER);")
      db.execSQL("CREATE TABLE "+Globals.TABLE_READFILTER+" (id INTEGER PRIMARY KEY, readers_id INTEGER, num INTEGER, volume NUMERIC, pitch NUMECIR, speed NUMERIC);")
-     db.execSQL("CREATE TABLE "+Globals.TABLE_READERS+" (id INTEGER PRIMARY KEY, path TEXT);")
+     db.execSQL("CREATE TABLE "+Globals.TABLE_READERS+" (id INTEGER PRIMARY KEY, path TEXT, joka_upper INTEGER, joka_lower INTEGER);")
      Utils.withTransaction(db, () => {
        val cv = new ContentValues()
        cv.put("skip",new java.lang.Integer(0))
