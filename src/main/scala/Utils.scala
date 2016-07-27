@@ -873,6 +873,20 @@ object Utils {
       wa.doPlay(from_swipe=true)
     }
   }
+
+  val PATTERN_JOKA_UPPER = "upper_(\\d+)".r
+  val PATTERN_JOKA_LOWER = "lower_(\\d+)".r
+  def parseReadOrderJoka():(Int,Int) = {
+    val read_order_joka = Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+    var upper, lower = 1
+    read_order_joka.split(",").foreach{x =>
+      x match {
+        case PATTERN_JOKA_UPPER(n) => upper = n.toInt
+        case PATTERN_JOKA_LOWER(n) => lower = n.toInt
+      }
+    }
+    (upper,lower)
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

@@ -17,20 +17,12 @@ object AudioHelper{
     val read_order_each = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
     var ss = read_order_each.split("_")
     if(cur_num == 0){
-      val read_order_joka = if(Globals.prefs.get.getBoolean("joka_enable",true)){
-        Globals.prefs.get.getString("read_order_joka","upper_1,lower_1")
+      val (up,lo) = if(Globals.prefs.get.getBoolean("joka_enable",true)){
+        Utils.parseReadOrderJoka
       }else{
-        "upper_0,lower_0"
+        (0,0)
       }
-      ss = read_order_joka.split(",").flatMap{ s =>
-        val Array(t,num) = s.split("_")
-        Array.fill(num.toInt){
-          t match{
-            case "upper" => "CUR1"
-            case "lower" => "CUR2"
-          }
-        }
-      } ++ ss.filter(_.startsWith("NEXT"))
+      ss = Array.fill(up){"CUR1"} ++ Array.fill(lo){"CUR2"} ++ ss.filter(_.startsWith("NEXT"))
     }
     val is_last_fuda = FudaListHelper.isLastFuda(context)
     if(is_last_fuda && read_order_each.endsWith("NEXT1")){

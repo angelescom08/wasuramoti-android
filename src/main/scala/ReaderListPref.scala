@@ -123,12 +123,14 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
   }
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
-      val prev_value = getValue()
+      val prev_value = getValue
       super.onDialogClosed(positiveResult)
-      val (ok,message) = ReaderList.makeReader(context,getValue()).canReadAll()
+      val (ok,message) = ReaderList.makeReader(context,getValue).canReadAll
       if(!ok){
         Utils.messageDialog(context,Left(message))
         setValue(prev_value)
+      }else{
+        FudaListHelper.saveRestoreReadOrderJoka(prev_value,getValue)
       }
     }else{
       super.onDialogClosed(positiveResult)

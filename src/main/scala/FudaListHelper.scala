@@ -645,6 +645,27 @@ object FudaListHelper{
       is_add && fs.nonEmpty
     }
   }
+  def saveRestoreReadOrderJoka(prev_path:String, cur_path:String){ Globals.db_lock.synchronized {
+    val wdb = Globals.database.get.getWritableDatabase
+    val (prev_upper,prev_lower) = Utils.parseReadOrderJoka
+    val cv = new ContentValues()
+    cv.put("path",prev_path)
+    cv.put("joka_upper",new java.lang.Integer(prev_upper))
+    cv.put("joka_lower",new java.lang.Integer(prev_lower))
+    wdb.replace(Globals.TABLE_READERS,null,cv)
+    wdb.close
+    val db = Globals.database.get.getReadableDatabase
+    val cs = db.query(Globals.TABLE_READERS,Array("joka_upper","joka_lower"),"path = ?",Array(cur_path),null,null,null,null)
+    if(cs.getCount > 0){
+      cs.moveToFirst
+      val up = if(cs.isNull(0)){1}else{cs.getInt(0)}
+      val lo = if(cs.isNull(1)){1}else{cs.getInt(1)}
+      val edit = Globals.prefs.get.edit
+      edit.putString("read_order_joka",s"upper_${up},lower_${lo}")
+      edit.commit
+    }
+    cs.close
+  }}
 }
 
 // vim: set ts=2 sw=2 et:
