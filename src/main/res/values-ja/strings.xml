@@ -11,7 +11,7 @@
   <string name="button_test">テスト</string>
   <string name="button_config_detail">詳細設定</string>
   <string name="now_playing">再生中</string>
-  <string name="now_auto_playing">自動再生中</string>
+  <string name="now_auto_playing">連続再生中</string>
   <string name="now_stopped">停止</string>
   <string name="now_stopped_auto">%d秒停止</string>
   <string name="now_searching">検索中</string>
@@ -226,7 +226,10 @@
   <string name="conf_num_1">1回</string>
   <string name="conf_num_2">2回</string>
 
-  <string name="conf_joka_caveat">※ 実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意</string>
+  <string name="conf_joka_caveat">
+    ※1 序歌を詠む回数は詠み手ごとに保存されます \n
+    ※2 実際は000_1.oggに上の句と下の句が両方含まれている音源もあるので注意
+  </string>
 
   <!-- CATEGORY_VOICE -->
   <string name="category_voice">音源</string>

@@ -255,7 +255,10 @@
   <string name="conf_num_1">Once</string>
   <string name="conf_num_2">Twice</string>
 
-  <string name="conf_joka_caveat">Note: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.</string>
+  <string name="conf_joka_caveat">
+    Note 1: This config is preserved for each reciters. \n
+    Note 2: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.
+  </string>
 
   <!-- CATEGORY_AUTO -->
   <string name="category_auto">Auto</string>
