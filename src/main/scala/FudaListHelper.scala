@@ -645,6 +645,12 @@ object FudaListHelper{
       is_add && fs.nonEmpty
     }
   }
+  def deleteReadersNotInList(paths:Array[CharSequence]){ Globals.db_lock.synchronized {
+    val wdb = Globals.database.get.getWritableDatabase
+    val placeholders = Array.fill(paths.size){"?"}.mkString(",")
+    wdb.delete(Globals.TABLE_READERS,s"path NOT IN (${placeholders})", paths.map{_.toString})
+    wdb.close
+  }}
   def saveRestoreReadOrderJoka(prev_path:String, cur_path:String, joka_upper:Boolean, joka_lower:Boolean){ Globals.db_lock.synchronized {
     if(prev_path == cur_path){
       return

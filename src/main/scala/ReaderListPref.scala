@@ -70,6 +70,8 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
             }
           })
       }
+      FudaListHelper.deleteReadersNotInList(getEntryValues)
+
     }
 
     // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
