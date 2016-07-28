@@ -645,7 +645,7 @@ object FudaListHelper{
       is_add && fs.nonEmpty
     }
   }
-  def saveRestoreReadOrderJoka(prev_path:String, cur_path:String){ Globals.db_lock.synchronized {
+  def saveRestoreReadOrderJoka(prev_path:String, cur_path:String, joka_upper:Boolean, joka_lower:Boolean){ Globals.db_lock.synchronized {
     if(prev_path == cur_path){
       return
     }
@@ -667,7 +667,9 @@ object FudaListHelper{
       val lo = if(cs.isNull(1)){1}else{cs.getInt(1)}
       (up,lo)
     }else{
-      (1,1)
+      val up = if(joka_upper){1}else{0}
+      val lo = if(joka_lower){1}else{0}
+      (up,lo)
     }
     edit.putString("read_order_joka",s"upper_${upper},lower_${lower}")
     edit.commit

@@ -272,7 +272,12 @@ object Utils {
     (is_joka || roe.contains("CUR")) && roe.contains("NEXT")
   }
   def readJoka():Boolean = {
-    Globals.prefs.get.getBoolean("joka_enable",true)
+    Globals.prefs.exists{ pref =>
+      // Since FudaListHelper.saveRestoreReadOrderJoka() may set read_order_joka to upper_0,lower_0,
+      // we check both joka_enable and read_order_joka
+      pref.getBoolean("joka_enable",true) && 
+      pref.getString("read_order_joka","upper_1,lower_1") != "upper_0,lower_0"
+    }
   }
   def readFirstFuda():Boolean = {
     val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")

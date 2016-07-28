@@ -19,7 +19,7 @@ object ReaderList{
       for(p <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
         val reader_path = "INT:" + p
         val reader = makeReader(context,reader_path)
-        if(reader.canReadAll() match {case (b,m) => b}){
+        if(reader.canReadAll._1){
           Globals.prefs.get.edit.putString("reader_path",reader_path).commit
           return
         }
@@ -125,12 +125,12 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     if(positiveResult){
       val prev_value = getValue
       super.onDialogClosed(positiveResult)
-      val (ok,message) = ReaderList.makeReader(context,getValue).canReadAll
+      val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,getValue).canReadAll
       if(!ok){
         Utils.messageDialog(context,Left(message))
         setValue(prev_value)
       }else{
-        FudaListHelper.saveRestoreReadOrderJoka(prev_value,getValue)
+        FudaListHelper.saveRestoreReadOrderJoka(prev_value,getValue,joka_upper,joka_lower)
       }
     }else{
       super.onDialogClosed(positiveResult)
@@ -209,15 +209,18 @@ abstract class Reader(context:Context,val path:String){
       }
     })
   }
-  def canReadAll():(Boolean,String) = {
-    for(num <- 0 to 100; kamisimo <- 1 to 2 if num > 0 || kamisimo == 2){
+  def canReadAll():(Boolean,String,Boolean,Boolean) = {
+    val joka_upper = canRead(0,1)._1
+    val joka_lower = canRead(0,2)._1
+    for(num <- 1 to 100; kamisimo <- 1 to 2){
       canRead(num,kamisimo) match {
         case (false,reason) => 
-          return(false, context.getResources.getString(R.string.cannot_read_audio,addSuffix(basename,num,kamisimo)) + "\n" + reason)
+          return(false, context.getResources.getString(R.string.cannot_read_audio,addSuffix(basename,num,kamisimo)) + "\n" + reason,
+            joka_upper,joka_lower)
         case (true,_) => // do nothing
       }
     }
-    (true,"")
+    (true,"",joka_upper,joka_lower)
   }
 }
 class Asset(context:Context,path:String) extends Reader(context,path){
