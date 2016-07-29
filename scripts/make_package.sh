@@ -65,7 +65,7 @@ if [ ! "${READER}" ];then
   exit
 fi
 
-VERSION=$(grep -oP 'android:versionName="[0-9.]+"' < ${ROOT}/target/android-bin/AndroidManifest.xml | cut -d = -f 2 | tr -d '"')
+VERSION=$(grep -oP 'android:versionName=".*?"' < ${ROOT}/target/android-bin/AndroidManifest.xml | cut -d = -f 2 | tr -d '"')
 TARGET_DIR="${TARGET_BASE}/wasuramoti-android-${READER}-${VERSION}"
 if [ -e "${TARGET_DIR}" ];then
   rm -rf "${TARGET_DIR}"
