@@ -70,7 +70,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
             }
           })
       }
-      FudaListHelper.deleteReadersNotInList(getEntryValues)
+      FudaListHelper.updateReaders(getEntryValues)
 
     }
 
@@ -141,15 +141,20 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
-    for(i <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
-      entvals += "INT:"+i
-      entries += i
+
+    for(x <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
+      entvals += "INT:"+x
+      entries += x
     }
+    for(x <- FudaListHelper.selectNonInternalReaders){
+      entvals += x
+      entries += new File(x).getName
+    }
+
     setEntries(entries.toArray)
     setEntryValues(entvals.toArray)
     adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
-    new SearchDirectoryTask().execute(new AnyRef())
 
     val ctitle = android.view.LayoutInflater.from(context).inflate(R.layout.reader_list_pref_title,null)
     ctitle.findViewById(R.id.btn_audio_decode_test).asInstanceOf[Button].setOnClickListener(new View.OnClickListener(){
@@ -159,10 +164,14 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     })
     builder.setCustomTitle(ctitle)
 
-
+    val showHandler = () => {
+      showDialog(null)
+      new SearchDirectoryTask().execute(new AnyRef())
+      ()
+    }
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          new ScanReaderConfDialog(context).show
+          new ScanReaderConfDialog(context,showHandler).show
         }
       })
 

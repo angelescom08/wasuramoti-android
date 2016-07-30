@@ -645,15 +645,26 @@ object FudaListHelper{
       is_add && fs.nonEmpty
     }
   }
-  def deleteReadersNotInList(paths:Array[CharSequence]){ Globals.db_lock.synchronized {
+  def updateReaders(paths:Array[CharSequence]){ Globals.db_lock.synchronized {
     val wdb = Globals.database.get.getWritableDatabase
-    val cond = if(paths.nonEmpty){
-      val placeholders = Array.fill(paths.size){"?"}.mkString(",")
-      s"path NOT IN (${placeholders})"
-    }else{
-      null
-    }
-    wdb.delete(Globals.TABLE_READERS,cond,paths.map{_.toString})
+    Utils.withTransaction(wdb,() => {
+      for(path <- paths){
+        val cv = new ContentValues
+        cv.put("path",path.toString)
+        // maybe we won't need putNull()'s here
+        cv.putNull("joka_upper")
+        cv.putNull("joka_lower")
+        wdb.insertWithOnConflict(Globals.TABLE_READERS,null,cv,SQLiteDatabase.CONFLICT_IGNORE)
+      }
+      // delete items not in paths
+      val cond = if(paths.nonEmpty){
+        val placeholders = Array.fill(paths.size){"?"}.mkString(",")
+        s"path NOT IN (${placeholders})"
+      }else{
+        null
+      }
+      wdb.delete(Globals.TABLE_READERS,cond,paths.map{_.toString})
+    })
     wdb.close
   }}
   def saveRestoreReadOrderJoka(prev_path:String, cur_path:String, joka_upper:Boolean, joka_lower:Boolean){ Globals.db_lock.synchronized {
@@ -686,6 +697,19 @@ object FudaListHelper{
     edit.commit
     cs.close
   }}
+
+  def selectNonInternalReaders():Array[String] = {
+    val res = mutable.Buffer[String]()
+    val db = Globals.database.get.getReadableDatabase
+    val cs = db.query(Globals.TABLE_READERS,Array("path"),"path NOT LIKE 'INT:%'",null,null,null,"path ASC",null)
+    cs.moveToFirst
+    for( i <- 0 until cs.getCount ){
+      res += cs.getString(0)
+      cs.moveToNext
+    }
+    cs.close
+    res.toArray
+  }
 }
 
 // vim: set ts=2 sw=2 et:

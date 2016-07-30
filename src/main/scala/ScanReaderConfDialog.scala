@@ -9,7 +9,7 @@ import android.graphics.Color
 import android.text.TextUtils
 import java.io.File
 
-class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
+class ScanReaderConfDialog(context:Context,showParent:()=>Unit) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.scan_reader_conf,null)
     setView(view)
@@ -32,6 +32,7 @@ class ScanReaderConfDialog(context:Context) extends AlertDialog(context){
                 edit.putString("scan_reader_additional",path)
                 edit.commit
                 dismiss()
+                showParent()
               }else{
                 // we have to re-show this dialog since BUTTON_{POSITIVE,NEGATIVE,NEUTRAL} closes the dialog
                 Utils.messageDialog(context,Right(R.string.scan_reader_invalid_path),{()=>show()})
