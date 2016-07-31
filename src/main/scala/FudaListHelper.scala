@@ -683,15 +683,16 @@ object FudaListHelper{
     val db = Globals.database.get.getReadableDatabase
     val cs = db.query(Globals.TABLE_READERS,Array("joka_upper","joka_lower"),"path = ?",Array(cur_path),null,null,null,null)
     val edit = Globals.prefs.get.edit
+    
+    val up_d = if(joka_upper){1}else{0}
+    val lo_d = if(joka_lower){1}else{0}
     val (upper,lower) = if(cs.getCount > 0){
       cs.moveToFirst
-      val up = if(cs.isNull(0)){1}else{cs.getInt(0)}
-      val lo = if(cs.isNull(1)){1}else{cs.getInt(1)}
+      val up = if(cs.isNull(0)){up_d}else{cs.getInt(0)}
+      val lo = if(cs.isNull(1)){lo_d}else{cs.getInt(1)}
       (up,lo)
     }else{
-      val up = if(joka_upper){1}else{0}
-      val lo = if(joka_lower){1}else{0}
-      (up,lo)
+      (up_d,lo_d)
     }
     edit.putString("read_order_joka",s"upper_${upper},lower_${lower}")
     edit.commit
