@@ -13,6 +13,7 @@ import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
+import android.preference.PreferenceActivity
 
 import java.lang.Runnable
 
@@ -658,7 +659,7 @@ trait MainButtonTrait{
     if(
       (from_main_button || from_swipe) 
       && Seq("EXT","ABS").contains(Globals.prefs.get.getString("reader_path","").split(":")(0))
-      && !checkRequestMarshmallowPermission
+      && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)
     ){
       return
     }
@@ -745,22 +746,24 @@ trait WasuramotiBaseTrait {
 
 trait RequirePermissionTrait {
   self:Activity =>
-  val REQ_CODE_READ_EXTERNAL_STORAGE = 1
+  val REQ_PERM_MAIN_ACTIVITY = 1
+  val REQ_PERM_PREFERENCE_SCAN = 2
+
   // References:
   //   https://developer.android.com/training/permissions/requesting.html
   //   http://sys1yagi.hatenablog.com/entry/2015/11/07/185539
   //   http://quesera2.hatenablog.jp/entry/2016/04/29/165124
   //   http://stackoverflow.com/questions/30719047/android-m-check-runtime-permission-how-to-determine-if-the-user-checked-nev
-  def checkRequestMarshmallowPermission():Boolean = {
+  def checkRequestMarshmallowPermission(reqCode:Int):Boolean = {
     if(android.os.Build.VERSION.SDK_INT < 23){
       return true
     }
-    val reqperm = android.Manifest.permission.READ_EXTERNAL_STORAGE
-    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,reqperm)){
-      val reqfunc = {()=>ActivityCompat.requestPermissions(this,Array(reqperm),REQ_CODE_READ_EXTERNAL_STORAGE)}
-      if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqperm)){
+    val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,reqPerm)){
+      val reqfunc = {()=>ActivityCompat.requestPermissions(this,Array(reqPerm),reqCode)}
+      if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
          // permission was previously denied, with never ask again turned off.
-         Utils.messageDialog(this,Right(R.string.read_external_storage_permission_rationale),reqfunc )
+         Utils.messageDialog(this,Right(R.string.read_external_storage_permission_rationale),reqfunc)
       }else{
          // we previously never called requestPermission, or permission was denied with never ask again turned on.
          reqfunc()
@@ -772,16 +775,24 @@ trait RequirePermissionTrait {
   }
 
   override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
-    if(requestCode != REQ_CODE_READ_EXTERNAL_STORAGE){
+    if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN).contains(requestCode)){
       return
     }
-    val reqperm = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
     for((perm,grant) <- permissions.zip(grantResults)){
-      if(perm == reqperm){
+      if(perm == reqPerm){
         if(grant == PackageManager.PERMISSION_GRANTED){
-          // TODO:call refreshKarutaPlayer
+          requestCode match {
+            case REQ_PERM_MAIN_ACTIVITY =>
+              Globals.player = AudioHelper.refreshKarutaPlayer(self.asInstanceOf[WasuramotiActivity], Globals.player, true)
+            case REQ_PERM_PREFERENCE_SCAN =>
+              val pref = self.asInstanceOf[PreferenceActivity].findPreference("reader_path")
+              if(pref != null){
+                pref.asInstanceOf[ReaderListPreference].showDialogWithScan
+              }
+          }
         }else{
-          if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqperm)){
+          if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
             // permission is denied for first time, or denied with never ask again turned off
             Utils.messageDialog(this,Right(R.string.read_external_storage_permission_denied))
 

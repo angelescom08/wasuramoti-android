@@ -27,12 +27,15 @@ class ScanReaderConfDialog(context:Context,showParent:()=>Unit) extends AlertDia
           which match{
             case DialogInterface.BUTTON_POSITIVE => {
               val path = path_form.getText.toString
+              val activity = context.asInstanceOf[ConfActivity]
               if(TextUtils.isEmpty(path) || new File(path).isDirectory){
                 val edit = Globals.prefs.get.edit
                 edit.putString("scan_reader_additional",path)
                 edit.commit
-                dismiss()
-                showParent()
+                if(activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_SCAN)){
+                  dismiss()
+                  showParent()
+                }
               }else{
                 // we have to re-show this dialog since BUTTON_{POSITIVE,NEGATIVE,NEUTRAL} closes the dialog
                 Utils.messageDialog(context,Right(R.string.scan_reader_invalid_path),{()=>show()})

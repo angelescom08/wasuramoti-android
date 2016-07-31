@@ -138,7 +138,6 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       super.onDialogClosed(positiveResult)
     }
   }
-  var scanFileSystem = false
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
@@ -149,9 +148,10 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     }
     // I don't think switching by scanFileSystem flag is correct way to do this
     // TODO: override Preference and switch which AlertDialog to show
-    if(scanFileSystem){
+    val bundle = getExtras
+    if(bundle.getBoolean("scanFileSystem",false)){
       new SearchDirectoryTask().execute(new AnyRef())
-      scanFileSystem = false
+      bundle.remove("scanFileSystem")
     }else{
       for(x <- FudaListHelper.selectNonInternalReaders){
         entvals += x
@@ -172,17 +172,18 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     })
     builder.setCustomTitle(ctitle)
 
-    val showHandler = () => {
-      scanFileSystem = true
-      showDialog(null)
-    }
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          new ScanReaderConfDialog(context,showHandler).show
+          new ScanReaderConfDialog(context,showDialogWithScan).show
         }
       })
 
     super.onPrepareDialogBuilder(builder)
+  }
+
+  def showDialogWithScan(){
+    getExtras.putBoolean("scanFileSystem",true)
+    showDialog(null)
   }
 }
 
