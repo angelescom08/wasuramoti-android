@@ -138,6 +138,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       super.onDialogClosed(positiveResult)
     }
   }
+  var scanFileSystem = false
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
@@ -146,9 +147,16 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       entvals += "INT:"+x
       entries += x
     }
-    for(x <- FudaListHelper.selectNonInternalReaders){
-      entvals += x
-      entries += new File(x).getName
+    // I don't think switching by scanFileSystem flag is correct way to do this
+    // TODO: override Preference and switch which AlertDialog to show
+    if(scanFileSystem){
+      new SearchDirectoryTask().execute(new AnyRef())
+      scanFileSystem = false
+    }else{
+      for(x <- FudaListHelper.selectNonInternalReaders){
+        entvals += x
+        entries += new File(x).getName
+      }
     }
 
     setEntries(entries.toArray)
@@ -165,9 +173,8 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     builder.setCustomTitle(ctitle)
 
     val showHandler = () => {
+      scanFileSystem = true
       showDialog(null)
-      new SearchDirectoryTask().execute(new AnyRef())
-      ()
     }
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
