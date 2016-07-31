@@ -20,8 +20,6 @@ End of Life:
 
 Future Android:
   [Android 6.0]
-    * Apply runtime permission
-      - https://developer.android.com/training/permissions/requesting.html
     * Instead of searching wasuramoti_reader using Utils.walkdir(), use Storage Access Framework
       - https://developer.android.com/guide/topics/providers/document-provider.html
     * Use Service

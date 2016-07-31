@@ -2,8 +2,13 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.{Activity,AlertDialog}
 import android.content.{Intent,Context,DialogInterface}
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.os.{Bundle,Handler,Build}
 import android.support.v7.app.{ActionBarActivity,ActionBar}
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
@@ -15,7 +20,7 @@ import org.json.{JSONTokener,JSONObject,JSONArray}
 
 import scala.collection.mutable
 
-class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with MainButtonTrait{
+class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with MainButtonTrait with RequirePermissionTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -650,6 +655,13 @@ trait MainButtonTrait{
   }
 
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
+    if(
+      (from_main_button || from_swipe) 
+      && Seq("EXT","ABS").contains(Globals.prefs.get.getString("reader_path","").split(":")(0))
+      && !checkRequestMarshmallowPermission
+    ){
+      return
+    }
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
@@ -728,5 +740,62 @@ trait WasuramotiBaseTrait {
       case _ => {}
     }
     return true
+  }
+}
+
+trait RequirePermissionTrait {
+  self:Activity =>
+  val REQ_CODE_READ_EXTERNAL_STORAGE = 1
+  // References:
+  //   https://developer.android.com/training/permissions/requesting.html
+  //   http://sys1yagi.hatenablog.com/entry/2015/11/07/185539
+  //   http://quesera2.hatenablog.jp/entry/2016/04/29/165124
+  //   http://stackoverflow.com/questions/30719047/android-m-check-runtime-permission-how-to-determine-if-the-user-checked-nev
+  def checkRequestMarshmallowPermission():Boolean = {
+    if(android.os.Build.VERSION.SDK_INT < 23){
+      return true
+    }
+    val reqperm = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,reqperm)){
+      val reqfunc = {()=>ActivityCompat.requestPermissions(this,Array(reqperm),REQ_CODE_READ_EXTERNAL_STORAGE)}
+      if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqperm)){
+         // permission was previously denied, with never ask again turned off.
+         Utils.messageDialog(this,Right(R.string.read_external_storage_permission_rationale),reqfunc )
+      }else{
+         // we previously never called requestPermission, or permission was denied with never ask again turned on.
+         reqfunc()
+      }
+      return false
+    }else{
+      return true
+    }
+  }
+
+  override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
+    if(requestCode != REQ_CODE_READ_EXTERNAL_STORAGE){
+      return
+    }
+    val reqperm = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    for((perm,grant) <- permissions.zip(grantResults)){
+      if(perm == reqperm){
+        if(grant == PackageManager.PERMISSION_GRANTED){
+          // TODO:call refreshKarutaPlayer
+        }else{
+          if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqperm)){
+            // permission is denied for first time, or denied with never ask again turned off
+            Utils.messageDialog(this,Right(R.string.read_external_storage_permission_denied))
+
+          }else{
+            // permission is denied, with never ask again turned on
+            Utils.confirmDialog(this,Right(R.string.read_external_storage_permission_denied_forever),()=>{
+              val intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+              val uri = Uri.fromParts("package", getPackageName(), null)
+              intent.setData(uri)
+              startActivity(intent)
+            })
+          }
+        }
+      }
+    }
   }
 }

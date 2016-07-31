@@ -7,18 +7,13 @@ object Build extends android.AutoBuild {
     version := "0.9.12-beta1",
     versionCode := Some(73),
     scalaVersion := "2.11.7",
-    platformTarget in Android := "android-23",
-    buildToolsVersion in Android := Some("23.0.2"),
+    platformTarget in Android := "android-24",
+    buildToolsVersion in Android := Some("24.0.1"),
     // See https://github.com/pfn/android-sdk-plugin/issues/88
     sourceGenerators in Compile <<= (sourceGenerators in Compile) (g => Seq(g.last)),
-    // Android support library >= 20 tries to emulate Material Design instead of Holo design.
-    // I think wasuramoti fits to Holo rather than Material Design because Holo is more darker.
-    // Therefore I will use older support library (19.1.0) instead of newer one.
-    // I will stick to AppCompat 19.1.0 until most of the user thinks `Holo theme looks old`
-    // TODO: use newer support library when penetration rate of android 5.x exceeds 80%
     libraryDependencies ++= Seq(
-      "com.android.support" % "support-v4" % "19.1.0",
-      android.Dependencies.aar("com.android.support" % "appcompat-v7" % "19.1.0")
+      "com.android.support" % "support-v4" % "24.1.1",
+      android.Dependencies.aar("com.android.support" % "appcompat-v7" % "24.1.1")
     ),
     scalacOptions in Compile ++= Seq(
         "-unchecked",

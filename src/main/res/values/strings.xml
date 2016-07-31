@@ -625,4 +625,19 @@
   <string name="cannot_read_audio">Cannot read %s.</string>
   <string name="cannot_read_audio_reason_not_found">File does not exist: `%s`.</string>
   <string name="cannot_read_audio_reason_maybe_permission">File exists but cannot read. check the file permission: `%s`.</string>
+
+  <!-- MarshmallowPermission -->
+  <string name="read_external_storage_permission_rationale">
+    This app requires permission for reading audio files in internal/external storage\n
+    Press `Allow` in next dialog if you want to use it.
+  </string>
+  <string name="read_external_storage_permission_denied">
+    The permission was denied for reading audio files in internal/external storage\n
+    Change the setting to other reciter, or retry.\n
+  </string>
+  <string name="read_external_storage_permission_denied_forever">
+    The permision was denied eternally for reading audio files in internal/extenal storage \n
+    Change the setting to other reciter,\n
+    Or press `OK` to go to app config, and set `Permissions` of `Storage` to `ON`
+  </string>
 </resources>

@@ -581,4 +581,19 @@
   <string name="cannot_read_audio_reason_not_found">「%s」というファイルは存在しません．</string>
   <string name="cannot_read_audio_reason_maybe_permission">「%s」というファイルは存在しますが読み込めません．おそらくファイルの権限の問題だと思われます．</string>
 
+  <!-- MarshmallowPermission -->
+  <string name="read_external_storage_permission_rationale">
+    内部/外部ストレージの詠み手の音声ファイルを読み込むための権限を申請します．\n
+    よろしかったら次に出すダイアログで「許可」ボタンを押して下さい
+  </string>
+  <string name="read_external_storage_permission_denied">
+    内部/外部ストレージの音声ファイルを読み込む権限を拒否されました．\n
+    詳細設定から詠み手の音声をデフォルトに戻すか，もう一度試して下さい．\n
+  </string>
+  <string name="read_external_storage_permission_denied_forever">
+    内部/外部ストレージの音声ファイルを読み込む権限を永久に拒否されました．\n
+    詳細設定から詠み手の音声をデフォルトに戻すか，\n
+    「OK」を押すことで飛べるこのアプリの設定画面で，「許可」メニューから「ストレージ」に許可を与えて下さい．\n
+  </string>
+
 </resources>
