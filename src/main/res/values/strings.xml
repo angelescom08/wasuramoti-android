@@ -628,16 +628,25 @@
 
   <!-- MarshmallowPermission -->
   <string name="read_external_storage_permission_rationale">
-    This app requires permission for reading audio files in internal/external storage\n
+    This app requires permission for reading audio files in internal/external storage.\n
     Press `Allow` in next dialog if you want to use it.
   </string>
   <string name="read_external_storage_permission_denied">
-    The permission was denied for reading audio files in internal/external storage\n
-    Change the setting to other reciter, or retry.\n
+    The permission was denied for reading audio files in internal/external storage.\n
+    Change the setting to other reciter, or retry.
   </string>
   <string name="read_external_storage_permission_denied_forever">
     The permision was denied eternally for reading audio files in internal/extenal storage \n
     Change the setting to other reciter,\n
     Or press `OK` to go to app config, and set `Permissions` of `Storage` to `ON`
+  </string>
+  <string name="read_external_storage_permission_denied_scan">
+    The permission was denied for reading audio files in internal/external storage.\n
+    This app requires permission for scanning the storage for audio file, so please retry.
+  </string>
+  <string name="read_external_storage_permission_denied_forever_scan">
+    The permision was denied eternally for reading audio files in internal/extenal storage \n
+    This app requires permission for scanning the storage for audio file.
+    Press `OK` to go to app config, and set `Permissions` of `Storage` to `ON`
   </string>
 </resources>

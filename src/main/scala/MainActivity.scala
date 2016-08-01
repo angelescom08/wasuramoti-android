@@ -775,27 +775,34 @@ trait RequirePermissionTrait {
     if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN).contains(requestCode)){
       return
     }
+    val (deniedMessage,deniedForeverMessage,grantedAction) = requestCode match {
+      case REQ_PERM_MAIN_ACTIVITY =>
+        (R.string.read_external_storage_permission_denied, R.string.read_external_storage_permission_denied_forever,
+          ()=>{
+            Globals.player = AudioHelper.refreshKarutaPlayer(self.asInstanceOf[WasuramotiActivity], Globals.player, true)
+          })
+      case REQ_PERM_PREFERENCE_SCAN =>
+        (R.string.read_external_storage_permission_denied_scan, R.string.read_external_storage_permission_denied_forever_scan,
+          ()=>{
+            val pref = self.asInstanceOf[PreferenceActivity].findPreference("reader_path")
+            if(pref != null){
+              pref.asInstanceOf[ReaderListPreference].showDialogWithScan
+            }
+          })
+    }
+
     val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
     for((perm,grant) <- permissions.zip(grantResults)){
       if(perm == reqPerm){
         if(grant == PackageManager.PERMISSION_GRANTED){
-          requestCode match {
-            case REQ_PERM_MAIN_ACTIVITY =>
-              Globals.player = AudioHelper.refreshKarutaPlayer(self.asInstanceOf[WasuramotiActivity], Globals.player, true)
-            case REQ_PERM_PREFERENCE_SCAN =>
-              val pref = self.asInstanceOf[PreferenceActivity].findPreference("reader_path")
-              if(pref != null){
-                pref.asInstanceOf[ReaderListPreference].showDialogWithScan
-              }
-          }
+          grantedAction()
         }else{
           if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
             // permission is denied for first time, or denied with never ask again turned off
-            Utils.messageDialog(this,Right(R.string.read_external_storage_permission_denied))
-
+            Utils.messageDialog(this,Right(deniedMessage))
           }else{
             // permission is denied, with never ask again turned on
-            Utils.confirmDialog(this,Right(R.string.read_external_storage_permission_denied_forever),()=>{
+            Utils.confirmDialog(this,Right(deniedForeverMessage),()=>{
               val intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
               val uri = Uri.fromParts("package", getPackageName(), null)
               intent.setData(uri)
