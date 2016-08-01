@@ -892,6 +892,10 @@ object Utils {
     }
     (upper,lower)
   }
+
+  def isExternalReaderPath(path:String):Boolean = {
+    Option(path).exists(x => Seq("EXT","ABS").contains(x.split(":")(0)))
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

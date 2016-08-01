@@ -127,12 +127,18 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     if(positiveResult){
       val prev_value = getValue
       super.onDialogClosed(positiveResult)
-      val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,getValue).canReadAll
-      if(!ok){
-        Utils.messageDialog(context,Left(message))
-        setValue(prev_value)
+      val cur_value = getValue
+      val activity = context.asInstanceOf[ConfActivity]
+      if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
+        setValue(prev_value) // cancel
       }else{
-        FudaListHelper.saveRestoreReadOrderJoka(prev_value,getValue,joka_upper,joka_lower)
+        val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,cur_value).canReadAll
+        if(!ok){
+          Utils.messageDialog(context,Left(message))
+          setValue(prev_value) // cancel
+        }else{
+          FudaListHelper.saveRestoreReadOrderJoka(prev_value,cur_value,joka_upper,joka_lower)
+        }
       }
     }else{
       super.onDialogClosed(positiveResult)
@@ -174,15 +180,17 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          new ScanReaderConfDialog(context,showDialogWithScan).show
+          new ScanReaderConfDialog(context,{()=>showDialogPublic(true)}).show
         }
       })
 
     super.onPrepareDialogBuilder(builder)
   }
 
-  def showDialogWithScan(){
-    getExtras.putBoolean("scanFileSystem",true)
+  def showDialogPublic(scanFileSystem:Boolean){
+    if(scanFileSystem){
+      getExtras.putBoolean("scanFileSystem",true)
+    }
     showDialog(null)
   }
 }

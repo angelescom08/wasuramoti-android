@@ -671,7 +671,7 @@ trait MainButtonTrait{
           }
           Utils.messageDialog(self,Right(R.string.all_read_done),custom=custom)
         }else if(
-          Seq("EXT","ABS").contains(Globals.prefs.get.getString("reader_path","").split(":")(0))
+          Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
           // do nothing since checkRequestMarshmallowPermission shows the dialog when permission denied
         }else if(Globals.player_none_reason.nonEmpty){
@@ -745,6 +745,7 @@ trait RequirePermissionTrait {
   self:Activity =>
   val REQ_PERM_MAIN_ACTIVITY = 1
   val REQ_PERM_PREFERENCE_SCAN = 2
+  val REQ_PERM_PREFERENCE_CHOOSE_READER = 3
 
   // References:
   //   https://developer.android.com/training/permissions/requesting.html
@@ -772,7 +773,7 @@ trait RequirePermissionTrait {
   }
 
   override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
-    if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN).contains(requestCode)){
+    if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN,REQ_PERM_PREFERENCE_CHOOSE_READER).contains(requestCode)){
       return
     }
     val (deniedMessage,deniedForeverMessage,grantedAction) = requestCode match {
@@ -781,12 +782,12 @@ trait RequirePermissionTrait {
           ()=>{
             Globals.player = AudioHelper.refreshKarutaPlayer(self.asInstanceOf[WasuramotiActivity], Globals.player, true)
           })
-      case REQ_PERM_PREFERENCE_SCAN =>
+      case REQ_PERM_PREFERENCE_SCAN | REQ_PERM_PREFERENCE_CHOOSE_READER =>
         (R.string.read_external_storage_permission_denied_scan, R.string.read_external_storage_permission_denied_forever_scan,
           ()=>{
             val pref = self.asInstanceOf[PreferenceActivity].findPreference("reader_path")
             if(pref != null){
-              pref.asInstanceOf[ReaderListPreference].showDialogWithScan
+              pref.asInstanceOf[ReaderListPreference].showDialogPublic(requestCode == REQ_PERM_PREFERENCE_SCAN)
             }
           })
     }
