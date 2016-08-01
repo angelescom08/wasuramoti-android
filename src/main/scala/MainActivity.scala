@@ -656,13 +656,6 @@ trait MainButtonTrait{
   }
 
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
-    if(
-      (from_main_button || from_swipe) 
-      && Seq("EXT","ABS").contains(Globals.prefs.get.getString("reader_path","").split(":")(0))
-      && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)
-    ){
-      return
-    }
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
         if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
@@ -677,6 +670,10 @@ trait MainButtonTrait{
             })
           }
           Utils.messageDialog(self,Right(R.string.all_read_done),custom=custom)
+        }else if(
+          Seq("EXT","ABS").contains(Globals.prefs.get.getString("reader_path","").split(":")(0))
+          && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
+          // do nothing since checkRequestMarshmallowPermission shows the dialog when permission denied
         }else if(Globals.player_none_reason.nonEmpty){
           Utils.messageDialog(self,Left(Globals.player_none_reason.get))
         }else{
