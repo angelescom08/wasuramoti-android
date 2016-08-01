@@ -435,11 +435,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
     handleActionView()
     restartRefreshTimer()
     startDimLockTimer()
-    // TODO: remove `Globals.have_to_alert_ver_0_9_9` and `R.string.alert_ver_0_9_9` at 2017-02-23
-    if(Globals.have_to_alert_ver_0_9_9){
-      Utils.messageDialog(this,Right(R.string.alert_ver_0_9_9))
-      Globals.have_to_alert_ver_0_9_9 = false
-    }
     Globals.prefs.foreach{ p =>
       if(!p.contains("intended_use")){
         changeIntendedUse(true)

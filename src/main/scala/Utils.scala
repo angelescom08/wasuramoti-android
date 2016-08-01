@@ -59,7 +59,6 @@ object Globals {
   var alert_dialog = None:Option[AlertDialog]
 
   var current_config_dialog = None:Option[DialogPreference]
-  var have_to_alert_ver_0_9_9 = false
 }
 
 object Utils {
@@ -185,9 +184,6 @@ object Utils {
             edit.putBoolean("joka_enable",false)
             edit.putString("read_order_joka","upper_1,lower_1")
           }
-        }
-        if(prev_version > 0 && prev_version < 8 && pref.getBoolean("autoplay_enable",false) ){
-          Globals.have_to_alert_ver_0_9_9 = true
         }
 
         // remove obsolete preferences

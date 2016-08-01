@@ -15,7 +15,6 @@ Code Refactoring:
   * Migrate to newer android-sdk-plugin.
 
 End of Life:
-  * [2017-02-23] Remove Globals.have_to_alert_ver_0_9_9 and R.string.alert_ver_0_9_9
   * [2017-02-23] Remove `skip_on_longclick` option.
 
 Future Android:
