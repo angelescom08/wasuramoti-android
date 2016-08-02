@@ -170,21 +170,21 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
 
-    val ctitle = android.view.LayoutInflater.from(context).inflate(R.layout.reader_list_pref_title,null)
-    ctitle.findViewById(R.id.btn_audio_decode_test).asInstanceOf[Button].setOnClickListener(new View.OnClickListener(){
-      override def onClick(view:View){
-        new AudioDecodeTestDialog(context).show
-      }
-    })
-    builder.setCustomTitle(ctitle)
-
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
           new ScanReaderConfDialog(context,{()=>showDialogPublic(true)}).show
         }
       })
 
+    // we have to call onPrepareDialogBuilder before calling setPositiveButton
+    // since ListPreference.onPrepareDialogBuilder() calls builder.setPositiveButton(null, null)
     super.onPrepareDialogBuilder(builder)
+
+    builder.setPositiveButton(R.string.button_test, new DialogInterface.OnClickListener(){
+      override def onClick(dialog:DialogInterface,which:Int){
+        new AudioDecodeTestDialog(context).show
+      }
+    })
   }
 
   def showDialogPublic(scanFileSystem:Boolean){
