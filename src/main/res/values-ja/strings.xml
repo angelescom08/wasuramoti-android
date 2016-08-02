@@ -239,6 +239,7 @@
   <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
   <string name="scan_reader_addition">追加でスキャンさせたいパスを下記に入力して下さい</string>
   <string name="scan_reader_invalid_path">テキストボックスに入力されたパスはディレクトリではありません</string>
+  <string name="scan_reader_exec">[スキャン開始]</string>
 
   <string name="conf_audio_volume">音量</string>
   <string name="conf_audio_volume_summary">詠み上げ時の端末の音量</string>

@@ -70,7 +70,7 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
             }
           })
       }
-      FudaListHelper.updateReaders(getEntryValues)
+      FudaListHelper.updateReaders(getEntryValues.filterNot(_=="SCAN_EXEC"))
 
     }
 
@@ -129,7 +129,10 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       super.onDialogClosed(positiveResult)
       val cur_value = getValue
       val activity = context.asInstanceOf[ConfActivity]
-      if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
+      if(cur_value == "SCAN_EXEC"){
+        setValue(prev_value) // cancel
+        showDialogPublic(true)
+      }else if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
         setValue(prev_value) // cancel
       }else{
         val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,cur_value).canReadAll
@@ -163,6 +166,8 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
         entvals += x
         entries += new File(x).getName
       }
+      entvals += "SCAN_EXEC"
+      entries += context.getResources.getString(R.string.scan_reader_exec)
     }
 
     setEntries(entries.toArray)

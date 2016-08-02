@@ -279,6 +279,7 @@
   <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
   <string name="scan_reader_addition">You can add scan path in following textbox:</string>
   <string name="scan_reader_invalid_path">The path in text box is not a valid directory. </string>
+  <string name="scan_reader_exec">[Execute Scan]</string>
 
   <string name="conf_audio_volume">Volume</string>
   <string name="conf_audio_volume_summary">Set audio volume of device when playing.</string>
