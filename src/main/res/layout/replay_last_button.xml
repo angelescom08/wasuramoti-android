@@ -7,12 +7,13 @@
   android:layout_height="match_parent"
   >
   <Button
+    style="?android:attr/buttonBarButtonStyle"
+    android:textColor="?android:attr/textColorPrimary"
     android:id="@+id/replay_last_button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:text="Replay Last Phrase"
     android:textSize="@dimen/read_button_text_normal"
-    style="?android:attr/buttonBarButtonStyle"
     android:contentDescription="ReplayButton"
     />
 </LinearLayout>

@@ -2,6 +2,7 @@
 <!-- layout_{width,height,weight} is set programatically inside YomiInfoButtonList.addButtons -->
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
   style="?android:attr/buttonBarButtonStyle"
+  android:textColor="?android:attr/textColorPrimary"
   android:textSize="@dimen/yomi_info_button_text"
   android:layout_width="0dp"
   android:layout_height="wrap_content"
