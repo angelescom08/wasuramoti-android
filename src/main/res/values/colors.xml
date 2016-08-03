@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="main_activity_border">#222222</color>
   <color name="action_bar_primary_text">#FFFFFF</color>
-  <color name="action_bar_poem_num_color">#FFDAB9</color>
+  <color name="action_bar_poem_num">#FFDAB9</color>
+  <color name="poem_text_main">#FFFFFF</color>
+  <color name="poem_text_furigana">#C7EFFB</color>
+  <color name="kimariji_primary">#90EE90</color>
+  <color name="kimariji_secondary">#F0FFFF</color>
+  <color name="kimariji_tertiary">#555555</color>
 </resources>

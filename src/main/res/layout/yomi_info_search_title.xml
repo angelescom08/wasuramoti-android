@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent" android:layout_height="match_parent"
   android:orientation="vertical"
-  android:background="#222222"
+  android:background="@color/main_activity_border"
   android:paddingTop="7dip"
   android:paddingBottom="3dip"
   android:paddingLeft="3dip"
@@ -18,7 +18,7 @@
     />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:textColor="@color/action_bar_poem_num_color"
+      android:textColor="@color/action_bar_poem_num"
       android:id="@+id/yomi_info_search_poem_num"
       android:paddingLeft="4dip"
     />

@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="#222222"
+              android:background="@color/main_activity_border"
               android:tag="main_linear_layout"
               >
   <ViewStub

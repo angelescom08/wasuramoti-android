@@ -32,10 +32,14 @@ object YomiInfoSearchDialog{
       if(num == 0){
         (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
       }else{
+        // TODO: cache these values
+        val COLOR_1 = Integer.toHexString(context.getResources.getColor(R.color.kimariji_primary)).substring(2)
+        val COLOR_2 = Integer.toHexString(context.getResources.getColor(R.color.kimariji_secondary)).substring(2)
+        val COLOR_3 = Integer.toHexString(context.getResources.getColor(R.color.kimariji_tertiary)).substring(2)
         val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
         val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
         val k_c = kimari_all.substring(kimari_in_fudaset.length)
-        val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#F0FFFF">$k_b</font><font color="#555555">$k_c</font>"""
+        val html = s"""<font color="#$COLOR_1">$kimari_cur</font><font color="#$COLOR_2">$k_b</font><font color="#$COLOR_3">$k_c</font>"""
         (num.toString,Html.fromHtml(html))
       }
     }.getOrElse{
