@@ -19,9 +19,14 @@
     android:layout_height="wrap_content"
     android:text="@string/scan_reader_addition"
     />
-   <EditText
+  <EditText
     android:layout_width="300sp"
     android:layout_height="wrap_content"
     android:id="@+id/scan_reader_additional" />
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/scan_reader_description_footnote"
+    />
 </LinearLayout>
 </ScrollView>

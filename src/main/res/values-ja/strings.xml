@@ -238,6 +238,8 @@
   <string name="scan_reader_title">探索対象パス</string>
   <string name="scan_reader_description">下記のパスをそれぞれ深さ%s階層までスキャンしてwasuramoti_readerを探します</string>
   <string name="scan_reader_addition">追加でスキャンさせたいパスを下記に入力して下さい</string>
+  <string name="scan_reader_description_footnote">「OK」を押すとスキャン開始します</string>
+
   <string name="scan_reader_invalid_path">テキストボックスに入力されたパスはディレクトリではありません</string>
   <string name="scan_reader_exec">[スキャン開始]</string>
 
@@ -361,7 +363,7 @@
     </p>
     <p>
       (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
-      以上でわすらもちの詠み手の選択肢に追加される．
+      以上を配置し，わすらもちの「詳細設定」→「詠み手」→「スキャン開始」すると選択肢に追加される．
     </p>
     ]]>
   </string>

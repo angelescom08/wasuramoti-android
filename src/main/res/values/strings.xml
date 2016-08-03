@@ -278,6 +278,8 @@
   <string name="scan_reader_title">Scan Path</string>
   <string name="scan_reader_description">We scan each following path to find `wasuramoti_reader` in max depth of %s plies.</string>
   <string name="scan_reader_addition">You can add scan path in following textbox:</string>
+  <string name="scan_reader_description_footnote">Press `OK` to execute scan.</string>
+
   <string name="scan_reader_invalid_path">The path in text box is not a valid directory. </string>
   <string name="scan_reader_exec">[Execute Scan]</string>
 
@@ -396,7 +398,7 @@
     </p>
     <p>
       (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
-      Now new reader should be added to choices in this app.
+      After placing is done, open this app, choose `Advanced Config`->`Reciter`->`Execute Scan` to add the reader to the list.
     </p>
     ]]>
   </string>
