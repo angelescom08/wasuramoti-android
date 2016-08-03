@@ -16,7 +16,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(Color.WHITE)
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_furigana.setColor(Color.rgb(199,239,251))
+  paint_furigana.setColor(Color.rgb(0xC7,0xEF,0xFB))
   var cur_num = None:Option[Int]
   var marker = None:Option[String]
   var torifuda_mode = false

@@ -35,7 +35,7 @@ object YomiInfoSearchDialog{
         val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
         val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
         val k_c = kimari_all.substring(kimari_in_fudaset.length)
-        val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#FFFFFF">$k_b</font><font color="#999999">$k_c</font>"""
+        val html = s"""<font color="#90EE90">$kimari_cur</font><font color="#F0FFFF">$k_b</font><font color="#555555">$k_c</font>"""
         (num.toString,Html.fromHtml(html))
       }
     }.getOrElse{
