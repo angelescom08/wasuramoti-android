@@ -51,7 +51,7 @@ copy_license "$ROOT" "$ROOT/src/main/assets/license/" "$AUDIO_LICENCE"
 # sbt android:package-release generates jarsigned and zipaligned apk
 sbt android:package-release || die compile FAILED
 
-APK_FILE=$(ls ${ROOT}/target/android-bin/wasuramoti-release.apk)
+APK_FILE=$(ls ${ROOT}/target/android/output/wasuramoti-release.apk)
 if [ $? -ne 0 ];then
   exit
 fi
@@ -65,7 +65,7 @@ if [ ! "${READER}" ];then
   exit
 fi
 
-VERSION=$(grep -oP 'android:versionName=".*?"' < ${ROOT}/target/android-bin/AndroidManifest.xml | cut -d = -f 2 | tr -d '"')
+VERSION=$(grep -oP 'android:versionName=".*?"' < ${ROOT}/target/android/intermediates/manifest/AndroidManifest.xml | cut -d = -f 2 | tr -d '"')
 TARGET_DIR="${TARGET_BASE}/wasuramoti-android-${READER}-${VERSION}"
 if [ -e "${TARGET_DIR}" ];then
   rm -rf "${TARGET_DIR}"
@@ -78,4 +78,4 @@ copy_license "$ROOT" "$TARGET_DIR/license/" "$AUDIO_LICENCE"
 cp -f "${APK_FILE}" "${TARGET_FILE}"
 echo "copied to ${TARGET_FILE}"
 echo "all done."
-
+echo "output of Android Lint is in ${ROOT}/target/streams/compile/compile/'\$global'/streams/out"
