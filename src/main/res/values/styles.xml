@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Reference: https://android.googlesource.com/platform/frameworks/support.git/+/master/v7/appcompat/res/values/themes_base.xml -->
   <style name="MyAppTheme" parent="Theme.AppCompat">
+    <item name="actionBarStyle">@style/MyActionBar</item>
+
+    <!-- This is applied to all the ListView and also PreferenceActivity since it inherits ListActivity -->
+    <item name="android:listViewStyle">@style/MyListView</item>
+
     <item name="android:textAllCaps">false</item>
-    <item name="actionBarStyle">@style/MyAppActionBar</item>
-    <item name="android:statusBarColor">@color/main_status_bar</item> 
     <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:statusBarColor">@color/main_status_bar</item> 
   </style>
-  <style name="MyAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+  <style name="MyActionBar" parent="Widget.AppCompat.ActionBar.Solid">
     <item name="background">@drawable/actionbar_shape</item>
   </style>
+
+  <style name="MyListView" parent="Widget.AppCompat.ListView.Menu">
+    <item name="android:background">#222222</item>
+    <item name="android:dividerHeight">1dp</item>
+    <item name="android:divider">#555555</item>
+  </style>
+
 </resources>

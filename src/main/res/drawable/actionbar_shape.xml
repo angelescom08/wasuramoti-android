@@ -4,6 +4,6 @@
 >
   <shape android:shape="rectangle">
     <stroke android:width="3dp" android:color="@color/main_activity_border" />
-    <solid android:color="#000000"/>
+    <solid android:color="@android:color/black"/>
   </shape>
 </inset>
