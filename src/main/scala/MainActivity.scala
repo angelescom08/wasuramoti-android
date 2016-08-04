@@ -418,7 +418,6 @@ class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with 
       // onCreate returned before loading preference
       return
     }
-    Utils.setStatusBarForLolipop(this)
     if(Globals.forceRestart){
       Globals.forceRestart = false
       reloadFragment()

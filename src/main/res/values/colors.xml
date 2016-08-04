@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="main_status_bar">#222222</color>
   <color name="main_activity_border">#222222</color>
   <color name="action_bar_primary_text">#FFFFFF</color>
   <color name="action_bar_poem_num">#FFDAB9</color>

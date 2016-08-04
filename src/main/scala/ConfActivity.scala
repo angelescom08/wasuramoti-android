@@ -91,7 +91,6 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
     val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
-    Utils.setStatusBarForLolipop(this)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)

@@ -110,7 +110,6 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   override def onCreate(savedInstanceState: Bundle){
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
-    Utils.setStatusBarForLolipop(this)
     setContentView(R.layout.notify_timer)
     NotifyTimerUtils.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)
