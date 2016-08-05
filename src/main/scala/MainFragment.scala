@@ -1,18 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.{Activity,AlertDialog}
-import android.content.{Intent,Context,DialogInterface}
-import android.os.{Bundle,Handler,Build}
-import android.support.v7.app.{ActionBarActivity,ActionBar}
+import android.app.Activity
+import android.os.{Bundle,Handler}
 import android.support.v4.app.Fragment
-import android.util.{Base64,TypedValue}
-import android.view.animation.{AnimationUtils,Interpolator}
-import android.view.{View,Menu,MenuItem,WindowManager,ViewStub,LayoutInflater,ViewGroup}
-import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
+import android.util.TypedValue
+import android.view.{View,ViewStub,LayoutInflater,ViewGroup}
+import android.widget.Button
 
 import java.lang.Runnable
-
-import org.json.{JSONTokener,JSONObject,JSONArray}
 
 import scala.collection.mutable
 

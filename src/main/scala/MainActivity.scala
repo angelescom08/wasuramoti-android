@@ -6,10 +6,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.os.{Bundle,Handler,Build}
-import android.support.v7.app.{ActionBarActivity,ActionBar}
+import android.support.v7.app.{AppCompatActivity,ActionBar}
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.{Base64,TypedValue}
+import android.util.Base64
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
@@ -21,7 +21,7 @@ import org.json.{JSONTokener,JSONObject,JSONArray}
 
 import scala.collection.mutable
 
-class WasuramotiActivity extends ActionBarActivity with ActivityDebugTrait with MainButtonTrait with RequirePermissionTrait{
+class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with MainButtonTrait with RequirePermissionTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]

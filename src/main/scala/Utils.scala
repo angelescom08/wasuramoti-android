@@ -6,7 +6,7 @@ import android.content.res.{Configuration,Resources}
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
-import android.graphics.{Paint,Color}
+import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
 import android.os.{Environment,Handler}

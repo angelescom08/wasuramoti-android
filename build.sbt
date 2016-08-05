@@ -1,9 +1,7 @@
 androidBuild
 
 scalaVersion := "2.11.7"
-
 platformTarget in Android := "android-24"
-
 buildToolsVersion in Android := Some("24.0.1")
 
 libraryDependencies ++= Seq(
@@ -12,7 +10,6 @@ libraryDependencies ++= Seq(
   )
 
 javacOptions in Compile ++= Seq("-source","1.7","-target","1.7")
-
 scalacOptions in Compile ++= Seq(
   "-unchecked",
   "-deprecation",
@@ -27,7 +24,6 @@ scalacOptions in Compile ++= Seq(
   )
 
 useProguard := true
-
 proguardOptions in Android ++= Seq(
   "-keepattributes Signature",
   "-verbose"

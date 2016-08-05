@@ -8,7 +8,7 @@ import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
 import android.app.{AlertDialog,ProgressDialog,Activity}
 import android.os.{Environment,AsyncTask}
-import android.view.{Gravity,View}
+import android.view.Gravity
 import android.widget.{ArrayAdapter,Button}
 import java.io.{IOException,File,FileOutputStream}
 import karuta.hpnpwd.audio.OggVorbisDecoder

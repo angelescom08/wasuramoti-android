@@ -64,7 +64,6 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     }else{
       val c = FudaListHelper.queryNumbersToReadAlt("memorized = 1")
       val cn = FudaListHelper.queryNumbersToReadAlt("memorized = 0")
-      val rc = ""
       (c,cn)
     }
     panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].setText(count.toString)
