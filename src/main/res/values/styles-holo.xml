@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Reference:  https://android.googlesource.com/platform/frameworks/support -->
+  <style name="Wasuramoti.SubTheme" parent="Theme.AppCompat" />
+  <style name="Wasuramoti.ButtonBar" parent="Widget.AppCompat.ButtonBar" />
+  <style name="Wasuramoti.ButtonBarButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog" />
+  <style name="Wasuramoti.FudaListButton" parent="Widget.AppCompat.Button" />
+</resources>

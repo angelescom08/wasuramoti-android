@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Reference: https://android.googlesource.com/platform/frameworks/support.git/+/master/v7/appcompat/res/values/themes_base.xml -->
-  <style name="Wasuramoti.AppTheme" parent="Theme.AppCompat">
+  <!-- Reference: https://android.googlesource.com/platform/frameworks/support/+/master/v7/appcompat/res/values/themes_base.xml -->
+  <style name="Wasuramoti.MainTheme" parent="Theme.AppCompat">
     <item name="actionBarStyle">@style/Wasuramoti.ActionBar</item>
     <item name="android:textAllCaps">false</item>
     <item name="android:statusBarColor">@color/main_status_bar</item> 
@@ -10,9 +10,5 @@
     <item name="background">@drawable/actionbar_shape</item>
     <item name="logo">@drawable/actionbar_logo</item>
     <item name="displayOptions">useLogo</item>
-  </style>
-  <style name="Wasuramoti.ButtonBar" parent="@android:style/Holo.ButtonBar">
-  </style>
-  <style name="Wasuramoti.ButtonBarButton" parent="@android:style/Widget.Holo.Button.Borderless">
   </style>
 </resources>

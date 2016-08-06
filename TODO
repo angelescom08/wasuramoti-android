@@ -12,13 +12,13 @@ Code Refactoring:
    - that means that it would be not called when moved from ConfActivity -> WasuramotiActivity ?
   * Include bug_report.cgi and some other related scripts inside this repository
    - raise error if there's no detail
-  * Migrate to newer android-sdk-plugin.
 
 End of Life:
   * [2017-02-23] Remove `skip_on_longclick` option.
 
   * [2017-08-01] Migrate to Support v7 Preference
      - current preference-v7 is immature, so wait until August 2017.
+     - http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
      - AlertDialog -> v7.AlertDialog
      - PreferenceActivity -> v7.AppCompatActivity, v7.PreferenceFragmentCompat
      - DialogPreference -> v7.DialogPreference, v7.PreferenceDialogFragmentCompat
@@ -100,12 +100,6 @@ Priority Medium-High:
   * Save poem text as image.
   * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Solve the warnings caused by -Xlint
-  * Migrate from Holo to Material Design when penetration rate of Android 5.x exceeds 80%
-    - use AppCompat >= 22.1.0 (this will automatically emulates Material Design for lower API version devices)
-    - Use colorPrimaryDark instead of setStatusBarColor
-    - ActionBarActivity -> AppCompatActivity
-    - Use PreferenceFragment instead for PreferenceActivity for API >= 11
-      - see http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
 
 Priority Medium:
   * Support MP3 audio.
