@@ -44,6 +44,7 @@ object ReaderList{
 
 class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs) with PreferenceCustom{
   var adapter = None:Option[ArrayAdapter[CharSequence]]
+  var scanFileSystem = false
   class SearchDirectoryTask extends AsyncTask[AnyRef,Void,Boolean] {
     var progress = None:Option[ProgressDialog]
     override def onPreExecute(){
@@ -157,10 +158,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     }
     // I don't think switching by scanFileSystem flag is correct way to do this
     // TODO: override Preference and switch which AlertDialog to show
-    val bundle = getExtras
-    if(bundle.getBoolean("scanFileSystem",false)){
+    if(scanFileSystem){
       new SearchDirectoryTask().execute(new AnyRef())
-      bundle.remove("scanFileSystem")
+      scanFileSystem = false
     }else{
       for(x <- FudaListHelper.selectNonInternalReaders){
         entvals += x
@@ -192,9 +192,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     })
   }
 
-  def showDialogPublic(scanFileSystem:Boolean){
-    if(scanFileSystem){
-      getExtras.putBoolean("scanFileSystem",true)
+  def showDialogPublic(doScan:Boolean){
+    if(doScan){
+      scanFileSystem = true
     }
     showDialog(null)
   }
