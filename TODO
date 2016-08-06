@@ -17,6 +17,14 @@ Code Refactoring:
 End of Life:
   * [2017-02-23] Remove `skip_on_longclick` option.
 
+  * [2017-08-01] Migrate to Support v7 Preference
+     - current preference-v7 is immature, so wait until August 2017.
+     - AlertDialog -> v7.AlertDialog
+     - PreferenceActivity -> v7.AppCompatActivity, v7.PreferenceFragmentCompat
+     - DialogPreference -> v7.DialogPreference, v7.PreferenceDialogFragmentCompat
+     - apply Wasuramoti.AppTheme for ConfActivity and NotifyTimerActivity
+     - customize style and items in styles.xml and make darker theme
+
 Future Android:
   [Android 6.0]
     * Instead of searching wasuramoti_reader using Utils.walkdir(), use Storage Access Framework
@@ -39,6 +47,8 @@ Future Android:
       - https://developer.android.com/preview/features/picture-in-picture.html
 
 Priority High:
+  * When starting notify timer, alert that "It is silent mode, so may not hear sound".
+  * Also test vibrate in notify timer.
   * Add more [] to index.
   * Use Seekbar for moving poem
   * Search by poem number
