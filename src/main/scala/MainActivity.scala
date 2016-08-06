@@ -230,8 +230,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     ){
       bar_kima.inflate()
       actionbar.setDisplayShowTitleEnabled(false)
+      actionbar.setDisplayShowHomeEnabled(false)
     }else{
       actionbar.setDisplayShowTitleEnabled(true)
+      actionbar.setDisplayShowHomeEnabled(true)
     }
   }
 

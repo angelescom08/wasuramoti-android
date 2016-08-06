@@ -5,4 +5,4 @@
   android:layout_width="match_parent"
   android:layout_height="0dp"
   android:layout_weight="1.0"
-  style="?android:attr/buttonBarStyle" />
+  style="@style/Wasuramoti.ButtonBar" />

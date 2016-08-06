@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  style="?android:attr/buttonBarStyle"
+  style="@style/Wasuramoti.ButtonBar"
   android:background="@android:color/black"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   >
   <Button
-    style="?android:attr/buttonBarButtonStyle"
+    style="@style/Wasuramoti.ButtonBarButton"
     android:textColor="?android:attr/textColorPrimary"
     android:id="@+id/replay_last_button"
     android:layout_width="match_parent"
