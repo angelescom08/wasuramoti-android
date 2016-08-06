@@ -21,7 +21,7 @@ class FudaSetReOrderDialog(context:Context,
 
 
   override def doWhenClose(view:View){
-    val list = view.findViewById(R.id.fudaset_list).asInstanceOf[ViewGroup]
+    val list = view.findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
     val fudaset_ids = (0 until list.getChildCount).map{ i=>
       Option(list.getChildAt(i).getTag(R.id.tag_fudaset_id))
     }.flatten
@@ -57,7 +57,7 @@ class FudaSetReOrderDialog(context:Context,
 
   override def onCreate(state:Bundle){
     val root = LayoutInflater.from(context).inflate(R.layout.fudaset_reorder, null)
-    val list = root.findViewById(R.id.fudaset_list).asInstanceOf[ViewGroup]
+    val list = root.findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
 
     def getPrevNextBorder(v:View):(View,View) = {
       val index = list.indexOfChild(v)
