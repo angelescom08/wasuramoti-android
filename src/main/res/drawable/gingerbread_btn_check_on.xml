@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape>
+      <solid android:color="#88d91d"/>
+    </shape>
+  </item>
+  <item android:drawable="@drawable/abc_btn_check_to_on_mtrl_015" />
+</layer-list>

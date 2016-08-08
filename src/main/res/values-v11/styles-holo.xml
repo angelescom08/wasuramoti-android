@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Reference:  https://android.googlesource.com/platform/frameworks/base -->
+  <!-- Reference: https://android.googlesource.com/platform/frameworks/base -->
   <style name="Wasuramoti.SubTheme" parent="@android:style/Theme.Holo" />
   <style name="Wasuramoti.ButtonBar" parent="@android:style/Holo.ButtonBar" />
   <style name="Wasuramoti.ButtonBarButton" parent="@android:style/Widget.Holo.Button.Borderless" />
