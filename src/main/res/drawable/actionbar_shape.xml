@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Reference: http://stackoverflow.com/questions/1598119/is-there-an-easy-way-to-add-a-border-to-the-top-and-bottom-of-an-android-view-->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-  android:insetTop="-2dp" android:insetLeft="-2dp" android:insetRight="-2dp"
+  android:insetTop="-5dp" android:insetLeft="-5dp" android:insetRight="-5dp"
 >
   <shape android:shape="rectangle">
     <stroke android:width="2dp" android:color="@color/action_bar_divider" />

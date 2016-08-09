@@ -8,6 +8,7 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal" >
     <Button android:id="@+id/move_button_prev"
+      style="?attr/buttonStyleSmall"
       android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/move_button_prev" />
     <TextView android:layout_width="36sp" android:layout_height="wrap_content"
@@ -24,6 +25,7 @@
       android:id="@+id/move_position_total"
     />
     <Button android:id="@+id/move_button_next"
+      style="?attr/buttonStyleSmall"
       android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/move_button_next" />
     <Button android:id="@+id/move_button_goto_num"
