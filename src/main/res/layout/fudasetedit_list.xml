@@ -5,13 +5,13 @@
   <RelativeLayout
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal" >
-    <Button android:id="@+id/button_ok"
+    <Button android:id="@id/button_ok"
       style="@style/Wasuramoti.FudaListButton"
       android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/button_ok"
       android:layout_alignParentTop="true"
       />
-    <Button android:id="@+id/button_cancel"
+    <Button android:id="@id/button_cancel"
       style="@style/Wasuramoti.FudaListButton"
       android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/button_cancel"
