@@ -132,7 +132,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       val activity = context.asInstanceOf[ConfActivity]
       if(cur_value == "SCAN_EXEC"){
         setValue(prev_value) // cancel
-        showDialogPublic(true)
+        if(activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_SCAN)){
+          showDialogPublic(true)
+        }
       }else if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
         setValue(prev_value) // cancel
       }else{
