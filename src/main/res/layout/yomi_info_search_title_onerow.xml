@@ -17,7 +17,7 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textSize="@dimen/title_bar_large_text"
       android:textColor="@color/action_bar_poem_num"
-      android:id="@+id/yomi_info_search_poem_num"
+      android:id="@id/yomi_info_search_poem_num"
       android:paddingLeft="@dimen/title_bar_margin_each"
     />
   </LinearLayout>
@@ -34,7 +34,7 @@
       android:textColor="@android:color/white"
       android:textSize="@dimen/title_bar_large_text"
       android:paddingLeft="@dimen/title_bar_margin_each"
-      android:id="@+id/yomi_info_search_kimariji"
+      android:id="@id/yomi_info_search_kimariji"
     />
   </LinearLayout>
 </LinearLayout>

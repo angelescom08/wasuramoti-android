@@ -4,4 +4,6 @@
   <item type="id" name="button_cancel" />
   <item type="id" name="tag_fudaset_id" />
   <item type="id" name="activity_placeholder" />
+  <item type="id" name="yomi_info_search_kimariji" />
+  <item type="id" name="yomi_info_search_poem_num" />
 </resources>
