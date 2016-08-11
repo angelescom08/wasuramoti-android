@@ -90,7 +90,6 @@ Priority Medium-High:
   * Acquire audio focus for notification timer.
   * Use scalaz, shapeless
   * Set contentDescription for all the buttons
-  * In some device such as Xperia Z3 Tablet, it shows diffenent poem in a moment on app start.
   * Configure poem size using pinch zoom
   * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
   * Support equalizer in OpenSLESPlayer.

@@ -14,16 +14,19 @@
       android:id="@+id/yomi_info_view_next"
       android:layout_height="match_parent"
       android:layout_width="wrap_content"
+      android:visibility="invisible"
       />
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_cur"
       android:layout_height="match_parent"
       android:layout_width="wrap_content"
+      android:visibility="invisible"
       />
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_prev"
       android:layout_height="match_parent"
       android:layout_width="wrap_content"
+      android:visibility="invisible"
       />
   </LinearLayout>
 </karuta.hpnpwd.wasuramoti.YomiInfoLayout>

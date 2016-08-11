@@ -99,11 +99,11 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
       return
     }
     val that = this
+    // we use post() to do this in next draw cycle
     post(new Runnable(){
         override def run(){
           for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-            val v = findViewById(i)
-            if(v!=null){
+            Option(findViewById(i)).foreach{ v=>
               val prop = v.getLayoutParams
               prop.width = w
               v.setLayoutParams(prop)
@@ -116,9 +116,17 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
                 that.getViewTreeObserver.removeGlobalOnLayoutListener(this)
                 val vid = Globals.player.flatMap{_.current_yomi_info}.getOrElse(R.id.yomi_info_view_cur)
                 that.scrollToView(vid,false)
+                // We initially set YomiInfoView invisible, and make it visible after layout is done.
+                // Since scroll position of YomiInfoLayout is intially zero, yomi_info_view_next is displayed
+                // on the screen until layout is finished.
+                // We have to avoid it since what we want to display initially is yomi_info_view_cur.
+                for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
+                  Option(findViewById(i)).foreach{ v=>
+                    v.setVisibility(View.VISIBLE)
+                  }
+                }
               }
           })
-
           requestLayout()
       }
     })
