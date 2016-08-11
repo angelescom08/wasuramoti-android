@@ -19,7 +19,7 @@
         android:src="@drawable/blue_ring" />
     </LinearLayout>
     <ViewStub
-      android:id="@+id/yomi_info_bar_kimari_container"
+      android:id="@+id/yomi_info_bar_container"
       android:layout="@layout/yomi_info_search_title_onerow"
       android:layout_width="wrap_content" android:layout_height="match_parent"
       android:layout_alignParentTop="true"

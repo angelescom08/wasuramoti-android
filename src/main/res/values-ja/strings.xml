@@ -91,7 +91,7 @@
   <string name="yomi_info_japanese_desc">詠み句:</string>
   <string name="yomi_info_furigana_desc">ふりがな:</string>
   <string name="yomi_info_torifuda_desc">取り札:</string>
-  <string name="yomi_info_torifuda_mode_desc">既定のモード:</string>
+  <string name="yomi_info_torifuda_mode_desc">タイプ:</string>
   <string-array name="yomi_info_mode">
     <item>詠み札</item>
     <item>取り札</item>
@@ -122,7 +122,8 @@
   <string name="yomi_info_furigana_size_desc">ふりがなの\n大きさ:</string>
   <string name="yomi_info_joka">序歌</string>
 
-  <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
+  <string name="yomi_info_show_bar_poem_num">歌番号</string>
+  <string name="yomi_info_show_bar_kimari">決まり字</string>
 
   <string name="yomi_info_search_poem_num">番号:</string>
   <string name="yomi_info_search_kimariji">決まり字:</string>

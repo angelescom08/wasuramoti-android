@@ -223,12 +223,19 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     actionbar.setCustomView(actionview)
     actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
 
-    val bar_kima = actionview.findViewById(R.id.yomi_info_bar_kimari_container).asInstanceOf[ViewStub]
-    if(bar_kima != null &&
-      YomiInfoUtils.showPoemText &&
-      Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
+    val bar_container = actionview.findViewById(R.id.yomi_info_bar_container).asInstanceOf[ViewStub]
+    val show_kimari  = Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
+    val show_poem_num  = Globals.prefs.get.getBoolean("yomi_info_show_bar_poem_num",true)
+    if(bar_container != null &&
+      YomiInfoUtils.showPoemText && (show_kimari || show_poem_num)
     ){
-      bar_kima.inflate()
+      val inflated = bar_container.inflate()
+      Option(inflated.findViewById(R.id.yomi_info_search_kimariji_container)).foreach{v =>
+        v.setVisibility(if(show_kimari){View.VISIBLE}else{View.GONE})
+      }
+      Option(inflated.findViewById(R.id.yomi_info_search_poem_num_container)).foreach{v =>
+        v.setVisibility(if(show_poem_num){View.VISIBLE}else{View.GONE})
+      }
       actionbar.setDisplayShowTitleEnabled(false)
       actionbar.setDisplayShowHomeEnabled(false)
     }else{
@@ -352,13 +359,21 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
              yomi_dlg.setFudanum(fudanum)
        }
       val cv = getSupportActionBar.getCustomView
-      if(cv != null && Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)){
-        val v_fn = cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]
-        val v_kima = cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]
-        if(v_fn != null && v_kima != null){
-          val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
-          v_fn.setText(fudanum_s)
-          v_kima.setText(kimari)
+      if(cv != null){
+        val show_kimari  = Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
+        val show_poem_num  = Globals.prefs.get.getBoolean("yomi_info_show_bar_poem_num",true)
+        if(show_kimari || show_poem_num){
+          val (fudanum_s,kimari_s) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
+          if(show_poem_num){
+            Option(cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]).foreach{ tv =>
+              tv.setText(fudanum_s)
+            }
+          }
+          if(show_kimari){
+            Option(cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]).foreach{ tv =>
+              tv.setText(kimari_s)
+            }
+          }
         }
       }
     }

@@ -94,7 +94,7 @@
   <string name="yomi_info_japanese_desc">Poem Text:</string>
   <string name="yomi_info_furigana_desc">Furigana:</string>
   <string name="yomi_info_torifuda_desc">Torifuda:</string>
-  <string name="yomi_info_torifuda_mode_desc">Default Mode:</string>
+  <string name="yomi_info_torifuda_mode_desc">Type:</string>
   <string-array name="yomi_info_mode">
     <item>Yomifuda</item>
     <item>Torifuda</item>
@@ -131,7 +131,8 @@
   <string name="yomi_info_furigana_size_desc">Firigana\nSize:</string>
   <string name="yomi_info_joka">Joka</string>
 
-  <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
+  <string name="yomi_info_show_bar_kimari">Kimariji</string>
+  <string name="yomi_info_show_bar_poem_num">Number</string>
 
   <string name="yomi_info_search_poem_num">No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>

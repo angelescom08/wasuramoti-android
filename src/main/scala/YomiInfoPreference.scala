@@ -46,20 +46,26 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
     val kami = view.findViewById(R.id.yomi_info_kami).asInstanceOf[CheckBox]
     val simo = view.findViewById(R.id.yomi_info_simo).asInstanceOf[CheckBox]
-    (main,furigana_size,furigana_show,author,kami,simo)
+    val torifuda_mode =  view.findViewById(R.id.yomi_info_torifuda_mode).asInstanceOf[Spinner]
+    val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
+    val show_poem_num = view.findViewById(R.id.yomi_info_show_bar_poem_num).asInstanceOf[CheckBox]
+    (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num)
   }
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (main,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
+        val (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num) = getWidgets(view)
         YomiInfoUtils.setPoemTextVisibility(edit,main.isChecked)
         edit.putInt("yomi_info_furigana_width",furigana_size.getProgress)
         edit.putBoolean("yomi_info_furigana_show",furigana_show.isChecked)
         edit.putBoolean("yomi_info_author",author.isChecked)
         edit.putBoolean("yomi_info_kami",kami.isChecked)
         edit.putBoolean("yomi_info_simo",simo.isChecked)
+        edit.putBoolean("yomi_info_torifuda_mode",torifuda_mode.getSelectedItemPosition == 1)
+        edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
+        edit.putBoolean("yomi_info_show_bar_poem_num",show_poem_num.isChecked)
         edit.commit
         notifyChangedPublic
       }
@@ -70,15 +76,19 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf, null)
     root_view = Some(view)
-    val (main,furigana_size,furigana_show,author,kami,simo) = getWidgets(view)
+    val (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num) = getWidgets(view)
     val prefs = Globals.prefs.get
     main.setChecked(YomiInfoUtils.showPoemText)
+    torifuda_mode.setSelection(if(prefs.getBoolean("yomi_info_torifuda_mode",false)){1}else{0})
     furigana_size.setProgress(prefs.getInt("yomi_info_furigana_width",context.getResources.getInteger(R.integer.yomi_info_furigana_width_default)))
 
     furigana_show.setChecked(prefs.getBoolean("yomi_info_furigana_show",false))
     author.setChecked(prefs.getBoolean("yomi_info_author",false))
     kami.setChecked(prefs.getBoolean("yomi_info_kami",true))
     simo.setChecked(prefs.getBoolean("yomi_info_simo",true))
+
+    show_kimari.setChecked(prefs.getBoolean("yomi_info_show_bar_kimari",true))
+    show_poem_num.setChecked(prefs.getBoolean("yomi_info_show_bar_poem_num",true))
 
     // switch visibility when spinner changed
     val layout = view.findViewById(R.id.yomi_info_conf_layout)
@@ -110,7 +120,6 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         }
     })
 
-
     builder.setView(view)
 
     super.onPrepareDialogBuilder(builder)
@@ -119,19 +128,15 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
 
 class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
-    val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
     val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
-    val torifuda_mode =  view.findViewById(R.id.yomi_info_torifuda_mode).asInstanceOf[Spinner]
-    (show_kimari,show_trans,default_lang,torifuda_mode)
+    (show_trans,default_lang)
   }
   override def doWhenClose(view:View){
     val edit = Globals.prefs.get.edit
-    val (show_kimari,show_trans,default_lang,torifuda_mode) = getWidgets(view)
-    edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
+    val (show_trans,default_lang) = getWidgets(view)
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
-    edit.putBoolean("yomi_info_torifuda_mode",torifuda_mode.getSelectedItemPosition == 1)
     edit.commit
     Globals.forceRestart = true
   }
@@ -139,16 +144,11 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_detail, null)
 
-    val (show_kimari,show_trans,default_lang,torifuda_mode) = getWidgets(view)
+    val (show_trans,default_lang) = getWidgets(view)
     val prefs = Globals.prefs.get
-
-    show_kimari.setChecked(prefs.getBoolean("yomi_info_show_bar_kimari",true))
     show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
-
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     default_lang.setSelection(lang.id)
-
-    torifuda_mode.setSelection(if(prefs.getBoolean("yomi_info_torifuda_mode",false)){1}else{0})
     setTitle(R.string.yomi_info_conf_detail_title)
     setViewAndButton(view)
     super.onCreate(state)

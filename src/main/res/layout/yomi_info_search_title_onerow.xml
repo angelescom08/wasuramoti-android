@@ -6,6 +6,7 @@
   >
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
     android:orientation="horizontal"
+    android:id="@+id/yomi_info_search_poem_num_container"
     android:paddingRight="@dimen/title_bar_margin_center"
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -22,6 +23,7 @@
   </LinearLayout>
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
       android:orientation="horizontal"
+      android:id="@+id/yomi_info_search_kimariji_container"
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/title_bar_kimariji"
