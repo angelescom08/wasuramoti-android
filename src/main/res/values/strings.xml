@@ -104,11 +104,10 @@
   <string name="yomi_info_furigana_show_desc">Furigana</string>
   <string name="yomi_info_kami_desc">1st</string>
   <string name="yomi_info_simo_desc">2nd</string>
-  <string name="yomi_info_abbrev_furigana">F</string>
-  <string name="yomi_info_abbrev_author">A</string>
-  <string name="yomi_info_abbrev_kami">1</string>
-  <string name="yomi_info_abbrev_simo">2</string>
-  <string name="yomi_info_abbrev_both">12</string>
+  <string name="yomi_info_abbrev_yomifuda">Yomifuda</string>
+  <string name="yomi_info_abbrev_torifuda">Torifuda</string>
+  <string name="yomi_info_abbrev_romaji">Romaji</string>
+  <string name="yomi_info_abbrev_english">English</string>
   <string name="yomi_info_abbrev_none">None</string>
   <string-array name="conf_yomi_info_japanese_fonts">
     <item>Default</item>

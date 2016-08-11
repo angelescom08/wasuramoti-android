@@ -11,33 +11,24 @@ import android.support.v4.app.DialogFragment
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
   var root_view = None:Option[View]
   override def getAbbrValue():String = {
-    val res = context.getResources
-    if(YomiInfoUtils.showPoemText){
-      val index = getIndexFromValue(context,YomiInfoUtils.getPoemTextFont)
-      val base = res.getStringArray(R.array.conf_yomi_info_japanese_fonts_abbr)(index)
-      val ex = new StringBuilder()
-      if(Globals.prefs.get.getBoolean("yomi_info_author",false)){
-        ex.append(res.getString(R.string.yomi_info_abbrev_author))
-      }
-      val kami = Globals.prefs.get.getBoolean("yomi_info_kami",true)
-      val simo = Globals.prefs.get.getBoolean("yomi_info_simo",true)
-      (kami,simo) match {
-        case (true,true) => ex.append(res.getString(R.string.yomi_info_abbrev_both))
-        case (true,false) => ex.append(res.getString(R.string.yomi_info_abbrev_kami))
-        case (false,true) => ex.append(res.getString(R.string.yomi_info_abbrev_simo))
-        case _ => Unit
-      }
-      if(Globals.prefs.get.getBoolean("yomi_info_furigana_show",false)){
-        ex.append(res.getString(R.string.yomi_info_abbrev_furigana))
-      }
-      if(ex.length > 0){
-        base + "/" + ex.toString
+    val res_id = if(YomiInfoUtils.showPoemText){
+      if(Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)){
+        R.string.yomi_info_abbrev_torifuda
       }else{
-        base
+        val lang = Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get) 
+        lang match {
+          case Utils.YomiInfoLang.Japanese =>
+            R.string.yomi_info_abbrev_yomifuda
+          case Utils.YomiInfoLang.Romaji =>
+            R.string.yomi_info_abbrev_romaji
+          case Utils.YomiInfoLang.English =>
+            R.string.yomi_info_abbrev_english
+        }
       }
     }else{
-      res.getString(R.string.yomi_info_abbrev_none)
+      R.string.yomi_info_abbrev_none
     }
+    context.getResources.getString(res_id)
   }
   def getWidgets(view:View) = {
     val main = view.findViewById(R.id.yomi_info_show_text).asInstanceOf[CheckBox]

@@ -88,7 +88,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
   def setFudanum(fudanum:Option[Int]){
     getArguments.putSerializable("fudanum",fudanum)
     val torifuda_mode = Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)
-    val info_lang = Utils.YomiInfoLang.withName(Globals.prefs.get.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
+    val info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get)
     if(info_lang != Utils.YomiInfoLang.Japanese){
       enableDisplayButton(true,Map("FURIGANA"->false))
     }else if(torifuda_mode){
@@ -269,7 +269,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
         (x.torifuda_mode,x.info_lang)
       }.getOrElse((
         Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false),
-        Utils.YomiInfoLang.withName(Globals.prefs.get.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
+        Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get)
       ))
     val text_convert= {(s:String,label:String) =>
       if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){

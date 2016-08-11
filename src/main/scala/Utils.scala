@@ -99,6 +99,11 @@ object Utils {
   object YomiInfoLang extends Enumeration{
     type YomiInfoLang = Value
     val Japanese,Romaji,English = Value
+    def getDefaultLangFromPref(pref:SharedPreferences):YomiInfoLang = {
+      Option(pref.getString("yomi_info_default_lang",null)).map{ p =>
+        withName(p)
+      }.getOrElse(Japanese)
+    }
   }
 
   // Caution: Never use StringOps.format since the output varies with locale.

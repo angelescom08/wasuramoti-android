@@ -101,11 +101,10 @@
   <string name="yomi_info_furigana_show_desc">ふりがな</string>
   <string name="yomi_info_kami_desc">上の句</string>
   <string name="yomi_info_simo_desc">下の句</string>
-  <string name="yomi_info_abbrev_furigana">ふ</string>
-  <string name="yomi_info_abbrev_author">人</string>
-  <string name="yomi_info_abbrev_kami">上</string>
-  <string name="yomi_info_abbrev_simo">下</string>
-  <string name="yomi_info_abbrev_both">両</string>
+  <string name="yomi_info_abbrev_yomifuda">詠み札</string>
+  <string name="yomi_info_abbrev_torifuda">取り札</string>
+  <string name="yomi_info_abbrev_romaji">ローマ字</string>
+  <string name="yomi_info_abbrev_english">英語</string>
   <string name="yomi_info_abbrev_none">なし</string>
   <string-array name="conf_yomi_info_japanese_fonts">
     <item>デフォルト</item>

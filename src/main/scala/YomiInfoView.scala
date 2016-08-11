@@ -61,7 +61,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
-      info_lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
+      info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(prefs)
     }
     if(!show_author && !show_kami && !show_simo){
       updateMarker(cur_num)
