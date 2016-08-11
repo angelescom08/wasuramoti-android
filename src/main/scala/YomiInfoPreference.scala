@@ -246,6 +246,7 @@ class QuickConfigDialog extends DialogFragment{
             YomiInfoUtils.setPoemTextVisibility(edit,true)
             edit.putBoolean("yomi_info_torifuda_mode",true)
             edit.putBoolean("yomi_info_show_bar_kimari",false)
+            edit.putBoolean("yomi_info_show_bar_poem_num",false)
           case 3 =>
             // Only 1st Half
             YomiInfoUtils.showOnlyFirst(edit)
@@ -282,6 +283,7 @@ object YomiInfoUtils{
     setPoemTextVisibility(edit,true)
     edit.putBoolean("yomi_info_torifuda_mode",false)
     edit.putBoolean("yomi_info_show_bar_kimari",true)
+    edit.putBoolean("yomi_info_show_bar_poem_num",true)
   }
   def hidePoemText(edit:SharedPreferences.Editor){
     setPoemTextVisibility(edit,false)
