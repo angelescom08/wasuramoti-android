@@ -49,9 +49,7 @@ class WasuramotiFragment extends Fragment{
 
     val frag_stub = root.findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
     if(frag_stub != null &&
-      YomiInfoUtils.showPoemText &&
-      Globals.prefs.get.getBoolean("yomi_info_show_info_button",true)
-    ){
+      YomiInfoUtils.showPoemText){
       frag_stub.inflate()
       val fragment = YomiInfoSearchDialog.newInstance(false,Some(0))
       getChildFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit

@@ -120,17 +120,15 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
 class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
-    val show_btn = view.findViewById(R.id.yomi_info_show_info_button).asInstanceOf[CheckBox]
     val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
     val torifuda_mode =  view.findViewById(R.id.yomi_info_torifuda_mode).asInstanceOf[Spinner]
-    (show_kimari,show_btn,show_trans,default_lang,torifuda_mode)
+    (show_kimari,show_trans,default_lang,torifuda_mode)
   }
   override def doWhenClose(view:View){
     val edit = Globals.prefs.get.edit
-    val (show_kimari,show_btn,show_trans,default_lang,torifuda_mode) = getWidgets(view)
+    val (show_kimari,show_trans,default_lang,torifuda_mode) = getWidgets(view)
     edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
-    edit.putBoolean("yomi_info_show_info_button",show_btn.isChecked)
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
     edit.putBoolean("yomi_info_torifuda_mode",torifuda_mode.getSelectedItemPosition == 1)
@@ -141,11 +139,10 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_detail, null)
 
-    val (show_kimari,show_btn,show_trans,default_lang,torifuda_mode) = getWidgets(view)
+    val (show_kimari,show_trans,default_lang,torifuda_mode) = getWidgets(view)
     val prefs = Globals.prefs.get
 
     show_kimari.setChecked(prefs.getBoolean("yomi_info_show_bar_kimari",true))
-    show_btn.setChecked(prefs.getBoolean("yomi_info_show_info_button",true))
     show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
 
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))

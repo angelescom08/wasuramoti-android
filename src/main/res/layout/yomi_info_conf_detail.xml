@@ -42,11 +42,6 @@
       android:text="@string/yomi_info_show_bar_kimari"
       />
     <CheckBox
-      android:id="@+id/yomi_info_show_info_button"
-      android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:text="@string/yomi_info_show_info_button"
-      />
-    <CheckBox
       android:id="@+id/yomi_info_show_translate_button"
       android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/yomi_info_show_translate_button"

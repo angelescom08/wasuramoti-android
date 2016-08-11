@@ -123,7 +123,6 @@
   <string name="yomi_info_joka">序歌</string>
 
   <string name="yomi_info_show_bar_kimari">上のバーに歌番号と決まり字を表示</string>
-  <string name="yomi_info_show_info_button">Web検索などの情報ボタンを表示</string>
 
   <string name="yomi_info_search_poem_num">番号:</string>
   <string name="yomi_info_search_kimariji">決まり字:</string>

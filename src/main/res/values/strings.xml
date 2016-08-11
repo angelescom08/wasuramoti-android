@@ -101,7 +101,7 @@
   </string-array>
   <string name="yomi_info_display_desc">Display:</string>
   <string name="yomi_info_author_desc">Author</string>
-  <string name="yomi_info_furigana_show_desc">Furigana Font</string>
+  <string name="yomi_info_furigana_show_desc">Furigana</string>
   <string name="yomi_info_kami_desc">1st</string>
   <string name="yomi_info_simo_desc">2nd</string>
   <string name="yomi_info_abbrev_furigana">F</string>
@@ -132,7 +132,6 @@
   <string name="yomi_info_joka">Joka</string>
 
   <string name="yomi_info_show_bar_kimari">Show Poem No. and Kimariji on Top Bar</string>
-  <string name="yomi_info_show_info_button">Show Web Search and Other Buttons. </string>
 
   <string name="yomi_info_search_poem_num">No.:</string>
   <string name="yomi_info_search_kimariji">Kimariji:</string>
