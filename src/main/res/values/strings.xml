@@ -10,7 +10,7 @@
   <string name="button_help">Help</string>
   <string name="button_config">Config</string>
   <string name="button_test">Test</string>
-  <string name="button_config_detail">Detail</string>
+  <string name="button_config_lang">Language</string>
   <string name="now_playing">Playing</string>
   <string name="now_auto_playing">Auto Playing</string>
   <string name="now_stopped">Stopped</string>
@@ -88,7 +88,7 @@
   <string name="category_order">Order</string>
   <string name="conf_show_yomi_info_title">Show Poem Text</string>
   <string name="conf_show_yomi_info_summary">Show current poem text on the screen.</string>
-  <string name="yomi_info_conf_detail_title">Poem Text Detail</string>
+  <string name="yomi_info_conf_lang_title">Language of Poem Text</string>
   <string name="yomi_info_conf_font_title">Poem Text Font</string>
   <string name="yomi_info_show_text_desc">Show Poem Text</string>
   <string name="yomi_info_japanese_desc">Poem Text:</string>

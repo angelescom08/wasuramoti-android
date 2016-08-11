@@ -9,7 +9,7 @@
   <string name="button_help">ヘルプ</string>
   <string name="button_config">設定</string>
   <string name="button_test">テスト</string>
-  <string name="button_config_detail">詳細設定</string>
+  <string name="button_config_lang">言語設定</string>
   <string name="now_playing">再生中</string>
   <string name="now_auto_playing">連続再生中</string>
   <string name="now_stopped">停止</string>
@@ -85,7 +85,7 @@
   <string name="category_order">順番</string>
   <string name="conf_show_yomi_info_title">詠み句の表示</string>
   <string name="conf_show_yomi_info_summary">詠まれている歌を画面に表示する</string>
-  <string name="yomi_info_conf_detail_title">詠み句の詳細設定</string>
+  <string name="yomi_info_conf_lang_title">詠み句の言語設定</string>
   <string name="yomi_info_conf_font_title">詠み句のフォント</string>
   <string name="yomi_info_show_text_desc">詠み句を表示</string>
   <string name="yomi_info_japanese_desc">詠み句:</string>

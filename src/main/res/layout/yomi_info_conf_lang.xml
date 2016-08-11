@@ -20,7 +20,6 @@
                 android:entries="@array/yomi_info_default_languages"
                  />
     </LinearLayout>
-    <include layout="@layout/horizontal_rule" />
     <CheckBox
       android:id="@+id/yomi_info_show_translate_button"
       android:layout_width="wrap_content" android:layout_height="wrap_content"

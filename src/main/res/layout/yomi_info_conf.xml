@@ -109,8 +109,8 @@
         android:id="@+id/yomi_info_conf_button_font"
         />
       <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/button_config_detail"
-        android:id="@+id/yomi_info_conf_button_detail"
+        android:text="@string/button_config_lang"
+        android:id="@+id/yomi_info_conf_button_lang"
         />
 
     </LinearLayout>

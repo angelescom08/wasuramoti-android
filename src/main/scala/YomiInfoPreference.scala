@@ -106,10 +106,10 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         }
     })
 
-    val btn_detail = view.findViewById(R.id.yomi_info_conf_button_detail).asInstanceOf[Button]
-    btn_detail.setOnClickListener(new View.OnClickListener(){
+    val btn_lang = view.findViewById(R.id.yomi_info_conf_button_lang).asInstanceOf[Button]
+    btn_lang.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
-          val dlg = new YomiInfoConfigDetailDialog(context)
+          val dlg = new YomiInfoConfigLangDialog(context)
           dlg.show
         }
     })
@@ -126,7 +126,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   }
 }
 
-class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
+class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
@@ -142,14 +142,14 @@ class YomiInfoConfigDetailDialog(context:Context) extends AlertDialog(context) w
   }
 
   override def onCreate(state:Bundle){
-    val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_detail, null)
+    val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_lang, null)
 
     val (show_trans,default_lang) = getWidgets(view)
     val prefs = Globals.prefs.get
     show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     default_lang.setSelection(lang.id)
-    setTitle(R.string.yomi_info_conf_detail_title)
+    setTitle(R.string.yomi_info_conf_lang_title)
     setViewAndButton(view)
     super.onCreate(state)
   }
