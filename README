@@ -64,13 +64,13 @@ __END_CREDITS__
     # general installment from package manager in linux
       IcedTea JDK 7 (or some other Java JDK )
       scala 2.11.7
-      sbt 0.13.9 (A Scala-Based Simple Build Tool)
+      sbt 0.13.12 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
-      android-sdk-plugin 1.4.9 (https://github.com/pfn/android-sdk-plugin)
+      android-sdk-plugin 1.6.10 (https://github.com/scala-android/sbt-android)
     # downloaded from official Android SDK/NDK site and Android SDK manager
-      Android SDK v19 (https://developer.android.com/sdk/index.html#download)
-      Android NDK v9 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)
-      Android Support Library & Android Support Repository v19.1.0 (Extras in Android SDK manager)
+      Android SDK v24 (https://developer.android.com/sdk/index.html#download)
+      Android NDK v12 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)
+      Android Support Library & Android Support Repository v24.1.1 (Extras in Android SDK manager)
   Where to place keystore:
     copy `local.properties.example` to `local.properties` and edit it
   How to build:
