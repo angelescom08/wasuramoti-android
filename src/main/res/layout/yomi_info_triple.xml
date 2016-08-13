@@ -8,7 +8,6 @@
   android:background="@android:color/black"
   >
   <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                android:id="@+id/yomi_info_double"
                 android:orientation="horizontal" >
     <karuta.hpnpwd.wasuramoti.YomiInfoView
       android:id="@+id/yomi_info_view_next"

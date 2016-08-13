@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 import android.content.Context
-import android.view.View
+import android.view.{View,MotionEvent}
 import android.text.TextUtils
 import android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
 import android.util.{Log,AttributeSet}
@@ -37,6 +37,36 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
         FudaListHelper.switchMemorized(num)
       }
     }
+  }
+
+  override def onTouchEvent(ev:MotionEvent):Boolean = {
+    super.onTouchEvent(ev)
+    if(getId != R.id.yomi_info_view_cur){
+      return true
+    }
+    val LONG_CLICK_MILLISEC = 500
+    val TOUCH_REGION = 0.3
+    ev.getAction match {
+      case MotionEvent.ACTION_UP =>
+        if((ev.getEventTime-ev.getDownTime) < LONG_CLICK_MILLISEC){
+          val maybe_goto_id = if(ev.getX <= getWidth * TOUCH_REGION){
+            Some(R.id.yomi_info_view_next)
+          }else if(ev.getX >= getWidth * (1.0-TOUCH_REGION)){
+            Some(R.id.yomi_info_view_prev)
+          }else{
+            None
+          }
+          for(
+            goto_id <- maybe_goto_id;
+            yomi <- Utils.findAncestorViewById(this,R.id.yomi_info)
+          ){
+            yomi.asInstanceOf[YomiInfoLayout].scrollToView(goto_id, true, true)
+          }
+        }
+      case _ => Unit
+    }
+
+    true
   }
 
   def updateCurNum(num:Option[Int] = None){
