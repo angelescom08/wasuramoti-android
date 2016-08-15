@@ -233,24 +233,13 @@ object Utils {
     }
   }
 
-  def isScreenWide(context:Context):Boolean = {
-    isScreenLarge(context) || (isScreenNormal(context) && isLandscape(context))
-  }
-
   def getScreenLayout(context:Context):Int = {
     context.getResources.getConfiguration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK
   }
 
-  def isScreenNormal(context:Context):Boolean = {
-    Configuration.SCREENLAYOUT_SIZE_NORMAL == getScreenLayout(context)
-  }
   def isScreenLarge(context:Context):Boolean = {
     Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains
     getScreenLayout(context)
-  }
-  def isLandscape(context:Context):Boolean = {
-    val display = context.getSystemService(Context.WINDOW_SERVICE).asInstanceOf[WindowManager].getDefaultDisplay
-    Array(Surface.ROTATION_90,Surface.ROTATION_270).contains(display.getRotation)
   }
 
   def readCurNext(context:Context):Boolean = {

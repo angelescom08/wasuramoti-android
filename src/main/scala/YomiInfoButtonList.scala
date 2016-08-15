@@ -40,7 +40,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends LinearLayou
     button
   }
   def addButtons(context:Context,yiv:Option[YomiInfoView], text_and_tags:Array[(String,String,Boolean)]){
-    if(Utils.isScreenWide(context)){
+    if(context.getResources.getBoolean(R.bool.button_twocolumn)){
       for(ar<-text_and_tags.grouped(2)){
         val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[LinearLayout]
         for((text,tag,enabled)<-ar if ! TextUtils.isEmpty(text)){

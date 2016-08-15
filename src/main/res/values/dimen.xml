@@ -9,6 +9,4 @@
   <dimen name="title_bar_margin_left">4dp</dimen>
   <dimen name="title_bar_margin_center">6dp</dimen>
   <dimen name="title_bar_margin_each">3dp</dimen>
-  <item name="main_left_weight" format="float" type="dimen">0.36</item>
-  <item name="main_right_weight" format="float" type="dimen">0.64</item>
 </resources>
