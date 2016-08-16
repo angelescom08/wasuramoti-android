@@ -1,0 +1,174 @@
+{
+  "title": "Android One",
+  "width": 480,
+  "height": 854,
+  "density": "1.5"
+}
+{
+  "title": "Dell Venue 8",
+  "width": 1600,
+  "height": 2560,
+  "density": "2.0"
+}
+{
+  "title": "HTC One M8",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "HTC One M9",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "LG G2",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "LG G3",
+  "width": 1440,
+  "height": 2560,
+  "density": "3.0"
+}
+{
+  "title": "Moto G",
+  "width": 720,
+  "height": 1280,
+  "density": "2.0"
+}
+{
+  "title": "Moto X",
+  "width": 720,
+  "height": 1280,
+  "density": "2.0"
+}
+{
+  "title": "Moto X (2nd Gen)",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "Nexus 10",
+  "width": 2560,
+  "height": 1600,
+  "density": "2.0"
+}
+{
+  "title": "Nexus 4",
+  "width": 768,
+  "height": 1280,
+  "density": "2.0"
+}
+{
+  "title": "Nexus 5",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "Nexus 6",
+  "width": 1440,
+  "height": 2560,
+  "density": "3.5"
+}
+{
+  "title": "Nexus 5X",
+  "width": 1080,
+  "height": 1920,
+  "density": "2.6"
+}
+{
+  "title": "Nexus 6P",
+  "width": 1440,
+  "height": 2560,
+  "density": "3.5"
+}
+{
+  "title": "Nexus 7 ('12)",
+  "width": 800,
+  "height": 1280,
+  "density": "1.3"
+}
+{
+  "title": "Nexus 7 ('13)",
+  "width": 1200,
+  "height": 1920,
+  "density": "2.0"
+}
+{
+  "title": "Nexus 9",
+  "width": 2048,
+  "height": 1536,
+  "density": "2.0"
+}
+{
+  "title": "Samsung Galaxy Note 4",
+  "width": 1440,
+  "height": 2560,
+  "density": "3.0"
+}
+{
+  "title": "Samsung Galaxy S5",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "Samsung Galaxy S6",
+  "width": 1440,
+  "height": 2560,
+  "density": "4.0"
+}
+{
+  "title": "Samsung Galaxy Tab 10",
+  "width": 800,
+  "height": 1280,
+  "density": "1.0"
+}
+{
+  "title": "Sony Xperia Z Ultra",
+  "width": 1080,
+  "height": 1920,
+  "density": "2.0"
+}
+{
+  "title": "Sony Xperia Z1 Compact",
+  "width": 720,
+  "height": 1280,
+  "density": "2.0"
+}
+{
+  "title": "Sony Xperia Z2/Z3",
+  "width": 1080,
+  "height": 1920,
+  "density": "3.0"
+}
+{
+  "title": "Sony Xperia Z3 Compact",
+  "width": 720,
+  "height": 1280,
+  "density": "2.0"
+}
+{
+  "title": "Sony Xperia C4",
+  "width": 1080,
+  "height": 1920,
+  "density": "2.0"
+}
+{
+  "title": "Sony Xperia Z4 Tablet",
+  "width": 2560,
+  "height": 1600,
+  "density": "2.0"
+}
+{
+  "title": "Sony Xperia Z3 Tablet",
+  "width": 1920,
+  "height": 1200,
+  "density": "2.0"
+}
