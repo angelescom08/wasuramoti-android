@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="read_button_text_small">20dp</dimen>
-  <dimen name="read_button_text_normal">22dp</dimen>
-  <dimen name="read_button_text_large">32dp</dimen>
-  <dimen name="yomi_info_button_text">16dp</dimen>
   <dimen name="title_bar_small_text">14dp</dimen>
   <dimen name="title_bar_large_text">18dp</dimen>
   <dimen name="title_bar_margin_left">4dp</dimen>
   <dimen name="title_bar_margin_center">6dp</dimen>
   <dimen name="title_bar_margin_each">3dp</dimen>
+  <string name="title_bar_poem_num">@string/yomi_info_search_poem_num_abbrev</string>
+  <string name="title_bar_kimariji">@string/yomi_info_search_kimariji_abbrev</string>
 </resources>

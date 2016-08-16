@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="title_bar_poem_num">@string/yomi_info_search_poem_num</string>
-  <string name="title_bar_kimariji">@string/yomi_info_search_kimariji</string>
-</resources>
