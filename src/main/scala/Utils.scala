@@ -14,7 +14,7 @@ import android.preference.{DialogPreference,PreferenceManager}
 import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
 import android.util.Log
-import android.view.{LayoutInflater,View,WindowManager,Surface}
+import android.view.{LayoutInflater,View}
 import android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
 
 import android.support.v4.content.FileProvider

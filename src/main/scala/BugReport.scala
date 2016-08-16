@@ -202,7 +202,7 @@ object BugReport{
     try{
       writer.println("[configuration]")
       val config = context.getResources.getConfiguration
-      writer.println( s"locale=${config.locale}")
+      writer.println( s"config=${config}")
       writer.println( s"screenLayout=0x${config.screenLayout.toHexString}")
     }catch{
       case e:Exception => doWhenError(e)
@@ -307,7 +307,7 @@ object BugReport{
           while(!c.isAfterLast){
             val table = c.getString(0)
             c.moveToNext
-            // fudalist is large so we don't bugreport (in order to avoid exceeding browser's url length limit)
+            // fudalist is large so we don't bugreport
             if(table != "fudalist"){
               val c2 = db.rawQuery(s"SELECT * from $table",null)
               if(c2.moveToFirst){

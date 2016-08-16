@@ -73,8 +73,6 @@ Priority High:
   * Add link to http://pjmtdw.github.io/wasuramoti/fudaset.html inside app
   * Warn that equalizer volume is too small when config
   * Temporary lower the volume when ACTION_AUDIO_BECOMING_NOISY
-  * Move `Show Poem No. and Kimariji on Top Bar` from detail to display option
-    - Split into two options `Poem No.` and `Kimariji`
   * Add app version to mail of support form.
   * Customize order and avaliability of each poem info buttons.
   * Add timeout for Utils.walkdir()
@@ -90,7 +88,6 @@ Priority Medium-High:
   * Use scalaz, shapeless
   * Set contentDescription for all the buttons
   * Configure poem size using pinch zoom
-  * Add option to switch two timers - AlarmManager.setExact and Handler.postDelayed
   * Support equalizer in OpenSLESPlayer.
   * Check that OpenSLESPlayer work on large endian architecture.
   * Show font example.
@@ -118,3 +115,4 @@ Priority Low:
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Support Android Wear
   * Support Chromecast
+  * Support Chromebook
