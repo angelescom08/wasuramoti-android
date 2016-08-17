@@ -19,4 +19,4 @@ wasuramoti-android-*/
 wasuramoti-android-*.zip
 
 scripts/vorbis_decoder_test/out/
-scripts/device_metrics_screen_capture/capture/
+scripts/device_metrics_screen_capture/result/

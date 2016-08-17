@@ -3,7 +3,7 @@
 # run the app in variety of devices and take screenshot of it
 
 BASE_PATH=$(dirname $(readlink -f $0))
-CAPTURE_PATH="$BASE_PATH"/capture
+CAPTURE_PATH="$BASE_PATH"/result
 
 function adb_shell(){
   adb -e shell -n "$@"
@@ -63,6 +63,34 @@ function density_or_error(){
   fi
 }
 
+function crop_resize_image(){
+  local ww="$1"
+  local hh="$2"
+  local density="$3"
+  local image_path="$4"
+  read iw ih < <(identify -format '%w %h' "$image_path")
+  if ((iw>ih));then
+    # the image orientation is different from device orientation
+    # note that ww is always smaller than hh so we don't have to consider the case.
+    local t="$ww"
+    ww="$hh"
+    hh="$t"
+  fi
+  if ((ih*ww > hh*iw));then
+    # crop top and bottom
+    ch=$((iw*hh/ww))
+    oy=$(((ih-ch)/2))
+    rw=$(bc <<< "($ww/$density)/1")
+    mogrify -crop "${iw}x${ch}+0+${oy}" +repage -resize "${rw}x" "$image_path"
+  else
+    # crop left and right
+    cw=$((ih*ww/hh))
+    ox=$(((iw-cw)/2))
+    rh=$(bc <<< "($hh/$density)/1")
+    mogrify -crop "${cw}x${ih}+${ox}+0" +repage -resize "x${rh}" "$image_path"
+  fi
+}
+
 if ! [ -e "$CAPTURE_PATH" ];then
   mkdir "$CAPTURE_PATH" || exit 1
 fi
@@ -97,8 +125,10 @@ while IFS=$'\t' read title width height density; do
     fi
     sleep 2
     adb_shell screencap -p "$image"
-    adb_shell dumpsys window | grep 'mCurConfiguration' > $BASE_PATH/capture/"$prefix".info
+    adb_shell dumpsys window | grep 'mCurConfiguration' > $CAPTURE_PATH/"$prefix".info
+    image_local="$CAPTURE_PATH"/"$prefix".png
     adb -e pull "$image" "$CAPTURE_PATH"/"$prefix".png 
     adb_shell rm "$image"
+    crop_resize_image "$ww" "$hh" "$density" "$image_local"
   done
 done
