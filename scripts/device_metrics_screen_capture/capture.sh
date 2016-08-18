@@ -64,6 +64,7 @@ function density_or_error(){
 }
 
 function crop_resize_image(){
+  # resize to 1dp = 1px
   local ww="$1"
   local hh="$2"
   local density="$3"

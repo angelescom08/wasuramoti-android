@@ -21,6 +21,20 @@ def root(req,res)
   html+="</body></html>"
 end
 
+def get_actual_image_size(id,info)
+  img_path = File.join(RESULT_DIR,"#{id}.png")
+  wh = `identify -format '%w %h' #{img_path}`.split(" ").map{|x|x.to_i}
+  # get dpi of current PC display
+  dpi = if /(\d+)x(\d+) dots per inch/ =~ `xdpyinfo | grep 'resolution:'` then
+          [$1.to_i,$2.to_i]
+        else
+          [96,96]
+        end
+  diag_inch = Math.sqrt(wh.zip(dpi).map{|x,y|x/y.to_f}.map{|x|x**2}.inject(0,:+))
+  rate = info["screen_inch"].to_f/diag_inch
+  wh.map{|x|(x*rate).to_i}
+end
+
 def capture(req,res)
   id = req.query["id"]
 
@@ -34,6 +48,8 @@ def capture(req,res)
   hdp = (info["height"].to_f/info["density"].to_f).to_i
   config = info["mCurConfiguration"].split(/\s+/)[4..9].join(" ")
 
+  (width,height) = get_actual_image_size(id,info)
+
   %Q(<!DOCTYPE html><html><head>
   <title>#{id}</title>
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
@@ -44,7 +60,7 @@ def capture(req,res)
     <div><span class='text-muted'>Device Metrics:</span> <tt>#{info["screen_inch"]}in (#{wdp}dp &times; #{hdp}dp</tt>)</div>
     <div><span class='text-muted'>App Configuration:</span> <tt>#{config}</tt></div>
   </div>
-  <img src='/img/#{id}.png'>
+  <img src='/img/#{id}.png' width='#{width}' height='#{height}'>
   </body></html>  
   )
   
