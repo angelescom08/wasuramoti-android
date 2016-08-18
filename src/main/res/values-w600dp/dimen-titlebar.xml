@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="title_bar_small_text">18dp</dimen>
-  <dimen name="title_bar_large_text">22dp</dimen>
+  <dimen name="title_bar_small_text">18sp</dimen>
+  <dimen name="title_bar_large_text">22sp</dimen>
   <dimen name="title_bar_margin_left">7dp</dimen>
   <dimen name="title_bar_margin_center">12dp</dimen>
   <dimen name="title_bar_margin_each">4dp</dimen>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="read_button_text_small">28dp</dimen>
-  <dimen name="read_button_text_normal">32dp</dimen>
-  <dimen name="read_button_text_large">46dp</dimen>
-  <dimen name="yomi_info_button_text">20dp</dimen>
+  <dimen name="read_button_text_small">28sp</dimen>
+  <dimen name="read_button_text_normal">32sp</dimen>
+  <dimen name="read_button_text_large">46sp</dimen>
+  <dimen name="yomi_info_button_text">20sp</dimen>
 </resources>
