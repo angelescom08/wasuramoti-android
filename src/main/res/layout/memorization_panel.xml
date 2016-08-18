@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="wrap_content" android:layout_height="wrap_content"
-  android:background="@drawable/round_border" android:padding="10dip" android:layout_marginTop="10dip"
+  android:background="@drawable/round_border" android:padding="10dp" android:layout_marginTop="10dip"
   android:orientation="vertical" >
 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
   android:textColor="#FFFF00"
@@ -14,7 +14,7 @@
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_memorized"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:paddingRight="6dip"
+    android:paddingRight="6dp"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:id="@+id/memorization_panel_memorized_count"
@@ -37,7 +37,7 @@
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_not_memorized"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:paddingRight="6dip"
+    android:paddingRight="6dp"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:id="@+id/memorization_panel_not_memorized_count"

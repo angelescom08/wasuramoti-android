@@ -16,7 +16,7 @@
       android:orientation="vertical"
       android:id="@+id/karafuda_layout"
       >
-      <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="12dip">
+      <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="12dp">
         <TextView
           android:layout_height="wrap_content" android:layout_width="wrap_content"
           android:text="@string/karafuda_append_num"
@@ -51,14 +51,14 @@
               android:layout_width="match_parent"
               android:max="100"
               android:progress="50"
-              android:layout_marginBottom="6dip"
+              android:layout_marginBottom="6dp"
                />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />
     <TextView
       android:layout_height="wrap_content" android:layout_width="wrap_content"
       android:text="@string/memorization_warn_karafuda"
-      android:layout_marginBottom="4dip"
+      android:layout_marginBottom="4dp"
       />
   </LinearLayout>
 </ScrollView>

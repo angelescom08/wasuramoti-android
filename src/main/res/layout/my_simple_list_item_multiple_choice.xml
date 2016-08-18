@@ -6,6 +6,6 @@
   android:textAppearance="?android:attr/textAppearanceMedium"
   android:gravity="center_vertical"
   android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-  android:paddingLeft="6dip"
-  android:paddingRight="6dip"
+  android:paddingLeft="6dp"
+  android:paddingRight="6dp"
 />

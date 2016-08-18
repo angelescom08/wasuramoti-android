@@ -6,9 +6,9 @@
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent" android:layout_height="match_parent"
               android:orientation="vertical"
-              android:layout_marginBottom="18dip"
-              android:paddingLeft="6dip"
-              android:paddingRight="6dip"
+              android:layout_marginBottom="18dp"
+              android:paddingLeft="6dp"
+              android:paddingRight="6dp"
               >
     <TextView
         android:layout_width="wrap_content"
@@ -36,8 +36,8 @@
           android:text="@string/developer_mail_addr"
           android:textAppearance="?android:attr/textAppearanceMedium"
           android:textColor="#00FFFF"
-          android:paddingTop="8dip"
-          android:paddingBottom="11dip"
+          android:paddingTop="8dp"
+          android:paddingBottom="11dp"
           />
     </LinearLayout>
     <include layout="@layout/horizontal_rule" />

@@ -25,8 +25,8 @@
       <karuta.hpnpwd.wasuramoti.PatchedTextView
         android:id="@+id/fudasetedit_help_html"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:paddingTop="6dip"
-        android:paddingBottom="6dip"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         />
 
       <karuta.hpnpwd.wasuramoti.LocalizationEditText android:id="@+id/fudasetedit_text"
@@ -39,25 +39,25 @@
   <!-- copied from: https://github.com/android/platform_frameworks_base/blob/master/core/res/res/layout/alert_dialog.xml -->
   <LinearLayout
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:minHeight="54dip" android:orientation="vertical" >
+    android:minHeight="54dp" android:orientation="vertical" >
     <LinearLayout
       style="?android:attr/buttonBarStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      android:paddingTop="4dip"
-      android:paddingStart="2dip"
-      android:paddingEnd="2dip"
+      android:paddingTop="4dp"
+      android:paddingStart="2dp"
+      android:paddingEnd="2dp"
       android:measureWithLargestChild="true">
       <LinearLayout android:id="@+id/leftSpacer"
         android:layout_weight="0.25"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone" />
       <Button android:id="@id/button_ok"
         android:text="@string/button_ok"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_gravity="start"
         android:layout_weight="1"
         style="?android:attr/buttonBarButtonStyle"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content" />
       <Button android:id="@id/button_cancel"
         android:text="@string/button_cancel"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         style="?android:attr/buttonBarButtonStyle"
@@ -73,14 +73,14 @@
         android:layout_height="wrap_content" />
       <Button android:id="@+id/button_fudasetedit_list"
         android:text="@string/button_fudasetedit_list"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_gravity="end"
         android:layout_weight="1"
         style="?android:attr/buttonBarButtonStyle"
         android:maxLines="2"
         android:layout_height="wrap_content" />
       <LinearLayout android:id="@+id/rightSpacer"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_weight="0.25"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

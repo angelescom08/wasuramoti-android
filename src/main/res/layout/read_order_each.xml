@@ -5,7 +5,7 @@
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent" android:layout_height="match_parent"
               android:orientation="vertical"
-              android:paddingBottom="12dip"
+              android:paddingBottom="12dp"
               >
     <TextView
       android:layout_width="wrap_content"
@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur2_next1"
         android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
@@ -43,8 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur2_next1_next2"
         android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
@@ -58,8 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1_cur2"
         android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
@@ -73,8 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1_cur2_cur2"
         android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
@@ -88,8 +88,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1"
         android:tag="radio_text" />
       <include layout="@layout/horizontal_rule" />
@@ -103,8 +103,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
-        android:paddingLeft="17dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="17dp"
+        android:paddingBottom="5dp"
         />
       <include layout="@layout/horizontal_rule" />
     </RadioGroup>
