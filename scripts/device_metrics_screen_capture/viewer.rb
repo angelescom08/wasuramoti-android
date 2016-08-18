@@ -29,7 +29,7 @@ def capture(req,res)
   prev_href = if prev_id then "<a href='/capture?id=#{prev_id}'>Prev</a>" else "Prev" end
   next_id = ID_LIST[id_index+1]
   next_href = if next_id then "<a href='/capture?id=#{next_id}'>Next</a>" else "Next" end
-  info = File.readlines(File.join(RESULT_DIR,"#{id}.info")).map{|x|x.split("=")}.to_h
+  info = File.readlines(File.join(RESULT_DIR,"#{id}.info")).map{|x|x.chomp.split("=")}.to_h
   wdp = (info["width"].to_f/info["density"].to_f).to_i
   hdp = (info["height"].to_f/info["density"].to_f).to_i
   config = info["mCurConfiguration"].split(/\s+/)[4..9].join(" ")
@@ -41,7 +41,7 @@ def capture(req,res)
   [#{prev_href}] [#{next_href}]
   <div class='well'>
     <h3>#{info["title"]}</h3>
-    <div><span class='text-muted'>Device Metrics:</span> <tt>#{wdp}dp &times; #{hdp}dp</tt></div>
+    <div><span class='text-muted'>Device Metrics:</span> <tt>#{info["screen_inch"]}in (#{wdp}dp &times; #{hdp}dp</tt>)</div>
     <div><span class='text-muted'>App Configuration:</span> <tt>#{config}</tt></div>
   </div>
   <img src='/img/#{id}.png'>

@@ -11,4 +11,6 @@ curl 'https://design.google.com/devices/devices_data.min.js' \
   {title:.title."$t",
    width:.pxscreenw|tonumber,
    height:.pxscreenh|gsub("[^0-9]+";"")|tonumber,
-   density:.density}'
+   density:.density,
+   screen_inch:.inscreend
+  }'

@@ -99,8 +99,8 @@ fi
 adb_shell content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0 || exit 1
 
 
-jq -r < device_metrics.json '[.title,(.width|tostring),(.height|tostring),.density]|join("\t")' | \
-while IFS=$'\t' read title width height density; do
+jq -r < device_metrics.json '[.title,(.width|tostring),(.height|tostring),.density,.screen_inch]|join("\t")' | \
+while IFS=$'\t' read title width height density screen_inch; do
   id=$(normalize_title "$title")
   if ((width > height));then
     ww=$height
@@ -128,6 +128,7 @@ while IFS=$'\t' read title width height density; do
     adb_shell screencap -p "$image"
     adb_shell dumpsys window | grep 'mCurConfiguration' | sed -e 's/^ *//' | tr -d $'\r' > $info_path
     echo "title=$title" >> $info_path
+    echo "screen_inch=$screen_inch" >> $info_path
     echo "density=$density" >> $info_path
     if [ $rotation = port ];then
       echo "width=$ww" >> $info_path
