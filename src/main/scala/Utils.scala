@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
 import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
-import android.content.res.{Configuration,Resources}
+import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
@@ -13,7 +13,7 @@ import android.os.{Environment,Handler}
 import android.preference.{DialogPreference,PreferenceManager}
 import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
-import android.util.Log
+import android.util.{Log,TypedValue}
 import android.view.{LayoutInflater,View}
 import android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
 
@@ -218,6 +218,14 @@ object Utils {
     (px / Resources.getSystem.getDisplayMetrics.density).toFloat
   }
 
+  // getDimension() does not work for <item format="float" type="dimen"> so we use getValue() instead
+  // reference: http://stackoverflow.com/questions/3282390/add-floating-point-value-to-android-resources-values
+  def getDimenFloat(context:Context,resId:Int):Float={
+    val outValue = new TypedValue
+    context.getResources.getValue(resId,outValue,true)
+    outValue.getFloat
+  }
+
   def isRandom():Boolean = {
     getReadOrder == ReadOrder.Random
   }
@@ -231,15 +239,6 @@ object Utils {
       case "POEM_NUM" => ReadOrder.PoemNum
       case _ => ReadOrder.Shuffle
     }
-  }
-
-  def getScreenLayout(context:Context):Int = {
-    context.getResources.getConfiguration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK
-  }
-
-  def isScreenLarge(context:Context):Boolean = {
-    Array(Configuration.SCREENLAYOUT_SIZE_LARGE,Configuration.SCREENLAYOUT_SIZE_XLARGE) contains
-    getScreenLayout(context)
   }
 
   def readCurNext(context:Context):Boolean = {

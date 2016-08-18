@@ -230,7 +230,7 @@ trait YomiInfoYomifudaTrait{
   var show_simo = true
 
   def initYomifuda(){
-    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)
     MARGIN_TOP = MARGIN_TOP_BASE.map{_*margin_boost}
     MARGIN_AUTHOR = MARGIN_AUTHOR_BASE.map{_*margin_boost}
     MARGIN_BOTTOM_ORIG = MARGIN_BOTTOM_BASE*margin_boost
@@ -533,11 +533,7 @@ trait YomiInfoTorifudaTrait{
   def onDrawTorifuda(canvas:Canvas){
     cur_num.foreach{ num=>
       paint.setTextAlign(Paint.Align.CENTER)
-      val margin_boost = if(Utils.isScreenLarge(context)){
-        2.0
-      }else{
-        1.0
-      }
+      val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_torifuda)
       val max_height = getHeight * (1.0 - 2*FUDA_MARGIN_TB*margin_boost)
       val max_width = getWidth * (1.0 - 2*FUDA_MARGIN_LR*margin_boost)
       val r = max_height / max_width
@@ -606,7 +602,7 @@ trait YomiInfoEnglishTrait{
   var ENG_MARGIN_LR = ENG_MARGIN_LR_BASE
   def initEnglish(){
     paint.setTypeface(TypefaceManager.get(context,Globals.prefs.get.getString("yomi_info_english_font","Serif")))
-    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)
     ENG_MARGIN_TB = ENG_MARGIN_TB_BASE*margin_boost
     ENG_MARGIN_LR = ENG_MARGIN_LR_BASE*margin_boost
   }
@@ -689,7 +685,7 @@ trait YomiInfoRomajiTrait{
   var ROMAJI_LR = ROMAJI_LR_BASE
   var ROMAJI_TB = ROMAJI_TB_BASE
   def initRomaji(){
-    val margin_boost = if(Utils.isScreenLarge(context)){1.5}else{1.0}
+    val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)
     ROMAJI_LR = ROMAJI_LR_BASE * margin_boost
     ROMAJI_TB = ROMAJI_TB_BASE * margin_boost
 
