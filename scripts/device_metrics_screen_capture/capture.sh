@@ -117,6 +117,7 @@ while IFS=$'\t' read title width height density; do
   for rotation in port land; do
     prefix="$id"-$rotation
     image=/sdcard/"$prefix".png
+    info_path=$CAPTURE_PATH/"$prefix".info
     # rotate device
     if [ $rotation = port ];then
       adb_shell content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:0
@@ -125,7 +126,16 @@ while IFS=$'\t' read title width height density; do
     fi
     sleep 2
     adb_shell screencap -p "$image"
-    adb_shell dumpsys window | grep 'mCurConfiguration' > $CAPTURE_PATH/"$prefix".info
+    adb_shell dumpsys window | grep 'mCurConfiguration' | sed -e 's/^ *//' | tr -d $'\r' > $info_path
+    echo "title=$title" >> $info_path
+    echo "density=$density" >> $info_path
+    if [ $rotation = port ];then
+      echo "width=$ww" >> $info_path
+      echo "height=$hh" >> $info_path
+    else
+      echo "width=$hh" >> $info_path
+      echo "height=$ww" >> $info_path
+    fi
     image_local="$CAPTURE_PATH"/"$prefix".png
     adb -e pull "$image" "$CAPTURE_PATH"/"$prefix".png 
     adb_shell rm "$image"
