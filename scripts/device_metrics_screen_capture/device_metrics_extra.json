@@ -1,0 +1,41 @@
+{
+  "title": "MediaPad T2 7.0 Pro",
+  "width": 1200,
+  "height": 1920,
+  "density": "2.5",
+  "screen_inch": "7.0"
+}
+{
+  "title": "Zenfone 2 Lazer",
+  "width": 720,
+  "height": 1280,
+  "density": "2.0",
+  "screen_inch": "5.0"
+}
+{
+  "title": "QVGA",
+  "width": 240,
+  "height": 320,
+  "density": "0.75",
+  "screen_inch": "2.7"
+}
+{
+  "title": "WQVGA400",
+  "width": 240,
+  "height": 400,
+  "density": "0.75",
+  "screen_inch": "3.3"
+}
+{
+  "title": "WQVGA432",
+  "width": 240,
+  "height": 432,
+  "density": "0.75",
+  "screen_inch": "3.4"
+}
+{ "title": "HVGA",
+  "width": 320,
+  "height": 480,
+  "density": "1.0",
+  "screen_inch": "3.2"
+}

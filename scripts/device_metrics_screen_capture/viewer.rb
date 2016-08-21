@@ -11,14 +11,20 @@ def id_list()
   }
 end
 
+def content_for(title,body)
+  %Q(<!DOCTYPE html><html><head>
+  <title>#{title}</title>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+  </head><body>#{body}</body></html>)
+end
+
 ID_LIST = id_list
 
 def root(req,res)
-  html="<!DOCTYPE html><html><head><title>Emulator Screenshot</title></head><body>"
-  ID_LIST.each{|id|
-    html += "<a href='/capture?id=#{id}'>#{id}</a><br>"
-  }
-  html+="</body></html>"
+  body = "<h3>Devices</h3><ul>" + ID_LIST.map{|id|
+    "<li><a href='/capture?id=#{id}'>#{id}</a><br></li>"
+  }.join("\n") + "</ul>"
+  content_for("ScreenShot",body)
 end
 
 def get_actual_image_size(id,info)
@@ -50,19 +56,15 @@ def capture(req,res)
 
   (width,height) = get_actual_image_size(id,info)
 
-  %Q(<!DOCTYPE html><html><head>
-  <title>#{id}</title>
-  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
-  </head><body>
-  [#{prev_href}] [#{next_href}]
+  content_for("ScreenShot - #{info["title"]}",%Q(
+  [<a href='/'>Home</a>] [#{prev_href}] [#{next_href}]
   <div class='well'>
     <h3>#{info["title"]}</h3>
     <div><span class='text-muted'>Device Metrics:</span> <tt>#{info["screen_inch"]}in (#{wdp}dp &times; #{hdp}dp</tt>)</div>
     <div><span class='text-muted'>App Configuration:</span> <tt>#{config}</tt></div>
   </div>
   <img src='/img/#{id}.png' width='#{width}' height='#{height}'>
-  </body></html>  
-  )
+  ))
   
 end
 

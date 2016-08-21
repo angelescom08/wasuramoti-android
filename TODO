@@ -77,6 +77,7 @@ Priority High:
   * Customize order and avaliability of each poem info buttons.
   * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
+  * Add option for switching number of button columns one/two.
 
 Priority Medium-High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.

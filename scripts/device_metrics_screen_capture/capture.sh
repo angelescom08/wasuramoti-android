@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # run the app in variety of devices and take screenshot of it
+# Tested with emulator profile: Nexus 7 with API Level 24, and default landscape portrait
 
 BASE_PATH=$(dirname $(readlink -f $0))
 CAPTURE_PATH="$BASE_PATH"/result
@@ -100,8 +101,9 @@ fi
 adb_shell content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0 || exit 1
 
 
-jq -r < device_metrics.json '[.title,(.width|tostring),(.height|tostring),.density,.screen_inch]|join("\t")' | \
+jq -r '[.title,(.width|tostring),(.height|tostring),.density,.screen_inch]|join("\t")' device_metrics*.json | \
 while IFS=$'\t' read title width height density screen_inch; do
+  echo "-- $title --"
   id=$(normalize_title "$title")
   if ((width > height));then
     ww=$height
