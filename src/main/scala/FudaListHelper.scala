@@ -93,70 +93,83 @@ object FudaListHelper{
     num_to_read + num_memorized != AllFuda.list.size
   }
 
-  def makeReadIndexMessage(context:Context):String = {
+  def makeReadIndexMessage(context:Context,fromAuto:Boolean):String = {
+    val res = context.getResources
+    val pref = Globals.prefs.get
     val num_to_read = getOrQueryNumbersToReadAlt()
     val num_of_kara = getOrQueryNumbersOfKarafuda()
 
     val set_name = if(!isBoundedByFudaset && num_of_kara == 0){
-      ""
+      None
     }else{
-      val t = Globals.prefs.get.getString("fudaset","")
-      if(TextUtils.isEmpty(t)){
-        ""
-      }else{
-        t + "\n"
-      }
+      Option(pref.getString("fudaset",null))
     }
     val kara_memorized_order = {
       val kara = if(num_of_kara > 0){
-        Some(context.getResources.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)))
+        Some(res.getString(R.string.message_karafuda_num,new java.lang.Integer(num_of_kara)))
       }else{
         None
       }
-      val memorized = if(Globals.prefs.get.getBoolean("memorization_mode",false)){
+      val memorized = if(pref.getBoolean("memorization_mode",false)){
         val num = getOrQueryNumbersOfMemorized
-        Some(context.getResources.getString(R.string.message_memorized_num,new java.lang.Integer(num)))
+        Some(res.getString(R.string.message_memorized_num,new java.lang.Integer(num)))
       }else{
         None
       }
       val order = Utils.getReadOrder match {
-        case Utils.ReadOrder.PoemNum => Some(context.getResources.getString(R.string.message_in_fudanum_order))
+        case Utils.ReadOrder.PoemNum => Some(res.getString(R.string.message_in_fudanum_order))
         case _ => None
       }
-      val s = Array(order,kara,memorized).flatten.mkString(", ")
+      val s = Seq(order,kara,memorized).flatten.mkString(", ")
       if(TextUtils.isEmpty(s)){
-        ""
+        None
       }else{
-        s + "\n"
+        Some(s)
       }
     }
-    val body = if(Utils.isRandom){
+    val body = Some(if(Utils.isRandom){
       // we have to show result of getOrQueryNumbersToRead instead of getOrQueryNumbersToReadAlt when random mode,
       // however, querying DB again takes some cost, so we just decrease incTotalRead
-      context.getResources.getString(R.string.message_readindex_random,
+      res.getString(R.string.message_readindex_random,
         new java.lang.Integer(num_to_read - Utils.incTotalRead)
       )
     }else{
       val current_index = getOrQueryCurrentIndexWithSkip(context)
       val (index_s,total_s) = Utils.makeDisplayedNum(current_index,num_to_read)
       if(current_index > num_to_read){
-        context.getResources.getString(R.string.message_readindex_done,
+        res.getString(R.string.message_readindex_done,
           new java.lang.Integer(total_s))
-      }else if(Globals.prefs.get.getBoolean("show_current_index",true)){
+      }else if(pref.getBoolean("show_current_index",true)){
         if(Globals.player.exists(_.is_replay)){
-          context.getResources.getString(R.string.message_readindex_replay,
+          res.getString(R.string.message_readindex_replay,
             new java.lang.Integer(total_s))
         }else{
-          context.getResources.getString(R.string.message_readindex_shuffle,
+          res.getString(R.string.message_readindex_shuffle,
             new java.lang.Integer(index_s),
             new java.lang.Integer(total_s))
         }
       }else{
-        context.getResources.getString(R.string.message_readindex_onlytotal,
+        res.getString(R.string.message_readindex_onlytotal,
           new java.lang.Integer(total_s))
       }
-    }
-    set_name + kara_memorized_order + body
+    })
+    val status = Some(
+        if(Globals.is_playing){
+          if(pref.getBoolean("autoplay_enable",false) && !Globals.player.exists(_.is_replay)){
+            res.getString(R.string.now_auto_playing)
+          }else{
+            res.getString(R.string.now_playing)
+          }
+        }else{
+          if(fromAuto && Globals.player.nonEmpty){
+            val sec = pref.getLong("autoplay_span",3).toInt
+            res.getString(R.string.now_stopped_auto,new java.lang.Integer(sec))
+          }else{
+            res.getString(R.string.now_stopped)
+          }
+        }
+      )
+    Seq(set_name,kara_memorized_order,body,status).flatten.mkString("\n")
   }
 
   def allReadDone(context:Context):Boolean = {

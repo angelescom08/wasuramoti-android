@@ -523,27 +523,10 @@ object Utils {
         }else if(Globals.is_playing && KarutaPlayUtils.have_to_mute){
           context.getResources.getString(R.string.muted_of_audio_focus)
         }else{
-          val res = context.getResources
           if(invalidateQueryCacheExceptKarafuda){
             FudaListHelper.invalidateQueryCacheExceptKarafuda()
           }
-          FudaListHelper.makeReadIndexMessage(context) + "\n" +
-          (
-            if(Globals.is_playing){
-              if(Globals.prefs.get.getBoolean("autoplay_enable",false) && !Globals.player.exists(_.is_replay)){
-                res.getString(R.string.now_auto_playing)
-              }else{
-                res.getString(R.string.now_playing)
-              }
-            }else{
-              if(fromAuto && Globals.player.nonEmpty){
-                val sec = Globals.prefs.get.getLong("autoplay_span",3).toInt
-                res.getString(R.string.now_stopped_auto,new java.lang.Integer(sec))
-              }else{
-                res.getString(R.string.now_stopped)
-              }
-            }
-          )
+          FudaListHelper.makeReadIndexMessage(context,fromAuto)
         }
       )
     }

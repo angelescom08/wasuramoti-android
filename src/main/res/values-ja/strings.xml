@@ -375,7 +375,7 @@
   <string name="all_read_done">全て詠み終えました．シャッフルを選ぶと始めから詠み直せます．</string>
   <string name="all_memorized">全て覚え終えました．メニューの「詳細設定」から暗記モードをリセットするか，別の札セットを選択して下さい．</string>
 
-  <string name="message_readindex_shuffle" formatted="false">%d / %d 首目</string>
+  <string name="message_readindex_shuffle" formatted="false">%d / %d 首</string>
   <string name="message_readindex_onlytotal" formatted="false">%d 首</string>
   <string name="message_in_fudanum_order">番号順</string>
   <string name="message_karafuda_num">空札%d枚</string>
