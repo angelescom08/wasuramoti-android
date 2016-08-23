@@ -71,7 +71,7 @@ class WasuramotiFragment extends Fragment{
        getActivity.runOnUiThread(new Runnable(){
         override def run(){
           val lines = txt.split("\n")
-          val max_chars = lines.map{_.length}.max // TODO: treat japanese characters as two characters.
+          val max_chars = lines.map{x=>Utils.measureStringWidth(x)}.max
           if((lines.length >= 4 || max_chars >= 16) && YomiInfoUtils.showPoemText){
             read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
           }

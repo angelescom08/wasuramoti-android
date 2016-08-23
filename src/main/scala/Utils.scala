@@ -871,6 +871,28 @@ object Utils {
   def isExternalReaderPath(path:String):Boolean = {
     Option(path).exists(x => Seq("EXT","ABS").contains(x.split(":")(0)))
   }
+
+  def measureStringWidth(s:String):Int = {
+    val z = s.toCharArray
+    z.zip(z.tail:+Char.MinValue).collect{
+      case (hi,lo) if !Character.isLowSurrogate(hi)=>
+        if(lo!=Char.MinValue && Character.isSurrogatePair(hi,lo)){
+          Character.toCodePoint(hi,lo)
+        }else{
+          hi.toInt
+        }
+    }.map{ codePoint =>
+      Try{
+        Character.UnicodeBlock.of(codePoint) match {
+          // HALFWIDTH_AND_FULLWIDTH_FORMS contains both fullwidth alphanumeric and halfwidth kana,
+          // however, we treat both of of it has width = 2
+          // https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms
+          case Character.UnicodeBlock.BASIC_LATIN => 1
+          case _ => 2
+        }
+      }.toOption.getOrElse(1)
+    }.sum
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){
