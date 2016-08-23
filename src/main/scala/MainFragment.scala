@@ -72,8 +72,13 @@ class WasuramotiFragment extends Fragment{
         override def run(){
           val lines = txt.split("\n")
           val max_chars = lines.map{x=>Utils.measureStringWidth(x)}.max
-          if((lines.length >= 4 || max_chars >= 16) && YomiInfoUtils.showPoemText){
-            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_small))
+          if(YomiInfoUtils.showPoemText){
+            val res_id = if(lines.length >= 4 || max_chars >= 18){
+              R.dimen.read_button_text_small
+            }else{
+              R.dimen.read_button_text_normal
+            }
+            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(res_id))
           }
           read_button.setMinLines(lines.length)
           read_button.setMaxLines(lines.length+1) // We accept exceeding one row

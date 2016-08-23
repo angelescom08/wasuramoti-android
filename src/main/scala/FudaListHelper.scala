@@ -116,11 +116,7 @@ object FudaListHelper{
       }else{
         None
       }
-      val order = Utils.getReadOrder match {
-        case Utils.ReadOrder.PoemNum => Some(res.getString(R.string.message_in_fudanum_order))
-        case _ => None
-      }
-      val s = Seq(order,kara,memorized).flatten.mkString(", ")
+      val s = Seq(kara,memorized).flatten.mkString(", ")
       if(TextUtils.isEmpty(s)){
         None
       }else{
@@ -136,21 +132,31 @@ object FudaListHelper{
     }else{
       val current_index = getOrQueryCurrentIndexWithSkip(context)
       val (index_s,total_s) = Utils.makeDisplayedNum(current_index,num_to_read)
-      if(current_index > num_to_read){
+      var show_seq = false
+      val str = if(current_index > num_to_read){
         res.getString(R.string.message_readindex_done,
           new java.lang.Integer(total_s))
+      }else if(Globals.player.exists(_.is_replay)){
+        res.getString(R.string.message_readindex_replay,
+          new java.lang.Integer(total_s))
       }else if(pref.getBoolean("show_current_index",true)){
-        if(Globals.player.exists(_.is_replay)){
-          res.getString(R.string.message_readindex_replay,
-            new java.lang.Integer(total_s))
-        }else{
-          res.getString(R.string.message_readindex_shuffle,
-            new java.lang.Integer(index_s),
-            new java.lang.Integer(total_s))
-        }
+        show_seq = true
+        res.getString(R.string.message_readindex_shuffle,
+          new java.lang.Integer(index_s),
+          new java.lang.Integer(total_s))
       }else{
+        show_seq = true
         res.getString(R.string.message_readindex_onlytotal,
           new java.lang.Integer(total_s))
+      }
+      if(show_seq){
+        val order = Utils.getReadOrder match {
+          case Utils.ReadOrder.PoemNum => res.getString(R.string.message_in_fudanum_order) + " "
+          case _ => ""
+        }
+        order + str
+      }else{
+        str
       }
     })
     val status = Some(

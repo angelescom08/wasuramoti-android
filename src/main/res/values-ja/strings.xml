@@ -377,7 +377,7 @@
 
   <string name="message_readindex_shuffle" formatted="false">%d / %d 首</string>
   <string name="message_readindex_onlytotal" formatted="false">%d 首</string>
-  <string name="message_in_fudanum_order">番号順</string>
+  <string name="message_in_fudanum_order">昇順</string>
   <string name="message_karafuda_num">空札%d枚</string>
   <string name="message_memorized_num">%d首覚えた</string>
   <string name="message_readindex_random">ランダム / %d 首</string>
