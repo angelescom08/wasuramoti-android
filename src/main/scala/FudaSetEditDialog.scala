@@ -76,7 +76,7 @@ class FudaSetEditDialog(
       case Some((kimari,st_size)) =>
         val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
         Utils.confirmDialog(context,Left(message),() => {
-          Utils.writeFudaSetToDB(title,kimari,st_size,is_add,orig_title)
+          Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
           callback(new FudaSetWithSize(title,st_size))
           Globals.forceRefresh = true
           dialog.dismiss()

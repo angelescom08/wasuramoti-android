@@ -84,7 +84,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
           }
           val r = TrieUtils.makeKimarijiSetFromNumList(a.toList).exists{
             case (kimari,st_size) =>
-              Utils.writeFudaSetToDB(name,kimari,st_size,true)
+              Utils.writeFudaSetToDB(this,name,kimari,st_size)
           }
           (if(r){count+=1;"[OK]"}else{"[NG]"}) + " " + name
         }

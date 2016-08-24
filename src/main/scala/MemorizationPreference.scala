@@ -170,7 +170,7 @@ class MemorizationFudaSetDialog(context:Context,
     TrieUtils.makeKimarijiSetFromNumList(ids.toSeq) match{
       case None => // do nothing, this should not happen
       case Some((kimari,st_size))=>
-        Utils.writeFudaSetToDB(title,kimari,st_size,true)
+        Utils.writeFudaSetToDB(context,title,kimari,st_size)
         if(Option(view.findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
           FudaListHelper.resetMemorized(reset_cond)
           FudaListHelper.updateSkipList(context)

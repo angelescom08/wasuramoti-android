@@ -43,7 +43,7 @@ class FudaSetCopyMergeDialog(
     }
     val newset = FudaListHelper.queryMergedFudaset(items.map{_.id})
     newset.foreach{case (body,st_size) =>
-      Utils.writeFudaSetToDB(title,body,st_size,true)
+      Utils.writeFudaSetToDB(context,title,body,st_size)
       callback(new FudaSetWithSize(title,st_size))
     }
   } }

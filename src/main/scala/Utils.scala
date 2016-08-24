@@ -669,23 +669,30 @@ object Utils {
     }
   }
   // return true if succeed
-  def writeFudaSetToDB(title:String,kimari:String,st_size:Int,is_add:Boolean,orig_title:String=null):Boolean = Globals.db_lock.synchronized{
+  def writeFudaSetToDB(context:Context,title:String,kimari:String,st_size:Int,orig_title:Option[String]=None):Boolean = Globals.db_lock.synchronized{
     val cv = new ContentValues()
     val db = Globals.database.get.getWritableDatabase
     cv.put("title",title)
     cv.put("body",kimari)
     cv.put("set_size",new java.lang.Integer(st_size))
-    val r = if(is_add){
-      val cursor = db.query(Globals.TABLE_FUDASETS,Array("ifnull(max(set_order),0)"),null,null,null,null,null,null)
-      cursor.moveToFirst
-      val max_order = cursor.getInt(0)
-      cursor.close
-      cv.put("set_order",new java.lang.Integer(max_order+1))
-      db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
-    }else{
-      db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig_title)) > 0
+    val r = orig_title match{
+      case None =>
+        // Insert
+        val cursor = db.query(Globals.TABLE_FUDASETS,Array("ifnull(max(set_order),0)"),null,null,null,null,null,null)
+        cursor.moveToFirst
+        val max_order = cursor.getInt(0)
+        cursor.close
+        cv.put("set_order",new java.lang.Integer(max_order+1))
+        db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
+      case Some(orig) =>
+        // Update
+        db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig)) > 0
     }
     db.close()
+    if(orig_title.exists{_==Globals.prefs.get.getString("fudaset",null)}){
+      Globals.prefs.get.edit.putString("fudaset",title).commit
+      FudaListHelper.updateSkipList(context)
+    }
     return r
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
