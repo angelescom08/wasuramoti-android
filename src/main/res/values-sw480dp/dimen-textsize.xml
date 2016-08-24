@@ -8,4 +8,5 @@
   <dimen name="read_button_text_large">37sp</dimen>
   <item name="poemtext_margin_yomifuda" format="float" type="dimen">1.5</item>
   <item name="poemtext_margin_torifuda" format="float" type="dimen">2.0</item>
+  <dimen name="actionbar_logo_margin">16dp</dimen>
 </resources>

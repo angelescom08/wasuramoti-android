@@ -4,7 +4,7 @@
 >
   <item
     android:drawable="@drawable/animals_dolphin"
-    android:top="10dp"
-    android:bottom="10dp"
-    android:right="10dp"/>
+    android:top="@dimen/actionbar_logo_margin"
+    android:bottom="@dimen/actionbar_logo_margin"
+    android:right="@dimen/actionbar_logo_margin"/>
 </layer-list>
