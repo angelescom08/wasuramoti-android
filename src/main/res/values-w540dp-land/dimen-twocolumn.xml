@@ -1,1 +1,6 @@
-../values-w420dp-port/dimen-twocolumn.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <bool name="button_twocolumn">true</bool>
+  <item name="main_left_weight" format="float" type="dimen">0.5</item>
+  <item name="main_right_weight" format="float" type="dimen">0.5</item>
+</resources>

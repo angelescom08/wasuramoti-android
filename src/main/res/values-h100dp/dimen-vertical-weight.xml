@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="main_top_weight" format="float" type="dimen">0.5</item>
+  <item name="main_bottom_weight" format="float" type="dimen">0.5</item>
+</resources>

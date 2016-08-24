@@ -1,4 +1,11 @@
 {
+  "title": "YOGA Tablet 2 Pro",
+  "width": 2560,
+  "height": 1440,
+  "density": "2.0",
+  "screen_inch": "13.3"
+}
+{
   "title": "MediaPad T2 7.0 Pro",
   "width": 1200,
   "height": 1920,
@@ -38,4 +45,10 @@
   "height": 480,
   "density": "1.0",
   "screen_inch": "3.2"
+}
+{ "title": "Custom A",
+  "width": 420,
+  "height": 540,
+  "density": "1.0",
+  "screen_inch": "5.0"
 }

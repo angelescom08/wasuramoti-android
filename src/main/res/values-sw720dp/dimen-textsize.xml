@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="yomi_info_button_text">24sp</dimen>
+  <dimen name="title_bar_small_text">22sp</dimen>
+  <dimen name="title_bar_large_text">24sp</dimen>
+  <dimen name="read_button_text_small">32sp</dimen>
+  <dimen name="read_button_text_normal">36sp</dimen>
+  <dimen name="read_button_text_large">47sp</dimen>
+  <item name="poemtext_margin_yomifuda" format="float" type="dimen">2.0</item>
+  <item name="poemtext_margin_torifuda" format="float" type="dimen">3.0</item>
+</resources>
