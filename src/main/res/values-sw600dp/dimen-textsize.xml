@@ -6,7 +6,7 @@
   <dimen name="read_button_text_small">27sp</dimen>
   <dimen name="read_button_text_normal">30sp</dimen>
   <dimen name="read_button_text_large">42sp</dimen>
-  <item name="poemtext_margin_yomifuda" format="float" type="dimen">1.5</item>
-  <item name="poemtext_margin_torifuda" format="float" type="dimen">2.0</item>
+  <item name="poemtext_margin_yomifuda" format="float" type="dimen">1.7</item>
+  <item name="poemtext_margin_torifuda" format="float" type="dimen">2.4</item>
   <dimen name="actionbar_logo_margin">18dp</dimen>
 </resources>

@@ -36,15 +36,15 @@ Future Android:
         - In Android >= 5.x, able to show in lock screen ?
       - ASUS Auto-start Manager may refuse to start Service ?
     * Use MediaPlayer.setDataSource(MediaDataSource dataSource)
-  [Android N]
+  [Android 7.0]
     * Screen Zoom
       - https://developer.android.com/preview/behavior-changes.html#screen-zoom
     * Font Size Change
       - https://developer.android.com/preview/behavior-changes.html#other
-    * Multi-Window
-      - https://developer.android.com/preview/features/multi-window.html
     * Support Picure in Picture Mode
       - https://developer.android.com/preview/features/picture-in-picture.html
+    * Multi Locale
+      - https://developer.android.com/about/versions/nougat/android-7.0.html#multi-locale_languages
 
 Priority High:
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
@@ -78,6 +78,8 @@ Priority High:
   * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
   * Add option for switching number of button columns one/two.
+  * Use android.icu instead of WanaKanaJava if possible
+    - https://developer.android.com/guide/topics/resources/icu4j-framework.html
 
 Priority Medium-High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
@@ -93,6 +95,7 @@ Priority Medium-High:
   * Check that OpenSLESPlayer work on large endian architecture.
   * Show font example.
   * Change the color of author, poem text, and furigana.
+    - also change the font size
   * Save poem text as image.
   * When read_order_each is CUR2_NEXT1, and the poem text is displayed, we can swipe to Joka even if read_order_joka is upper_0,lower_0 .
   * Solve the warnings caused by -Xlint
