@@ -220,7 +220,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         return
       }
       val rest_start = () => {
-        if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity.getApplicationContext)){
+        if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity)){
           Toast.makeText(activity.getApplicationContext,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
           return
         }
@@ -234,7 +234,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         Globals.is_playing = true
         is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
         KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
-        Utils.setButtonTextByState(activity.getApplicationContext())
+        activity.setButtonTextByState()
         // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
         if(YomiInfoUtils.showPoemText && !is_replay){
           if(Utils.readCurNext(activity.getApplicationContext)){
@@ -329,7 +329,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
          })
         }
         stop()
-        Utils.setButtonTextByState(activity.getApplicationContext())
+        activity.setButtonTextByState()
       }
       val current_queue = if(is_replay){
         if(KarutaPlayUtils.replay_audio_queue.isEmpty){
@@ -461,7 +461,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
           //       since it cannot capture the event after abandonAudioFocus
           KarutaPlayUtils.have_to_mute  = false
           Utils.runOnUiThread(activity,()=>
-              Utils.setButtonTextByState(activity.getApplicationContext)
+              activity.setButtonTextByState()
           )
         }
         t match {

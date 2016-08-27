@@ -8,8 +8,6 @@ import android.support.v4.app.DialogFragment
 import android.content.Context
 import android.text.{Editable,TextWatcher,TextUtils}
 
-import java.lang.Runnable
-
 import scala.util.Sorting
 import scala.collection.mutable
 

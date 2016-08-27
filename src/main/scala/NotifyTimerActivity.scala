@@ -272,7 +272,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       val timer_id = extras.getInt("timer_id")
       val icon = extras.getInt("timer_icon")
       NotifyTimerUtils.notify_timers.remove(timer_id)
-      Utils.setButtonTextByState(context)
+      
       val message = extras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
       val notif = new NotificationCompat.Builder(context)
@@ -301,6 +301,9 @@ class NotifyTimerReceiver extends BroadcastReceiver {
         }
       }
       NotifyTimerUtils.notify_manager.foreach{_.notify(timer_id, notif.build)}
+
+      // call WasuramotiActivity.setButtonTextByState()
+      context.sendBroadcast(new Intent(Globals.ACTION_NOTIFY_TIMER_FIRED))
     }
   }
 }

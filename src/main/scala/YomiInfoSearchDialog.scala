@@ -205,6 +205,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
     btnlist.setOnClickListener(new YomiInfoButtonList.OnClickListener(){
         override def onClick(btn:View,tag:String){
+          val was = getActivity.asInstanceOf[WasuramotiActivity]
           if(tag == YomiInfoSearchDialog.PREFIX_KIMARIJI + "_LOG"){
             showYomiInfoDetailDialog()
           }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
@@ -239,13 +240,13 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
           }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
-            KarutaPlayUtils.startReplay(getActivity.asInstanceOf[WasuramotiActivity])
+            KarutaPlayUtils.startReplay(was)
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>
               if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
                 vw.switchMemorized
-                Utils.setButtonTextByState(getActivity.getApplicationContext, invalidateQueryCacheExceptKarafuda = true)
+                was.setButtonTextByState(invalidateQueryCacheExceptKarafuda = true)
               }else{
                 postfix match{
                   case "AUTHOR" => vw.show_author ^= true

@@ -7,8 +7,6 @@ import android.util.TypedValue
 import android.view.{View,ViewStub,LayoutInflater,ViewGroup}
 import android.widget.Button
 
-import java.lang.Runnable
-
 import scala.collection.mutable
 
 
@@ -28,17 +26,17 @@ class WasuramotiFragment extends Fragment{
   }
 
   override def onViewCreated(root:View, state:Bundle){
-    val wa = getActivity.asInstanceOf[WasuramotiActivity]
-    switchViewAndReloadHandler(root)
-    wa.setCustomActionBar()
+    val was = getActivity.asInstanceOf[WasuramotiActivity]
+    switchViewAndReloadHandler(was,root)
+    was.setCustomActionBar()
     setLongClickYomiInfo(root)
-    setLongClickButton(root)
+    setLongClickButton(was,root)
     if(getArguments.getBoolean("have_to_resume_task")){
-      wa.doWhenResume()
+      was.doWhenResume()
     }
   }
 
-  def switchViewAndReloadHandler(root:View){
+  def switchViewAndReloadHandler(was:WasuramotiActivity, root:View){
     val read_button = root.findViewById(R.id.read_button).asInstanceOf[Button]
     val stub = root.findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
     if(YomiInfoUtils.showPoemText){
@@ -62,29 +60,11 @@ class WasuramotiFragment extends Fragment{
       btn.setText(Utils.replayButtonText(getResources))
       btn.setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
-           KarutaPlayUtils.startReplay(getActivity.asInstanceOf[WasuramotiActivity])
+           KarutaPlayUtils.startReplay(was)
         }
       })
     }
 
-    Globals.setButtonText = Some( txt =>
-       getActivity.runOnUiThread(new Runnable(){
-        override def run(){
-          val lines = txt.split("\n")
-          val max_chars = lines.map{x=>Utils.measureStringWidth(x)}.max
-          if(YomiInfoUtils.showPoemText){
-            val res_id = if(lines.length >= 4 || max_chars >= 18){
-              R.dimen.read_button_text_small
-            }else{
-              R.dimen.read_button_text_normal
-            }
-            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(res_id))
-          }
-          read_button.setMinLines(lines.length)
-          read_button.setMaxLines(lines.length+1) // We accept exceeding one row
-          read_button.setText(txt)
-        }
-      }))
   }
   def setLongClickYomiInfo(root:View){
     for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
@@ -104,7 +84,7 @@ class WasuramotiFragment extends Fragment{
       }
     }
   }
-  def setLongClickButton(root:View){
+  def setLongClickButton(was:WasuramotiActivity,root:View){
     val btn = root.findViewById(R.id.read_button).asInstanceOf[Button]
     if(btn != null){
       btn.setOnLongClickListener(
@@ -115,9 +95,8 @@ class WasuramotiFragment extends Fragment{
                 if(Globals.is_playing){
                   Globals.player.foreach{p=>
                     p.stop()
-                    val wa = getActivity.asInstanceOf[WasuramotiActivity]
-                    wa.moveToNextFuda()
-                    wa.doPlay()
+                    was.moveToNextFuda()
+                    was.doPlay()
                   }
                 }
               }

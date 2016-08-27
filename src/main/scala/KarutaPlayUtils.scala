@@ -221,10 +221,11 @@ object KarutaPlayUtils{
     }
   }
 
-  def requestAudioFocus(context:Context):Boolean = {
+  def requestAudioFocus(activity:WasuramotiActivity):Boolean = {
     if(! Globals.prefs.get.getBoolean("use_audio_focus",true)){
       return true
     }
+    val context = activity.getApplicationContext
     abandonAudioFocus(context)
     val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(am != null){
@@ -233,7 +234,8 @@ object KarutaPlayUtils{
           import AudioManager._
           focusChange match {
             case AUDIOFOCUS_GAIN =>
-              recoverVolume(context)
+              recoverVolume()
+              activity.setButtonTextByState()
             case AUDIOFOCUS_LOSS =>
               cancelAllPlay()
               Toast.makeText(context,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
@@ -247,7 +249,8 @@ object KarutaPlayUtils{
               //  http://developer.android.com/training/managing-audio/audio-focus.html
               //  https://code.google.com/p/android/issues/detail?id=155984
               //  https://code.google.com/p/android/issues/detail?id=17995
-              lowerVolume(context)
+              lowerVolume()
+              activity.setButtonTextByState()
             case _ =>
           }
         }
@@ -272,20 +275,18 @@ object KarutaPlayUtils{
       }
     }
   }
-  def lowerVolume(context:Context){
+  def lowerVolume(){
     have_to_mute = true
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,true)}
     }
-    Utils.setButtonTextByState(context)
   }
 
-  def recoverVolume(context:Context){
+  def recoverVolume(){
     have_to_mute = false
     Globals.player.foreach{
       _.music_track.foreach{Utils.setVolumeMute(_,false)}
     }
-    Utils.setButtonTextByState(context)
   }
 
   def acquireWakeLock(context:Context,timeout:Long){

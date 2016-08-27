@@ -42,6 +42,7 @@ object Globals {
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
   val READER_SCAN_DEPTH_MAX = 3
+  val ACTION_NOTIFY_TIMER_FIRED = "karuta.hpnpwd.wasuramoti.notify.timer.fired"
   val global_lock = new Object()
   val db_lock = new Object()
   val decode_lock = new Object()
@@ -49,7 +50,6 @@ object Globals {
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
   var player_none_reason = None:Option[String]
-  var setButtonText = None:Option[String=>Unit]
   var is_playing = false
   var forceRefresh = false
   var forceRestart = false
@@ -513,22 +513,6 @@ object Utils {
           walkDir(f,depth - 1,func)
         }
       }
-    }
-  }
-  def setButtonTextByState(context:Context, fromAuto:Boolean = false, invalidateQueryCacheExceptKarafuda:Boolean = false){
-    Globals.setButtonText.foreach{
-      _(
-        if(NotifyTimerUtils.notify_timers.nonEmpty){
-          NotifyTimerUtils.makeTimerText(context)
-        }else if(Globals.is_playing && KarutaPlayUtils.have_to_mute){
-          context.getResources.getString(R.string.muted_of_audio_focus)
-        }else{
-          if(invalidateQueryCacheExceptKarafuda){
-            FudaListHelper.invalidateQueryCacheExceptKarafuda()
-          }
-          FudaListHelper.makeReadIndexMessage(context,fromAuto)
-        }
-      )
     }
   }
 

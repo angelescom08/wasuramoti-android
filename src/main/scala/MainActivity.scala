@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.app.{Activity,AlertDialog}
-import android.content.{Intent,Context,DialogInterface}
+import android.content.{Intent,IntentFilter,Context,DialogInterface,BroadcastReceiver}
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
@@ -9,13 +9,11 @@ import android.os.{Bundle,Handler,Build}
 import android.support.v7.app.{AppCompatActivity,ActionBar}
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Base64
+import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,RadioGroup,Toast}
 import android.preference.PreferenceActivity
-
-import java.lang.Runnable
 
 import org.json.{JSONTokener,JSONObject,JSONArray}
 
@@ -29,6 +27,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
   var run_refresh_text = None:Option[Runnable]
   val handler = new Handler()
   var bar_poem_info_num = None:Option[Int]
+  var broadcast_receiver = None:Option[BroadcastReceiver]
 
   override def onNewIntent(intent:Intent){
     super.onNewIntent(intent)
@@ -112,7 +111,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
               run_refresh_text = None
               return
             }
-            Utils.setButtonTextByState(getApplicationContext())
+            setButtonTextByState()
             run_refresh_text.foreach{handler.postDelayed(_,MINUTE_MILLISEC)}
           }
         })
@@ -121,10 +120,47 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     }
   }
 
+  def setButtonText(txt:String){
+     runOnUiThread(new Runnable(){
+      override def run(){
+        Option(findViewById(R.id.read_button).asInstanceOf[Button]).foreach{ read_button =>
+          val lines = txt.split("\n")
+          val max_chars = lines.map{x=>Utils.measureStringWidth(x)}.max
+          if(YomiInfoUtils.showPoemText){
+            val res_id = if(lines.length >= 4 || max_chars >= 18){
+              R.dimen.read_button_text_small
+            }else{
+              R.dimen.read_button_text_normal
+            }
+            read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(res_id))
+          }
+          read_button.setMinLines(lines.length)
+          read_button.setMaxLines(lines.length+1) // We accept exceeding one row
+          read_button.setText(txt)
+        }
+      }
+    })
+  }
+
+  def setButtonTextByState(fromAuto:Boolean = false, invalidateQueryCacheExceptKarafuda:Boolean = false){
+    val txt =
+      if(NotifyTimerUtils.notify_timers.nonEmpty){
+        NotifyTimerUtils.makeTimerText(getApplicationContext)
+      }else if(Globals.is_playing && KarutaPlayUtils.have_to_mute){
+        getResources.getString(R.string.muted_of_audio_focus)
+      }else{
+        if(invalidateQueryCacheExceptKarafuda){
+          FudaListHelper.invalidateQueryCacheExceptKarafuda()
+        }
+        FudaListHelper.makeReadIndexMessage(getApplicationContext,fromAuto)
+      }
+    setButtonText(txt)
+  }
+
   def refreshAndSetButton(force:Boolean = false, fromAuto:Boolean = false, nextRandom:Option[Int] = None){
     Globals.global_lock.synchronized{
       Globals.player = AudioHelper.refreshKarutaPlayer(this, Globals.player, force, fromAuto, nextRandom)
-      Utils.setButtonTextByState(getApplicationContext(), fromAuto)
+      setButtonTextByState(fromAuto)
     }
   }
 
@@ -147,7 +183,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
 
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
     KarutaPlayUtils.cancelAllPlay()
-    Utils.setButtonTextByState(getApplicationContext())
+    setButtonTextByState()
     item.getItemId match {
       case R.id.menu_shuffle => {
         showShuffleDialog()
@@ -417,7 +453,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         Globals.player = AudioHelper.refreshKarutaPlayer(this,Globals.player,false)
       }
     }
-    Utils.setButtonTextByState(getApplicationContext)
+    setButtonTextByState()
     if(Globals.player.forall(!_.is_replay)){
       invalidateYomiInfo()
     }else{
@@ -435,6 +471,14 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         None
       }
     )
+  }
+
+  def genBroadcastReceiver():BroadcastReceiver = {
+    new BroadcastReceiver(){
+        override def onReceive(c:Context,i:Intent){
+          setButtonTextByState()
+        }
+      }
   }
 
   override def onResume(){
@@ -464,6 +508,11 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         changeIntendedUse(true)
       }
     }
+    if(NotifyTimerUtils.notify_timers.nonEmpty){
+      val brc = genBroadcastReceiver
+      registerReceiver(brc,new IntentFilter(Globals.ACTION_NOTIFY_TIMER_FIRED))
+      broadcast_receiver = Some(brc)
+    }
   }
   override def onPause(){
     super.onPause()
@@ -477,6 +526,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     // we have to close the dialog at onPause() to avoid window leak.
     // without this, window leak occurs when rotating the device when dialog is shown.
     Utils.dismissAlertDialog()
+    broadcast_receiver.foreach{ brc =>
+      unregisterReceiver(brc)
+      broadcast_receiver = None
+    }
   }
   override def onStop(){
     super.onStop()
@@ -713,7 +766,7 @@ trait MainButtonTrait{
         if(have_to_go_next){
           moveToNextFuda()
         }else{
-          Utils.setButtonTextByState(self.getApplicationContext())
+          setButtonTextByState()
         }
       }else{
         // TODO: if auto_play then turn off display
