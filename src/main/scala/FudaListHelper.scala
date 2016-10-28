@@ -9,6 +9,8 @@ import scala.util.Random
 import scala.collection.mutable
 
 case class FudaSet(id:Long, title:String, body:String, set_size: Int)
+case class NumWithOrder(num:Int, order:Int)
+case class CurNext(cur:NumWithOrder, next:NumWithOrder)
 
 // According to one of the Android framework engineer, there is no need to close the database in content provider.
 // In fact, if we close it manually with SQLiteDatabase.close() method, there seems to occur exception such as
@@ -65,14 +67,14 @@ object FudaListHelper{
     }else{
       1
     }
-    queryNext(fst).foreach(
-      {case (_,_,first_index,_) => putCurrentIndex(context,first_index)}
-    )
+    queryNext(fst).foreach{
+      x=>putCurrentIndex(context,x.cur.order)
+  }
   }
   def movePrevOrNext(context:Context,is_next:Boolean){
     val current_index = getCurrentIndex(context)
     queryPrevOrNext(current_index,is_next).foreach{
-      x => putCurrentIndex(context,x._4)
+      x=>putCurrentIndex(context,x.next.order)
     }
   }
   def moveNext(context:Context){
@@ -225,23 +227,22 @@ object FudaListHelper{
       return(index)
     }
   }
-  def queryPrevOrNext(index:Int,is_next:Boolean,current_only:Boolean=false):Option[(Int,Int,Int,Int)] = Globals.db_lock.synchronized{
+  def queryPrevOrNext(index:Int,is_next:Boolean,current_only:Boolean=false):Option[CurNext] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
     val (op,order) = if(is_next){ (">=","ASC") }else{ ("<=","DESC") }
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
     try{
       cursor.moveToFirst()
-      val simo_num = cursor.getInt(0)
-      val simo_order = cursor.getInt(1)
+      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
       val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
       if(current_only || (is_next && cursor.getCount == 1 && !roe.contains("NEXT"))){
         val maxn = AllFuda.list.length + 1
-        return Some((simo_num,maxn,simo_order,maxn))
+        val no_next = NumWithOrder(maxn,maxn)
+        return Some(CurNext(no_cur,no_next))
       }
       cursor.moveToNext()
-      val kami_num = cursor.getInt(0)
-      val kami_order = cursor.getInt(1)
-      return Some((simo_num,kami_num,simo_order,kami_order))
+      val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      return Some(CurNext(no_cur,no_next))
     }catch{
       case _:CursorIndexOutOfBoundsException =>
        return None
@@ -257,10 +258,10 @@ object FudaListHelper{
     rawQueryGetInt(db,0,s"SELECT read_order FROM ${Globals.TABLE_FUDALIST} WHERE skip <=0 AND num=${fudanum} LIMIT 1")
   }
 
-  def queryNext(index:Int):Option[(Int,Int,Int,Int)] = {
+  def queryNext(index:Int):Option[CurNext] = {
     queryPrevOrNext(index,true)
   }
-  def queryPrev(index:Int):Option[(Int,Int,Int,Int)] = {
+  def queryPrev(index:Int):Option[CurNext] = {
     queryPrevOrNext(index,false)
   }
 
@@ -547,13 +548,13 @@ object FudaListHelper{
         Globals.player.map{_.cur_num}
         .orElse{
           val current_index = getCurrentIndex(context)
-          queryPrevOrNext(current_index, true, true).map{_._1}
+          queryPrevOrNext(current_index, true, true).map{_.cur.num}
         }
       case 1 =>
         Globals.player.map{_.next_num}
         .orElse{
           val current_index = getCurrentIndex(context)
-          queryNext(current_index).map{_._2}
+          queryNext(current_index).map{_.next.num}
         }
       case -1 =>
         val current_index = getCurrentIndex(context)
@@ -562,9 +563,9 @@ object FudaListHelper{
           // It occurs when in either one of the following condition holds.
           // (1) go last poem -> memorization mode -> click `memorized` -> swipe rightwards
           // (2) go last poem -> play the poem -> restart app
-          queryPrevOrNext(current_index, false, true).map{_._1}
+          queryPrevOrNext(current_index, false, true).map{_.cur.num}
         }else{
-          queryPrev(current_index).map{_._2}
+          queryPrev(current_index).map{_.next.num}
         }
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)

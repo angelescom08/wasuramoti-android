@@ -120,7 +120,7 @@ object AudioHelper{
       }
     }else{
       FudaListHelper.queryNext(current_index).map{
-        case (cur_num,next_num,_,_) => (cur_num,next_num)
+        x=>(x.cur.num,x.next.num)
       }
     }
     num.flatMap{case(cur_num,next_num) =>{
