@@ -74,7 +74,8 @@ object FudaListHelper{
   }
   def movePrevOrNext(context:Context,go_forward:Boolean){
     val current_index = getCurrentIndex(context)
-    queryTwo(current_index,go_forward).foreach{
+    val mem_move_mode = Globals.prefs.get.getBoolean("memorization_mode",false)
+    queryTwo(current_index,go_forward,mem_move_mode).foreach{
       x=>putCurrentIndex(context,x.next.order)
     }
   }
@@ -229,10 +230,23 @@ object FudaListHelper{
     }
   }
 
-  def queryBase[T](index:Int, go_forward:Boolean, func:Cursor=>Option[T]): Option[T] = Globals.db_lock.synchronized {
+  def queryBase[T](
+    index:Int,
+    go_forward:Boolean,
+    mem_move_mode:Boolean=false)
+    (func:Cursor=>Option[T]): Option[T] = Globals.db_lock.synchronized {
     val db = Globals.database.get.getReadableDatabase
     val (op,order) = if(go_forward){ (">=","ASC") }else{ ("<=","DESC") }
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
+    val condbase = s"skip <= 0 AND read_order $op ?"
+    // in memorization mode, there might be a case that current poem might have skip = 2 
+    val (cond,args) = if(mem_move_mode){
+      val c = s"(memorized = 1 AND read_order = ?) OR ($condbase)" 
+      (c, Array.fill(2)(index.toString))
+    }else{
+      (condbase,Array(index.toString))
+    }
+
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),cond,args,null,null,"read_order "+order,"2")
     try{
       cursor.moveToFirst()
       func(cursor)
@@ -246,13 +260,13 @@ object FudaListHelper{
   }
 
   def queryOne(index:Int, go_forward:Boolean):Option[NumWithOrder] = {
-    queryBase(index,go_forward,{cursor=>
+    queryBase(index,go_forward){cursor=>
       val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
       return Some(no_cur)
-    })
+    }
   }
-  def queryTwo(index:Int,go_forward:Boolean):Option[CurNext] = {
-    queryBase(index,go_forward,{cursor=>
+  def queryTwo(index:Int,go_forward:Boolean,mem_move_mode:Boolean=false):Option[CurNext] = {
+    queryBase(index,go_forward,mem_move_mode){cursor=>
       val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
       val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
       if(go_forward && cursor.getCount == 1 && !roe.contains("NEXT")){
@@ -263,7 +277,7 @@ object FudaListHelper{
       cursor.moveToNext()
       val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
       return Some(CurNext(no_cur,no_next))
-    })
+    }
   }
 
   // [0,100]
