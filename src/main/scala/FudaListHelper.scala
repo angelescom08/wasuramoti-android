@@ -3,6 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.content.{Context,ContentValues}
 import android.database.CursorIndexOutOfBoundsException
 import android.database.sqlite.SQLiteDatabase
+import android.database.Cursor
 import android.text.TextUtils
 
 import scala.util.Random
@@ -71,9 +72,9 @@ object FudaListHelper{
       x=>putCurrentIndex(context,x.cur.order)
   }
   }
-  def movePrevOrNext(context:Context,is_next:Boolean){
+  def movePrevOrNext(context:Context,go_forward:Boolean){
     val current_index = getCurrentIndex(context)
-    queryPrevOrNext(current_index,is_next).foreach{
+    queryTwo(current_index,go_forward).foreach{
       x=>putCurrentIndex(context,x.next.order)
     }
   }
@@ -227,22 +228,14 @@ object FudaListHelper{
       return(index)
     }
   }
-  def queryPrevOrNext(index:Int,is_next:Boolean,current_only:Boolean=false):Option[CurNext] = Globals.db_lock.synchronized{
+
+  def queryBase[T](index:Int, go_forward:Boolean, func:Cursor=>Option[T]): Option[T] = Globals.db_lock.synchronized {
     val db = Globals.database.get.getReadableDatabase
-    val (op,order) = if(is_next){ (">=","ASC") }else{ ("<=","DESC") }
+    val (op,order) = if(go_forward){ (">=","ASC") }else{ ("<=","DESC") }
     val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"skip <= 0 AND read_order "+op+" ?",Array(index.toString),null,null,"read_order "+order,"2")
     try{
       cursor.moveToFirst()
-      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
-      val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
-      if(current_only || (is_next && cursor.getCount == 1 && !roe.contains("NEXT"))){
-        val maxn = AllFuda.list.length + 1
-        val no_next = NumWithOrder(maxn,maxn)
-        return Some(CurNext(no_cur,no_next))
-      }
-      cursor.moveToNext()
-      val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
-      return Some(CurNext(no_cur,no_next))
+      func(cursor)
     }catch{
       case _:CursorIndexOutOfBoundsException =>
        return None
@@ -252,6 +245,27 @@ object FudaListHelper{
     }
   }
 
+  def queryOne(index:Int, go_forward:Boolean):Option[NumWithOrder] = {
+    queryBase(index,go_forward,{cursor=>
+      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      return Some(no_cur)
+    })
+  }
+  def queryTwo(index:Int,go_forward:Boolean):Option[CurNext] = {
+    queryBase(index,go_forward,{cursor=>
+      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
+      if(go_forward && cursor.getCount == 1 && !roe.contains("NEXT")){
+        val maxn = AllFuda.list.length + 1
+        val no_next = NumWithOrder(maxn,maxn)
+        return Some(CurNext(no_cur,no_next))
+      }
+      cursor.moveToNext()
+      val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      return Some(CurNext(no_cur,no_next))
+    })
+  }
+
   // [0,100]
   def queryIndexFromFudaNum(fudanum:Int):Option[Int] = Globals.db_lock.synchronized{
     val db = Globals.database.get.getReadableDatabase
@@ -259,10 +273,10 @@ object FudaListHelper{
   }
 
   def queryNext(index:Int):Option[CurNext] = {
-    queryPrevOrNext(index,true)
+    queryTwo(index,true)
   }
   def queryPrev(index:Int):Option[CurNext] = {
-    queryPrevOrNext(index,false)
+    queryTwo(index,false)
   }
 
   def rawQueryGetInt(db:SQLiteDatabase,column:Int,query:String):Option[Int] = {
@@ -548,7 +562,7 @@ object FudaListHelper{
         Globals.player.map{_.cur_num}
         .orElse{
           val current_index = getCurrentIndex(context)
-          queryPrevOrNext(current_index, true, true).map{_.cur.num}
+          queryOne(current_index, true).map{_.num}
         }
       case 1 =>
         Globals.player.map{_.next_num}
@@ -558,12 +572,12 @@ object FudaListHelper{
         }
       case -1 =>
         val current_index = getCurrentIndex(context)
-        if(Globals.player.isEmpty && queryPrevOrNext(current_index, true, true).isEmpty){
+        if(Globals.player.isEmpty && queryOne(current_index, true).isEmpty){
           // This means it is last fuda and cur_view.cur_num is None.
           // It occurs when in either one of the following condition holds.
           // (1) go last poem -> memorization mode -> click `memorized` -> swipe rightwards
           // (2) go last poem -> play the poem -> restart app
-          queryPrevOrNext(current_index, false, true).map{_.cur.num}
+          queryOne(current_index, false).map{_.num}
         }else{
           queryPrev(current_index).map{_.next.num}
         }
