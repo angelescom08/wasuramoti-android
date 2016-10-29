@@ -74,8 +74,9 @@ object FudaListHelper{
   }
   def movePrevOrNext(context:Context,go_forward:Boolean){
     val current_index = getCurrentIndex(context)
-    val mem_move_mode = Globals.prefs.get.getBoolean("memorization_mode",false)
-    queryTwo(current_index,go_forward,mem_move_mode).foreach{
+    //TODO: maybe we don't have to check memorization_mode, and always set force_current = true
+    val force_current = Globals.prefs.get.getBoolean("memorization_mode",false)
+    queryTwo(current_index,go_forward,force_current).foreach{
       x=>putCurrentIndex(context,x.next.order)
     }
   }
@@ -233,13 +234,13 @@ object FudaListHelper{
   def queryBase[T](
     index:Int,
     go_forward:Boolean,
-    mem_move_mode:Boolean=false)
+    force_current:Boolean=false)
     (func:Cursor=>Option[T]): Option[T] = Globals.db_lock.synchronized {
     val db = Globals.database.get.getReadableDatabase
     val (op,order) = if(go_forward){ (">=","ASC") }else{ ("<=","DESC") }
     val condbase = s"skip <= 0 AND read_order $op ?"
     // in memorization mode, there might be a case that current poem might have skip = 2 
-    val (cond,args) = if(mem_move_mode){
+    val (cond,args) = if(force_current){
       val c = s"(memorized = 1 AND read_order = ?) OR ($condbase)" 
       (c, Array.fill(2)(index.toString))
     }else{
@@ -265,8 +266,8 @@ object FudaListHelper{
       return Some(no_cur)
     }
   }
-  def queryTwo(index:Int,go_forward:Boolean,mem_move_mode:Boolean=false):Option[CurNext] = {
-    queryBase(index,go_forward,mem_move_mode){cursor=>
+  def queryTwo(index:Int,go_forward:Boolean,force_current:Boolean=false):Option[CurNext] = {
+    queryBase(index,go_forward,force_current){cursor=>
       val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
       val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
       if(go_forward && cursor.getCount == 1 && !roe.contains("NEXT")){
@@ -288,9 +289,6 @@ object FudaListHelper{
 
   def queryNext(index:Int):Option[CurNext] = {
     queryTwo(index,true)
-  }
-  def queryPrev(index:Int):Option[CurNext] = {
-    queryTwo(index,false)
   }
 
   def rawQueryGetInt(db:SQLiteDatabase,column:Int,query:String):Option[Int] = {
@@ -593,7 +591,9 @@ object FudaListHelper{
           // (2) go last poem -> play the poem -> restart app
           queryOne(current_index, false).map{_.num}
         }else{
-          queryPrev(current_index).map{_.next.num}
+          //TODO: maybe we don't have to check memorization_mode, and always set force_current = true
+          val force_current = Globals.prefs.get.getBoolean("memorization_mode",false)
+          queryTwo(current_index,false,force_current).map{_.next.num}
         }
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)

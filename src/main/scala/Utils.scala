@@ -867,6 +867,11 @@ object Utils {
       }.toOption.getOrElse(1)
     }.sum
   }
+  def printStackTrace(){
+    for(elem <- Thread.currentThread.getStackTrace){
+      println(s"wasuramoti_debug: ${elem}")
+    }
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){
