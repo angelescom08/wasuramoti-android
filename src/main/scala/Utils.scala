@@ -869,7 +869,7 @@ object Utils {
   }
   def printStackTrace(){
     for(elem <- Thread.currentThread.getStackTrace){
-      println(s"wasuramoti_debug: ${elem}")
+      Log.d("wasuramoti_debug",elem.toString)
     }
   }
 }
