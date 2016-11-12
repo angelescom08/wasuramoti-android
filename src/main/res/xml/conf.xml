@@ -96,12 +96,6 @@
       >
       <PreferenceCategory android:title="@string/category_move">
         <CheckBoxPreference
-          android:key="skip_on_longclick"
-          android:title="@string/conf_skip_on_longclick"
-          android:summary="@string/conf_skip_on_longclick_summary"
-          android:defaultValue="false"
-          />
-        <CheckBoxPreference
           android:key="move_next_after_done"
           android:title="@string/conf_move_next_after_done"
           android:summary="@string/conf_move_next_after_done_summary"

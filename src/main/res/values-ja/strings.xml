@@ -249,8 +249,6 @@
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">その他の設定</string>
   <string name="category_move">進め方</string>
-  <string name="conf_skip_on_longclick">長押しで詠み飛ばす</string>
-  <string name="conf_skip_on_longclick_summary">詠みの最中にボタンを長押しすると次の札を詠む</string>
   <string name="conf_move_after_first_phrase">中断時に次の札へ</string>
   <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
   <string name="conf_move_next_after_done">終了時に次の札へ</string>

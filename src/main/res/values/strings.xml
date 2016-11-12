@@ -287,8 +287,6 @@
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>
   <string name="category_move">Move</string>
-  <string name="conf_skip_on_longclick">Skip on Long Click</string>
-  <string name="conf_skip_on_longclick_summary">Play next poem when holding down the button during the play.</string>
   <string name="conf_move_after_first_phrase">Go Next if Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
   <string name="conf_move_next_after_done">Go Next after Done</string>

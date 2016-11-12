@@ -30,7 +30,6 @@ class WasuramotiFragment extends Fragment{
     switchViewAndReloadHandler(was,root)
     was.setCustomActionBar()
     setLongClickYomiInfo(root)
-    setLongClickButton(was,root)
     if(getArguments.getBoolean("have_to_resume_task")){
       was.doWhenResume()
     }
@@ -84,30 +83,4 @@ class WasuramotiFragment extends Fragment{
       }
     }
   }
-  def setLongClickButton(was:WasuramotiActivity,root:View){
-    val btn = root.findViewById(R.id.read_button).asInstanceOf[Button]
-    if(btn != null){
-      btn.setOnLongClickListener(
-        if(Globals.prefs.get.getBoolean("skip_on_longclick",false)){
-          new View.OnLongClickListener(){
-            override def onLongClick(v:View):Boolean = {
-              Globals.global_lock.synchronized{
-                if(Globals.is_playing){
-                  Globals.player.foreach{p=>
-                    p.stop()
-                    was.moveToNextFuda()
-                    was.doPlay()
-                  }
-                }
-              }
-              return true
-            }
-          }
-        }else{
-          null
-        }
-      )
-    }
-  }
-
 }

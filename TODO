@@ -14,7 +14,6 @@ Code Refactoring:
    - raise error if there's no detail
 
 End of Life:
-  * [2017-02-23] Remove `skip_on_longclick` option.
 
   * [2017-08-01] Migrate to Support v7 Preference
      - current preference-v7 is immature, so wait until August 2017.
