@@ -14,7 +14,6 @@ Code Refactoring:
    - raise error if there's no detail
 
 End of Life:
-
   * [2017-08-01] Migrate to Support v7 Preference
      - current preference-v7 is immature, so wait until August 2017.
      - http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
@@ -23,6 +22,13 @@ End of Life:
      - DialogPreference -> v7.DialogPreference, v7.PreferenceDialogFragmentCompat
      - apply Wasuramoti.AppTheme for ConfActivity and NotifyTimerActivity
      - customize style and items in styles.xml and make darker theme
+
+  * [20XX-XX-XX] Only support API Level >= 15
+      - you can use LinearLayout's android:showDividers and android:divider
+        http://stackoverflow.com/questions/4259467/in-android-how-to-make-space-between-linearlayout-children
+      - you can remove src/main/res/*-{small,normal,large} since it supports sw<N>dp, w<N>dp, h<N>dp identifier
+
+
 
 Future Android:
   [Android 6.0]

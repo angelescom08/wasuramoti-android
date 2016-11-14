@@ -5,7 +5,7 @@ import android.os.{Bundle,Handler}
 import android.support.v4.app.Fragment
 import android.util.TypedValue
 import android.view.{View,ViewStub,LayoutInflater,ViewGroup}
-import android.widget.Button
+import android.widget.{Button,LinearLayout}
 
 import scala.collection.mutable
 
@@ -75,6 +75,21 @@ class WasuramotiFragment extends Fragment{
              KarutaPlayUtils.skipToNext(was)
           }
         })
+        // add margin
+        // TODO: for API >= 11 you can use android:showDividers and android:divider instead
+        // http://stackoverflow.com/questions/4259467/in-android-how-to-make-space-between-linearlayout-children
+        if(show_replay_last_button){
+          val container = sub_buttons.asInstanceOf[LinearLayout]
+          val params = inflated.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+          val margin = Utils.dpToPx(4).toInt // 4dp
+          container.getOrientation match {
+            case LinearLayout.HORIZONTAL =>
+              params.setMargins(margin,0,0,0) //left margin
+            case LinearLayout.VERTICAL =>
+              params.setMargins(0,margin,0,0) // top margin
+          }
+          inflated.setLayoutParams(params)
+        }
       }
     }
 
