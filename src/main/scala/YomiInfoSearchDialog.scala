@@ -15,6 +15,7 @@ import scala.collection.mutable
 object YomiInfoSearchDialog{
   val PREFIX_MEMORIZE = "I.MEMORIZE"
   val PREFIX_REPLAY = "K.REPLAY"
+  val PREFIX_NEXT = "K.NEXT"
   val PREFIX_DISPLAY = "L.DISPLAY"
   val PREFIX_SWITCH = "N.SWITCH"
   val PREFIX_KIMARIJI = "N.KIMARIJI"
@@ -195,6 +196,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
         haveToEnableButton(tag)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_REPLAY+"_")){
         Globals.prefs.get.getBoolean("show_replay_last_button",false)
+      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_NEXT+"_")){
+        Globals.prefs.get.getBoolean("show_skip_button",false)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_MEMORIZE+"_")){
         Globals.prefs.get.getBoolean("memorization_mode",false)
       }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
@@ -241,6 +244,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
             doWebSearch(getFudanum,tag.split("_")(1))
           }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
             KarutaPlayUtils.startReplay(was)
+          }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
+            KarutaPlayUtils.skipToNext(was)
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>

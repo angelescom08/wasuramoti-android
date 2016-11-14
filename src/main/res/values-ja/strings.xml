@@ -131,6 +131,7 @@
   <string-array name="yomi_info_search_array">
     <item>I.MEMORIZE_SWITCH|覚えた</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>
+    <item>K.NEXT_SKIP|スキップ</item>
     <item>L.DISPLAY_KAMI|上の句</item>
     <item>L.DISPLAY_SIMO|下の句</item>
     <item>L.DISPLAY_AUTHOR|歌人</item>

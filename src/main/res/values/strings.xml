@@ -140,6 +140,7 @@
   <string-array name="yomi_info_search_array">
     <item>I.MEMORIZE_SWITCH|Memorized</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>
+    <item>K.NEXT_SKIP|Skip</item>
     <item>L.DISPLAY_KAMI|1st Half</item>
     <item>L.DISPLAY_SIMO|2nd Half</item>
     <item>L.DISPLAY_AUTHOR|Author</item>
