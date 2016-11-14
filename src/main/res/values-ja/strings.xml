@@ -259,7 +259,9 @@
   <!-- CATEGORY_DISPLAY -->
   <string name="category_display">表示</string>
   <string name="conf_show_replay_last_button">リプレイボタンを表示</string>
-  <string name="conf_show_replay_last_button_summary">前の札の最後の句をもう一度再生するためのボタンを表示</string>
+  <string name="conf_show_replay_last_button_summary">前の札の最後の句をもう一度再生するボタンを表示</string>
+  <string name="conf_show_skip_button">スキップボタンを表示</string>
+  <string name="conf_show_skip_button_summary">現在の札を中断し次の札を詠み始めるボタンを表示</string>
   <string name="conf_show_message_when_moved">進んだ時にその旨を表示</string>
   <string name="conf_show_message_when_moved_summary">「次の札へ進みました」を表示する</string>
   <string name="message_when_moved">次の札へ進みました</string>
