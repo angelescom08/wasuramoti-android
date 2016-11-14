@@ -147,6 +147,8 @@
   <string name="repeat_last_1st">上</string>
   <string name="repeat_last_2nd">下</string>
   <string name="repeat_last_else">前</string>
+
+  <string name="skip_button">スキップ</string>
   
   <string name="yomi_info_search_detail_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal"
+              android:background="@color/main_activity_border"
+              >
+  <ViewStub
+    android:id="@id/replay_last_button_stub"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="0.5"
+    android:layout="@layout/replay_last_button"
+  />
+  <ViewStub
+    android:id="@id/skip_button_stub"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="0.5"
+    android:layout="@layout/skip_button"
+  />
+</LinearLayout>

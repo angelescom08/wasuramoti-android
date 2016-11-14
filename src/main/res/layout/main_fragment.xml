@@ -8,7 +8,7 @@
               android:tag="main_linear_layout"
               >
   <ViewStub
-        android:id="@+id/yomi_info_stub"
+        android:id="@id/yomi_info_stub"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.72"
@@ -21,7 +21,7 @@
         android:layout_weight="0.28"
         >
     <ViewStub
-          android:id="@+id/yomi_info_search_stub"
+          android:id="@id/yomi_info_search_stub"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="@dimen/main_left_weight"
@@ -37,11 +37,11 @@
     </FrameLayout>
   </LinearLayout>
   <ViewStub
-      android:id="@+id/replay_last_button_stub"
+      android:id="@id/sub_buttons_stub"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="0.06"
-      android:layout="@layout/replay_last_button"
+      android:layout="@layout/sub_buttons"
       android:layout_marginTop="4dp"
     />
 </LinearLayout>

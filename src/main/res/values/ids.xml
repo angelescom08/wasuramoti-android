@@ -6,4 +6,10 @@
   <item type="id" name="activity_placeholder" />
   <item type="id" name="yomi_info_search_kimariji" />
   <item type="id" name="yomi_info_search_poem_num" />
+  <!-- stub -->
+  <item type="id" name="sub_buttons_stub" />
+  <item type="id" name="yomi_info_stub" />
+  <item type="id" name="yomi_info_search_stub" />
+  <item type="id" name="replay_last_button_stub" />
+  <item type="id" name="skip_button_stub" />
 </resources>

@@ -77,6 +77,20 @@ object KarutaPlayUtils{
     }
   }
 
+  def skipToNext(activity:WasuramotiActivity){
+    Globals.global_lock.synchronized{
+      if(Globals.is_playing){
+        Globals.player.foreach{ p=>
+          p.stop()
+          activity.moveToNextFuda()
+          activity.doPlay()
+        }
+      }else{
+        activity.doPlay()
+      }
+    }
+  }
+
   def cancelAllPlay(){
     cancelAutoTimer()
     Globals.player.foreach(_.stop())
@@ -344,5 +358,6 @@ object KarutaPlayUtils{
       })
     }
   }
+
 }
 
