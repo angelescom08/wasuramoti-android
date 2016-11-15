@@ -508,7 +508,7 @@
   <string name="intended_use_desc">Select your intended use:</string>
   <string name="intended_use_recreation">Recreative Karuta</string>
   <string name="intended_use_recreation_desc">
-    Plays in normal order, with second half of the poem twice. Displays replay button.
+    Plays in normal order, with second half of the poem twice. Displays replay button and skip button.
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
@@ -545,8 +545,9 @@
   <string name="intended_use_joka_on">Enabled</string>
   <string name="intended_use_joka_off">Disabled</string>
   <string name="intended_use_replay">Replay Button</string>
-  <string name="intended_use_replay_on">Show</string>
-  <string name="intended_use_replay_off">Hide</string>
+  <string name="intended_use_skip">Skip Button</string>
+  <string name="intended_use_show">Show</string>
+  <string name="intended_use_hide">Hide</string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
     If this occurs frequently, please contact us from `Support Form` in `Advanced Config`.\n

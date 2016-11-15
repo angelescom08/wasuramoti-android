@@ -473,7 +473,7 @@
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>
   <string name="intended_use_recreation_desc">
-    上の句→下の句→下の句 の順に詠む．画面は上の句のみ表示．リプレイボタンを表示する．
+    上の句→下の句→下の句 の順に詠む．画面は上の句のみ表示．リプレイボタンとスキップボタンを表示する．
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
@@ -510,8 +510,9 @@
   <string name="intended_use_joka_on">詠む</string>
   <string name="intended_use_joka_off">詠まない</string>
   <string name="intended_use_replay">リプレイボタン</string>
-  <string name="intended_use_replay_on">表示</string>
-  <string name="intended_use_replay_off">非表示</string>
+  <string name="intended_use_skip">スキップボタン</string>
+  <string name="intended_use_show">表示</string>
+  <string name="intended_use_hide">非表示</string>
   <string name="from_oom_message">
     ごめんなさい．わすらもちはメモリ不足により強制終了しました．\n
     これが頻繁に起こるようでしたら「詳細設定」→「サポート窓口」から報告して下さい．\n

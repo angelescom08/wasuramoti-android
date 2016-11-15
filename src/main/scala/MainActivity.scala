@@ -609,13 +609,15 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("joka_enable",true)
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",false)
+            edit.putBoolean("show_skip_button",false)
             YomiInfoUtils.hidePoemText(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_hide),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
               (R.string.intended_use_joka,R.string.intended_use_joka_on),
               (R.string.conf_memorization_title,R.string.message_disabled),
-              (R.string.intended_use_replay,R.string.intended_use_replay_off)
+              (R.string.intended_use_replay,R.string.intended_use_hide),
+              (R.string.intended_use_skip,R.string.intended_use_hide)
             )
           }
           case R.id.intended_use_study => {
@@ -625,13 +627,15 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",true)
             edit.putBoolean("show_replay_last_button",false)
+            edit.putBoolean("show_skip_button",false)
             YomiInfoUtils.showFull(edit)
              Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_full),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2),
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
               (R.string.conf_memorization_title,R.string.message_enabled),
-              (R.string.intended_use_replay,R.string.intended_use_replay_off)
+              (R.string.intended_use_replay,R.string.intended_use_hide),
+              (R.string.intended_use_skip,R.string.intended_use_hide)
             )
           }
           case R.id.intended_use_recreation => {
@@ -641,13 +645,15 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("joka_enable",false)
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",true)
+            edit.putBoolean("show_skip_button",true)
             YomiInfoUtils.showOnlyFirst(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur1_cur2_cur2),
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
               (R.string.conf_memorization_title,R.string.message_disabled),
-              (R.string.intended_use_replay,R.string.intended_use_replay_on)
+              (R.string.intended_use_replay,R.string.intended_use_show),
+              (R.string.intended_use_skip,R.string.intended_use_show)
             )
           }
           case _ => Array() // do nothing
