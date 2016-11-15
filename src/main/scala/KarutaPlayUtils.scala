@@ -363,5 +363,20 @@ object KarutaPlayUtils{
     }
   }
 
+  def setSkipButtonEnabled(activity:WasuramotiActivity,enabled:Boolean){
+    val btn = Option(activity.findViewById(R.id.skip_button))
+    .orElse(
+      Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
+        Option(x.findViewWithTag(YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"))
+      ))
+    btn.foreach{ b =>
+      activity.runOnUiThread(new Runnable(){
+        override def run(){
+          b.setEnabled(enabled)
+        }
+      })
+    }
+  }
+
 }
 

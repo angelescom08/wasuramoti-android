@@ -471,6 +471,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         None
       }
     )
+    KarutaPlayUtils.setSkipButtonEnabled(this,Globals.is_playing)
   }
 
   def genBroadcastReceiver():BroadcastReceiver = {
