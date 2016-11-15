@@ -50,6 +50,8 @@ Future Android:
       - https://developer.android.com/preview/features/picture-in-picture.html
     * Multi Locale
       - https://developer.android.com/about/versions/nougat/android-7.0.html#multi-locale_languages
+    * Use android.icu instead of WanaKanaJava
+      - https://developer.android.com/guide/topics/resources/icu4j-framework.html
 
 Priority High:
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
@@ -82,9 +84,7 @@ Priority High:
   * Customize order and avaliability of each poem info buttons.
   * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
-  * Add option for switching number of button columns one/two.
-  * Use android.icu instead of WanaKanaJava if possible
-    - https://developer.android.com/guide/topics/resources/icu4j-framework.html
+  * Add option for switching number of button columns between one and two.
 
 Priority Medium-High:
   * Warn that karafuda mode is disabled in memorization mode more user friendly.

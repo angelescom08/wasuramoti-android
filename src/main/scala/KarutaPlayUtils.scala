@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.media.AudioManager
 import android.content.Context
 import android.widget.{Button,Toast}
-import android.os.{Bundle,Handler,PowerManager}
+import android.os.{Bundle,Handler,PowerManager,SystemClock}
 import android.view.View
 
 import scala.collection.mutable
@@ -79,6 +79,10 @@ object KarutaPlayUtils{
 
   def skipToNext(activity:WasuramotiActivity){
     Globals.global_lock.synchronized{
+      // avoid miss click for simultaneous push with main button
+      if(Globals.player.exists(_.play_started.exists(SystemClock.elapsedRealtime - _ <= 1000))){
+        return
+      }
       if(Globals.is_playing){
         Globals.player.foreach{ p=>
           p.stop()
@@ -86,7 +90,7 @@ object KarutaPlayUtils{
           activity.doPlay()
         }
       }else{
-        activity.doPlay()
+        activity.moveToNextFuda()
       }
     }
   }
