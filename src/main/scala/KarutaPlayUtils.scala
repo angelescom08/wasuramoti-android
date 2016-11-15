@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.{Button,Toast}
 import android.os.{Bundle,Handler,PowerManager,SystemClock}
 import android.view.View
+import android.app.Activity
 
 import scala.collection.mutable
 object KarutaPlayUtils{
@@ -348,34 +349,30 @@ object KarutaPlayUtils{
     }
   }
 
-  def setReplayButtonEnabled(activity:WasuramotiActivity,force:Option[Boolean]=None){
-    val btn = Option(activity.findViewById(R.id.replay_last_button))
+  def haveToEnableReplayButton():Boolean = { replay_audio_queue.nonEmpty }
+  def haveToEnableSkipButton():Boolean = { Globals.is_playing }
+
+  def setButtonEnabled(activity:Activity,force:Option[Boolean],button_id:Int,button_tag:String,default_enabled: =>Boolean){
+    val btn = Option(activity.findViewById(button_id))
     .orElse(
       Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
-        Option(x.findViewWithTag(YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"))
+        Option(x.findViewWithTag(button_tag))
       ))
     btn.foreach{ b =>
       activity.runOnUiThread(new Runnable(){
         override def run(){
-          b.setEnabled(force.getOrElse(replay_audio_queue.nonEmpty))
+          b.setEnabled(force.getOrElse(default_enabled))
         }
       })
     }
   }
 
-  def setSkipButtonEnabled(activity:WasuramotiActivity,enabled:Boolean){
-    val btn = Option(activity.findViewById(R.id.skip_button))
-    .orElse(
-      Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
-        Option(x.findViewWithTag(YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"))
-      ))
-    btn.foreach{ b =>
-      activity.runOnUiThread(new Runnable(){
-        override def run(){
-          b.setEnabled(enabled)
-        }
-      })
-    }
+  def setReplayButtonEnabled(activity:Activity,force:Option[Boolean]=None){
+    setButtonEnabled(activity,force,R.id.replay_last_button,YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST",haveToEnableReplayButton)
+  }
+
+  def setSkipButtonEnabled(activity:Activity,force:Option[Boolean]=None){
+    setButtonEnabled(activity,force,R.id.skip_button,YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP",haveToEnableSkipButton)
   }
 
 }

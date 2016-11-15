@@ -64,7 +64,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
         val tag = YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t
         val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
         if(b != null){
-          b.setEnabled(force.getOrElse(t,enabled && haveToEnableButton(tag)))
+          b.setEnabled(force.getOrElse(t,enabled && haveToEnableDisplayButton(tag)))
           val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
           b.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
         }
@@ -178,7 +178,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     orig.split(";")(s)
   }
 
-  def haveToEnableButton(tag:String):Boolean = {
+  def haveToEnableDisplayButton(tag:String):Boolean = {
     val p = Globals.prefs.get
     tag.split("_")(1) match{
       case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
@@ -193,7 +193,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
-        haveToEnableButton(tag)
+        haveToEnableDisplayButton(tag)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_REPLAY+"_")){
         Globals.prefs.get.getBoolean("show_replay_last_button",false)
       }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_NEXT+"_")){
@@ -291,12 +291,17 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
-      val r = if(init_info_lang != Utils.YomiInfoLang.Japanese){
-        label != YomiInfoSearchDialog.PREFIX_DISPLAY+"_FURIGANA"
+      if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+        KarutaPlayUtils.haveToEnableReplayButton
+      }else if(label == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
+        KarutaPlayUtils.haveToEnableSkipButton
       }else{
-        !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
+        if(init_info_lang != Utils.YomiInfoLang.Japanese){
+          label != YomiInfoSearchDialog.PREFIX_DISPLAY+"_FURIGANA"
+        }else{
+          !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
+        }
       }
-      r
     }
 
     btnlist.addButtons(getActivity, getCurYomiInfoView, items
