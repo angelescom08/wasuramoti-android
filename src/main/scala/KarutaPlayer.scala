@@ -234,7 +234,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         Globals.is_playing = true
         is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
         KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
-        KarutaPlayUtils.setSkipButtonEnabled(activity,Some(true))
         activity.setButtonTextByState()
         // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
         if(YomiInfoUtils.showPoemText && !is_replay){
@@ -454,6 +453,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
 
       Globals.audio_track_failed_count = 0
       play_started = Some(SystemClock.elapsedRealtime)
+
+      // we enable skip button after `play_started` is set.
+      // this is because KarutaPlayUtils.skipToNext avoids miss click using value of `play_started`
+      KarutaPlayUtils.setSkipButtonEnabled(activity,Some(true))
+      
       music_track.foreach{ t => {
         if(fromAuto && KarutaPlayUtils.have_to_mute){
           Utils.setVolumeMute(t,true)
