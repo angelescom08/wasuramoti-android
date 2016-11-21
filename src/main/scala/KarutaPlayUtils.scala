@@ -90,8 +90,6 @@ object KarutaPlayUtils{
           activity.moveToNextFuda()
           activity.doPlay()
         }
-      }else{
-        activity.moveToNextFuda()
       }
     }
   }
