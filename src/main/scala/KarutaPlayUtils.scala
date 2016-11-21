@@ -87,7 +87,7 @@ object KarutaPlayUtils{
       if(Globals.is_playing){
         Globals.player.foreach{ p=>
           p.stop()
-          activity.moveToNextFuda()
+          activity.moveToNextFuda(false)
           activity.doPlay()
         }
       }
