@@ -182,8 +182,8 @@
   <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示</string>
   <string name="yomi_info_english_fonts_desc">英語:</string>
 
-  <string name="conf_read_order_each_title">札ごとの詠み順</string>
-  <string name="conf_read_order_each_summary">一回の詠みで上の句と下の句をどの順番で詠むか</string>
+  <string name="conf_read_order_each_title">札ごとの詠み順と回数</string>
+  <string name="conf_read_order_each_summary">一回の詠みで上の句と下の句をどの順番で何回ずつ詠むか</string>
   <string name="conf_read_order_each_description">`/` より前の文字は現在の歌を示し，`/`より後の文字は次の歌を示します．\n
     序歌の詠み順は「序歌の有無と回数」で別途指定して下さい．
   </string>
@@ -477,7 +477,7 @@
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
-     「下の句をもう一度」ボタンを押すと最後に詠まれた歌の下の句をもう一度再生できます．
+    初心者用の詠み順では下の句が2回詠まれます．「詳細設定」&rArr;「札ごとの詠み順と回数」で1回に変更できます．
     ]]>
   </string>
   <string name="intended_use_study">百人一首の学習</string>

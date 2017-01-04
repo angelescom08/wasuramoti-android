@@ -512,7 +512,7 @@
   </string>
   <string name="intended_use_recreation_footnote">
     <![CDATA[
-     If you click `Replay 2nd Half`, you can replay the 2nd half of the most recent poem.
+      In beginners mode, the 2nd half of the poem is played twice. To change the behavior, choose `Advanced Config` &rArr; `Play Order of Each Poem`.
     ]]>
   </string>
   <string name="intended_use_study">Study 100 Poems</string>
@@ -535,7 +535,7 @@
   </string>
   <string name="intended_use_result">
     <![CDATA[
-      Configured as follows. It can be reconfigured from `Quick Config` &rArr; `Change Intended Use`.
+      Configured as follows. You can change it from `Quick Config` &rArr; `Change Intended Use`.
     ]]>
   </string>
   <string name="intended_use_result_title">Config Done</string>
