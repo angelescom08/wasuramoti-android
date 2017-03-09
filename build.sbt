@@ -1,8 +1,8 @@
 androidBuild
 
-scalaVersion := "2.11.7"
-platformTarget in Android := "android-24"
-buildToolsVersion in Android := Some("24.0.1")
+scalaVersion := "2.11.8"
+platformTarget in Android := "android-25"
+buildToolsVersion in Android := Some("25.0.2")
 
 libraryDependencies ++= Seq(
   "com.android.support" % "support-v4" % "24.1.1",
