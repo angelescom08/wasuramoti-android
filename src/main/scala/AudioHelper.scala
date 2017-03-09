@@ -3,7 +3,6 @@ package karuta.hpnpwd.wasuramoti
 import karuta.hpnpwd.audio.OggVorbisDecoder
 import android.media.AudioTrack
 import android.content.Context
-import android.view.View
 
 import java.nio.{ByteOrder,ShortBuffer,ByteBuffer}
 

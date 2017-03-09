@@ -6,7 +6,6 @@ import android.os.{Build,StatFs}
 import android.annotation.TargetApi
 import android.app.{AlertDialog,ActivityManager}
 import android.util.{Log,Base64,Base64OutputStream}
-import android.net.Uri
 import android.view.{View,LayoutInflater}
 import android.widget.{TextView,Button,Toast}
 

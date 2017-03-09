@@ -2,10 +2,9 @@ package karuta.hpnpwd.wasuramoti
 import android.content.Context
 import android.view.{View,MotionEvent}
 import android.text.TextUtils
-import android.graphics.{Canvas,Typeface,Paint,Color,Rect,Path}
+import android.graphics.{Canvas,Paint,Color,Rect,Path}
 import android.util.{Log,AttributeSet}
 
-import scala.collection.mutable
 import scala.util.hashing.MurmurHash3
 
 class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs)

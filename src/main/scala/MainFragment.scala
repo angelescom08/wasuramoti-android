@@ -1,14 +1,10 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.Activity
-import android.os.{Bundle,Handler}
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.TypedValue
 import android.view.{View,ViewStub,LayoutInflater,ViewGroup}
 import android.widget.{Button,LinearLayout}
-
-import scala.collection.mutable
-
 
 object WasuramotiFragment{
   def newInstance(have_to_resume_task:Boolean):WasuramotiFragment={

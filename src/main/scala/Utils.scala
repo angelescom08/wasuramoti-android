@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{AlertDialog,AlarmManager,PendingIntent,Activity}
+import android.app.{AlertDialog,AlarmManager,PendingIntent}
 import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
@@ -15,7 +15,7 @@ import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
 import android.util.{Log,TypedValue}
 import android.view.{LayoutInflater,View}
-import android.widget.{TextView,Button,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
+import android.widget.{TextView,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
 
 import android.support.v4.content.FileProvider
 

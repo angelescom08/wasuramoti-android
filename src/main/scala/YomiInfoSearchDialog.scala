@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.net.Uri
 import android.text.{Html,Spanned}
 import android.app.{AlertDialog,SearchManager,Dialog}
-import scala.collection.mutable
 
 // The constructor of Fragment must be empty since when fragment is recreated,
 // The empty constructor is called.

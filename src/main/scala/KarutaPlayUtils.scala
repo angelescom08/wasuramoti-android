@@ -7,7 +7,6 @@ import android.os.{Bundle,Handler,PowerManager,SystemClock}
 import android.view.View
 import android.app.Activity
 
-import scala.collection.mutable
 object KarutaPlayUtils{
   var audio_focus = None:Option[AudioManager.OnAudioFocusChangeListener]
   var wake_lock = None:Option[PowerManager#WakeLock]

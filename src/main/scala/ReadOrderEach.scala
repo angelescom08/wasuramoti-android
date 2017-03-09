@@ -4,7 +4,7 @@ import android.content.{Context,SharedPreferences,DialogInterface}
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.os.Bundle
-import android.widget.{RadioGroup,RadioButton,Button,EditText,TextView}
+import android.widget.{RadioGroup,EditText,TextView}
 import android.app.AlertDialog
 class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap

@@ -5,7 +5,7 @@ import android.annotation.TargetApi
 import android.media.{AudioManager,AudioFormat,AudioTrack}
 import android.os.{AsyncTask,Bundle,SystemClock}
 import android.media.audiofx.Equalizer
-import android.widget.{Toast,CheckBox}
+import android.widget.Toast
 import android.util.Log
 import android.app.AlertDialog
 import android.content.Context

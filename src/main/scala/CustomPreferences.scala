@@ -4,10 +4,9 @@ import android.preference.DialogPreference
 import android.content.Context
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
-import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Button}
+import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import android.media.AudioManager
 import android.text.{TextUtils}
-import scala.collection.mutable
 
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   // We can set defaultValue="..." in src/main/res/xml/conf.xml

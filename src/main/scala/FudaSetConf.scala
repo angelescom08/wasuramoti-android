@@ -1,6 +1,5 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.Dialog
 import android.content.Context
 import android.preference.DialogPreference
 import android.text.TextUtils

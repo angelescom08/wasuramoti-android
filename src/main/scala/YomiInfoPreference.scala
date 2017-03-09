@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.widget.{SeekBar,CheckBox,Spinner,Button,CompoundButton}
 import android.os.Bundle
-import android.app.{AlertDialog,Dialog,Activity}
+import android.app.{AlertDialog,Dialog}
 import android.support.v4.app.DialogFragment
 
 class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{

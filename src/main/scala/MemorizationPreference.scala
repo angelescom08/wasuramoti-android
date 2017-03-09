@@ -7,8 +7,7 @@ import android.util.AttributeSet
 import android.text.TextUtils
 import android.app.AlertDialog
 import android.view.{View,LayoutInflater,ViewGroup}
-import android.widget.{TextView,CheckBox,Button,EditText}
-import scala.collection.mutable
+import android.widget.{TextView,CheckBox,EditText}
 
 class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   val TAG_PANEL_ALL = "panel_all"

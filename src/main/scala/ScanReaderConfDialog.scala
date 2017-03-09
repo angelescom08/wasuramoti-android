@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.os.Bundle
-import android.view.{LayoutInflater,View}
+import android.view.{LayoutInflater}
 import android.widget.{TextView,EditText}
 import android.graphics.Color
 import android.text.TextUtils

@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
 import android.media.{AudioManager,RingtoneManager,Ringtone}
-import android.os.{Bundle,Vibrator,Parcelable}
+import android.os.{Bundle,Vibrator}
 import android.net.Uri
 import android.view.{View,LayoutInflater}
 import android.content.{Intent,Context,BroadcastReceiver}
