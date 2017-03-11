@@ -652,4 +652,30 @@
     This app requires permission for scanning the storage for audio file.
     Press `OK` to go to app config, and set `Permissions` of `Storage` to `ON`
   </string>
+  <string name="conf_caution">
+    * CAUTION *
+  </string>
+  <string name="conf_caution_summary">
+    Please press here and read description before editing options below.
+  </string>
+  <string name="conf_caution_message">
+    <![CDATA[
+    <div><font color="#CCFFFF"><b>Threashold</b></font></div>
+    <p>
+      This app is cropping the silence from both head and tail of the audio. The signal lower than threashold will be cropped off. It should be less than <tt>0.01</tt> for low noice audio source.
+    </p>
+    <div><font color="#CCFFFF"><b>Fade In/Out</b></font></div>
+    <p>
+      It is also applying fade in/out after cropping to avoid clatter. The value should be lower than <tt>0.3</tt> seconds.
+    </p>
+    <div><font color="#CCFFFF"><b>OpenSL ES</b></font></div>
+    <p>
+      We use <tt>AudioTrack</tt> as default sound engine. However, some device may have problem using it. In the case, enable <tt>OpenSL ES</tt> when something goes wrong with the sound. However it should be avoided whenever possible since it is not Android\'s native engine.
+    </p>
+    <div><font color="#CCFFFF"><b>Stream Type</b></font></div>
+    <p>
+      Android has several stream types, and each has their own volume level. We use <tt>Music</tt> as default, but changing it to something like <tt>Ring</tt> may change some behavior (i.e. plays from speaker even when earphone is plugged).
+    </p>
+    ]]>
+  </string>
 </resources>

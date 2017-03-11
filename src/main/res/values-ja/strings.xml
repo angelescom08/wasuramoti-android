@@ -610,5 +610,32 @@
     ストレージをスキャンして音声ファイルを探すには許可してもらう必要があります．\n
     「OK」を押すとこのアプリの設定画面に飛ぶので，「許可」メニューの「ストレージ」で権限を与えて下さい．
   </string>
+  <string name="conf_caution">
+    ※注意
+  </string>
+  <string name="conf_caution_summary">
+    ここから下のオプションはここをタップして説明を読んでから変更して下さい
+  </string>
+  <string name="conf_caution_message">
+    <![CDATA[
+    <div><font color="#CCFFFF"><b>閾値</b></font></div>
+    <p>
+      このアプリは間を正確に1秒に保つために音声の先頭と末尾の無音を除去します．閾値以下の音は無音とみなして切り取ります．雑音の少ない音源なら0.01以下にして下さい．
+    </p>
+    <div><font color="#CCFFFF"><b>フェードイン/フェードアウト</b></font></div>
+    <p>
+    無音を除去した後の先頭/末尾を滑らかにするために軽くフェードをかけます．あまり不自然にならないように<tt>0.3</tt>秒以下にして下さい．
+    </p>
+    <div><font color="#CCFFFF"><b>OpenSL ES</b></font></div>
+    <p>
+    デフォルトの音声エンジンは<tt>AudioTrack</tt>ですが，機種によっては不具合があるかもしれないので，その場合は<tt>OpenSL ES</tt>を有効にして下さい．ただし大多数の機種では無効でも動くはずです．
+    </p>
+    <div><font color="#CCFFFF"><b>Stream Type</b></font></div>
+    <p>
+      Androidにはいくつか音源(Stream)があり，それぞれがボリュームを保持しています．このアプリのデフォルトは<tt>Music</tt>ですが，これを<tt>Ring</tt>に変えるとイヤホンを付けても本体スピーカーから再生できたり，何が起きるかは機種によって異なります．
+    </p>
+
+    ]]>
+  </string>
 
 </resources>
