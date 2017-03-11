@@ -70,8 +70,6 @@
   <string name="equalizer_error_notsupported">この端末ではイコライザーは使えません</string>
   <string name="equalizer_not_available_in_opensles">OpenSL ESモードではイコライザーは使えません</string>
 
-  <!-- CATEGORY_AUTO -->
-  <string name="category_auto">自動</string>
   <string name="conf_autoplay">連続詠み上げ</string>
   <string name="conf_autoplay_summary">前の札を詠み終えたら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>

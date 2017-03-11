@@ -260,8 +260,6 @@
     Note 2: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.
   </string>
 
-  <!-- CATEGORY_AUTO -->
-  <string name="category_auto">Auto</string>
   <string name="conf_autoplay">Continuous Play</string>
   <string name="conf_autoplay_summary">Start playing next poem when finished.</string>
   <string name="autoplay_enable">Start playing next poem when finished.</string>
