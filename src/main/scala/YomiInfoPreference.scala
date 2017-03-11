@@ -204,7 +204,7 @@ class QuickConfigDialog extends DialogFragment{
           case 5 =>
             // Change Intended Use
             dismiss
-            act.changeIntendedUse(false)
+            ChangeIntendedUse.run(act,false)
             return
           case 4 =>
             // Translation
