@@ -511,6 +511,9 @@
   <string name="intended_use_skip">スキップボタン</string>
   <string name="intended_use_show">表示</string>
   <string name="intended_use_hide">非表示</string>
+  <string name="intended_use_move_next">読み終了時に次の札へ</string>
+  <string name="intended_use_move_next_on">行く</string>
+  <string name="intended_use_move_next_off">行かない</string>
   <string name="from_oom_message">
     ごめんなさい．わすらもちはメモリ不足により強制終了しました．\n
     これが頻繁に起こるようでしたら「詳細設定」→「サポート窓口」から報告して下さい．\n

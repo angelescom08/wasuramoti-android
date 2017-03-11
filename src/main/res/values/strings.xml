@@ -546,6 +546,9 @@
   <string name="intended_use_skip">Skip Button</string>
   <string name="intended_use_show">Show</string>
   <string name="intended_use_hide">Hide</string>
+  <string name="intended_use_move_next">Go Next After Play</string>
+  <string name="intended_use_move_next_on">Yes</string>
+  <string name="intended_use_move_next_off">No</string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
     If this occurs frequently, please contact us from `Support Form` in `Advanced Config`.\n

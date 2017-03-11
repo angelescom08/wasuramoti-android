@@ -610,6 +610,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",false)
             edit.putBoolean("show_skip_button",false)
+            edit.putBoolean("move_next_after_done",true)
+            edit.putBoolean("move_after_first_phrase",true)
             YomiInfoUtils.hidePoemText(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_hide),
@@ -617,7 +619,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
               (R.string.intended_use_joka,R.string.intended_use_joka_on),
               (R.string.conf_memorization_title,R.string.message_disabled),
               (R.string.intended_use_replay,R.string.intended_use_hide),
-              (R.string.intended_use_skip,R.string.intended_use_hide)
+              (R.string.intended_use_skip,R.string.intended_use_hide),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_on)
             )
           }
           case R.id.intended_use_study => {
@@ -628,6 +631,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("memorization_mode",true)
             edit.putBoolean("show_replay_last_button",false)
             edit.putBoolean("show_skip_button",false)
+            edit.putBoolean("move_next_after_done",false)
+            edit.putBoolean("move_after_first_phrase",false)
             YomiInfoUtils.showFull(edit)
              Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_full),
@@ -635,7 +640,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
               (R.string.conf_memorization_title,R.string.message_enabled),
               (R.string.intended_use_replay,R.string.intended_use_hide),
-              (R.string.intended_use_skip,R.string.intended_use_hide)
+              (R.string.intended_use_skip,R.string.intended_use_hide),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_off)
             )
           }
           case R.id.intended_use_recreation => {
@@ -646,6 +652,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",true)
             edit.putBoolean("show_skip_button",true)
+            edit.putBoolean("move_next_after_done",true)
+            edit.putBoolean("move_after_first_phrase",true)
             YomiInfoUtils.showOnlyFirst(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_only_first),
@@ -653,7 +661,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
               (R.string.intended_use_joka,R.string.intended_use_joka_off),
               (R.string.conf_memorization_title,R.string.message_disabled),
               (R.string.intended_use_replay,R.string.intended_use_show),
-              (R.string.intended_use_skip,R.string.intended_use_show)
+              (R.string.intended_use_skip,R.string.intended_use_show),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_on)
             )
           }
           case _ => Array() // do nothing
