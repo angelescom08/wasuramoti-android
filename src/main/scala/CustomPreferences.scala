@@ -9,6 +9,8 @@ import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import android.media.AudioManager
 import android.text.{TextUtils,Html}
 
+import scala.collection.mutable
+
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   // We can set defaultValue="..." in src/main/res/xml/conf.xml
   // and reflect it to actual preference by calling:
@@ -283,6 +285,49 @@ class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPr
     val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
     txtview.setText(Html.fromHtml(message))
     builder.setView(view)
+    super.onPrepareDialogBuilder(builder)
+  }
+}
+class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+  override def getAbbrValue():String={
+    val persisted = getPersistedString(null)
+    val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
+    for(x <- ar){
+      val Array(key,title,_) = x.split('|')
+      if( key == persisted){
+        return title
+      }
+    }
+    return persisted
+  }
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val helper = new GeneralRadioHelper(context,builder)
+    val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
+    val ids = context.getResources.obtainTypedArray(R.array.general_radio_helper)
+    val id2key = mutable.Map[Int,String]()
+    val persisted = getPersistedString(null)
+    var currentId = None:Option[Int]
+    val items = ar.zipWithIndex.map{ case (x,i) =>
+      val id = ids.getResourceId(i,-1)
+      if(id == -1){
+        throw new RuntimeException(s"index out of range for general_radio_helper[${i}]")
+      }
+      val Array(key,title,desc) = x.split('|')
+      id2key += ((id,key))
+      if(key == persisted){
+        currentId = Some(id)
+      }
+      GeneralRadioHelper.Item(id,Right(title),Right(desc))
+    }
+    val handler = (id:Int) => {
+      id2key.get(id).foreach(persistString(_))
+      getDialog.dismiss()
+    }
+    helper.setDescription(R.string.conf_read_order_desc)
+    helper.addItems(items, Some(handler))
+    currentId.foreach(helper.radio_group.check(_))
+    builder.setPositiveButton(null,null)
     super.onPrepareDialogBuilder(builder)
   }
 }

@@ -35,12 +35,10 @@
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_order" android:key="category_order">
-    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+    <karuta.hpnpwd.wasuramoti.ReadOrderPreference
       android:key="read_order"
       android:title="@string/conf_read_order_title"
       android:summary="@string/conf_read_order_summary"
-      android:entries="@array/conf_read_order_entries"
-      android:entryValues="@array/conf_read_order_entryValues"
       android:defaultValue="SHUFFLE"
       android:widgetLayout="@layout/conf_current_value"
       />

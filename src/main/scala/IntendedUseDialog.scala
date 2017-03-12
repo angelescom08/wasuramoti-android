@@ -10,9 +10,9 @@ object ChangeIntendedUse{
     val helper = new GeneralRadioHelper(context)
     helper.setDescription(R.string.intended_use_desc)
     helper.addItems(Seq(
-      GeneralRadioHelper.Item(R.id.intended_use_recreation,R.string.intended_use_recreation,R.string.intended_use_recreation_desc),
-      GeneralRadioHelper.Item(R.id.intended_use_competitive,R.string.intended_use_competitive,R.string.intended_use_competitive_desc),
-      GeneralRadioHelper.Item(R.id.intended_use_study,R.string.intended_use_study,R.string.intended_use_study_desc)
+      GeneralRadioHelper.Item(R.id.intended_use_recreation,Left(R.string.intended_use_recreation),Left(R.string.intended_use_recreation_desc)),
+      GeneralRadioHelper.Item(R.id.intended_use_competitive,Left(R.string.intended_use_competitive),Left(R.string.intended_use_competitive_desc)),
+      GeneralRadioHelper.Item(R.id.intended_use_study,Left(R.string.intended_use_study),Left(R.string.intended_use_study_desc))
     ))
     (Globals.prefs.get.getString("intended_use","") match {
       case "study" => Some(R.id.intended_use_study)

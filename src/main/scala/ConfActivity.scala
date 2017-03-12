@@ -77,7 +77,6 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
       }
     }
     key match{
-      case "read_order" => get_entry_from_value(R.array.conf_read_order_entryValues,R.array.conf_read_order_entries)
       case "audio_stream_type" => get_entry_from_value(R.array.conf_audio_stream_type_entryValues,R.array.conf_audio_stream_type_entries)
       case _ => value
     }

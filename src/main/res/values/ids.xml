@@ -17,4 +17,15 @@
   <item type="id" name="intended_use_recreation" />
   <item type="id" name="intended_use_competitive" />
   <item type="id" name="intended_use_study" />
+
+  <!-- ids for GeneralRadioHelper -->
+  <item type="id" name="general_radio_helper_1" />
+  <item type="id" name="general_radio_helper_2" />
+  <item type="id" name="general_radio_helper_3" />
+
+  <array name="general_radio_helper">
+    <item>@id/general_radio_helper_1</item>
+    <item>@id/general_radio_helper_2</item>
+    <item>@id/general_radio_helper_3</item>
+  </array>
 </resources>

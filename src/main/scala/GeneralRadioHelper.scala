@@ -6,7 +6,8 @@ import android.widget.{RadioGroup,RadioButton,TextView}
 import android.view.{LayoutInflater,View}
 
 object GeneralRadioHelper{
-  case class Item(id:Int, textId:Int, descriptionId:Int)
+  case class Item(id:Int, text:Either[Int,String], description:Either[Int,String])
+
   def eachRadioText(group:RadioGroup, handler:(View,Option[RadioButton])=>Unit){
     var last_radio_button = None:Option[RadioButton]
     for(i <- 0 until group.getChildCount){
@@ -21,22 +22,31 @@ object GeneralRadioHelper{
     }
   }
 
-  def setRadioTextClickListener(group:RadioGroup){
+  def setRadioTextClickListener(group:RadioGroup, clickHandler:Option[(Int)=>Unit]=None){
     eachRadioText(group,(view,radio)=>{
-      radio.foreach{ btn =>
+      radio.foreach{ btn => 
         view.setOnClickListener(new View.OnClickListener(){
           override def onClick(v:View){
             group.check(btn.getId)
+            clickHandler.foreach(_(btn.getId))
           }
         })
-      }
-    })
+        clickHandler.foreach{handler =>
+          btn.setOnClickListener(new View.OnClickListener(){
+            override def onClick(v:View){
+              handler(btn.getId)
+            }
+          })
+        }
+    }})
   }
 }
 
-class GeneralRadioHelper(context:Context){
+class GeneralRadioHelper(context:Context, var builder:AlertDialog.Builder = null){
+  if(builder == null){
+    builder = new AlertDialog.Builder(context)
+  }
   val inflater = LayoutInflater.from(context)
-  val builder = new AlertDialog.Builder(context)
   val view = inflater.inflate(R.layout.general_radio_dialog,null)
   val radio_group = view.findViewById(R.id.general_radio_dialog_group).asInstanceOf[RadioGroup]
   builder.setView(view)
@@ -47,7 +57,7 @@ class GeneralRadioHelper(context:Context){
     v.setText(text)
   }
 
-  def addItems(items:Seq[GeneralRadioHelper.Item]){
+  def addItems(items:Seq[GeneralRadioHelper.Item], clickHandler:Option[(Int)=>Unit]=None){
     for(item <- items){
       inflater.inflate(R.layout.general_radio_dialog_item,radio_group,true)
     }
@@ -56,10 +66,16 @@ class GeneralRadioHelper(context:Context){
       radio.foreach{ r =>
         val item = iter.next
         r.setId(item.id)
-        r.setText(item.textId)
-        view.asInstanceOf[TextView].setText(item.descriptionId)
+        item.text match {
+          case Left(id) => r.setText(id)
+          case Right(txt) => r.setText(txt)
+        }
+        item.description match {
+          case Left(id) =>  view.asInstanceOf[TextView].setText(id)
+          case Right(txt) =>  view.asInstanceOf[TextView].setText(txt)
+        }
       }
     })
-    GeneralRadioHelper.setRadioTextClickListener(radio_group)
+    GeneralRadioHelper.setRadioTextClickListener(radio_group, clickHandler)
   }
 }

@@ -63,15 +63,11 @@
 
   <string name="conf_read_order_title">Play Order</string>
   <string name="conf_read_order_summary">How to play throughout all the poems.</string>
+  <string name="conf_read_order_desc">Joka is disabled in random mode.</string>
   <string-array name="conf_read_order_entries">
-    <item>Shuffle</item>
-    <item>Random</item>
-    <item>Sequential</item>
-  </string-array>
-  <string-array name="conf_read_order_entryValues">
-    <item>SHUFFLE</item>
-    <item>RANDOM</item>
-    <item>POEM_NUM</item>
+    <item>SHUFFLE|Shuffle|Read in random order, same poem would not be read twice.</item>
+    <item>RANDOM|Random|Choose from random list, read it, and give it back to the list.</item>
+    <item>POEM_NUM|Sequential|Read through 1 to 100.</item>
   </string-array>
 
   <string name="conf_equalizer">Equalizer</string>
@@ -256,8 +252,9 @@
   <string name="conf_num_2">Twice</string>
 
   <string name="conf_joka_caveat">
-    Note 1: This config is preserved for each reciters. \n
-    Note 2: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.
+    Note 1: Joka is disabled in random mode. \n
+    Note 2: This config is preserved for each reciters. \n
+    Note 3: Actually, there might be a case that both 1st and 2nd half of the poem is included in 000_1.ogg.
   </string>
 
   <string name="conf_autoplay">Continuous Play</string>
@@ -515,7 +512,7 @@
   </string>
   <string name="intended_use_study">Study 100 Poems</string>
   <string name="intended_use_study_desc">
-    Plays in normal order. Displays whole the poem text. Enables memorization mode.
+    Plays in normal order. Displays whole the poem text. Enables memorization mode. Would not go to next poem after read.
   </string>
   <string name="intended_use_study_footnote">
     <![CDATA[
