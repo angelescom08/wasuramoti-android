@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.app.{AlertDialog,Dialog,Activity}
 import android.os.{Bundle,Handler}
 import android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
-import android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView}
+import android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView,SeekBar}
 import android.support.v4.app.DialogFragment
 import android.content.Context
 import android.text.{Editable,TextWatcher,TextUtils}
@@ -12,19 +12,29 @@ import scala.util.Sorting
 import scala.collection.mutable
 
 class MovePositionDialog extends DialogFragment{
+  case class Convey(text:TextView,bar:SeekBar)
+
   var current_index = 0 // displayed number in TextView differs from real index
   var numbers_to_read = 0
-  def setCurrentIndex(text:TextView){
-    val (index_s,_) = Utils.makeDisplayedNum(current_index,numbers_to_read)
-    text.setText(index_s.toString)
+
+  def boundIndex(x:Int):Int = {
+    val (n,total_s) = Utils.makeDisplayedNum(x,numbers_to_read)
+    return Math.min(Math.max(n,1),total_s) + Utils.indexOffset
   }
-  def incCurrentIndex(text:TextView,dx:Int):Boolean = {
-    val offset = if(Utils.readFirstFuda){ 0 } else { 1 }
-    val (n,total_s) = Utils.makeDisplayedNum(current_index+dx,numbers_to_read)
+
+  def setCurrentIndex(con:Convey,progress:Boolean=true){
+    val (index_s,_) = Utils.makeDisplayedNum(current_index,numbers_to_read)
+    con.text.setText(index_s.toString)
+    if(progress){
+      val v = current_index - 1 - Utils.indexOffset
+      con.bar.setProgress(Math.min(Math.max(v,0),con.bar.getMax))
+    }
+  }
+  def incCurrentIndex(con:Convey,dx:Int):Boolean = {
     val prev_index = current_index
-    current_index = Math.min(Math.max(n,1),total_s) + offset
+    current_index = boundIndex(current_index+dx)
     if(prev_index != current_index){
-      setCurrentIndex(text)
+      setCurrentIndex(con)
       true
     }else{
       false
@@ -42,7 +52,7 @@ class MovePositionDialog extends DialogFragment{
   abstract class RunnableWithCounter(var counter:Int) extends Runnable{
   }
 
-  def startIncrement(handler:Handler,text:TextView,is_inc:Boolean){
+  def startIncrement(handler:Handler,con:Convey,is_inc:Boolean){
     lazy val runnable:RunnableWithCounter = new RunnableWithCounter(0){
       override def run(){
         runnable.counter += 1
@@ -56,7 +66,7 @@ class MovePositionDialog extends DialogFragment{
           (1,500)
         }
 
-        if(incCurrentIndex(text,if(is_inc){dx}else{-dx})){
+        if(incCurrentIndex(con,if(is_inc){dx}else{-dx})){
           handler.postDelayed(runnable,delay)
         }
       }
@@ -68,12 +78,12 @@ class MovePositionDialog extends DialogFragment{
     handler.removeCallbacksAndMessages(null)
   }
 
-  def setIncrementWhilePressed(handler:Handler,view:View,text:TextView,id:Int,is_inc:Boolean){
+  def setIncrementWhilePressed(handler:Handler,view:View,con:Convey,id:Int,is_inc:Boolean){
     view.findViewById(id).asInstanceOf[Button].setOnTouchListener(
       new View.OnTouchListener(){
         override def onTouch(v:View, event:MotionEvent):Boolean = {
           event.getAction match {
-            case MotionEvent.ACTION_DOWN => startIncrement(handler,text,is_inc)
+            case MotionEvent.ACTION_DOWN => startIncrement(handler,con,is_inc)
             case MotionEvent.ACTION_UP => endIncrement(handler)
             case _ =>
           }
@@ -99,17 +109,34 @@ class MovePositionDialog extends DialogFragment{
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.move_position,null)
     val text = view.findViewById(R.id.move_position_index).asInstanceOf[TextView]
+    val bar = view.findViewById(R.id.move_position_seek).asInstanceOf[SeekBar]
+    val con = Convey(text,bar)
     builder.setView(view)
     .setTitle(R.string.move_position_title)
     .setNegativeButton(android.R.string.cancel,null)
     val handler = new Handler()
-    setIncrementWhilePressed(handler,view,text,R.id.move_button_next,true)
-    setIncrementWhilePressed(handler,view,text,R.id.move_button_prev,false)
+
+    setIncrementWhilePressed(handler,view,con,R.id.move_button_next,true)
+    setIncrementWhilePressed(handler,view,con,R.id.move_button_prev,false)
     setOnClick(view,R.id.move_button_goto_num, {() => onOk() })
    
     val (index_s,total_s) = Utils.makeDisplayedNum(current_index, numbers_to_read)
     view.findViewById(R.id.move_position_total).asInstanceOf[TextView].setText(total_s.toString)
-    setCurrentIndex(text)
+
+    bar.setMax(total_s-1)
+    bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+      override def onProgressChanged(bar:SeekBar, progress:Int, fromUser: Boolean){
+        if(fromUser){
+          current_index = boundIndex(bar.getProgress+1+Utils.indexOffset)
+          setCurrentIndex(con,false)
+        }
+      }
+      override def onStartTrackingTouch(bar:SeekBar){
+      }
+      override def onStopTrackingTouch(bar:SeekBar){
+      }
+    })
+    setCurrentIndex(con)
 
     val all_list = AllFuda.get(getActivity,R.array.list_full)
     val author_list = AllFuda.get(getActivity,R.array.author)
@@ -159,8 +186,8 @@ class MovePositionDialog extends DialogFragment{
     getDialog.dismiss()
     Utils.playAfterMove(wa)
   }
-  def onPrev(text:TextView){incCurrentIndex(text,-1)}
-  def onNext(text:TextView){incCurrentIndex(text,1)}
+  def onPrev(con:Convey){incCurrentIndex(con,-1)}
+  def onNext(con:Convey){incCurrentIndex(con,1)}
 
 }
 

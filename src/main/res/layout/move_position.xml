@@ -32,6 +32,11 @@
       android:layout_width="96sp" android:layout_height="wrap_content"
       android:text="@string/move_button_goto_num" />
   </LinearLayout>
+  <SeekBar android:id="@+id/move_position_seek"
+    android:layout_height="24sp"
+    android:layout_width="match_parent"
+    android:max="100"
+    />
   <include layout="@layout/horizontal_rule" />
   <EditText
     android:layout_width="300sp" android:layout_height="wrap_content"

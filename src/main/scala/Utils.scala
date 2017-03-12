@@ -267,8 +267,11 @@ object Utils {
      1
     }
   }
+  def indexOffset():Int = {
+    if(Utils.readFirstFuda){ 0 } else { 1 }
+  }
   def makeDisplayedNum(index:Int,total:Int):(Int,Int) = {
-    val dx = if(Utils.readFirstFuda){ 0 } else { 1 }
+    val dx = indexOffset()
     (index-dx,total-dx)
   }
 
