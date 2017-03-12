@@ -33,7 +33,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
     val group = view.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
-    Utils.setRadioTextClickListener(group)
+    GeneralRadioHelper.setRadioTextClickListener(group)
     val value = getPersistedString(DEFAULT_VALUE)
     val vw = group.findViewWithTag(value.toLowerCase)
     if(vw == null){

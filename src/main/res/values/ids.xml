@@ -12,4 +12,9 @@
   <item type="id" name="yomi_info_search_stub" />
   <item type="id" name="replay_last_button_stub" />
   <item type="id" name="skip_button_stub" />
+
+  <!-- intended_use_dialog -->
+  <item type="id" name="intended_use_recreation" />
+  <item type="id" name="intended_use_competitive" />
+  <item type="id" name="intended_use_study" />
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  >
+  <RadioButton
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="#FF9900"
+    android:paddingLeft="17dp"
+    android:paddingBottom="5dp"
+    android:tag="radio_text"
+    />
+  <include layout="@layout/horizontal_rule" />
+</merge>

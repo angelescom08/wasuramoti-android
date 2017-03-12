@@ -15,7 +15,7 @@ import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
 import android.util.{Log,TypedValue}
 import android.view.{LayoutInflater,View}
-import android.widget.{TextView,ListView,ArrayAdapter,CheckBox,RadioGroup,RadioButton}
+import android.widget.{TextView,ListView,ArrayAdapter,CheckBox}
 
 import android.support.v4.content.FileProvider
 
@@ -798,27 +798,6 @@ object Utils {
       val clip = context.getSystemService(Context.CLIPBOARD_SERVICE)
         .asInstanceOf[android.text.ClipboardManager]
       clip.setText(text)
-    }
-  }
-
-  def setRadioTextClickListener(group:RadioGroup){
-    var last_radio_button = None:Option[RadioButton]
-    for(i <- 0 until group.getChildCount){
-      group.getChildAt(i) match {
-        case radio:RadioButton => last_radio_button = Some(radio)
-        case view => {
-          val tag = view.getTag
-          if(Option(tag).exists(_.toString == "radio_text")){
-            last_radio_button.foreach{ btn =>
-              view.setOnClickListener(new View.OnClickListener(){
-                override def onClick(v:View){
-                  group.check(btn.getId)
-                }
-              })
-            }
-          }
-        }
-      }
     }
   }
 

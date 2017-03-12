@@ -2,26 +2,28 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.widget.{RadioGroup}
-import android.view.LayoutInflater
+import android.widget.RadioGroup
 
 object ChangeIntendedUse{
   def run(activity:WasuramotiActivity, first_config:Boolean = true){
-    var context = activity
-    val builder = new AlertDialog.Builder(context)
-    val view = LayoutInflater.from(context).inflate(R.layout.intended_use_dialog,null)
-    val radio_group = view.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
-    Utils.setRadioTextClickListener(radio_group)
+    val context = activity
+    val helper = new GeneralRadioHelper(context)
+    helper.setDescription(R.string.intended_use_desc)
+    helper.addItems(Seq(
+      GeneralRadioHelper.Item(R.id.intended_use_recreation,R.string.intended_use_recreation,R.string.intended_use_recreation_desc),
+      GeneralRadioHelper.Item(R.id.intended_use_competitive,R.string.intended_use_competitive,R.string.intended_use_competitive_desc),
+      GeneralRadioHelper.Item(R.id.intended_use_study,R.string.intended_use_study,R.string.intended_use_study_desc)
+    ))
     (Globals.prefs.get.getString("intended_use","") match {
       case "study" => Some(R.id.intended_use_study)
       case "competitive" => Some(R.id.intended_use_competitive)
       case "recreation" => Some(R.id.intended_use_recreation)
       case _ => None
-    }).foreach{ radio_group.check(_) }
+    }).foreach{ helper.radio_group.check(_) }
     val listener = new DialogInterface.OnClickListener(){
       import FudaSetEditListDialog.{SortMode,ListItemMode}
       override def onClick(interface:DialogInterface,which:Int){
-        val id = radio_group.getCheckedRadioButtonId
+        val id = helper.radio_group.getCheckedRadioButtonId
         if(id == -1){
           return
         }
@@ -118,19 +120,20 @@ object ChangeIntendedUse{
         },custom = hcustom)
       }
     }
-    builder.setView(view).setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
-    builder.setPositiveButton(android.R.string.yes,listener)
+    helper.builder
+          .setTitle(if(first_config){R.string.intended_use_title}else{R.string.quick_conf_intended_use})
+          .setPositiveButton(android.R.string.yes,listener)
     if(first_config){
-      builder.setCancelable(false)
+      helper.builder.setCancelable(false)
     }else{
-      builder.setNegativeButton(android.R.string.no,null)
+      helper.builder.setNegativeButton(android.R.string.no,null)
     }
-    val dialog = builder.create
+    val dialog = helper.builder.create
     if(first_config){
       dialog.setOnShowListener(new DialogInterface.OnShowListener(){
         override def onShow(interface:DialogInterface){
           val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-          val rgp = dialog.findViewById(R.id.intended_use_group).asInstanceOf[RadioGroup]
+          val rgp = helper.radio_group
           if(rgp != null && button != null){
             rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
               override def onCheckedChanged(group:RadioGroup,checkedId:Int){
