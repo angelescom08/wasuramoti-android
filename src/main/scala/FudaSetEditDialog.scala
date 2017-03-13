@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.Dialog
+import android.app.AlertDialog
 import android.os.Bundle
-import android.content.Context
+import android.content.{Context,DialogInterface}
 import android.text.{TextUtils,Html}
 import android.view.View
 import android.widget.{EditText,TextView}
@@ -11,17 +11,28 @@ class FudaSetEditDialog(
   context:Context,
   is_add:Boolean,
   callback:FudaSetWithSize=>Unit,
-  orig_title:String) extends Dialog(context) with View.OnClickListener{
+  orig_title:String) extends AlertDialog(context) with View.OnClickListener with DialogInterface.OnClickListener{
 
   val buttonMapping = Map(
-      R.id.button_cancel -> buttonCancel _,
-      R.id.button_ok -> buttonOk _,
       R.id.button_fudasetedit_list -> buttonFudasetEditList _,
+      R.id.button_fudasetedit_initial -> buttonFudasetEditInitial _,
+      R.id.button_fudasetedit_num -> buttonFudasetEditNum _,
       R.id.fudasetedit_help_html -> helpHtmlClicked _
     )
 
   override def onClick(view:View){
     buttonMapping.get(view.getId).foreach{_()}
+  }
+
+  override def onClick(dialog:DialogInterface,which:Int){
+    which match {
+      case DialogInterface.BUTTON_POSITIVE => {
+        buttonOk()
+      }
+      case DialogInterface.BUTTON_NEGATIVE => {
+        dialog.dismiss()
+      }
+    }
   }
 
   var data_id = None:Option[Long]
@@ -35,21 +46,23 @@ class FudaSetEditDialog(
 
   override def onCreate(bundle:Bundle){
     super.onCreate(bundle)
-    this.setContentView(R.layout.fudaset_edit)
-    this.setTitle(R.string.fudasetedit_title)
-    val title_view = this.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+    setContentView(R.layout.fudaset_edit)
+    setTitle(R.string.fudasetedit_title)
+    val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
+    val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     if(!is_add){
       title_view.setText(orig_title)
       val fs = FudaListHelper.selectFudasetByTitle(orig_title)
       fs.foreach{ f => body_view.setLocalizationText(f.body) }
       data_id = fs.map{_.id}
     }
-    val help_view = this.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
+    val help_view = findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
     help_view.setText(Html.fromHtml(context.getString(R.string.fudasetedit_help_html)))
     for(id <- buttonMapping.keys){
-      this.findViewById(id).setOnClickListener(this)
+      findViewById(id).setOnClickListener(this)
     }
+    setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),this)
+    setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),this)
   }
 
   def helpHtmlClicked(){
@@ -85,10 +98,6 @@ class FudaSetEditDialog(
     }
   }
 
-  def buttonCancel(){
-    dismiss()
-  }
-
   def buttonFudasetEditList(){
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     val kms = makeKimarijiSetFromBodyView(body_view) match{
@@ -99,4 +108,10 @@ class FudaSetEditDialog(
     d.show()
   }
 
+  def buttonFudasetEditInitial(){
+    //TODO: implement this
+  }
+  def buttonFudasetEditNum(){
+    //TODO: implement this
+  }
 }

@@ -340,7 +340,7 @@
   <string name="fudasetedit_hint">Title of Poem Set</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    Press `List` button, or input first letters of poem in Romaji. You can also input <font color=\"#00CCFF\">[<u>Poem No.</u>]</font>
+    Input initial letters of poem in Romaji:
     ]]>
   </string>
   <string name="fudasetedit_text_hint">Example: kimi naniwa 21..30</string>
@@ -358,6 +358,8 @@
     ]]>
   </string>
   <string name="button_fudasetedit_list">List</string>
+  <string name="button_fudasetedit_initial">Initial</string>
+  <string name="button_fudasetedit_num">Number</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>
     <item>Switch Text ( Kimariji / Full )</item>
