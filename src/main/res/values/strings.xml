@@ -359,6 +359,7 @@
   </string>
   <string name="button_fudasetedit_list">List</string>
   <string name="button_fudasetedit_initial">Initial</string>
+  <string name="fudasetedit_initial_title">Create Set From Initial Letters</string>
   <string name="button_fudasetedit_num">Number</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>

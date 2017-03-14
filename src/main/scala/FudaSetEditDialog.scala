@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.content.{Context,DialogInterface}
 import android.text.{TextUtils,Html}
-import android.view.View
+import android.view.{View,LayoutInflater}
 import android.widget.{EditText,TextView}
 
 class FudaSetEditDialog(
@@ -45,24 +45,25 @@ class FudaSetEditDialog(
   }
 
   override def onCreate(bundle:Bundle){
-    super.onCreate(bundle)
-    setContentView(R.layout.fudaset_edit)
     setTitle(R.string.fudasetedit_title)
-    val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-    val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+    val view = LayoutInflater.from(context).inflate(R.layout.fudaset_edit,null)
+    val title_view = view.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
+    val body_view = view.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
     if(!is_add){
       title_view.setText(orig_title)
       val fs = FudaListHelper.selectFudasetByTitle(orig_title)
       fs.foreach{ f => body_view.setLocalizationText(f.body) }
       data_id = fs.map{_.id}
     }
-    val help_view = findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
+    val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
     help_view.setText(Html.fromHtml(context.getString(R.string.fudasetedit_help_html)))
     for(id <- buttonMapping.keys){
-      findViewById(id).setOnClickListener(this)
+      view.findViewById(id).setOnClickListener(this)
     }
     setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),this)
     setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),this)
+    setView(view)
+    super.onCreate(bundle)
   }
 
   def helpHtmlClicked(){

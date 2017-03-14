@@ -326,6 +326,7 @@
   </string>
   <string name="button_fudasetedit_list">一覧</string>
   <string name="button_fudasetedit_initial">最初の文字</string>
+  <string name="fudasetedit_initial_title">最初の文字から札セットを作成</string>
   <string name="button_fudasetedit_num">札番号</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>選択の反転</item>
