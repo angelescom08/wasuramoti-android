@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.content.{Context,DialogInterface}
 import android.view.View
 import android.widget.{ArrayAdapter,AdapterView,ListView,TextView}
-import java.util.Comparator
 
 object FudaSetEditListDialog {
   object SortMode extends Enumeration {
@@ -44,24 +43,15 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
       }
       prefix + body
     }
-    def compareTo(that:FudaListItem):Int = {
+    def compVal():(Int,String) = {
       sort_mode match{
-        case SortMode.ABC => str.compareTo(that.str)
-        case SortMode.NUM => fudanum.compareTo(that.fudanum)
+        case SortMode.ABC => (0,str)
+        case SortMode.NUM => (fudanum,"")
       }
     }
-    def equals(that:FudaListItem):Boolean = {
-      str.equals(that.str) && fudanum.equals(that.fudanum)
-    }
   }
-  val fudalistitem_comp = new Comparator[FudaListItem](){
-    override def compare(lhs:FudaListItem,rhs:FudaListItem):Int = {
-      lhs.compareTo(rhs)
-    }
-    override def equals(obj:Any):Boolean = {
-      this.equals(obj)
-    }
-  }
+  val fudalistitem_comp = Ordering.by[FudaListItem,(Int,String)](_.compVal())
+
   def checkListBy(f:FudaListItem=>Boolean){
     val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
     val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
