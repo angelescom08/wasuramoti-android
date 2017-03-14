@@ -109,9 +109,11 @@ class FudaSetEditDialog(
   }
 
   def buttonFudasetEditInitial(){
-    //TODO: implement this
+    val dialog = new FudaSetEditInitialDialog(context)
+    dialog.show()
   }
   def buttonFudasetEditNum(){
-    //TODO: implement this
+    val dialog = new FudaSetEditNumDialog(context)
+    dialog.show()
   }
 }

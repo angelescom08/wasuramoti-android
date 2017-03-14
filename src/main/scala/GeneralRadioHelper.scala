@@ -10,6 +10,7 @@ object GeneralRadioHelper{
 
   def eachRadioText(group:RadioGroup, handler:(View,Option[RadioButton])=>Unit){
     var last_radio_button = None:Option[RadioButton]
+    // TODO: can <RadioButton> not be direct children of <RadioGroup> ? e.g grand children.
     for(i <- 0 until group.getChildCount){
       group.getChildAt(i) match {
         case radio:RadioButton => last_radio_button = Some(radio)

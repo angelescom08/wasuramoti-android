@@ -304,6 +304,7 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val helper = new GeneralRadioHelper(context,builder)
     val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
+    // TODO: use View.generateViewId() for API >= 17
     val ids = context.getResources.obtainTypedArray(R.array.general_radio_helper)
     val id2key = mutable.Map[Int,String]()
     val persisted = getPersistedString(null)
