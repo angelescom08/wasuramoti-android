@@ -287,9 +287,9 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
         objects = results.values.asInstanceOf[Array[SearchFudaListItem]]
         // TODO: sort by score: https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
         if (results.count > 0) {
-          notifyDataSetChanged();
+          notifyDataSetChanged()
         } else {
-          notifyDataSetInvalidated();
+          notifyDataSetInvalidated()
         }
       }
     }
