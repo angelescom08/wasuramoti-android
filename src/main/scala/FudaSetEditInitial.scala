@@ -9,7 +9,7 @@ import scala.collection.mutable
 
 class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
 
-  val TAG_INITIAL = 1
+  val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
   class FudaListItem(val str:String){
     override def toString():String = {

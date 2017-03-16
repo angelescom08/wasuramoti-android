@@ -9,7 +9,7 @@ import scala.collection.mutable
 
 class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
 
-  val TAG_NUM = 1
+  val TAG_NUM = R.id.fudasetedit_tag_num
 
   class FudaListItem(val num:Int, val str:String){
     override def toString():String = {
@@ -41,6 +41,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
     val sar = context.getResources.getStringArray(R.array.fudasetedit_numbers)
     val list_view = root.findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
     val radio_group = root.findViewById(R.id.fudasetedit_num_type).asInstanceOf[RadioGroup]
+    radio_group.check(R.id.fudasetedit_num_type_ones_digit)
     val filtered = (n:Int)=>radio_group.getCheckedRadioButtonId match{
       case R.id.fudasetedit_num_type_ones_digit =>
         n.toString.last
@@ -61,7 +62,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
       val row = new LinearLayout(context)
       for(c <- s){
         val btn = new ToggleButton(context)
-        btn.setTag(TAG_NUM,c.toString)
+        btn.setTag(TAG_NUM,c)
         btn.setText(c.toString)
         btn.setTextOn(c.toString)
         btn.setTextOff(c.toString)
