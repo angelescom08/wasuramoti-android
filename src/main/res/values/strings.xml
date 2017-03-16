@@ -359,8 +359,11 @@
   </string>
   <string name="button_fudasetedit_list">List</string>
   <string name="button_fudasetedit_initial">Initial</string>
-  <string name="fudasetedit_initial_title">Create Set From Initial Letters</string>
+  <string name="fudasetedit_initial_title">Add From Initial Letters</string>
   <string name="button_fudasetedit_num">Number</string>
+  <string name="fudasetedit_num_title">Add From Poem Nubers</string>
+  <string name="fudasetedit_num_type_ones_digit">Ones Digit</string>
+  <string name="fudasetedit_num_type_tens_digit">Tens Digit</string>
   <string-array name="fudaseteditlist_menuitems">
     <item>Invert Selection</item>
     <item>Switch Text ( Kimariji / Full )</item>

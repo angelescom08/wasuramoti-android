@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="musumefusahose">むすめふさほせうつしもゆいちひきはやよかみたこおわなあ</string>
-  <string-array name="fudasetedit_initials">
-    <item>むすめふさほせ</item>
-    <item>うつしもゆ</item>
-    <item>いちひきはやよか</item>
-    <item>みたこおわなあ</item>
-  </string-array>
   <string name="search_text_author">歌人</string>
   <string name="search_text_default">百人一首</string>
   <string-array name="poem_list">

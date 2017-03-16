@@ -4,8 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.content.{Context,DialogInterface}
 import android.text.{TextUtils,Html}
-import android.view.{View,LayoutInflater}
-import android.widget.{EditText,TextView,ArrayAdapter,Filter}
+import android.view.{View,LayoutInflater,ViewGroup}
+import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton}
 
 import scala.collection.JavaConversions
 import scala.collection.mutable
@@ -123,6 +123,18 @@ class FudaSetEditDialog(
 }
 
 object FudaSetEditUtils{
+
+  def searchToggleButton(vg:ViewGroup,tag_id:Int,ignore:Char,build:mutable.StringBuilder){
+    for(i <- 0 until vg.getChildCount){
+      vg.getChildAt(i) match {
+        case v:ViewGroup => searchToggleButton(v,tag_id,ignore,build)
+        case v:ToggleButton => 
+          val cc = v.getTag(tag_id).asInstanceOf[Char]
+          if(v.isChecked && cc != ignore){build.append(cc)}
+      }
+    }
+  }
+
   def filterableAdapter[T](context:Context,filter_func:(CharSequence)=>Array[T],ordering:Ordering[T]):ArrayAdapter[T]={
     val fudalist = mutable.ArrayBuffer[T]()
     return new ArrayAdapter[T](context,R.layout.my_simple_list_item_multiple_choice,JavaConversions.bufferAsJavaList(fudalist)){

@@ -1,13 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.app.AlertDialog
-import android.content.{Context,DialogInterface}
+import android.content.Context
 import android.os.Bundle
-import android.widget.{LinearLayout,ToggleButton,ListView,ArrayAdapter,Filter,CompoundButton}
-import android.view.{LayoutInflater,View,ViewGroup}
-import android.text.TextUtils
+import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
+import android.view.LayoutInflater
 import scala.collection.mutable
-import scala.collection.JavaConversions
 
 class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
 
@@ -20,17 +18,6 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     def compVal():(Int,String) = {
       val head = AllFuda.musumefusahoseAll.indexOf(str(0))
       return (head, str.substring(1))
-    }
-  }
-
-  def searchToggleButton(vg:ViewGroup,ignore:String,build:mutable.StringBuilder){
-    for(i <- 0 until vg.getChildCount){
-      vg.getChildAt(i) match {
-        case v:ViewGroup => searchToggleButton(v,ignore,build)
-        case v:ToggleButton => 
-          val cc = v.getTag(TAG_INITIAL).asInstanceOf[String]
-          if(v.isChecked && cc != ignore){build.append(cc)}
-      }
     }
   }
 
@@ -47,7 +34,7 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
       val row = new LinearLayout(context)
       for(c <- s){
         val btn = new ToggleButton(context)
-        btn.setTag(TAG_INITIAL,c.toString)
+        btn.setTag(TAG_INITIAL,c)
         val tt = Romanization.jap_to_local(context,c.toString)
         btn.setText(tt)
         btn.setTextOn(tt)
@@ -56,13 +43,15 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
         btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
           override def onCheckedChanged(v:CompoundButton,isChecked:Boolean){
             val build = new mutable.StringBuilder
-            val cc = v.getTag(TAG_INITIAL).asInstanceOf[String]
-            searchToggleButton(container,cc,build)
-            val constraint = build.toString + (if(isChecked){cc}else{""})
+            val cc = v.getTag(TAG_INITIAL).asInstanceOf[Char]
+            FudaSetEditUtils.searchToggleButton(container,TAG_INITIAL,cc,build)
+            if(isChecked){build.append(cc)}
+            val constraint = build.toString
             adapter.getFilter.filter(constraint)
           }
         });
       }
+      list_view.setAdapter(adapter)
       container.addView(row)
     }
     setView(root)
