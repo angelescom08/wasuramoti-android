@@ -124,13 +124,14 @@ class FudaSetEditDialog(
 
 object FudaSetEditUtils{
 
-  def searchToggleButton(vg:ViewGroup,tag_id:Int,ignore:Char,build:mutable.StringBuilder){
+  def aggregateToggleButton(vg:ViewGroup,tag_id:Int,ignore:Char,build:mutable.StringBuilder){
     for(i <- 0 until vg.getChildCount){
       vg.getChildAt(i) match {
-        case v:ViewGroup => searchToggleButton(v,tag_id,ignore,build)
+        case v:ViewGroup => aggregateToggleButton(v,tag_id,ignore,build)
         case v:ToggleButton => 
           val cc = v.getTag(tag_id).asInstanceOf[Char]
           if(v.isChecked && cc != ignore){build.append(cc)}
+        case _ => Unit
       }
     }
   }

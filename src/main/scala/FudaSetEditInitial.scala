@@ -44,7 +44,7 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
           override def onCheckedChanged(v:CompoundButton,isChecked:Boolean){
             val build = new mutable.StringBuilder
             val cc = v.getTag(TAG_INITIAL).asInstanceOf[Char]
-            FudaSetEditUtils.searchToggleButton(container,TAG_INITIAL,cc,build)
+            FudaSetEditUtils.aggregateToggleButton(container,TAG_INITIAL,cc,build)
             if(isChecked){build.append(cc)}
             val constraint = build.toString
             adapter.getFilter.filter(constraint)
