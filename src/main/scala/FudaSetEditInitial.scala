@@ -11,9 +11,11 @@ import scala.collection.JavaConversions
 
 class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
 
+  val TAG_INITIAL = 1
+
   class FudaListItem(val str:String){
     override def toString():String = {
-      return str
+      return Romanization.jap_to_local(context,str)
     }
     def compVal():(Int,String) = {
       val head = AllFuda.musumefusahoseAll.indexOf(str(0))
@@ -21,11 +23,13 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     }
   }
 
-  def searchToggleButton(vg:ViewGroup,ignore:CharSequence,build:mutable.StringBuilder){
+  def searchToggleButton(vg:ViewGroup,ignore:String,build:mutable.StringBuilder){
     for(i <- 0 until vg.getChildCount){
       vg.getChildAt(i) match {
         case v:ViewGroup => searchToggleButton(v,ignore,build)
-        case v:ToggleButton => if(v.isChecked && v.getText != ignore){build.append(v.getText)}
+        case v:ToggleButton => 
+          val cc = v.getTag(TAG_INITIAL).asInstanceOf[String]
+          if(v.isChecked && cc != ignore){build.append(cc)}
       }
     }
   }
@@ -43,15 +47,18 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
       val row = new LinearLayout(context)
       for(c <- s){
         val btn = new ToggleButton(context)
-        btn.setText(c.toString)
-        btn.setTextOn(c.toString)
-        btn.setTextOff(c.toString)
+        btn.setTag(TAG_INITIAL,c.toString)
+        val tt = Romanization.jap_to_local(context,c.toString)
+        btn.setText(tt)
+        btn.setTextOn(tt)
+        btn.setTextOff(tt)
         row.addView(btn)
         btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
           override def onCheckedChanged(v:CompoundButton,isChecked:Boolean){
             val build = new mutable.StringBuilder
-            searchToggleButton(container,v.getText,build)
-            val constraint = build.toString + (if(isChecked){v.getText}else{""})
+            val cc = v.getTag(TAG_INITIAL).asInstanceOf[String]
+            searchToggleButton(container,cc,build)
+            val constraint = build.toString + (if(isChecked){cc}else{""})
             adapter.getFilter.filter(constraint)
           }
         });
