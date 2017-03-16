@@ -21,44 +21,6 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     }
   }
 
-  def addItemsToListView(root:View){
-    val container = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
-    val fudalist = mutable.ArrayBuffer[FudaListItem]()
-    val filter = new Filter(){
-      override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
-        val results = new Filter.FilterResults
-        if(TextUtils.isEmpty(constraint)){
-          results.values = Array[FudaListItem]()
-          results.count = 0
-        }else{
-          val arr = AllFuda.list.filter(s=>constraint.toString.contains(s(0))).map(new FudaListItem(_))
-          results.values = arr
-          results.count = arr.size
-        }
-        return results
-      }
-      override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
-        fudalist.clear()
-        fudalist ++= results.values.asInstanceOf[Array[FudaListItem]]
-
-        val adapter = container.getAdapter.asInstanceOf[ArrayAdapter[FudaListItem]]
-        adapter.sort(Ordering.by[FudaListItem,(Int,String)](_.compVal()))
-        if(results.count > 0){
-          adapter.notifyDataSetChanged()
-        }else{
-          adapter.notifyDataSetInvalidated()
-        }
-      }
-    }
-    val adapter = new ArrayAdapter[FudaListItem](context,R.layout.my_simple_list_item_multiple_choice,JavaConversions.bufferAsJavaList(fudalist)){
-      override def getFilter():Filter = {
-        return filter
-      }
-    }
-    container.setAdapter(adapter)
-    adapter.sort(Ordering.by[FudaListItem,(Int,String)](_.compVal()))
-  }
-
   def searchToggleButton(vg:ViewGroup,ignore:CharSequence,build:mutable.StringBuilder){
     for(i <- 0 until vg.getChildCount){
       vg.getChildAt(i) match {
@@ -73,6 +35,10 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     val root = LayoutInflater.from(context).inflate(R.layout.fudasetedit_initial,null)
     val container = root.findViewById(R.id.fudasetedit_initial_list).asInstanceOf[LinearLayout]
     val sar = context.getResources.getStringArray(R.array.fudasetedit_initials)
+    val list_view = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+    val filter = (constraint:CharSequence) => AllFuda.list.filter(s=>constraint.toString.contains(s(0))).map(new FudaListItem(_))
+    val ordering = Ordering.by[FudaListItem,(Int,String)](_.compVal())
+    val adapter = FudaSetEditUtils.filterableAdapter(context,filter,ordering)
     for(s <- sar){
       val row = new LinearLayout(context)
       for(c <- s){
@@ -86,14 +52,12 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
             val build = new mutable.StringBuilder
             searchToggleButton(container,v.getText,build)
             val constraint = build.toString + (if(isChecked){v.getText}else{""})
-            val lv = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
-            lv.getAdapter.asInstanceOf[ArrayAdapter[FudaListItem]].getFilter.filter(constraint)
+            adapter.getFilter.filter(constraint)
           }
         });
       }
       container.addView(row)
     }
-    addItemsToListView(root)
     setView(root)
     super.onCreate(bundle)
   }

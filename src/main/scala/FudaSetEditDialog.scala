@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.content.{Context,DialogInterface}
 import android.text.{TextUtils,Html}
 import android.view.{View,LayoutInflater}
-import android.widget.{EditText,TextView}
+import android.widget.{EditText,TextView,ArrayAdapter,Filter}
+
+import scala.collection.JavaConversions
+import scala.collection.mutable
 
 class FudaSetEditDialog(
   context:Context,
@@ -116,5 +119,43 @@ class FudaSetEditDialog(
   def buttonFudasetEditNum(){
     val dialog = new FudaSetEditNumDialog(context)
     dialog.show()
+  }
+}
+
+object FudaSetEditUtils{
+  def filterableAdapter[T](context:Context,filter_func:(CharSequence)=>Array[T],ordering:Ordering[T]):ArrayAdapter[T]={
+    val fudalist = mutable.ArrayBuffer[T]()
+    return new ArrayAdapter[T](context,R.layout.my_simple_list_item_multiple_choice,JavaConversions.bufferAsJavaList(fudalist)){
+      val that = this
+      val filter = new Filter(){
+        override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
+          val results = new Filter.FilterResults
+          if(TextUtils.isEmpty(constraint)){
+            results.values = Array()
+            results.count = 0
+          }else{
+            val arr = filter_func(constraint) 
+            results.values = arr
+            results.count = arr.size
+          }
+          return results
+        }
+        override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
+          fudalist.clear()
+          fudalist ++= results.values.asInstanceOf[Array[T]]
+
+          val adapter = that
+          adapter.sort(ordering)
+          if(results.count > 0){
+            adapter.notifyDataSetChanged()
+          }else{
+            adapter.notifyDataSetInvalidated()
+          }
+        }
+      }
+      override def getFilter():Filter = {
+        return filter
+      }
+    }
   }
 }
