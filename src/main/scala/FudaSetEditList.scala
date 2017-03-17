@@ -22,7 +22,7 @@ object FudaSetEditListDialog {
   }
 }
 
-class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+class FudaSetEditListDialog(context:Context,kimarijis:String,callback:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
   import FudaSetEditListDialog.{SortMode,ListItemMode,genDialogMode}
   var sort_mode = SortMode.ABC
 
@@ -152,7 +152,7 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,onOk:String=>Unit) 
           case None => ""
           case Some((s,_)) => s
         }
-        onOk(body)
+        callback(body)
         dismiss()
       }
     })

@@ -4,10 +4,10 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton,RadioGroup,ArrayAdapter}
-import android.view.{LayoutInflater,ViewGroup}
+import android.view.{LayoutInflater,ViewGroup,View}
 import scala.collection.mutable
 
-class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
+class FudaSetEditNumDialog(context:Context,callback:(Set[Int])=>Unit) extends AlertDialog(context) with CustomAlertDialogTrait{
 
   val TAG_NUM = R.id.fudasetedit_tag_num
 
@@ -32,6 +32,12 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
       }
     }
     search(container)
+  }
+
+  override def doWhenClose(view:View):Boolean={
+    val list_view = findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
+    callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
+    return true
   }
 
   override def onCreate(bundle:Bundle){
@@ -81,7 +87,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
       list_view.setAdapter(adapter)
       container.addView(row)
     }
-    setView(root)
+    setViewAndButton(root)
     super.onCreate(bundle)
   }
 }

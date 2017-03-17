@@ -88,23 +88,32 @@ class FudaSetEditDialog(
     }
     return true
   }
-
+  def getCurrentKimarijis():String={
+    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+    return makeKimarijiSetFromBodyView(body_view).map{_._1}.getOrElse("")
+  }
   def buttonFudasetEditList(){
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-    val kms = makeKimarijiSetFromBodyView(body_view) match{
-      case None => ""
-      case Some((s,_)) => s
-    }
+    val kms = getCurrentKimarijis
     val d = new FudaSetEditListDialog(context,kms,{body_view.setLocalizationText(_)})
     d.show()
   }
 
+  def appendNums(st:Set[Int]){
+    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+    val kms = getCurrentKimarijis
+    val curs = TrieUtils.makeHaveToRead(kms)
+    val sts = st.map{(x:Int)=>AllFuda.list(x-1)}
+    val str = TrieUtils.makeKimarijiSet((curs++sts).toSeq).map{_._1}.getOrElse("")
+    body_view.setLocalizationText(str)
+  }
+
   def buttonFudasetEditInitial(){
-    val dialog = new FudaSetEditInitialDialog(context)
+    val dialog = new FudaSetEditInitialDialog(context,appendNums)
     dialog.show()
   }
   def buttonFudasetEditNum(){
-    val dialog = new FudaSetEditNumDialog(context)
+    val dialog = new FudaSetEditNumDialog(context,appendNums)
     dialog.show()
   }
 }

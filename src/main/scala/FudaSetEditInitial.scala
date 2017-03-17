@@ -4,14 +4,14 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
-import android.view.LayoutInflater
+import android.view.{View,LayoutInflater}
 import scala.collection.mutable
 
-class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
+class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends AlertDialog(context) with CustomAlertDialogTrait{
 
   val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
-  case class FudaListItem(val str:String){
+  case class FudaListItem(val num:Int, val str:String){
     override def toString():String = {
       return Romanization.jap_to_local(context,str)
     }
@@ -21,13 +21,21 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     }
   }
 
+  override def doWhenClose(view:View):Boolean={
+    val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+    callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
+    return true
+  }
+
   override def onCreate(bundle:Bundle){
     setTitle(R.string.fudasetedit_initial_title)
     val root = LayoutInflater.from(context).inflate(R.layout.fudasetedit_initial,null)
     val container = root.findViewById(R.id.fudasetedit_initial_list).asInstanceOf[LinearLayout]
     val sar = context.getResources.getStringArray(R.array.fudasetedit_initials)
     val list_view = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
-    val filter = (constraint:CharSequence) => AllFuda.list.filter(s=>constraint.toString.contains(s(0))).map(new FudaListItem(_))
+    val filter = (constraint:CharSequence) => for((s,i)<-AllFuda.list.zipWithIndex if constraint.toString.contains(s(0)))yield{
+      new FudaListItem(i+1,s)
+    }
     val ordering = Ordering.by[FudaListItem,(Int,String)](_.compVal())
     val adapter = FudaSetEditUtils.filterableAdapter(context,list_view,filter,ordering)
     for(s <- sar){
@@ -54,7 +62,7 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
       list_view.setAdapter(adapter)
       container.addView(row)
     }
-    setView(root)
+    setViewAndButton(root)
     super.onCreate(bundle)
   }
 
