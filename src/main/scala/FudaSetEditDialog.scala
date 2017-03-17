@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.content.{Context,DialogInterface}
 import android.text.{TextUtils,Html}
 import android.view.{View,LayoutInflater,ViewGroup}
-import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton}
+import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton,ListView}
 
 import scala.collection.JavaConversions
 import scala.collection.mutable
@@ -136,10 +136,15 @@ object FudaSetEditUtils{
     }
   }
 
-  def filterableAdapter[T](context:Context,filter_func:(CharSequence)=>Array[T],ordering:Ordering[T]):ArrayAdapter[T]={
+  def filterableAdapter[T](
+    context:Context,
+    list_view:ListView,
+    filter_func:(CharSequence)=>Array[T],
+    ordering:Ordering[T]):ArrayAdapter[T]={
     val fudalist = mutable.ArrayBuffer[T]()
+    val checked = mutable.Map[T,Boolean]()
     return new ArrayAdapter[T](context,R.layout.my_simple_list_item_multiple_choice,JavaConversions.bufferAsJavaList(fudalist)){
-      val that = this
+      val adapter = this
       val filter = new Filter(){
         override def performFiltering(constraint:CharSequence):Filter.FilterResults = {
           val results = new Filter.FilterResults
@@ -154,16 +159,31 @@ object FudaSetEditUtils{
           return results
         }
         override def publishResults(constraint:CharSequence,results:Filter.FilterResults){
+          // preserve checked state from ListView
+          checked.clear()
+          val poss = list_view.getCheckedItemPositions
+          for(i <- 0 until adapter.getCount){
+            checked += ((adapter.getItem(i),poss.get(i,true)))
+          }
+
           fudalist.clear()
           fudalist ++= results.values.asInstanceOf[Array[T]]
-
-          val adapter = that
           adapter.sort(ordering)
           if(results.count > 0){
             adapter.notifyDataSetChanged()
           }else{
             adapter.notifyDataSetInvalidated()
           }
+
+          // restore checked state
+          for(i <- 0 until adapter.getCount){
+            val state = checked.get(adapter.getItem(i)) match {
+              case None | Some(true) => true
+              case Some(false) => false
+            }
+            list_view.setItemChecked(i,state)
+          }
+
         }
       }
       override def getFilter():Filter = {

@@ -11,7 +11,7 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
 
   val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
-  class FudaListItem(val str:String){
+  case class FudaListItem(val str:String){
     override def toString():String = {
       return Romanization.jap_to_local(context,str)
     }
@@ -29,7 +29,7 @@ class FudaSetEditInitialDialog(context:Context) extends AlertDialog(context){
     val list_view = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
     val filter = (constraint:CharSequence) => AllFuda.list.filter(s=>constraint.toString.contains(s(0))).map(new FudaListItem(_))
     val ordering = Ordering.by[FudaListItem,(Int,String)](_.compVal())
-    val adapter = FudaSetEditUtils.filterableAdapter(context,filter,ordering)
+    val adapter = FudaSetEditUtils.filterableAdapter(context,list_view,filter,ordering)
     for(s <- sar){
       val row = new LinearLayout(context)
       for(c <- s){

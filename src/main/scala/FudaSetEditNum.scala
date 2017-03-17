@@ -11,7 +11,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
 
   val TAG_NUM = R.id.fudasetedit_tag_num
 
-  class FudaListItem(val num:Int, val str:String){
+  case class FudaListItem(val num:Int, val str:String){
     override def toString():String = {
       return s"${num}. ${Romanization.jap_to_local(context,str)}"
     }
@@ -52,7 +52,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
       new FudaListItem(i+1,s)
     }
     val ordering = Ordering.by[FudaListItem,Int](_.compVal())
-    val adapter = FudaSetEditUtils.filterableAdapter(context,filter,ordering)
+    val adapter = FudaSetEditUtils.filterableAdapter(context,list_view,filter,ordering)
     radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
       override def onCheckedChanged(group:RadioGroup,checkedId:Int){
         clearAll(adapter,container)

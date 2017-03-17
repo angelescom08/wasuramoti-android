@@ -733,9 +733,11 @@ object Utils {
   }
 
   def getCheckedItemsFromListView[T](container:ListView):Seq[T] = {
-    val poss = container.getCheckedItemPositions()
+    val poss = container.getCheckedItemPositions
     val adapter = container.getAdapter().asInstanceOf[ArrayAdapter[T]]
-    (0 until poss.size()).filter{poss.valueAt(_)}.map{ poss.keyAt(_) }.map{ adapter.getItem(_) }
+    for(i <- 0 until poss.size if poss.valueAt(i))yield{
+      adapter.getItem(poss.keyAt(i)) 
+    }
   }
 
   def setVolume(track:AudioTrack,gain:Float){
