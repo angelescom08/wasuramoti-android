@@ -27,7 +27,7 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
         vg.getChildAt(i) match {
           case v:ViewGroup => search(v)
           case v:ToggleButton => v.setChecked(false)
-          case _ => Unit
+          case _ => ()
         }
       }
     }
@@ -72,7 +72,8 @@ class FudaSetEditNumDialog(context:Context) extends AlertDialog(context){
             val build = new mutable.StringBuilder
             val cc = v.getTag(TAG_NUM).asInstanceOf[Char]
             FudaSetEditUtils.aggregateToggleButton(container,TAG_NUM,cc,build)
-            val constraint = build.toString + (if(isChecked){cc}else{""})
+            if(isChecked){build.append(cc)}
+            val constraint = build.toString
             adapter.getFilter.filter(constraint)
           }
         });

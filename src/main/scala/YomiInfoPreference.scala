@@ -123,13 +123,14 @@ class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) wit
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
     (show_trans,default_lang)
   }
-  override def doWhenClose(view:View){
+  override def doWhenClose(view:View):Boolean={
     val edit = Globals.prefs.get.edit
     val (show_trans,default_lang) = getWidgets(view)
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
     edit.commit
     Globals.forceRestart = true
+    return true
   }
 
   override def onCreate(state:Bundle){
@@ -154,7 +155,7 @@ class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) wit
     val english_font =  view.findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
     (japanese_font,furigana_font,torifuda_font,english_font)
   }
-  override def doWhenClose(view:View){
+  override def doWhenClose(view:View):Boolean={
     val edit = Globals.prefs.get.edit
     val (japanese_font,furigana_font,torifuda_font,english_font) = getWidgets(view)
     val ar_en = context.getResources.getStringArray(R.array.yomi_info_english_fonts_values)
@@ -165,6 +166,7 @@ class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) wit
     edit.putString("yomi_info_english_font",ar_en(english_font.getSelectedItemPosition))
     edit.commit
     Globals.forceRestart = true
+    return true
   }
 
   override def onCreate(state:Bundle){

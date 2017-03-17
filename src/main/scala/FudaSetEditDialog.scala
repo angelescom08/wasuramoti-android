@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.content.{Context,DialogInterface}
+import android.content.Context
 import android.text.{TextUtils,Html}
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton,ListView}
@@ -14,7 +14,7 @@ class FudaSetEditDialog(
   context:Context,
   is_add:Boolean,
   callback:FudaSetWithSize=>Unit,
-  orig_title:String) extends AlertDialog(context) with View.OnClickListener with DialogInterface.OnClickListener{
+  orig_title:String) extends AlertDialog(context) with View.OnClickListener with CustomAlertDialogTrait{
 
   val buttonMapping = Map(
       R.id.button_fudasetedit_list -> buttonFudasetEditList _,
@@ -25,17 +25,6 @@ class FudaSetEditDialog(
 
   override def onClick(view:View){
     buttonMapping.get(view.getId).foreach{_()}
-  }
-
-  override def onClick(dialog:DialogInterface,which:Int){
-    which match {
-      case DialogInterface.BUTTON_POSITIVE => {
-        buttonOk()
-      }
-      case DialogInterface.BUTTON_NEGATIVE => {
-        dialog.dismiss()
-      }
-    }
   }
 
   var data_id = None:Option[Long]
@@ -63,9 +52,7 @@ class FudaSetEditDialog(
     for(id <- buttonMapping.keys){
       view.findViewById(id).setOnClickListener(this)
     }
-    setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),this)
-    setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),this)
-    setView(view)
+    setViewAndButton(view)
     super.onCreate(bundle)
   }
 
@@ -73,33 +60,33 @@ class FudaSetEditDialog(
     Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
   }
 
-  def buttonOk(){
+  override def doWhenClose(view:View):Boolean={
    Globals.db_lock.synchronized{
-      val dialog = this
-      val title_view = this.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-      val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+      val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
+      val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
       val title = title_view.getText.toString
       if(TextUtils.isEmpty(title)){
         Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-        return
+        return false
       }
       if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
         Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
-        return
+        return false
       }
       makeKimarijiSetFromBodyView(body_view) match {
       case None =>
-        Utils.messageDialog(context,Right(R.string.fudasetedit_setempty) )
+        Utils.messageDialog(context,Right(R.string.fudasetedit_setempty))
+        return false
       case Some((kimari,st_size)) =>
         val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
         Utils.confirmDialog(context,Left(message),() => {
           Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
           callback(new FudaSetWithSize(title,st_size))
           Globals.forceRefresh = true
-          dialog.dismiss()
         })
       }
     }
+    return true
   }
 
   def buttonFudasetEditList(){
@@ -131,7 +118,7 @@ object FudaSetEditUtils{
         case v:ToggleButton => 
           val cc = v.getTag(tag_id).asInstanceOf[Char]
           if(v.isChecked && cc != ignore){build.append(cc)}
-        case _ => Unit
+        case _ => ()
       }
     }
   }
