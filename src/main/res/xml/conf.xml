@@ -124,6 +124,20 @@
           android:defaultValue="true"
           />
       </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_hokkaido">
+        <CheckBoxPreference
+          android:key="show_restore_to_deck"
+          android:title="@string/conf_restore_to_deck"
+          android:summary="@string/conf_restore_to_deck_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
+          android:key="show_kimari_simo"
+          android:title="@string/conf_kimari_simo"
+          android:summary="@string/conf_kimari_simo_summary"
+          android:defaultValue="false"
+          />
+      </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_behavior">
         <CheckBoxPreference
           android:key="use_audio_focus"

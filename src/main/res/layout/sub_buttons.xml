@@ -9,14 +9,21 @@
     android:id="@id/replay_last_button_stub"
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="0.5"
+    android:layout_weight="1"
     android:layout="@layout/replay_last_button"
+  />
+  <ViewStub
+    android:id="@id/restore_to_deck_stub"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:layout="@layout/restore_to_deck"
   />
   <ViewStub
     android:id="@id/skip_button_stub"
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="0.5"
+    android:layout_weight="1"
     android:layout="@layout/skip_button"
   />
 </LinearLayout>

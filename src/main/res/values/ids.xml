@@ -10,6 +10,7 @@
   <item type="id" name="sub_buttons_stub" />
   <item type="id" name="yomi_info_stub" />
   <item type="id" name="yomi_info_search_stub" />
+  <item type="id" name="restore_to_deck_stub" />
   <item type="id" name="replay_last_button_stub" />
   <item type="id" name="skip_button_stub" />
 

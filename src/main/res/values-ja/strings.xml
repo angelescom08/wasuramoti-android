@@ -647,5 +647,11 @@
 
     ]]>
   </string>
+  <string name="category_hokkaido">下の句かるた</string>
+  <string name="conf_restore_to_deck">流しボタンを表示</string>
+  <string name="conf_restore_to_deck_summary">最後に詠まれた札を山札に戻しかき混ぜる</string>
+  <string name="conf_kimari_simo">下の句の決まり字を表示</string>
+  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いで表示されます．（けふ→きょう，あふ→おお）</string>
+  <string name="restore_to_deck">流し</string>
 
 </resources>

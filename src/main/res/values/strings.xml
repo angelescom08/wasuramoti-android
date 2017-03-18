@@ -65,8 +65,8 @@
   <string name="conf_read_order_summary">How to play throughout all the poems.</string>
   <string name="conf_read_order_desc">Joka is disabled in random mode.</string>
   <string-array name="conf_read_order_entries">
-    <item>SHUFFLE|Shuffle|Read in random order, same poem would not be read twice.</item>
-    <item>RANDOM|Random|Choose from random list, read it, and give it back to the list.</item>
+    <item>SHUFFLE|Shuffle|Read one by one from random deck. Same poem would not be read twice.</item>
+    <item>RANDOM|Random|Choose one poem from random deck, read it, and give it back to the deck.</item>
     <item>POEM_NUM|Sequential|Read through 1 to 100.</item>
   </string-array>
 
@@ -682,4 +682,10 @@
     </p>
     ]]>
   </string>
+  <string name="category_hokkaido">Shimo-No-Ku Karuta</string>
+  <string name="conf_restore_to_deck">Show Restore Button</string>
+  <string name="conf_restore_to_deck_summary">Restore recent poem to the deck.</string>
+  <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
+  <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>
+  <string name="restore_to_deck">Restore</string>
 </resources>

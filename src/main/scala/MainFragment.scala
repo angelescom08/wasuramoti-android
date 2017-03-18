@@ -48,11 +48,21 @@ class WasuramotiFragment extends Fragment{
       getChildFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
     }
 
+    val show_restore_to_deck = Globals.prefs.get.getBoolean("show_restore_to_deck",false) 
     val show_replay_last_button = Globals.prefs.get.getBoolean("show_replay_last_button",false) 
-    
     val show_skip_button = Globals.prefs.get.getBoolean("show_skip_button",false)
-    if(!YomiInfoUtils.showPoemText && (show_replay_last_button || show_skip_button)){
+
+    if(!YomiInfoUtils.showPoemText && (show_replay_last_button || show_skip_button || show_restore_to_deck)){
       val sub_buttons = root.findViewById(R.id.sub_buttons_stub).asInstanceOf[ViewStub].inflate()
+      if(show_restore_to_deck){
+        val inflated = sub_buttons.findViewById(R.id.restore_to_deck_stub).asInstanceOf[ViewStub].inflate()
+        val btn = inflated.findViewById(R.id.restore_to_deck).asInstanceOf[Button]
+        btn.setOnClickListener(new View.OnClickListener(){
+          override def onClick(v:View){
+             KarutaPlayUtils.restoreToDeck(was)
+          }
+        })
+      }
       if(show_replay_last_button){
         val inflated = sub_buttons.findViewById(R.id.replay_last_button_stub).asInstanceOf[ViewStub].inflate()
         val btn = inflated.findViewById(R.id.replay_last_button).asInstanceOf[Button]

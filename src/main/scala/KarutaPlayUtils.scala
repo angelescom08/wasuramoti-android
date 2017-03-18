@@ -63,6 +63,10 @@ object KarutaPlayUtils{
     })
   }
 
+  def restoreToDeck(activity:WasuramotiActivity){
+    // TODO: implement
+  }
+
   def startReplay(activity:WasuramotiActivity){
     if(Globals.player.isEmpty){
       // create dummy karuta player
