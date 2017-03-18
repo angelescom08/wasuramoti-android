@@ -2,7 +2,6 @@ package karuta.hpnpwd.wasuramoti
 import android.text.TextUtils
 import scala.collection.mutable
 import scala.collection.mutable.Buffer
-import scala.util.Random
 
 class TrieVertex{
   var char:Char = '\u0000'
@@ -139,10 +138,9 @@ object TrieUtils{
     val EPSILON = 0.00000001
     val wlist = makeWeightedKarafuda(fudaset,candidate).toBuffer
     var weight_sum = wlist.map(_._1).sum
-    val rand = new Random()
     ( 0 until math.min(num,candidate.size) ).map{ i =>
       if(weight_sum > EPSILON){
-        val r = rand.nextDouble * weight_sum
+        val r = Globals.rand.nextDouble * weight_sum
         var ws = 0.0f
         val index = math.max(0,wlist.toStream.indexWhere{case(w,s)=>{ws+=w;ws>=r}})
         val (w,s) = wlist(index)
@@ -151,7 +149,7 @@ object TrieUtils{
         s
       }else{
         //choose randomly
-        val index = rand.nextInt(wlist.length)
+        val index = Globals.rand.nextInt(wlist.length)
         val (_,s) = wlist(index)
         wlist.remove(index)
         s

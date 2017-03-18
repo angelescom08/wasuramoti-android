@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.Cursor
 import android.text.TextUtils
 
-import scala.util.Random
 import scala.collection.mutable
 
 case class FudaSet(id:Long, title:String, body:String, set_size: Int)
@@ -415,8 +414,7 @@ object FudaListHelper{
     val num_read = getOrQueryNumbersToRead()
     val num_kara = getOrQueryNumbersOfKarafuda()
     if(num_kara > 0){
-      val rand = new Random()
-      val r = rand.nextDouble * num_read.toDouble
+      val r = Globals.rand.nextDouble * num_read.toDouble
       if(r < num_kara.toDouble){
         return Some(chooseKarafuda())
       }
@@ -445,11 +443,10 @@ object FudaListHelper{
       ){
       updateSkipList(context)
     }
-    val rand = new Random()
     val num_list = (1 to AllFuda.list.length).toList
     val shuffled = Utils.getReadOrder match {
       case Utils.ReadOrder.PoemNum => num_list
-      case _ => rand.shuffle(num_list)
+      case _ => Globals.rand.shuffle(num_list)
     }
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () =>

@@ -27,7 +27,7 @@ import karuta.hpnpwd.audio.OpenSLESPlayer
 
 import scala.collection.mutable
 import scala.io.Source
-import scala.util.Try
+import scala.util.{Try,Random}
 
 object Globals {
   val IS_DEBUG = false
@@ -46,6 +46,7 @@ object Globals {
   val global_lock = new Object()
   val db_lock = new Object()
   val decode_lock = new Object()
+  val rand = new Random()
   var database = None:Option[DictionaryOpenHelper]
   var prefs = None:Option[SharedPreferences]
   var player = None:Option[KarutaPlayer]
@@ -129,6 +130,12 @@ object Utils {
   // Increment Globals.PREFERENCE_VERSION if you want to read again
   def initGlobals(app_context:Context) {
     Globals.global_lock.synchronized{
+      Globals.rand.setSeed(System.currentTimeMillis)
+      // Throw away some numbers to avoid unique sequence (althogh the effect is doubtful)
+      for(i <- 0 until 16){
+        Globals.rand.nextInt
+      }
+
       if(Globals.database.isEmpty){
         Globals.database = Some(new DictionaryOpenHelper(app_context))
       }
