@@ -129,6 +129,7 @@
   <string name="yomi_info_search_kimariji_abbrev">決:</string>
   <string-array name="yomi_info_search_array">
     <item>I.MEMORIZE_SWITCH|覚えた</item>
+    <item>K.REWIND_PREV|流し</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>
     <item>K.NEXT_SKIP|スキップ</item>
     <item>L.DISPLAY_KAMI|上の句</item>

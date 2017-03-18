@@ -31,6 +31,21 @@ class WasuramotiFragment extends Fragment{
     }
   }
 
+  def subButtonMargin(sub_buttons:View,inflated:View){
+    // TODO: for API >= 11 you can use android:showDividers and android:divider instead
+    // http://stackoverflow.com/questions/4259467/in-android-how-to-make-space-between-linearlayout-children
+    val container = sub_buttons.asInstanceOf[LinearLayout]
+    val params = inflated.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+    val margin = Utils.dpToPx(4).toInt // 4dp
+    container.getOrientation match {
+      case LinearLayout.HORIZONTAL =>
+        params.setMargins(margin,0,0,0) //left margin
+      case LinearLayout.VERTICAL =>
+        params.setMargins(0,margin,0,0) // top margin
+    }
+    inflated.setLayoutParams(params)
+  }
+
   def switchViewAndReloadHandler(was:WasuramotiActivity, root:View){
     val read_button = root.findViewById(R.id.read_button).asInstanceOf[Button]
     val stub = root.findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
@@ -72,6 +87,9 @@ class WasuramotiFragment extends Fragment{
              KarutaPlayUtils.startReplay(was)
           }
         })
+        if(show_restore_to_deck){
+          subButtonMargin(sub_buttons,inflated)
+        }
       }
       if(show_skip_button){
         val inflated = sub_buttons.findViewById(R.id.skip_button_stub).asInstanceOf[ViewStub].inflate()
@@ -81,20 +99,8 @@ class WasuramotiFragment extends Fragment{
              KarutaPlayUtils.skipToNext(was)
           }
         })
-        // add margin
-        // TODO: for API >= 11 you can use android:showDividers and android:divider instead
-        // http://stackoverflow.com/questions/4259467/in-android-how-to-make-space-between-linearlayout-children
-        if(show_replay_last_button){
-          val container = sub_buttons.asInstanceOf[LinearLayout]
-          val params = inflated.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-          val margin = Utils.dpToPx(4).toInt // 4dp
-          container.getOrientation match {
-            case LinearLayout.HORIZONTAL =>
-              params.setMargins(margin,0,0,0) //left margin
-            case LinearLayout.VERTICAL =>
-              params.setMargins(0,margin,0,0) // top margin
-          }
-          inflated.setLayoutParams(params)
+        if(show_restore_to_deck || show_replay_last_button){
+          subButtonMargin(sub_buttons,inflated)
         }
       }
     }

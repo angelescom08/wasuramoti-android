@@ -24,6 +24,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends LinearLayou
     button.setText(text)
     button.setEnabled(enabled)
     val drawable = tag.split("_").head match{
+      case YomiInfoSearchDialog.PREFIX_REWIND => R.drawable.ic_action_rewind
       case YomiInfoSearchDialog.PREFIX_REPLAY => R.drawable.ic_action_replay
       case YomiInfoSearchDialog.PREFIX_NEXT => R.drawable.ic_action_next
       case YomiInfoSearchDialog.PREFIX_DISPLAY | YomiInfoSearchDialog.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)

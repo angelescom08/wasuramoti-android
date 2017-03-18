@@ -350,6 +350,10 @@ object KarutaPlayUtils{
     }
   }
 
+  def haveToEnableRestoreToDeck():Boolean = {
+    // TODO: implement
+    return true
+  }
   def haveToEnableReplayButton():Boolean = { replay_audio_queue.nonEmpty }
   def haveToEnableSkipButton():Boolean = { Globals.is_playing }
 

@@ -6,18 +6,18 @@
               android:background="@color/main_activity_border"
               >
   <ViewStub
-    android:id="@id/replay_last_button_stub"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:layout="@layout/replay_last_button"
-  />
-  <ViewStub
     android:id="@id/restore_to_deck_stub"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:layout="@layout/restore_to_deck"
+  />
+  <ViewStub
+    android:id="@id/replay_last_button_stub"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:layout="@layout/replay_last_button"
   />
   <ViewStub
     android:id="@id/skip_button_stub"

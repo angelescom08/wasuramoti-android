@@ -135,6 +135,7 @@
   <string name="yomi_info_search_kimariji_abbrev">Kmrj.:</string>
   <string-array name="yomi_info_search_array">
     <item>I.MEMORIZE_SWITCH|Memorized</item>
+    <item>K.REWIND_PREV|Rewind</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>
     <item>K.NEXT_SKIP|Skip</item>
     <item>L.DISPLAY_KAMI|1st Half</item>
@@ -683,7 +684,7 @@
     ]]>
   </string>
   <string name="category_hokkaido">Shimo-No-Ku Karuta</string>
-  <string name="conf_restore_to_deck">Show Restore Button</string>
+  <string name="conf_restore_to_deck">Show Rewind Button</string>
   <string name="conf_restore_to_deck_summary">Restore recent poem to the deck.</string>
   <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
   <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>

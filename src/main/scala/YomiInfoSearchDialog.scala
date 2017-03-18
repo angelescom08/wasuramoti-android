@@ -13,6 +13,7 @@ import android.app.{AlertDialog,SearchManager,Dialog}
 // Therefore we have to create instance through this function.
 object YomiInfoSearchDialog{
   val PREFIX_MEMORIZE = "I.MEMORIZE"
+  val PREFIX_REWIND = "K.REWIND"
   val PREFIX_REPLAY = "K.REPLAY"
   val PREFIX_NEXT = "K.NEXT"
   val PREFIX_DISPLAY = "L.DISPLAY"
@@ -193,11 +194,13 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       val tag = x.split("\\|")(0)
       if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
         haveToEnableDisplayButton(tag)
-      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_REPLAY+"_")){
+      }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
         Globals.prefs.get.getBoolean("show_replay_last_button",false)
-      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_NEXT+"_")){
+      }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+        Globals.prefs.get.getBoolean("show_restore_to_deck",false)
+      }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
         Globals.prefs.get.getBoolean("show_skip_button",false)
-      }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_MEMORIZE+"_")){
+      }else if(tag == YomiInfoSearchDialog.PREFIX_MEMORIZE+"_SWITCH"){
         Globals.prefs.get.getBoolean("memorization_mode",false)
       }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
         Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
@@ -241,6 +244,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
             }
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
+          }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+            KarutaPlayUtils.restoreToDeck(was)
           }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
             KarutaPlayUtils.startReplay(was)
           }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
@@ -290,7 +295,9 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
-      if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+      if(label == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+        KarutaPlayUtils.haveToEnableRestoreToDeck
+      }else if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
         KarutaPlayUtils.haveToEnableReplayButton
       }else if(label == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
         KarutaPlayUtils.haveToEnableSkipButton

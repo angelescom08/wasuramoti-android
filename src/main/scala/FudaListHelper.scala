@@ -290,6 +290,10 @@ object FudaListHelper{
     queryTwo(index,true)
   }
 
+  def queryPrev(index:Int):Option[CurNext] = {
+    queryTwo(index,false)
+  }
+
   def rawQueryGetInt(db:SQLiteDatabase,column:Int,query:String):Option[Int] = {
     val cursor = db.rawQuery(query,null)
     cursor.moveToFirst()
@@ -456,6 +460,10 @@ object FudaListHelper{
         db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array((i+1).toString))
       })
     db.close()
+  }}
+
+  def shufflePartial(context:Context, from:Int){ Globals.db_lock.synchronized{
+    // TODO: implement
   }}
 
   // Note: we have to always call this function after memorization_mode has been changed
