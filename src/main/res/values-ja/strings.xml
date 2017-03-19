@@ -28,6 +28,7 @@
   <string name="quick_conf_full">詠み句全表示</string>
   <string name="quick_conf_nagashi">札流し</string>
   <string name="quick_conf_only_first">上の句のみ</string>
+  <string name="quick_conf_only_second">下の句のみ</string>
   <string name="quick_conf_english">翻訳設定</string>
   <string name="quick_conf_intended_use">使用目的変更</string>
   <string name="quicklang_title">デフォルトの言語</string>
@@ -199,6 +200,7 @@
   <string name="conf_read_order_name_cur1_cur2">かるた遊び用</string>
   <string name="conf_read_order_name_cur1_cur2_cur2">かるた遊び初心者用</string>
   <string name="conf_read_order_name_cur1">上の句のみ</string>
+  <string name="conf_read_order_name_cur2_next2">下の句かるた</string>
   <string name="conf_read_order_name_custom">カスタム</string>
 
   <string name="conf_read_order_value_cur2_next1">下の句 / 上の句</string>
@@ -506,6 +508,15 @@
       「序歌」は競技かるた等で必ず最初に詠まれる百人一首にない歌のことです．全日本かるた協会の序歌は「なにわづに〜」です．
     ]]>
   </string>
+  <string name="intended_use_shimonoku">下の句かるた</string>
+  <string name="intended_use_shimonoku_desc">
+    下の句→下の句 の順に詠む．詠み句は下の句のみ表示．決まり字を下の句で表示．流しボタン表示．序歌を詠む（下の句一回）．
+  </string>
+  <string name="intended_use_shimonoku_footnote">
+    <![CDATA[
+      決まり字は現代仮名遣いで表示されます（けふ→きょう，あふ→おお）．また，流しボタンを押すと最後に詠まれた札を山札に戻しシャッフルできます．
+    ]]>
+  </string>
   <string name="intended_use_result">
     <![CDATA[
       下記のように設定しました．変更は「簡易設定」&rArr;「使用目的変更」からできます．
@@ -516,14 +527,20 @@
   <string name="intended_use_read_order">詠み順</string>
   <string name="intended_use_joka">序歌</string>
   <string name="intended_use_joka_on">詠む</string>
+  <string name="intended_use_joka_on_twice">詠む（下の句２回）</string>
+  <string name="intended_use_joka_on_once">詠む（下の句１回）</string>
   <string name="intended_use_joka_off">詠まない</string>
   <string name="intended_use_replay">リプレイボタン</string>
   <string name="intended_use_skip">スキップボタン</string>
+  <string name="intended_use_rewind">流しボタン</string>
   <string name="intended_use_show">表示</string>
   <string name="intended_use_hide">非表示</string>
   <string name="intended_use_move_next">読み終了時に次の札へ</string>
   <string name="intended_use_move_next_on">行く</string>
   <string name="intended_use_move_next_off">行かない</string>
+  <string name="intended_use_kimariji">決まり字</string>
+  <string name="intended_use_kimariji_upper">上の句</string>
+  <string name="intended_use_kimariji_lower">下の句</string>
   <string name="from_oom_message">
     ごめんなさい．わすらもちはメモリ不足により強制終了しました．\n
     これが頻繁に起こるようでしたら「詳細設定」→「サポート窓口」から報告して下さい．\n
@@ -653,7 +670,7 @@
   <string name="conf_restore_to_deck_summary">最後に詠まれた札を山札に戻しかき混ぜる</string>
   <string name="restore_to_deck_confirm">「%s」を山札に戻しても良いですか？</string>
   <string name="conf_kimari_simo">下の句の決まり字を表示</string>
-  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いで表示されます．（けふ→きょう，あふ→おお）</string>
+  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いで表示されます（けふ→きょう，あふ→おお）．</string>
   <string name="restore_to_deck">流し</string>
 
 </resources>

@@ -304,4 +304,11 @@ object YomiInfoUtils{
     edit.putBoolean("yomi_info_author",false)
     edit.putBoolean("yomi_info_furigana_show",true)
   }
+  def showOnlySecond(edit:SharedPreferences.Editor){
+    showPoemTextAndTitleBar(edit)
+    edit.putBoolean("yomi_info_kami",false)
+    edit.putBoolean("yomi_info_simo",true)
+    edit.putBoolean("yomi_info_author",false)
+    edit.putBoolean("yomi_info_furigana_show",true)
+  }
 }

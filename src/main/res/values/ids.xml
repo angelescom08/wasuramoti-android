@@ -18,6 +18,7 @@
   <item type="id" name="intended_use_recreation" />
   <item type="id" name="intended_use_competitive" />
   <item type="id" name="intended_use_study" />
+  <item type="id" name="intended_use_shimonoku" />
 
   <!-- iGeneralRadioHelper -->
   <item type="id" name="general_radio_helper_1" />

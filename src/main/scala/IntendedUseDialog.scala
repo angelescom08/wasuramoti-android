@@ -12,12 +12,14 @@ object ChangeIntendedUse{
     helper.addItems(Seq(
       GeneralRadioHelper.Item(R.id.intended_use_recreation,Left(R.string.intended_use_recreation),Left(R.string.intended_use_recreation_desc)),
       GeneralRadioHelper.Item(R.id.intended_use_competitive,Left(R.string.intended_use_competitive),Left(R.string.intended_use_competitive_desc)),
-      GeneralRadioHelper.Item(R.id.intended_use_study,Left(R.string.intended_use_study),Left(R.string.intended_use_study_desc))
+      GeneralRadioHelper.Item(R.id.intended_use_study,Left(R.string.intended_use_study),Left(R.string.intended_use_study_desc)),
+      GeneralRadioHelper.Item(R.id.intended_use_shimonoku,Left(R.string.intended_use_shimonoku),Left(R.string.intended_use_shimonoku_desc))
     ))
     (Globals.prefs.get.getString("intended_use","") match {
       case "study" => Some(R.id.intended_use_study)
       case "competitive" => Some(R.id.intended_use_competitive)
       case "recreation" => Some(R.id.intended_use_recreation)
+      case "shimonoku" => Some(R.id.intended_use_shimonoku)
       case _ => None
     }).foreach{ helper.radio_group.check(_) }
     val listener = new DialogInterface.OnClickListener(){
@@ -34,19 +36,23 @@ object ChangeIntendedUse{
             edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.ABC,ListItemMode.KIMARIJI))
             edit.putString("read_order_each","CUR2_NEXT1")
             edit.putBoolean("joka_enable",true)
+            edit.putString("read_order_joka","upper_1,lower_1")
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",false)
             edit.putBoolean("show_skip_button",false)
+            edit.putBoolean("show_restore_to_deck",false)
+            edit.putBoolean("show_kimari_simo",false)
             edit.putBoolean("move_next_after_done",true)
             edit.putBoolean("move_after_first_phrase",true)
             YomiInfoUtils.hidePoemText(edit)
             Array(
               (R.string.intended_use_poem_text,R.string.quick_conf_hide),
               (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next1),
-              (R.string.intended_use_joka,R.string.intended_use_joka_on),
+              (R.string.intended_use_joka,R.string.intended_use_joka_on_twice),
               (R.string.conf_memorization_title,R.string.message_disabled),
               (R.string.intended_use_replay,R.string.intended_use_hide),
               (R.string.intended_use_skip,R.string.intended_use_hide),
+              (R.string.intended_use_rewind,R.string.intended_use_hide),
               (R.string.intended_use_move_next,R.string.intended_use_move_next_on)
             )
           }
@@ -58,6 +64,8 @@ object ChangeIntendedUse{
             edit.putBoolean("memorization_mode",true)
             edit.putBoolean("show_replay_last_button",false)
             edit.putBoolean("show_skip_button",false)
+            edit.putBoolean("show_restore_to_deck",false)
+            edit.putBoolean("show_kimari_simo",false)
             edit.putBoolean("move_next_after_done",false)
             edit.putBoolean("move_after_first_phrase",false)
             YomiInfoUtils.showFull(edit)
@@ -68,7 +76,9 @@ object ChangeIntendedUse{
               (R.string.conf_memorization_title,R.string.message_enabled),
               (R.string.intended_use_replay,R.string.intended_use_hide),
               (R.string.intended_use_skip,R.string.intended_use_hide),
-              (R.string.intended_use_move_next,R.string.intended_use_move_next_off)
+              (R.string.intended_use_rewind,R.string.intended_use_hide),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_off),
+              (R.string.intended_use_kimariji,R.string.intended_use_kimariji_upper)
             )
           }
           case R.id.intended_use_recreation => {
@@ -79,6 +89,8 @@ object ChangeIntendedUse{
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",true)
             edit.putBoolean("show_skip_button",true)
+            edit.putBoolean("show_restore_to_deck",false)
+            edit.putBoolean("show_kimari_simo",false)
             edit.putBoolean("move_next_after_done",true)
             edit.putBoolean("move_after_first_phrase",true)
             YomiInfoUtils.showOnlyFirst(edit)
@@ -89,7 +101,35 @@ object ChangeIntendedUse{
               (R.string.conf_memorization_title,R.string.message_disabled),
               (R.string.intended_use_replay,R.string.intended_use_show),
               (R.string.intended_use_skip,R.string.intended_use_show),
-              (R.string.intended_use_move_next,R.string.intended_use_move_next_on)
+              (R.string.intended_use_rewind,R.string.intended_use_hide),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_on),
+              (R.string.intended_use_kimariji,R.string.intended_use_kimariji_upper)
+            )
+          }
+          case R.id.intended_use_shimonoku => {
+            edit.putString("intended_use","shimonoku")
+            edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.NUM,ListItemMode.FULL))
+            edit.putString("read_order_each","CUR2_NEXT2")
+            edit.putBoolean("joka_enable",true)
+            edit.putString("read_order_joka","upper_1")
+            edit.putBoolean("memorization_mode",false)
+            edit.putBoolean("show_replay_last_button",false)
+            edit.putBoolean("show_skip_button",false)
+            edit.putBoolean("show_restore_to_deck",true)
+            edit.putBoolean("show_kimari_simo",true)
+            edit.putBoolean("move_next_after_done",true)
+            edit.putBoolean("move_after_first_phrase",true)
+            YomiInfoUtils.showOnlySecond(edit)
+            Array(
+              (R.string.intended_use_poem_text,R.string.quick_conf_only_second),
+              (R.string.intended_use_read_order,R.string.conf_read_order_name_cur2_next2),
+              (R.string.intended_use_joka,R.string.intended_use_joka_on_once),
+              (R.string.conf_memorization_title,R.string.message_disabled),
+              (R.string.intended_use_replay,R.string.intended_use_hide),
+              (R.string.intended_use_skip,R.string.intended_use_hide),
+              (R.string.intended_use_rewind,R.string.intended_use_show),
+              (R.string.intended_use_move_next,R.string.intended_use_move_next_on),
+              (R.string.intended_use_kimariji,R.string.intended_use_kimariji_lower)
             )
           }
           case _ => Array() // do nothing
@@ -98,6 +138,7 @@ object ChangeIntendedUse{
           case R.id.intended_use_competitive => Some(R.string.intended_use_competitive_footnote)
           case R.id.intended_use_study => Some(R.string.intended_use_study_footnote)
           case R.id.intended_use_recreation => Some(R.string.intended_use_recreation_footnote)
+          case R.id.intended_use_shimonoku => Some(R.string.intended_use_shimonoku_footnote)
           case _ => None
         }
         edit.commit()

@@ -38,6 +38,7 @@
   <string name="quick_conf_full">Full Poem Text</string>
   <string name="quick_conf_nagashi">Fuda Nagashi</string>
   <string name="quick_conf_only_first">Only 1st Half</string>
+  <string name="quick_conf_only_second">Only 2nd Half</string>
   <string name="quick_conf_english">Translation</string>
   <string name="quick_conf_intended_use">Change Intended Use</string>
 
@@ -223,6 +224,7 @@
   <string name="conf_read_order_name_cur1_cur2">Recreative Karuta</string>
   <string name="conf_read_order_name_cur1_cur2_cur2">Recreative Karuta Beginners</string>
   <string name="conf_read_order_name_cur1">Only 1st Half</string>
+  <string name="conf_read_order_name_cur2_next2">Shimo-No-Ku Karuta</string>
   <string name="conf_read_order_name_custom">Custom</string>
 
   <string name="conf_read_order_value_cur2_next1">2nd / 1st</string>
@@ -296,6 +298,7 @@
   <string name="conf_show_replay_last_button">Show Replay Button</string>
   <string name="conf_show_replay_last_button_summary">Replay last half of the previous poem.</string>
   <string name="conf_show_skip_button">Show Skip Button</string>
+  <string name="intended_use_rewind">Show Rewind Button</string>
   <string name="conf_show_skip_button_summary">Halt current poem and start playing next poem.</string>
   <string name="conf_show_message_when_moved">Show Msg when Moved</string>
   <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message.</string>
@@ -535,6 +538,15 @@
       `Joka`, is a poem which is not included in 100 poems, but always read in the beginning of each game.
     ]]>
   </string>
+  <string name="intended_use_shimonoku">Shimo-No-Ku Karuta</string>
+  <string name="intended_use_shimonoku_desc">
+    Plays and displays only second have of the poem. This is intended for game rule in Hokkaido region of Japan.
+  </string>
+  <string name="intended_use_shimonoku_footnote">
+    <![CDATA[
+    Shimo-No-Ku means second have of the poem.
+    ]]>
+  </string>
   <string name="intended_use_result">
     <![CDATA[
       Configured as follows. You can change it from `Quick Config` &rArr; `Change Intended Use`.
@@ -545,6 +557,8 @@
   <string name="intended_use_read_order">Read Order</string>
   <string name="intended_use_joka">Joka</string>
   <string name="intended_use_joka_on">Enabled</string>
+  <string name="intended_use_joka_on_twice">Enabled (2nd half twice)</string>
+  <string name="intended_use_joka_on_once">Enabled (2nd half once)</string>
   <string name="intended_use_joka_off">Disabled</string>
   <string name="intended_use_replay">Replay Button</string>
   <string name="intended_use_skip">Skip Button</string>
@@ -553,6 +567,9 @@
   <string name="intended_use_move_next">Go Next After Play</string>
   <string name="intended_use_move_next_on">Yes</string>
   <string name="intended_use_move_next_off">No</string>
+  <string name="intended_use_kimariji">Kimariji</string>
+  <string name="intended_use_kimariji_upper">1st Half</string>
+  <string name="intended_use_kimariji_lower">2nd Half</string>
   <string name="from_oom_message">
     Sorry, Wasuramoti halted because of out of memory error.\n
     If this occurs frequently, please contact us from `Support Form` in `Advanced Config`.\n
