@@ -455,15 +455,43 @@ object FudaListHelper{
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () =>
       for ( (v,i) <- shuffled.zipWithIndex ){
-        val cv = new ContentValues()
+        val cv = new ContentValues
         cv.put("read_order",new java.lang.Integer(v))
         db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array((i+1).toString))
       })
     db.close()
   }}
+  def rewind(context:Context){ Globals.db_lock.synchronized{
+    movePrev(context)
+    val current_index = getCurrentIndex(context)
+    shufflePartial(context,current_index)
+  }}
 
   def shufflePartial(context:Context, from:Int){ Globals.db_lock.synchronized{
-    // TODO: implement
+    if(Utils.getReadOrder != Utils.ReadOrder.Shuffle){
+      return
+    }
+    val db = Globals.database.get.getWritableDatabase
+    Utils.withTransaction(db, () =>{
+      val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"read_order >= ?",Array(from.toString),null,null,null,null)
+      if(cursor.moveToFirst){
+        val num_ar = mutable.Buffer[Int]()
+        val order_ar = mutable.Buffer[Int]()
+        for(i <- 0 until cursor.getCount){
+          num_ar.append(cursor.getInt(0))
+          order_ar.append(cursor.getInt(1))
+          cursor.moveToNext
+        }
+        cursor.close
+        val shuffled = Globals.rand.shuffle(order_ar)
+        for((n,i) <- num_ar.zip(shuffled)){
+          val cv = new ContentValues
+          cv.put("read_order",new java.lang.Integer(i))
+          db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(n.toString))
+        }
+      }
+    })
+    db.close()
   }}
 
   // Note: we have to always call this function after memorization_mode has been changed

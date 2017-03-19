@@ -64,7 +64,16 @@ object KarutaPlayUtils{
   }
 
   def restoreToDeck(activity:WasuramotiActivity){
-    // TODO: implement
+    val ci = FudaListHelper.getCurrentIndex(activity)
+    val cn = FudaListHelper.queryPrev(ci)
+    cn.foreach{ c =>
+      val prev = AllFuda.list(c.next.num-1)
+      val message = activity.getResources.getString(R.string.restore_to_deck_confirm,prev)
+      Utils.confirmDialog(activity,Left(message),()=>{
+        FudaListHelper.rewind(activity)
+        activity.refreshAndInvalidate()
+      })
+    }
   }
 
   def startReplay(activity:WasuramotiActivity){
