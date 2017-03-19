@@ -25,6 +25,28 @@
     <item>きり</item><item>わがそ</item><item>よのなかは</item><item>みよ</item><item>おおけ</item>
     <item>はなさ</item><item>こぬ</item><item>かぜそ</item><item>ひとも</item><item>もも</item>
   </string-array>
+  <string-array name="kimari_simo_list">
+    <item>わがころもでは</item> <item>ころもほ</item> <item>ながな</item> <item>ふじ</item> <item>こえ</item>
+    <item>しろ</item> <item>みか</item> <item>よをう</item> <item>わがみよ</item> <item>しる</item>
+    <item>ひとには</item> <item>おと</item> <item>こいぞ</item> <item>みだれそ</item> <item>わがころもでに</item>
+    <item>まつと</item> <item>から</item> <item>ゆめ</item> <item>あわで</item> <item>みをつくしても</item>
+    <item>あり</item> <item>むべ</item> <item>わがみひ</item> <item>もみ</item> <item>ひとにし</item>
+    <item>いまひとたびのみ</item> <item>いつ</item> <item>ひとめ</item> <item>おき</item> <item>あか</item>
+    <item>よし</item> <item>ながれ</item> <item>しず</item> <item>まつも</item> <item>はなぞ</item>
+    <item>くもの</item> <item>つ</item> <item>ひとの</item> <item>あまり</item> <item>もの</item>
+    <item>ひとし</item> <item>す</item> <item>むか</item> <item>ひとを</item> <item>みの</item>
+    <item>ゆく</item> <item>ひとこそみ</item> <item>くだ</item> <item>ひる</item> <item>ながく</item>
+    <item>さ</item> <item>なおう</item> <item>いか</item> <item>きょうを</item> <item>なこ</item>
+    <item>いまひとたびのあ</item> <item>くもが</item> <item>いで</item> <item>かた</item> <item>まだ</item>
+    <item>きょうこ</item> <item>よに</item> <item>ひとづ</item> <item>あら</item> <item>こいに</item>
+    <item>はなよ</item> <item>かい</item> <item>こいし</item> <item>たつ</item> <item>いず</item>
+    <item>あし</item> <item>かけ</item> <item>と</item> <item>はげ</item> <item>あわれ</item>
+    <item>くもい</item> <item>われ</item> <item>いく</item> <item>もれ</item> <item>みだれて</item>
+    <item>ただ</item> <item>うき</item> <item>やま</item> <item>うし</item> <item>ね</item>
+    <item>かこ</item> <item>きり</item> <item>みをつくしてや</item> <item>しの</item> <item>ぬ</item>
+    <item>ころもか</item> <item>ひとこそし</item> <item>あまの</item> <item>ふる</item> <item>わがた</item>
+    <item>ふり</item> <item>やく</item> <item>みそ</item> <item>よをお</item> <item>なおあ</item>
+  </string-array>
   <string-array name="list_torifuda">
     <item>いまをはるへと さくやこのはな</item>
     <item>わかころもては つゆにぬれつつ</item>

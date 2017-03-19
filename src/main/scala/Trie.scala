@@ -108,9 +108,12 @@ object TrieUtils{
       Some((kimari,st.size))
     }
   }
-  def makeNumListFromKimariji(str:String):Set[Int] = {
-    val trie = CreateTrie.makeTrie(AllFuda.list.filter{x=>x.head == str.head})
-    trie.traversePrefix(str).map{AllFuda.getFudaNum(_)}.toSet
+  def makeNumListFromKimariji(
+    str:String,
+    kimalist:Seq[String]=AllFuda.getKimalist
+  ):Set[Int] = {
+    val trie = CreateTrie.makeTrie(kimalist.filter{x=>x.head == str.head})
+    trie.traversePrefix(str).map{AllFuda.getFudaNum(_,kimalist)}.toSet
   }
   def makeHaveToRead(str:String):Set[String] = {
     val ret = mutable.Set[String]()

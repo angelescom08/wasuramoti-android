@@ -376,11 +376,12 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
         addRow(table,getActivity.getString(R.string.kimariji_changelog_sameas))
       }
       if(kimari_in_fudaset != kimari_cur){
-        val alread_read = FudaListHelper.getAlreadyReadFromKimariji(num,kimari_cur)
+        val kimalist = AllFuda.getKimalist
+        val alread_read = FudaListHelper.getAlreadyReadFromKimariji(num,kimari_cur,kimalist)
         var kima_prev = kimari_in_fudaset
         for(ar<-alread_read.inits.toArray.reverse if ar.nonEmpty ){
           val (_,read_order) = ar.last
-          val kima = FudaListHelper.getKimarijiAtIndex(num,Some(read_order))
+          val kima = FudaListHelper.getKimarijiAtIndex(num,Some(read_order),kimalist)
           if(kima_prev != kima){
             val fuda_buf = ar.map{_._1}.filter{_.startsWith(kima)}
             addRow(table,getActivity.getString(R.string.kimariji_changelog_changed,fuda_buf.mkString(", "),kima)+

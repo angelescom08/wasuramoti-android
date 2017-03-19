@@ -8,9 +8,19 @@ import scala.util.Try
 object AllFuda{
   var musumefusahoseAll = null:String
   var list = null:Array[String]
+  var kimari_simo = null:Array[String]
   def init(context:Context){
     musumefusahoseAll = context.getResources.getString(R.string.musumefusahose)
     list = context.getResources.getStringArray(R.array.poem_list)
+    kimari_simo = context.getResources.getStringArray(R.array.kimari_simo_list)
+  }
+
+  def getKimalist():Array[String] = {
+    if(Globals.prefs.get.getBoolean("show_kimari_simo",false)){
+      kimari_simo
+    }else{
+      list
+    }
   }
 
   var cache = new mutable.HashMap[Int,Array[String]]
@@ -125,8 +135,8 @@ object AllFuda{
       return x1.compare(y1) < 0
     }
   }
-  def getFudaNum(s:String):Int = {
-    val r = list.indexOf(s)
+  def getFudaNum(s:String,kimalist:Seq[String]=list):Int = {
+    val r = kimalist.indexOf(s)
     if( r < 0){
       return -1
     }else{
