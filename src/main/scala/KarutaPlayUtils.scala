@@ -72,10 +72,15 @@ object KarutaPlayUtils{
     cn match{
       case Some(c) =>
         try{
-          val prev = AllFuda.list(c.next.num-1)
+          val (target,include_cur) = if(Utils.readCurNext(activity)){
+            (c.cur.num,false)
+          }else{
+            (c.next.num,true)
+          }
+          val prev = AllFuda.getKimalist()(target-1)
           val message = activity.getResources.getString(R.string.rewind_button_confirm,prev)
           Utils.confirmDialog(activity,Left(message),()=>{
-            FudaListHelper.rewind(activity)
+            FudaListHelper.rewind(activity,include_cur)
             activity.refreshAndInvalidate()
           })
         }catch{

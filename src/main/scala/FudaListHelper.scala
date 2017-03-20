@@ -475,19 +475,20 @@ object FudaListHelper{
       })
     db.close()
   }}
-  def rewind(context:Context){ Globals.db_lock.synchronized{
+  def rewind(context:Context,include_cur:Boolean){ Globals.db_lock.synchronized{
     movePrev(context)
-    val current_index = getCurrentIndex(context)
-    shufflePartial(context,current_index)
+    val target_index = getCurrentIndex(context)
+    shufflePartial(context, target_index, include_cur)
   }}
 
-  def shufflePartial(context:Context, from:Int){ Globals.db_lock.synchronized{
+  def shufflePartial(context:Context, from:Int, include_cur:Boolean){ Globals.db_lock.synchronized{
     if(Utils.getReadOrder != Utils.ReadOrder.Shuffle){
       return
     }
     val db = Globals.database.get.getWritableDatabase
     Utils.withTransaction(db, () =>{
-      val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),"read_order >= ?",Array(from.toString),null,null,null,null)
+      val op = if(include_cur){ ">=" } else { ">" }
+      val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),s"read_order ${op} ?",Array(from.toString),null,null,null,null)
       if(cursor.moveToFirst){
         val num_ar = mutable.Buffer[Int]()
         val order_ar = mutable.Buffer[Int]()
