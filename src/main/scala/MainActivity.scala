@@ -472,6 +472,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
       }
     )
     KarutaPlayUtils.setSkipButtonEnabled(this)
+    KarutaPlayUtils.setRewindButtonEnabled(this)
   }
 
   def genBroadcastReceiver():BroadcastReceiver = {

@@ -234,6 +234,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         Globals.is_playing = true
         is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
         KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
+        KarutaPlayUtils.setRewindButtonEnabled(activity,Some(false))
         activity.setButtonTextByState()
         // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
         if(YomiInfoUtils.showPoemText && !is_replay){
@@ -529,6 +530,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     }
     KarutaPlayUtils.setReplayButtonEnabled(activity)
     KarutaPlayUtils.setSkipButtonEnabled(activity,Some(false))
+    KarutaPlayUtils.setRewindButtonEnabled(activity,Some(true))
     if(is_replay){
       // restore normal poem text which is changed by forceYomiInfoView()
       activity.invalidateYomiInfo()

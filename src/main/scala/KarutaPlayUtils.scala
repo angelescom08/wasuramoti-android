@@ -64,6 +64,9 @@ object KarutaPlayUtils{
   }
 
   def restoreToDeck(activity:WasuramotiActivity){
+    if(Globals.is_playing){
+      return
+    }
     val ci = FudaListHelper.getCurrentIndex(activity)
     val cn = FudaListHelper.queryPrev(ci)
     cn match{
@@ -374,6 +377,7 @@ object KarutaPlayUtils{
   }
   def haveToEnableReplayButton():Boolean = { replay_audio_queue.nonEmpty }
   def haveToEnableSkipButton():Boolean = { Globals.is_playing }
+  def haveToEnableRewindButton():Boolean = { !Globals.is_playing }
 
   def setButtonEnabled(activity:Activity,force:Option[Boolean],button_id:Int,button_tag:String,default_enabled: =>Boolean){
     val btn = Option(activity.findViewById(button_id))
@@ -396,6 +400,10 @@ object KarutaPlayUtils{
 
   def setSkipButtonEnabled(activity:Activity,force:Option[Boolean]=None){
     setButtonEnabled(activity,force,R.id.skip_button,YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP",haveToEnableSkipButton)
+  }
+
+  def setRewindButtonEnabled(activity:Activity,force:Option[Boolean]=None){
+    setButtonEnabled(activity,force,R.id.restore_to_deck,YomiInfoSearchDialog.PREFIX_REWIND+"_PREV",haveToEnableRewindButton)
   }
 
 }
