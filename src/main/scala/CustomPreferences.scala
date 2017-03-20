@@ -290,7 +290,7 @@ class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPr
 }
 class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   override def getAbbrValue():String={
-    val persisted = getPersistedString(null)
+    val persisted = getPersistedString("SHUFFLE")
     val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
     for(x <- ar){
       val Array(key,title,_) = x.split('|')
@@ -307,7 +307,7 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     // TODO: use View.generateViewId() for API >= 17
     val ids = context.getResources.obtainTypedArray(R.array.general_radio_helper)
     val id2key = mutable.Map[Int,String]()
-    val persisted = getPersistedString(null)
+    val persisted = getPersistedString("SHUFFLE")
     var currentId = None:Option[Int]
     val items = ar.zipWithIndex.map{ case (x,i) =>
       val id = ids.getResourceId(i,-1)
