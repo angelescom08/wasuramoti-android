@@ -25,21 +25,21 @@ class FudaSetCopyMergeDialog(
     container_view.setAdapter(adapter)
   }
 
-  override def doWhenClose(view:View):Boolean={Globals.db_lock.synchronized {
+  override def doWhenClose(view:View){Globals.db_lock.synchronized {
     val title_view = view.findViewById(R.id.fudasetcopymerge_name).asInstanceOf[EditText]
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
-      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-      return false
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show})
+      return
     }
     if(FudaListHelper.isDuplicatedFudasetTitle(title,true,None)){
-      Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
-      return false
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated),{()=>show()})
+      return
     }
     val items = Utils.getCheckedItemsFromListView[FudaSetItem](view.findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView])
     if(items.isEmpty){
-      Utils.messageDialog(context,Right(R.string.fudaset_copymerge_notchecked))
-      return false
+      Utils.messageDialog(context,Right(R.string.fudaset_copymerge_notchecked),{()=>show()})
+      return
     }
     val newset = FudaListHelper.queryMergedFudaset(items.map{_.id})
     newset.foreach{case (body,st_size) =>
@@ -47,7 +47,6 @@ class FudaSetCopyMergeDialog(
       callback(new FudaSetWithSize(title,st_size))
     }
   }
-    return true
   }
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset_copymerge, null)

@@ -321,18 +321,28 @@ object Utils {
     context:Context,
     arg:Either[String,Int],
     func_yes:()=>Unit,
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+    custom:AlertDialog.Builder=>AlertDialog.Builder = identity,
+    func_no:Option[()=>Unit]=None
   ){
     val builder = custom(new AlertDialog.Builder(context))
     // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
     getStringOrResource(context,arg).foreach{builder.setMessage(_)}
+    val nega_handler = func_no match {
+      case None => null
+      case Some(func) =>
+        new DialogInterface.OnClickListener(){
+          override def onClick(interface:DialogInterface,which:Int){
+            func()
+          }
+        }
+    }
     val dialog:AlertDialog = builder
     .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
         override def onClick(interface:DialogInterface,which:Int){
           func_yes()
         }
       })
-    .setNegativeButton(android.R.string.no,null)
+    .setNegativeButton(android.R.string.no,nega_handler)
     .create
     showDialogAndSetGlobalRef(dialog)
   }
@@ -870,12 +880,13 @@ class AlreadyReportedException(s:String) extends Exception(s){
 
 trait CustomAlertDialogTrait{
   self:AlertDialog =>
-  def doWhenClose(view:View):Boolean
+  def doWhenClose(view:View)
   def setViewAndButton(view:View){
     self.setView(view)
     self.setButton(DialogInterface.BUTTON_POSITIVE,self.getContext.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
       override def onClick(dialog:DialogInterface,which:Int){
-        if(doWhenClose(view)){ dismiss() }
+        doWhenClose(view)
+        dismiss()
       }
     })
     self.setButton(DialogInterface.BUTTON_NEGATIVE,self.getContext.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){

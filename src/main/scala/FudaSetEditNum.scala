@@ -34,10 +34,9 @@ class FudaSetEditNumDialog(context:Context,callback:(Set[Int])=>Unit) extends Al
     search(container)
   }
 
-  override def doWhenClose(view:View):Boolean={
+  override def doWhenClose(view:View){
     val list_view = findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
     callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
-    return true
   }
 
   override def onCreate(bundle:Bundle){

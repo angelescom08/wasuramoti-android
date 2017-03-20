@@ -21,10 +21,9 @@ class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extend
     }
   }
 
-  override def doWhenClose(view:View):Boolean={
+  override def doWhenClose(view:View){
     val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
     callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
-    return true
   }
 
   override def onCreate(bundle:Bundle){

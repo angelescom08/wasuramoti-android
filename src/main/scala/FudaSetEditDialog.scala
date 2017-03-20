@@ -60,33 +60,32 @@ class FudaSetEditDialog(
     Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
   }
 
-  override def doWhenClose(view:View):Boolean={
+  override def doWhenClose(view:View){
    Globals.db_lock.synchronized{
       val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
       val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
       val title = title_view.getText.toString
       if(TextUtils.isEmpty(title)){
-        Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-        return false
+        Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
+        return
       }
       if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
-        Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
-        return false
+        Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated),{()=>show()})
+        return
       }
       makeKimarijiSetFromBodyView(body_view) match {
       case None =>
-        Utils.messageDialog(context,Right(R.string.fudasetedit_setempty))
-        return false
+        Utils.messageDialog(context,Right(R.string.fudasetedit_setempty),{()=>show()})
+        return
       case Some((kimari,st_size)) =>
         val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
         Utils.confirmDialog(context,Left(message),() => {
           Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
           callback(new FudaSetWithSize(title,st_size))
           Globals.forceRefresh = true
-        })
+        },func_no=Some({()=>show()}))
       }
     }
-    return true
   }
   def getCurrentKimarijis():String={
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]

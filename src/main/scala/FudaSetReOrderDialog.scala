@@ -20,7 +20,7 @@ class FudaSetReOrderDialog(context:Context,
   var TEXT_COLOR_DEFAULT = None:Option[Int]
 
 
-  override def doWhenClose(view:View):Boolean={
+  override def doWhenClose(view:View){
     val list = view.findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
     val fudaset_ids = (0 until list.getChildCount).map{ i=>
       Option(list.getChildAt(i).getTag(R.id.tag_fudaset_id))
@@ -35,7 +35,6 @@ class FudaSetReOrderDialog(context:Context,
     })
     db.close()
     callback()
-    return true
   }
 
   def setBorderColor(v:View,color:Int){

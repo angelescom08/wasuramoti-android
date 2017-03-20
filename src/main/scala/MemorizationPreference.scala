@@ -149,12 +149,12 @@ class MemorizationFudaSetDialog(context:Context,
   callback:()=>Unit)
   extends AlertDialog(context) with CustomAlertDialogTrait{
 
-  override def doWhenClose(view:View):Boolean={
+  override def doWhenClose(view:View){
     val title_view = view.findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
-      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-      return false
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
+      return
     }
     val ids = (onlyInFudaset,memorized) match{
       case (true,true) =>
@@ -177,7 +177,6 @@ class MemorizationFudaSetDialog(context:Context,
         callback()
         Utils.messageDialog(context,Right(R.string.memorization_fudaset_created))
     }
-    return true
   }
   override def onCreate(state:Bundle){
     val root = LayoutInflater.from(context).inflate(R.layout.memorization_fudaset, null)
