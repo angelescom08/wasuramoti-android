@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button android:id="@id/button_ok"
+      style="@style/Wasuramoti.FudaListButton"
+      android:layout_width="96sp" android:layout_height="wrap_content"
+      android:text="@string/button_add"
+      android:layout_alignParentTop="true"
+      />
+    <Button android:id="@id/button_cancel"
+      style="@style/Wasuramoti.FudaListButton"
+      android:layout_width="96sp" android:layout_height="wrap_content"
+      android:text="@string/button_cancel"
+      android:layout_alignParentTop="true"
+      android:layout_toRightOf="@id/button_ok"
+      />
+</merge>

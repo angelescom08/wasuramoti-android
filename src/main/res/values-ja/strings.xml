@@ -6,6 +6,7 @@
 
   <string name="button_ok">OK</string>
   <string name="button_cancel">取り消し</string>
+  <string name="button_add">追加</string>
   <string name="button_help">ヘルプ</string>
   <string name="button_config">設定</string>
   <string name="button_test">テスト</string>

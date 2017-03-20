@@ -1,13 +1,13 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
 import android.view.{View,LayoutInflater}
 import scala.collection.mutable
 
-class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends AlertDialog(context) with CustomAlertDialogTrait{
+class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
 
   val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
@@ -21,17 +21,13 @@ class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extend
     }
   }
 
-  override def doWhenClose(view:View){
-    val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
-    callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
-  }
-
   override def onCreate(bundle:Bundle){
+    super.onCreate(bundle)
+    setContentView(R.layout.fudasetedit_initial)
     setTitle(R.string.fudasetedit_initial_title)
-    val root = LayoutInflater.from(context).inflate(R.layout.fudasetedit_initial,null)
-    val container = root.findViewById(R.id.fudasetedit_initial_list).asInstanceOf[LinearLayout]
+    val container = findViewById(R.id.fudasetedit_initial_list).asInstanceOf[LinearLayout]
     val sar = context.getResources.getStringArray(R.array.fudasetedit_initials)
-    val list_view = root.findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+    val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
     val filter = (constraint:CharSequence) => for((s,i)<-AllFuda.list.zipWithIndex if constraint.toString.contains(s(0)))yield{
       new FudaListItem(i+1,s)
     }
@@ -61,8 +57,18 @@ class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extend
       list_view.setAdapter(adapter)
       container.addView(row)
     }
-    setViewAndButton(root)
-    super.onCreate(bundle)
+    findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        dismiss()
+      }
+    })
+    findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
+      override def onClick(v:View){
+        val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+        callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
+        dismiss()
+      }
+    })
   }
 
 }
