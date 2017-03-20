@@ -752,8 +752,8 @@ object Utils {
   def getCheckedItemsFromListView[T](container:ListView):Seq[T] = {
     val poss = container.getCheckedItemPositions
     val adapter = container.getAdapter().asInstanceOf[ArrayAdapter[T]]
-    for(i <- 0 until poss.size if poss.valueAt(i))yield{
-      adapter.getItem(poss.keyAt(i)) 
+    for(i <- 0 until adapter.getCount if poss.get(i,false))yield{
+      adapter.getItem(i)
     }
   }
 
