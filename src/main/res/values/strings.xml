@@ -701,11 +701,11 @@
     ]]>
   </string>
   <string name="category_hokkaido">Shimo-No-Ku Karuta</string>
-  <string name="conf_restore_to_deck">Show Rewind Button</string>
-  <string name="conf_restore_to_deck_summary">Restore recent poem to the deck.</string>
-  <string name="restore_to_deck_confirm">Really restore `%s` to deck?</string>
-  <string name="restore_to_deck_invalid">No poem to restore.</string>
+  <string name="conf_rewind_button">Show Rewind Button</string>
+  <string name="conf_rewind_button_summary">Restore recent poem to the deck.</string>
+  <string name="rewind_button_confirm">Really restore `%s` to deck?</string>
+  <string name="rewind_button_invalid">No poem to restore.</string>
   <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
   <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>
-  <string name="restore_to_deck">Restore</string>
+  <string name="rewind_button">Restore</string>
 </resources>

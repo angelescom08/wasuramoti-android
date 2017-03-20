@@ -63,18 +63,18 @@ class WasuramotiFragment extends Fragment{
       getChildFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
     }
 
-    val show_restore_to_deck = Globals.prefs.get.getBoolean("show_restore_to_deck",false) 
+    val show_rewind_button = Globals.prefs.get.getBoolean("show_rewind_button",false) 
     val show_replay_last_button = Globals.prefs.get.getBoolean("show_replay_last_button",false) 
     val show_skip_button = Globals.prefs.get.getBoolean("show_skip_button",false)
 
-    if(!YomiInfoUtils.showPoemText && (show_replay_last_button || show_skip_button || show_restore_to_deck)){
+    if(!YomiInfoUtils.showPoemText && (show_replay_last_button || show_skip_button || show_rewind_button)){
       val sub_buttons = root.findViewById(R.id.sub_buttons_stub).asInstanceOf[ViewStub].inflate()
-      if(show_restore_to_deck){
-        val inflated = sub_buttons.findViewById(R.id.restore_to_deck_stub).asInstanceOf[ViewStub].inflate()
-        val btn = inflated.findViewById(R.id.restore_to_deck).asInstanceOf[Button]
+      if(show_rewind_button){
+        val inflated = sub_buttons.findViewById(R.id.rewind_button_stub).asInstanceOf[ViewStub].inflate()
+        val btn = inflated.findViewById(R.id.rewind_button).asInstanceOf[Button]
         btn.setOnClickListener(new View.OnClickListener(){
           override def onClick(v:View){
-             KarutaPlayUtils.restoreToDeck(was)
+             KarutaPlayUtils.rewind(was)
           }
         })
       }
@@ -87,7 +87,7 @@ class WasuramotiFragment extends Fragment{
              KarutaPlayUtils.startReplay(was)
           }
         })
-        if(show_restore_to_deck){
+        if(show_rewind_button){
           subButtonMargin(sub_buttons,inflated)
         }
       }
@@ -99,7 +99,7 @@ class WasuramotiFragment extends Fragment{
              KarutaPlayUtils.skipToNext(was)
           }
         })
-        if(show_restore_to_deck || show_replay_last_button){
+        if(show_rewind_button || show_replay_last_button){
           subButtonMargin(sub_buttons,inflated)
         }
       }

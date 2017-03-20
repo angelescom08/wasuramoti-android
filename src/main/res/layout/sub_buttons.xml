@@ -6,11 +6,11 @@
               android:background="@color/main_activity_border"
               >
   <ViewStub
-    android:id="@id/restore_to_deck_stub"
+    android:id="@id/rewind_button_stub"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:layout="@layout/restore_to_deck"
+    android:layout="@layout/rewind_button"
   />
   <ViewStub
     android:id="@id/replay_last_button_stub"

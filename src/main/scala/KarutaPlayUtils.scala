@@ -63,7 +63,7 @@ object KarutaPlayUtils{
     })
   }
 
-  def restoreToDeck(activity:WasuramotiActivity){
+  def rewind(activity:WasuramotiActivity){
     if(Globals.is_playing){
       return
     }
@@ -73,18 +73,18 @@ object KarutaPlayUtils{
       case Some(c) =>
         try{
           val prev = AllFuda.list(c.next.num-1)
-          val message = activity.getResources.getString(R.string.restore_to_deck_confirm,prev)
+          val message = activity.getResources.getString(R.string.rewind_button_confirm,prev)
           Utils.confirmDialog(activity,Left(message),()=>{
             FudaListHelper.rewind(activity)
             activity.refreshAndInvalidate()
           })
         }catch{
           case _:ArrayIndexOutOfBoundsException =>
-            Utils.messageDialog(activity,Right(R.string.restore_to_deck_invalid))
+            Utils.messageDialog(activity,Right(R.string.rewind_button_invalid))
             return
         }
       case None =>
-        Utils.messageDialog(activity,Right(R.string.restore_to_deck_invalid))
+        Utils.messageDialog(activity,Right(R.string.rewind_button_invalid))
     }
   }
 
@@ -371,10 +371,6 @@ object KarutaPlayUtils{
     }
   }
 
-  def haveToEnableRestoreToDeck():Boolean = {
-    // TODO: implement
-    return true
-  }
   def haveToEnableReplayButton():Boolean = { replay_audio_queue.nonEmpty }
   def haveToEnableSkipButton():Boolean = { Globals.is_playing }
   def haveToEnableRewindButton():Boolean = { !Globals.is_playing }
@@ -403,7 +399,7 @@ object KarutaPlayUtils{
   }
 
   def setRewindButtonEnabled(activity:Activity,force:Option[Boolean]=None){
-    setButtonEnabled(activity,force,R.id.restore_to_deck,YomiInfoSearchDialog.PREFIX_REWIND+"_PREV",haveToEnableRewindButton)
+    setButtonEnabled(activity,force,R.id.rewind_button,YomiInfoSearchDialog.PREFIX_REWIND+"_PREV",haveToEnableRewindButton)
   }
 
 }

@@ -197,7 +197,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
         Globals.prefs.get.getBoolean("show_replay_last_button",false)
       }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
-        Globals.prefs.get.getBoolean("show_restore_to_deck",false)
+        Globals.prefs.get.getBoolean("show_rewind_button",false)
       }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
         Globals.prefs.get.getBoolean("show_skip_button",false)
       }else if(tag == YomiInfoSearchDialog.PREFIX_MEMORIZE+"_SWITCH"){
@@ -245,7 +245,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
           }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
           }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
-            KarutaPlayUtils.restoreToDeck(was)
+            KarutaPlayUtils.rewind(was)
           }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
             KarutaPlayUtils.startReplay(was)
           }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
@@ -296,7 +296,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
       if(label == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
-        KarutaPlayUtils.haveToEnableRestoreToDeck
+        KarutaPlayUtils.haveToEnableRewindButton
       }else if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
         KarutaPlayUtils.haveToEnableReplayButton
       }else if(label == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
