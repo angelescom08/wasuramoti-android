@@ -329,8 +329,8 @@
     ]]>
   </string>
   <string name="button_fudasetedit_list">一覧</string>
-  <string name="button_fudasetedit_initial">最初の文字</string>
-  <string name="fudasetedit_initial_title">最初の文字から追加</string>
+  <string name="button_fudasetedit_initial">一文字目</string>
+  <string name="fudasetedit_initial_title">一文字目から追加</string>
   <string name="button_fudasetedit_num">札番号</string>
   <string name="fudasetedit_num_title">札番号から追加</string>
   <string name="fudasetedit_num_type_ones_digit">一の位</string>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="fudasetedit_initials">
+    <item>むすめふさほせ</item>
+    <item>うつしもゆ</item>
+    <item>いちひき</item>
+    <item>はやよか</item>
+    <item>みたこおわなあ</item>
+  </string-array>
+  <string-array name="fudasetedit_numbers">
+    <item>01234</item>
+    <item>56789</item>
+  </string-array>
+</resources>
