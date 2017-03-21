@@ -346,7 +346,7 @@
   <string name="fudasetedit_hint">Title of Poem Set</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    Input initial letters of poem in Romaji:
+    Choose from above buttons, or input initial letters of poem in Romaji:
     ]]>
   </string>
   <string name="fudasetedit_text_hint">Example: kimi naniwa 21..30</string>

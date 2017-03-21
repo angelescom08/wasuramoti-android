@@ -312,7 +312,7 @@
   <string name="fudasetedit_hint">新しい札セット名</string>
   <string name="fudasetedit_help_html">
     <![CDATA[
-    現代仮名遣いで決まり字まで入力:
+    上記のボタンから選択するか，現代仮名遣いで決まり字まで入力:
     ]]>
   </string>
   <string name="fudasetedit_text_hint">例: きみ なにわ 21..30</string>
@@ -512,11 +512,11 @@
   </string>
   <string name="intended_use_shimonoku">下の句かるた</string>
   <string name="intended_use_shimonoku_desc">
-    下の句→下の句 の順に詠む．詠み句は下の句のみ表示．決まり字を下の句で表示．流しボタン表示．序歌を詠む（下の句一回）．
+    下の句→下の句 の順に詠む．詠み句および決まり字を下の句で表示．序歌を下の句一回で詠む．流しボタンを表示．
   </string>
   <string name="intended_use_shimonoku_footnote">
     <![CDATA[
-      決まり字は現代仮名遣いで表示されます（けふ→きょう，あふ→おお）．また，流しボタンを押すと最後に詠まれた札を山札に戻しシャッフルできます．
+      決まり字は現代仮名遣いを使います（けふ→きょう，あふ→おお）．流しボタンを押すと最後に詠まれた札を山札に戻しシャッフルできます．
     ]]>
   </string>
   <string name="intended_use_result">
@@ -537,7 +537,7 @@
   <string name="intended_use_rewind">流しボタン</string>
   <string name="intended_use_show">表示</string>
   <string name="intended_use_hide">非表示</string>
-  <string name="intended_use_move_next">読み終了時に次の札へ</string>
+  <string name="intended_use_move_next">詠み終了時に次の札へ</string>
   <string name="intended_use_move_next_on">行く</string>
   <string name="intended_use_move_next_off">行かない</string>
   <string name="intended_use_kimariji">決まり字</string>
@@ -673,7 +673,7 @@
   <string name="rewind_button_confirm">「%s」を山札に戻しても良いですか？</string>
   <string name="rewind_button_invalid">山札に戻すべき札がありません</string>
   <string name="conf_kimari_simo">下の句の決まり字を表示</string>
-  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いで表示されます（けふ→きょう，あふ→おお）．</string>
+  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いを使います（けふ→きょう，あふ→おお）．</string>
   <string name="rewind_button">流し</string>
 
 </resources>
