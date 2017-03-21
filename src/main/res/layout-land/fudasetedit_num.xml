@@ -33,12 +33,17 @@
         android:text="@string/fudasetedit_num_type_tens_digit"
         />
     </RadioGroup>
-    <LinearLayout
-        android:id="@+id/fudasetedit_num_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    </LinearLayout>
+    <ScrollView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      >
+      <LinearLayout
+          android:id="@+id/fudasetedit_num_list"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical" >
+      </LinearLayout>
+    </ScrollView>
   </LinearLayout>
   <LinearLayout
       android:layout_width="match_parent"
