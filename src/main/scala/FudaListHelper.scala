@@ -456,6 +456,7 @@ object FudaListHelper{
   }
 
   def shuffle(context:Context){ Globals.db_lock.synchronized{
+    Utils.throwawayRandom()
     if(Globals.prefs.get.getBoolean("karafuda_enable",false) ||
       Globals.prefs.get.getBoolean("memorization_mode",false)
       ){
@@ -482,6 +483,7 @@ object FudaListHelper{
   }}
 
   def shufflePartial(context:Context, from:Int, include_cur:Boolean){ Globals.db_lock.synchronized{
+    Utils.throwawayRandom()
     if(Utils.getReadOrder != Utils.ReadOrder.Shuffle){
       return
     }

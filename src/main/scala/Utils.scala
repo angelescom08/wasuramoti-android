@@ -123,6 +123,14 @@ object Utils {
     }
   }
 
+  def throwawayRandom(){
+    // Throw away some numbers to avoid unique sequence.
+    // The effect is doubtful, it's just for conscience's sake.
+    val count = 8 + (System.currentTimeMillis % 16)
+    for(i <- 0 until count.toInt){
+      Globals.rand.nextInt()
+    }
+  }
 
   type EqualizerSeq = Seq[Option[Float]]
   // Since every Activity has a possibility to be killed by android when it is background,
@@ -131,10 +139,7 @@ object Utils {
   def initGlobals(app_context:Context) {
     Globals.global_lock.synchronized{
       Globals.rand.setSeed(System.currentTimeMillis)
-      // Throw away some numbers to avoid unique sequence (althogh the effect is doubtful)
-      for(i <- 0 until 16){
-        Globals.rand.nextInt
-      }
+      Utils.throwawayRandom()
 
       if(Globals.database.isEmpty){
         Globals.database = Some(new DictionaryOpenHelper(app_context))

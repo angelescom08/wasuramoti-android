@@ -138,6 +138,7 @@ object TrieUtils{
     }.toSeq.sortBy(_._1).reverse // sorting in a descending order makes it faster when choosing random with weight.
   }
   def makeKarafuda(fudaset:Set[String],candidate:Set[String], num:Int):Set[String] = {
+    Utils.throwawayRandom()
     val EPSILON = 0.00000001
     val wlist = makeWeightedKarafuda(fudaset,candidate).toBuffer
     var weight_sum = wlist.map(_._1).sum
