@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
-import android.view.{View,LayoutInflater}
+import android.view.{View,LayoutInflater,ViewGroup}
 import scala.collection.mutable
 
 class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
@@ -37,6 +37,8 @@ class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extend
       val row = new LinearLayout(context)
       for(c <- s){
         val btn = new ToggleButton(context)
+        val width = context.getResources.getDimension(R.dimen.fudasetedit_letter_button_width).toInt
+        btn.setLayoutParams(new ViewGroup.LayoutParams(width,ViewGroup.LayoutParams.WRAP_CONTENT))
         btn.setTag(TAG_INITIAL,c)
         val tt = Romanization.jap_to_local(context,c.toString)
         btn.setText(tt)
