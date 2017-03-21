@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="locale">ja</string>
   <string name="app_name">わすらもち</string>
 
   <string name="error_ioerror">エラー: %s．不要なファイルやアプリを削除して再試行して下さい．それでも起きる場合はその状況や頻度を報告してくれると助かります．</string>

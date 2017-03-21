@@ -41,8 +41,7 @@ object Romanization{
   }
 
   def is_japanese(context:Context):Boolean = {
-    val loc = context.getResources.getConfiguration.locale
-    loc.equals(Locale.JAPAN) || loc.equals(Locale.JAPANESE)
+    context.getResources.getString(R.string.locale) == "ja"
   }
   def jap_to_local(context:Context,text:String):String = if (is_japanese(context)){ text } else {jap_to_roma(text)}
 }
