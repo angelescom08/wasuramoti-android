@@ -293,7 +293,7 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     val persisted = getPersistedString("SHUFFLE")
     val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
     for(x <- ar){
-      val Array(key,title,_) = x.split('|')
+      val Array(key,title,_) = x.split("\\|")
       if( key == persisted){
         return title
       }
@@ -314,7 +314,7 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
       if(id == -1){
         throw new RuntimeException(s"index out of range for general_radio_helper[${i}]")
       }
-      val Array(key,title,desc) = x.split('|')
+      val Array(key,title,desc) = x.split("\\|")
       id2key += ((id,key))
       if(key == persisted){
         currentId = Some(id)
