@@ -672,6 +672,7 @@
   <string name="conf_rewind_button_summary">最後に詠まれた札を山札に戻しシャッフル</string>
   <string name="rewind_button_confirm">「%s」を山札に戻しても良いですか？</string>
   <string name="rewind_button_invalid">山札に戻すべき札がありません</string>
+  <string name="rewind_only_for_shuffle">流しは順番がシャッフルの時のみ有効です</string>
   <string name="conf_kimari_simo">下の句の決まり字を表示</string>
   <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いです（けふ→きょう，あふ→おお）</string>
   <string name="rewind_button">流し</string>

@@ -67,6 +67,10 @@ object KarutaPlayUtils{
     if(Globals.is_playing){
       return
     }
+    if(Utils.getReadOrder != Utils.ReadOrder.Shuffle){
+      Utils.messageDialog(activity,Right(R.string.rewind_only_for_shuffle))
+      return
+    }
     val ci = FudaListHelper.getCurrentIndex(activity)
     val cn = FudaListHelper.queryPrev(ci)
     cn match{

@@ -707,6 +707,7 @@
   <string name="conf_rewind_button_summary">Restore recent poem to the deck.</string>
   <string name="rewind_button_confirm">Really restore `%s` to deck?</string>
   <string name="rewind_button_invalid">No poem to restore.</string>
+  <string name="rewind_only_for_shuffle">Rewind is only for shuffle mode.</string>
   <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
   <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>
   <string name="rewind_button">Restore</string>
