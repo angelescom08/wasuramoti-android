@@ -290,7 +290,7 @@
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>
   <string name="category_move">Move</string>
-  <string name="conf_move_after_first_phrase">Go Next if Interrupted</string>
+  <string name="conf_move_after_first_phrase">Go Next on Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
   <string name="conf_move_next_after_done">Go Next after Done</string>
   <string name="conf_move_next_after_done_summary">Go to next poem after playing done.</string>
@@ -710,4 +710,7 @@
   <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
   <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>
   <string name="rewind_button">Restore</string>
+
+  <string name="category_button">Button</string>
+  <string name="category_misc">Misc</string>
 </resources>

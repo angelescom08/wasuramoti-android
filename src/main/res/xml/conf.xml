@@ -26,15 +26,8 @@
       android:summary="@string/conf_karafuda_summary"
       android:widgetLayout="@layout/conf_current_value"
       />
-    <karuta.hpnpwd.wasuramoti.AutoPlayPreference
-      android:key="autoplay"
-      android:title="@string/conf_autoplay"
-      android:summary="@string/conf_autoplay_summary"
-      android:widgetLayout="@layout/conf_current_value"
-      unit="@string/conf_unit_second"
-      />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_order" android:key="category_order">
+  <PreferenceCategory android:title="@string/category_order">
     <karuta.hpnpwd.wasuramoti.ReadOrderPreference
       android:key="read_order"
       android:title="@string/conf_read_order_title"
@@ -56,17 +49,26 @@
       android:widgetLayout="@layout/conf_current_value"
       android:defaultValue="upper_1,lower_1"
       />
-    <CheckBoxPreference
-      android:key="show_replay_last_button"
-      android:title="@string/conf_show_replay_last_button"
-      android:summary="@string/conf_show_replay_last_button_summary"
-      android:defaultValue="false"
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_move" >
+    <karuta.hpnpwd.wasuramoti.AutoPlayPreference
+      android:key="autoplay"
+      android:title="@string/conf_autoplay"
+      android:summary="@string/conf_autoplay_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      unit="@string/conf_unit_second"
       />
     <CheckBoxPreference
-      android:key="show_skip_button"
-      android:title="@string/conf_show_skip_button"
-      android:summary="@string/conf_show_skip_button_summary"
-      android:defaultValue="false"
+      android:key="move_next_after_done"
+      android:title="@string/conf_move_next_after_done"
+      android:summary="@string/conf_move_next_after_done_summary"
+      android:defaultValue="true"
+      />
+    <CheckBoxPreference
+      android:key="move_after_first_phrase"
+      android:title="@string/conf_move_after_first_phrase"
+      android:summary="@string/conf_move_after_first_phrase_summary"
+      android:defaultValue="true"
       />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_voice">
@@ -83,6 +85,14 @@
       android:widgetLayout="@layout/conf_current_value"
       />
   </PreferenceCategory>
+  <PreferenceCategory android:title="@string/category_hokkaido">
+    <CheckBoxPreference
+      android:key="show_kimari_simo"
+      android:title="@string/conf_kimari_simo"
+      android:summary="@string/conf_kimari_simo_summary"
+      android:defaultValue="false"
+      />
+  </PreferenceCategory>
   <PreferenceCategory android:title="@string/category_other">
     <PreferenceScreen
       android:key="conf_others"
@@ -90,18 +100,31 @@
       android:persistent="false"
       android:summary="@string/subscreen_others"
       >
-      <PreferenceCategory android:title="@string/category_move">
+      <PreferenceCategory android:title="@string/category_button">
         <CheckBoxPreference
-          android:key="move_next_after_done"
-          android:title="@string/conf_move_next_after_done"
-          android:summary="@string/conf_move_next_after_done_summary"
-          android:defaultValue="true"
+          android:key="show_replay_last_button"
+          android:title="@string/conf_show_replay_last_button"
+          android:summary="@string/conf_show_replay_last_button_summary"
+          android:defaultValue="false"
           />
         <CheckBoxPreference
-          android:key="move_after_first_phrase"
-          android:title="@string/conf_move_after_first_phrase"
-          android:summary="@string/conf_move_after_first_phrase_summary"
-          android:defaultValue="true"
+          android:key="show_rewind_button"
+          android:title="@string/conf_rewind_button"
+          android:summary="@string/conf_rewind_button_summary"
+          android:defaultValue="false"
+          />
+        <CheckBoxPreference
+          android:key="show_skip_button"
+          android:title="@string/conf_show_skip_button"
+          android:summary="@string/conf_show_skip_button_summary"
+          android:defaultValue="false"
+          />
+      </PreferenceCategory>
+      <PreferenceCategory android:title="@string/category_misc">
+        <karuta.hpnpwd.wasuramoti.EqualizerPreference
+          android:key="effect_equalizer_seq"
+          android:title="@string/conf_equalizer"
+          android:summary="@string/conf_equalizer_summary"
           />
         <CheckBoxPreference
           android:key="play_after_swipe"
@@ -122,20 +145,6 @@
           android:title="@string/conf_show_current_index"
           android:summary="@string/conf_show_current_index_summary"
           android:defaultValue="true"
-          />
-      </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_hokkaido">
-        <CheckBoxPreference
-          android:key="show_rewind_button"
-          android:title="@string/conf_rewind_button"
-          android:summary="@string/conf_rewind_button_summary"
-          android:defaultValue="false"
-          />
-        <CheckBoxPreference
-          android:key="show_kimari_simo"
-          android:title="@string/conf_kimari_simo"
-          android:summary="@string/conf_kimari_simo_summary"
-          android:defaultValue="false"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_behavior">
@@ -194,13 +203,6 @@
           android:defaultValue="0.2"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
-          />
-      </PreferenceCategory>
-      <PreferenceCategory android:title="@string/category_processing">
-        <karuta.hpnpwd.wasuramoti.EqualizerPreference
-          android:key="effect_equalizer_seq"
-          android:title="@string/conf_equalizer"
-          android:summary="@string/conf_equalizer_summary"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_playback_detail">
