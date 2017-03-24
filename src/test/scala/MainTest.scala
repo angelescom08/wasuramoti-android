@@ -36,4 +36,13 @@ class MainTest extends JUnitSuite with Matchers {
       AllFuda.replaceFudaNumPattern("1*") shouldBe f((Array(1,100)++(0 to 9).map(x=>x+10)))
       AllFuda.replaceFudaNumPattern("[12]? ?[34]") shouldBe " " + f((0 to 9).flatMap(x=>Array(10+x,20+x)) ++ (1 to 9).flatMap(x=>Array(x*10+3,x*10+4)))
   }
+
+  @Test
+  def testSearchPoem(){
+      val context = RuntimeEnvironment.application.getApplicationContext
+      val index_poem = PoemSearchUtils.genIndex(context,R.array.poem_index)
+      val index_author = PoemSearchUtils.genIndex(context,R.array.author_index)
+      val found = PoemSearchUtils.doSearch(context,Array(index_poem,index_author),"ぬ")
+      found shouldBe Set(1,10,11,13,20,24,28,32,36,37,45,46,52,53,55,57,61,65,72,74,75,78,82,87,90,92,97)
+  }
 }
