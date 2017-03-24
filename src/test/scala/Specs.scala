@@ -1,12 +1,23 @@
-import karuta.hpnpwd.wasuramoti.{Romanization,AllFuda,TrieUtils}
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.Spec
+import android.content.SharedPreferences
+import karuta.hpnpwd.wasuramoti.{Romanization,AllFuda,TrieUtils,Globals}
+import org.scalatest.FunSpec
+import org.scalamock.scalatest.MockFactory
 import scala.collection.mutable.HashMap
-// これはテスト
-class Specs extends Spec with ShouldMatchers {
+import scala.xml.XML
+
+object Helper{
+  def loadStringArray(resourceFile:String,name:String):Array[String]={
+    var stream = getClass.getResourceAsStream("/values/strings-poem-list.xml")
+    val root = XML.load(stream)
+    val arr = (root \ "string-array").find{_.attribute("name").exists{_.head.text==name}}.get
+    return (arr \ "item").map(_.text).toArray
+  }
+}
+
+class Specs extends FunSpec with MockFactory{
   describe("Romanization test") {
     it("jap to roma"){
-      assert(Romanization.jap_to_roma("わすらもち 0123") == "wasuramoti 0123")
+      assert(Romanization.jap_to_roma("わすらもち 0123") == "wasuramochi 0123")
     }
     it("roma to jap"){
       assert(Romanization.roma_to_jap("wasuramoti 4567") == "わすらもち 4567")
@@ -15,6 +26,7 @@ class Specs extends Spec with ShouldMatchers {
       assert(Romanization.zenkaku_to_hankaku("＊？［］１２３４５６７８９０") == "*?[]1234567890")
     }
     it("replace fuda num pattern"){
+      AllFuda.list = Helper.loadStringArray("/values/string-poem-list.xml","poem_list")
       var f = (ar:Seq[Int]) => " " + ar.sortWith(_<_).distinct.map(x => AllFuda.list(x-1)).mkString(" ")
       assert(AllFuda.replaceFudaNumPattern("あきの はるす ?") == "あきの はるす " + f(1 to 9))
       assert(AllFuda.replaceFudaNumPattern("？[13579]") == f(for(x <- 11 to 99 if x % 2 == 1)yield x))
@@ -24,6 +36,9 @@ class Specs extends Spec with ShouldMatchers {
   }
   describe("Karafuda test") {
     it("make karafuda"){
+      val pref = mock[SharedPreferences]
+      (pref.getFloat (_,_)).expects("karafuda_urafuda_prob",0.5f).returning(0.5f).anyNumberOfTimes
+      Globals.prefs = Some(pref)
       val t = new HashMap[String,Int]()
       for(i <- 1 to 10000){
         val y = (TrieUtils.makeKarafuda(Set("あし","あきの","こころに","あさぼらけあ"),Set("ありま","あきか","こころあ","あさぼらけう","せ"),1))
@@ -34,7 +49,6 @@ class Specs extends Spec with ShouldMatchers {
           t(x) = 1
         }
       }
-      println(t)
 
     }
   }

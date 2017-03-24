@@ -5,9 +5,14 @@ platformTarget in Android := "android-25"
 buildToolsVersion in Android := Some("25.0.2")
 
 libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.0.1" % Test,
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test,
   "com.android.support" % "support-v4" % "24.1.1",
   android.Dependencies.aar("com.android.support" % "appcompat-v7" % "24.1.1")
   )
+
+// Required for `sbt test`
+unmanagedClasspath in Test ++= (bootClasspath in Android).value
 
 javacOptions in Compile ++= Seq("-source","1.7","-target","1.7")
 scalacOptions in Compile ++= Seq(
@@ -33,3 +38,4 @@ shrinkResources in Android := true
 
 // Reference: https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
 useSupportVectors
+
