@@ -6,12 +6,13 @@ buildToolsVersion in Android := Some("25.0.2")
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test,
+  "org.robolectric" % "robolectric" % "3.2.2" % Test,
+  "junit" % "junit" % "4.12" % Test,
   "com.android.support" % "support-v4" % "24.1.1",
   android.Dependencies.aar("com.android.support" % "appcompat-v7" % "24.1.1")
   )
 
-// Required for `sbt test`
+// Required for testing
 unmanagedClasspath in Test ++= (bootClasspath in Android).value
 
 javacOptions in Compile ++= Seq("-source","1.7","-target","1.7")
