@@ -331,7 +331,15 @@ object PoemSearchUtils{
 
   def findInIndex(index:Index,keyword:String):Set[Int] = {
     //TODO: following method searches all bigram even after `index.get()` returns None
-    val (found,notfound) = keyword.sliding(2).map{ s => {
+    // Scala 2.11.8 has a bug that Iterator.span finishes at state -1 when predicate is always true, so we convert it to Seq.
+    // you can confirm the bug with following code
+    // scala> val (yes,no) = Iterator("a","b","c","d").span(_=>true)
+    // scala> no.toList
+    // scala> yes.toList
+    // yes.toList becomes List("a") where it should be List("a","b","c","d")
+    // The bug was fixed in following patch
+    //   https://github.com/scala/scala/commit/dc6b91822f695250938ee06ad21818b1ca8a778d
+    val (found,notfound) = keyword.sliding(2).toSeq.map{ s => {
         index.get(s).map{_.toSet}
       }}.span{_.nonEmpty}
 
