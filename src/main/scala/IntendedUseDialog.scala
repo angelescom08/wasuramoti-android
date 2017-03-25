@@ -111,7 +111,7 @@ object ChangeIntendedUse{
             edit.putString("fudaset_edit_list_dlg_mode",FudaSetEditListDialog.genDialogMode(SortMode.NUM,ListItemMode.FULL))
             edit.putString("read_order_each","CUR2_NEXT2")
             edit.putBoolean("joka_enable",true)
-            edit.putString("read_order_joka","upper_1")
+            edit.putString("read_order_joka","upper_0,lower_1")
             edit.putBoolean("memorization_mode",false)
             edit.putBoolean("show_replay_last_button",false)
             edit.putBoolean("show_skip_button",false)
