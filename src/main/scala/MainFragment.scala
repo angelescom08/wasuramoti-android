@@ -59,7 +59,7 @@ class WasuramotiFragment extends Fragment{
     if(frag_stub != null &&
       YomiInfoUtils.showPoemText){
       frag_stub.inflate()
-      val fragment = YomiInfoSearchDialog.newInstance(false,Some(0))
+      val fragment = YomiInfoSearchDialog.newInstance(Some(0))
       getChildFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
     }
 
@@ -114,8 +114,7 @@ class WasuramotiFragment extends Fragment{
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
               if(view.cur_num.nonEmpty){
-                val dlg = YomiInfoSearchDialog.newInstance(true,view.cur_num)
-                dlg.show(getChildFragmentManager,"yomi_info_search")
+                // TODO: show poem description dialog
               }
               return true
             }

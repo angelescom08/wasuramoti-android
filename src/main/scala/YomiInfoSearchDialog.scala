@@ -20,11 +20,10 @@ object YomiInfoSearchDialog{
   val PREFIX_SWITCH = "N.SWITCH"
   val PREFIX_KIMARIJI = "N.KIMARIJI"
   val PREFIX_SEARCH = "P.SEARCH"
-  def newInstance(is_dialog:Boolean,fudanum:Option[Int]):YomiInfoSearchDialog = {
+  def newInstance(fudanum:Option[Int]):YomiInfoSearchDialog = {
     val fragment = new YomiInfoSearchDialog
     val args = new Bundle
     args.putSerializable("fudanum",fudanum)
-    args.putBoolean("is_dialog",is_dialog)
     fragment.setArguments(args)
     return fragment
   }
@@ -161,11 +160,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
   }
   override def onCreateView(inflater:LayoutInflater,container:ViewGroup,saved:Bundle):View = {
-    if(!getArguments.getBoolean("is_dialog")){
-      genContentView()
-    }else{
-      super.onCreateView(inflater,container,saved)
-    }
+    genContentView()
   }
 
   def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
@@ -269,9 +264,6 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
               btn.asInstanceOf[Button].setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
             }
           }
-          if(getArguments.getBoolean("is_dialog")){
-            dismiss()
-          }
         }
       })
     val (init_torifuda_mode,init_info_lang) =
@@ -289,9 +281,6 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       }else{
         s
       }
-    }
-    if(init_torifuda_mode && getArguments.getBoolean("is_dialog")){
-      items = items.filterNot{_.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")}
     }
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
@@ -323,22 +312,6 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     val dlg = new YomiInfoDetailDialog()
     dlg.setArguments(getArguments)
     dlg.show(getActivity.getSupportFragmentManager,"yomi_info_detail")
-  }
-  override def onCreateDialog(saved:Bundle):Dialog = {
-    if(!getArguments.getBoolean("is_dialog")){
-      return super.onCreateDialog(saved)
-    }
-    val builder = new AlertDialog.Builder(getActivity)
-    val (fudanum_s,kimari) = YomiInfoSearchDialog.getFudaNumAndKimari(getActivity,getFudanum)
-    val title_view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_title,null)
-    title_view.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView].setText(fudanum_s)
-    title_view.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView].setText(kimari)
-    val body_view = genContentView()
-    builder
-    .setView(body_view)
-    .setCustomTitle(title_view)
-    .setNegativeButton(android.R.string.cancel,null)
-    .create()
   }
 }
 
