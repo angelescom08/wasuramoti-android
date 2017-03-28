@@ -706,7 +706,7 @@ object Utils {
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
     val Array(prefix,postfix) = tag.split("_")
-    val is_mem = prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE
+    val is_mem = prefix == CommandButtonPanel.PREFIX_MEMORIZE
     val (ic_on,ic_off) = if(is_mem){
       (R.drawable.ic_action_important,R.drawable.ic_action_not_important)
     }else{

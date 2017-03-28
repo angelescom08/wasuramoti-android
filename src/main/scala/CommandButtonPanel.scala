@@ -1,5 +1,5 @@
 package karuta.hpnpwd.wasuramoti
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.{DialogFragment,Fragment}
 import android.content.{Context,Intent}
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,LinearLayout,Button}
@@ -11,7 +11,7 @@ import android.app.{AlertDialog,SearchManager,Dialog}
 // The constructor of Fragment must be empty since when fragment is recreated,
 // The empty constructor is called.
 // Therefore we have to create instance through this function.
-object YomiInfoSearchDialog{
+object CommandButtonPanel{
   val PREFIX_MEMORIZE = "I.MEMORIZE"
   val PREFIX_REWIND = "K.REWIND"
   val PREFIX_REPLAY = "K.REPLAY"
@@ -20,8 +20,8 @@ object YomiInfoSearchDialog{
   val PREFIX_SWITCH = "N.SWITCH"
   val PREFIX_KIMARIJI = "N.KIMARIJI"
   val PREFIX_SEARCH = "P.SEARCH"
-  def newInstance(fudanum:Option[Int]):YomiInfoSearchDialog = {
-    val fragment = new YomiInfoSearchDialog
+  def newInstance(fudanum:Option[Int]):CommandButtonPanel = {
+    val fragment = new CommandButtonPanel
     val args = new Bundle
     args.putSerializable("fudanum",fudanum)
     fragment.setArguments(args)
@@ -49,18 +49,18 @@ object YomiInfoSearchDialog{
 }
 
 trait GetFudanum {
-  self:DialogFragment =>
+  self:Fragment =>
   def getFudanum():Option[Int] = {
     Option(self.getArguments.getSerializable("fudanum").asInstanceOf[Option[Int]]).flatten
   }
 }
 
-class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
+class CommandButtonPanel extends Fragment with GetFudanum{
   def enableDisplayButton(enabled:Boolean,force:Map[String,Boolean]=Map()){
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
-        val tag = YomiInfoSearchDialog.PREFIX_DISPLAY + "_" + t
+        val tag = CommandButtonPanel.PREFIX_DISPLAY + "_" + t
         val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
         if(b != null){
           b.setEnabled(force.getOrElse(t,enabled && haveToEnableDisplayButton(tag)))
@@ -71,9 +71,9 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
   }
   def setMemorizedButton(){
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
     if(btnlist != null){
-      val tag = YomiInfoSearchDialog.PREFIX_MEMORIZE + "_SWITCH"
+      val tag = CommandButtonPanel.PREFIX_MEMORIZE + "_SWITCH"
       val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
       if(b != null){
         val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
@@ -82,7 +82,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
   }
   def getOrigText(tag:String):String ={
-    val items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray
+    val items = getActivity.getResources.getStringArray(R.array.command_button_array).toArray
     items.find{_.startsWith(tag+"|")}.get.split("\\|")(1)
   }
   def setFudanum(fudanum:Option[Int]){
@@ -99,8 +99,8 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
 
     setMemorizedButton()
 
-    val tag = YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
+    val tag = CommandButtonPanel.PREFIX_SWITCH+"_MODE"
+    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
     if(btnlist != null){
       val btn = btnlist.findViewWithTag(tag).asInstanceOf[Button]
       if(btn != null){
@@ -183,32 +183,32 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
   }
 
   def genContentView():View = {
-    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_dialog,null)
-    val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[YomiInfoButtonList]
-    var items = getActivity.getResources.getStringArray(R.array.yomi_info_search_array).toArray.filter{ x=>
+    val view = LayoutInflater.from(getActivity).inflate(R.layout.command_button_panel,null)
+    val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
+    var items = getActivity.getResources.getStringArray(R.array.command_button_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
-      if(tag.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")){
+      if(tag.startsWith(CommandButtonPanel.PREFIX_DISPLAY+"_")){
         haveToEnableDisplayButton(tag)
-      }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+      }else if(tag == CommandButtonPanel.PREFIX_REPLAY+"_LAST"){
         Globals.prefs.get.getBoolean("show_replay_last_button",false)
-      }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+      }else if(tag == CommandButtonPanel.PREFIX_REWIND+"_PREV"){
         Globals.prefs.get.getBoolean("show_rewind_button",false)
-      }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
+      }else if(tag == CommandButtonPanel.PREFIX_NEXT+"_SKIP"){
         Globals.prefs.get.getBoolean("show_skip_button",false)
-      }else if(tag == YomiInfoSearchDialog.PREFIX_MEMORIZE+"_SWITCH"){
+      }else if(tag == CommandButtonPanel.PREFIX_MEMORIZE+"_SWITCH"){
         Globals.prefs.get.getBoolean("memorization_mode",false)
-      }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
+      }else if(List("LANG","ROMAJI").map{ CommandButtonPanel.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
         Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
       }else{
         true
       }
     }
-    btnlist.setOnClickListener(new YomiInfoButtonList.OnClickListener(){
+    btnlist.setOnClickListener(new CommandButtonList.OnClickListener(){
         override def onClick(btn:View,tag:String){
           val was = getActivity.asInstanceOf[WasuramotiActivity]
-          if(tag == YomiInfoSearchDialog.PREFIX_KIMARIJI + "_LOG"){
+          if(tag == CommandButtonPanel.PREFIX_KIMARIJI + "_LOG"){
             showKimarijiChangelogDialog()
-          }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
+          }else if(tag == CommandButtonPanel.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true
               vw.initDrawing
@@ -216,7 +216,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
               btn.asInstanceOf[Button].setText(getSwitchModeButtonText(tag,vw.torifuda_mode))
               enableDisplayButton(!vw.torifuda_mode)
             }
-          }else if(List("LANG","ROMAJI").map{ YomiInfoSearchDialog.PREFIX_SWITCH + "_" + _ }.contains(tag)){
+          }else if(List("LANG","ROMAJI").map{ CommandButtonPanel.PREFIX_SWITCH + "_" + _ }.contains(tag)){
             getCurYomiInfoView.foreach{vw =>
               vw.info_lang = if(tag.endsWith("ROMAJI")){
                 if(vw.torifuda_mode || vw.info_lang != Utils.YomiInfoLang.Romaji){
@@ -237,18 +237,18 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
               vw.invalidate
               enableDisplayButton(true)
             }
-          }else if(tag.startsWith(YomiInfoSearchDialog.PREFIX_SEARCH+"_")){
+          }else if(tag.startsWith(CommandButtonPanel.PREFIX_SEARCH+"_")){
             doWebSearch(getFudanum,tag.split("_")(1))
-          }else if(tag == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+          }else if(tag == CommandButtonPanel.PREFIX_REWIND+"_PREV"){
             KarutaPlayUtils.rewind(was)
-          }else if(tag == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+          }else if(tag == CommandButtonPanel.PREFIX_REPLAY+"_LAST"){
             KarutaPlayUtils.startReplay(was)
-          }else if(tag == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
+          }else if(tag == CommandButtonPanel.PREFIX_NEXT+"_SKIP"){
             KarutaPlayUtils.skipToNext(was)
           }else{
             val Array(prefix,postfix) = tag.split("_")
             getCurYomiInfoView.foreach{vw =>
-              if(prefix == YomiInfoSearchDialog.PREFIX_MEMORIZE){
+              if(prefix == CommandButtonPanel.PREFIX_MEMORIZE){
                 vw.switchMemorized
                 was.setButtonTextByState(invalidateQueryCacheExceptKarafuda = true)
               }else{
@@ -274,9 +274,9 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
         Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get)
       ))
     val text_convert= {(s:String,label:String) =>
-      if(label == YomiInfoSearchDialog.PREFIX_SWITCH+"_MODE"){
+      if(label == CommandButtonPanel.PREFIX_SWITCH+"_MODE"){
         getSwitchModeButtonText(label,init_torifuda_mode)
-      }else if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+      }else if(label == CommandButtonPanel.PREFIX_REPLAY+"_LAST"){
         Utils.replayButtonText(getResources)
       }else{
         s
@@ -284,17 +284,17 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
     }
     // TODO: merge this function to enableDisplayButton() since it is duplicate code
     val have_to_enable = {(label:String) =>
-      if(label == YomiInfoSearchDialog.PREFIX_REWIND+"_PREV"){
+      if(label == CommandButtonPanel.PREFIX_REWIND+"_PREV"){
         KarutaPlayUtils.haveToEnableRewindButton
-      }else if(label == YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST"){
+      }else if(label == CommandButtonPanel.PREFIX_REPLAY+"_LAST"){
         KarutaPlayUtils.haveToEnableReplayButton
-      }else if(label == YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP"){
+      }else if(label == CommandButtonPanel.PREFIX_NEXT+"_SKIP"){
         KarutaPlayUtils.haveToEnableSkipButton
       }else{
         if(init_info_lang != Utils.YomiInfoLang.Japanese){
-          label != YomiInfoSearchDialog.PREFIX_DISPLAY+"_FURIGANA"
+          label != CommandButtonPanel.PREFIX_DISPLAY+"_FURIGANA"
         }else{
-          !init_torifuda_mode || !label.startsWith(YomiInfoSearchDialog.PREFIX_DISPLAY+"_")
+          !init_torifuda_mode || !label.startsWith(CommandButtonPanel.PREFIX_DISPLAY+"_")
         }
       }
     }

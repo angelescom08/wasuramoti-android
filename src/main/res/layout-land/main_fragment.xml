@@ -22,7 +22,7 @@
         >
     
     <ViewStub
-          android:id="@id/yomi_info_search_stub"
+          android:id="@id/command_button_stub"
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="@dimen/main_top_weight"

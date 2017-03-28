@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- layout_{width,height,weight} is set programatically inside YomiInfoButtonList.addButtons -->
+<!-- layout_{width,height,weight} is set programatically inside CommandButtonList.addButtons -->
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
   style="@style/Wasuramoti.ButtonBarButton"
   android:textColor="?android:attr/textColorPrimary"

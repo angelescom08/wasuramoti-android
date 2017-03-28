@@ -7,30 +7,30 @@ import android.text.TextUtils
 import android.view.{View,ViewGroup,LayoutInflater}
 
 
-object YomiInfoButtonList{
+object CommandButtonList{
   abstract class OnClickListener{
     def onClick(btn:View,tag:String)
   }
 }
 
-class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends LinearLayout(context,attrs) {
-  var m_on_click_listener:YomiInfoButtonList.OnClickListener = null
-  def setOnClickListener(listener:YomiInfoButtonList.OnClickListener){
+class CommandButtonList(context:Context,attrs:AttributeSet) extends LinearLayout(context,attrs) {
+  var m_on_click_listener:CommandButtonList.OnClickListener = null
+  def setOnClickListener(listener:CommandButtonList.OnClickListener){
     m_on_click_listener = listener
   }
   def genButton(yiv:Option[YomiInfoView], tag:String,text:String,enabled:Boolean):Button = {
-    val button = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_button,null).asInstanceOf[Button]
+    val button = LayoutInflater.from(context).inflate(R.layout.command_button_panel_button,null).asInstanceOf[Button]
     button.setTag(tag)
     button.setText(text)
     button.setEnabled(enabled)
     val drawable = tag.split("_").head match{
-      case YomiInfoSearchDialog.PREFIX_REWIND => R.drawable.ic_action_previous
-      case YomiInfoSearchDialog.PREFIX_REPLAY => R.drawable.ic_action_replay
-      case YomiInfoSearchDialog.PREFIX_NEXT => R.drawable.ic_action_next
-      case YomiInfoSearchDialog.PREFIX_DISPLAY | YomiInfoSearchDialog.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
-      case YomiInfoSearchDialog.PREFIX_KIMARIJI => R.drawable.ic_action_storage
-      case YomiInfoSearchDialog.PREFIX_SWITCH => R.drawable.ic_action_refresh
-      case YomiInfoSearchDialog.PREFIX_SEARCH => R.drawable.ic_action_web_site
+      case CommandButtonPanel.PREFIX_REWIND => R.drawable.ic_action_previous
+      case CommandButtonPanel.PREFIX_REPLAY => R.drawable.ic_action_replay
+      case CommandButtonPanel.PREFIX_NEXT => R.drawable.ic_action_next
+      case CommandButtonPanel.PREFIX_DISPLAY | CommandButtonPanel.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
+      case CommandButtonPanel.PREFIX_KIMARIJI => R.drawable.ic_action_storage
+      case CommandButtonPanel.PREFIX_SWITCH => R.drawable.ic_action_refresh
+      case CommandButtonPanel.PREFIX_SEARCH => R.drawable.ic_action_web_site
     }
     val img = context.getResources.getDrawable(drawable)
     button.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
@@ -44,7 +44,7 @@ class YomiInfoButtonList(context:Context,attrs:AttributeSet) extends LinearLayou
   def addButtons(context:Context,yiv:Option[YomiInfoView], text_and_tags:Array[(String,String,Boolean)]){
     if(context.getResources.getBoolean(R.bool.button_twocolumn)){
       for(ar<-text_and_tags.grouped(2)){
-        val lay = LayoutInflater.from(context).inflate(R.layout.yomi_info_search_dialog_row,null).asInstanceOf[LinearLayout]
+        val lay = LayoutInflater.from(context).inflate(R.layout.command_button_panel_row,null).asInstanceOf[LinearLayout]
         for((text,tag,enabled)<-ar if ! TextUtils.isEmpty(text)){
           val button = genButton(yiv,tag,text,enabled)
           val params = new LinearLayout.LayoutParams(0,ViewGroup.LayoutParams.MATCH_PARENT,1.0f)

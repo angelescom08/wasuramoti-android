@@ -132,11 +132,11 @@
   <string name="yomi_info_show_bar_kimari">Kimariji</string>
   <string name="yomi_info_show_bar_poem_num">Number</string>
 
-  <string name="yomi_info_search_poem_num">No.:</string>
-  <string name="yomi_info_search_kimariji">Kimariji:</string>
-  <string name="yomi_info_search_poem_num_abbrev">No.:</string>
-  <string name="yomi_info_search_kimariji_abbrev">Kmrj.:</string>
-  <string-array name="yomi_info_search_array">
+  <string name="command_button_poem_num">No.:</string>
+  <string name="command_button_kimariji">Kimariji:</string>
+  <string name="command_button_poem_num_abbrev">No.:</string>
+  <string name="command_button_kimariji_abbrev">Kmrj.:</string>
+  <string-array name="command_button_array">
     <item>I.MEMORIZE_SWITCH|Memorized</item>
     <item>K.REWIND_PREV|Rewind</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>

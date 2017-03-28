@@ -126,11 +126,11 @@
   <string name="yomi_info_show_bar_poem_num">歌番号</string>
   <string name="yomi_info_show_bar_kimari">決まり字</string>
 
-  <string name="yomi_info_search_poem_num">番号:</string>
-  <string name="yomi_info_search_kimariji">決まり字:</string>
-  <string name="yomi_info_search_poem_num_abbrev">番:</string>
-  <string name="yomi_info_search_kimariji_abbrev">決:</string>
-  <string-array name="yomi_info_search_array">
+  <string name="command_button_poem_num">番号:</string>
+  <string name="command_button_kimariji">決まり字:</string>
+  <string name="command_button_poem_num_abbrev">番:</string>
+  <string name="command_button_kimariji_abbrev">決:</string>
+  <string-array name="command_button_array">
     <item>I.MEMORIZE_SWITCH|覚えた</item>
     <item>K.REWIND_PREV|流し</item>
     <item>K.REPLAY_LAST|repeat_button_format</item>

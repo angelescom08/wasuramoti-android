@@ -266,10 +266,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
       YomiInfoUtils.showPoemText && (show_kimari || show_poem_num)
     ){
       val inflated = bar_container.inflate()
-      Option(inflated.findViewById(R.id.yomi_info_search_kimariji_container)).foreach{v =>
+      Option(inflated.findViewById(R.id.command_button_kimariji_container)).foreach{v =>
         v.setVisibility(if(show_kimari){View.VISIBLE}else{View.GONE})
       }
-      Option(inflated.findViewById(R.id.yomi_info_search_poem_num_container)).foreach{v =>
+      Option(inflated.findViewById(R.id.command_button_poem_num_container)).foreach{v =>
         v.setVisibility(if(show_poem_num){View.VISIBLE}else{View.GONE})
       }
       actionbar.setDisplayShowTitleEnabled(false)
@@ -390,7 +390,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
       bar_poem_info_num = fudanum
       for(
            main <- Option(getSupportFragmentManager.findFragmentById(R.id.activity_placeholder).asInstanceOf[WasuramotiFragment]);
-           yomi_dlg <- Option(main.getChildFragmentManager.findFragmentById(R.id.yomi_info_search_fragment).asInstanceOf[YomiInfoSearchDialog])
+           yomi_dlg <- Option(main.getChildFragmentManager.findFragmentById(R.id.command_button_fragment).asInstanceOf[CommandButtonPanel])
        ){
              yomi_dlg.setFudanum(fudanum)
        }
@@ -399,14 +399,14 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         val show_kimari  = Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
         val show_poem_num  = Globals.prefs.get.getBoolean("yomi_info_show_bar_poem_num",true)
         if(show_kimari || show_poem_num){
-          val (fudanum_s,kimari_s) = YomiInfoSearchDialog.getFudaNumAndKimari(this,fudanum)
+          val (fudanum_s,kimari_s) = CommandButtonPanel.getFudaNumAndKimari(this,fudanum)
           if(show_poem_num){
-            Option(cv.findViewById(R.id.yomi_info_search_poem_num).asInstanceOf[TextView]).foreach{ tv =>
+            Option(cv.findViewById(R.id.command_button_poem_num).asInstanceOf[TextView]).foreach{ tv =>
               tv.setText(fudanum_s)
             }
           }
           if(show_kimari){
-            Option(cv.findViewById(R.id.yomi_info_search_kimariji).asInstanceOf[TextView]).foreach{ tv =>
+            Option(cv.findViewById(R.id.command_button_kimariji).asInstanceOf[TextView]).foreach{ tv =>
               tv.setText(kimari_s)
             }
           }

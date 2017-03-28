@@ -387,7 +387,7 @@ object KarutaPlayUtils{
   def setButtonEnabled(activity:Activity,force:Option[Boolean],button_id:Int,button_tag:String,default_enabled: =>Boolean){
     val btn = Option(activity.findViewById(button_id))
     .orElse(
-      Option(activity.findViewById(R.id.yomi_info_search_fragment)).flatMap( x=>
+      Option(activity.findViewById(R.id.command_button_fragment)).flatMap( x=>
         Option(x.findViewWithTag(button_tag))
       ))
     btn.foreach{ b =>
@@ -400,15 +400,15 @@ object KarutaPlayUtils{
   }
 
   def setReplayButtonEnabled(activity:Activity,force:Option[Boolean]=None){
-    setButtonEnabled(activity,force,R.id.replay_last_button,YomiInfoSearchDialog.PREFIX_REPLAY+"_LAST",haveToEnableReplayButton)
+    setButtonEnabled(activity,force,R.id.replay_last_button,CommandButtonPanel.PREFIX_REPLAY+"_LAST",haveToEnableReplayButton)
   }
 
   def setSkipButtonEnabled(activity:Activity,force:Option[Boolean]=None){
-    setButtonEnabled(activity,force,R.id.skip_button,YomiInfoSearchDialog.PREFIX_NEXT+"_SKIP",haveToEnableSkipButton)
+    setButtonEnabled(activity,force,R.id.skip_button,CommandButtonPanel.PREFIX_NEXT+"_SKIP",haveToEnableSkipButton)
   }
 
   def setRewindButtonEnabled(activity:Activity,force:Option[Boolean]=None){
-    setButtonEnabled(activity,force,R.id.rewind_button,YomiInfoSearchDialog.PREFIX_REWIND+"_PREV",haveToEnableRewindButton)
+    setButtonEnabled(activity,force,R.id.rewind_button,CommandButtonPanel.PREFIX_REWIND+"_PREV",haveToEnableRewindButton)
   }
 
 }

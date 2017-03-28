@@ -55,12 +55,12 @@ class WasuramotiFragment extends Fragment{
       read_button.setBackgroundResource(R.drawable.main_button)
     }
 
-    val frag_stub = root.findViewById(R.id.yomi_info_search_stub).asInstanceOf[ViewStub]
+    val frag_stub = root.findViewById(R.id.command_button_stub).asInstanceOf[ViewStub]
     if(frag_stub != null &&
       YomiInfoUtils.showPoemText){
       frag_stub.inflate()
-      val fragment = YomiInfoSearchDialog.newInstance(Some(0))
-      getChildFragmentManager.beginTransaction.replace(R.id.yomi_info_search_fragment,fragment).commit
+      val fragment = CommandButtonPanel.newInstance(Some(0))
+      getChildFragmentManager.beginTransaction.replace(R.id.command_button_fragment,fragment).commit
     }
 
     val show_rewind_button = Globals.prefs.get.getBoolean("show_rewind_button",false) 

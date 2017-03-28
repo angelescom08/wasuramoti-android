@@ -4,12 +4,12 @@
   <item type="id" name="button_cancel" />
   <item type="id" name="tag_fudaset_id" />
   <item type="id" name="activity_placeholder" />
-  <item type="id" name="yomi_info_search_kimariji" />
-  <item type="id" name="yomi_info_search_poem_num" />
+  <item type="id" name="command_button_kimariji" />
+  <item type="id" name="command_button_poem_num" />
   <!-- stub -->
   <item type="id" name="sub_buttons_stub" />
   <item type="id" name="yomi_info_stub" />
-  <item type="id" name="yomi_info_search_stub" />
+  <item type="id" name="command_button_stub" />
   <item type="id" name="rewind_button_stub" />
   <item type="id" name="replay_last_button_stub" />
   <item type="id" name="skip_button_stub" />

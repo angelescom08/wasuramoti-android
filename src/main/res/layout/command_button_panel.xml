@@ -4,7 +4,7 @@
   android:fillViewport="true"
   android:fadeScrollbars="false"
   >
-  <karuta.hpnpwd.wasuramoti.YomiInfoButtonList
+  <karuta.hpnpwd.wasuramoti.CommandButtonList
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Wasuramoti.ButtonBar"
     android:id="@+id/yomi_info_button_list"

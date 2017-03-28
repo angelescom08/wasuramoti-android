@@ -21,7 +21,7 @@
         android:layout_weight="0.28"
         >
     <ViewStub
-          android:id="@id/yomi_info_search_stub"
+          android:id="@id/command_button_stub"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="@dimen/main_left_weight"

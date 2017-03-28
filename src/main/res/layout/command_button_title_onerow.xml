@@ -6,7 +6,7 @@
   >
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
     android:orientation="horizontal"
-    android:id="@+id/yomi_info_search_poem_num_container"
+    android:id="@+id/command_button_poem_num_container"
     android:paddingRight="@dimen/title_bar_margin_center"
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -17,13 +17,13 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textSize="@dimen/title_bar_large_text"
       android:textColor="@color/action_bar_poem_num"
-      android:id="@id/yomi_info_search_poem_num"
+      android:id="@id/command_button_poem_num"
       android:paddingLeft="@dimen/title_bar_margin_each"
     />
   </LinearLayout>
   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" 
       android:orientation="horizontal"
-      android:id="@+id/yomi_info_search_kimariji_container"
+      android:id="@+id/command_button_kimariji_container"
     >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/title_bar_kimariji"
@@ -34,7 +34,7 @@
       android:textColor="@android:color/white"
       android:textSize="@dimen/title_bar_large_text"
       android:paddingLeft="@dimen/title_bar_margin_each"
-      android:id="@id/yomi_info_search_kimariji"
+      android:id="@id/command_button_kimariji"
     />
   </LinearLayout>
 </LinearLayout>

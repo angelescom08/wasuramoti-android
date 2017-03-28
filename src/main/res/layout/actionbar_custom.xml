@@ -20,7 +20,7 @@
     </LinearLayout>
     <ViewStub
       android:id="@+id/yomi_info_bar_container"
-      android:layout="@layout/yomi_info_search_title_onerow"
+      android:layout="@layout/command_button_title_onerow"
       android:layout_width="wrap_content" android:layout_height="match_parent"
       android:layout_alignParentTop="true"
       android:layout_toRightOf="@id/actionbar_blue_ring_container" />
