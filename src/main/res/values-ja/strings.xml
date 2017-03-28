@@ -154,7 +154,7 @@
 
   <string name="skip_button">スキップ</string>
   
-  <string name="yomi_info_search_detail_title">決まり字の変化</string>
+  <string name="kimariji_changelog_title">決まり字の変化</string>
   <string name="kimariji_changelog_joka">
     序歌は全ての歌の前に詠まれる歌なので決まり字はありません．
   </string>

@@ -160,7 +160,7 @@
 
   <string name="skip_button">Skip</string>
   
-  <string name="yomi_info_search_detail_title">Kimariji Log</string>
+  <string name="kimariji_changelog_title">Kimariji Change Log</string>
   <string name="kimariji_changelog_joka">
     `Joka` is an introduction poem which is played before all poems. Therefore it has no Kimariji.
   </string>

@@ -207,7 +207,7 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
         override def onClick(btn:View,tag:String){
           val was = getActivity.asInstanceOf[WasuramotiActivity]
           if(tag == YomiInfoSearchDialog.PREFIX_KIMARIJI + "_LOG"){
-            showYomiInfoDetailDialog()
+            showKimarijiChangelogDialog()
           }else if(tag == YomiInfoSearchDialog.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true
@@ -308,17 +308,17 @@ class YomiInfoSearchDialog extends DialogFragment with GetFudanum{
       }})
     view
   }
-  def showYomiInfoDetailDialog(){
-    val dlg = new YomiInfoDetailDialog()
+  def showKimarijiChangelogDialog(){
+    val dlg = new KimarijiChangelogDialog()
     dlg.setArguments(getArguments)
-    dlg.show(getActivity.getSupportFragmentManager,"yomi_info_detail")
+    dlg.show(getActivity.getSupportFragmentManager,"kimariji_log")
   }
 }
 
 
-class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
+class KimarijiChangelogDialog extends DialogFragment with GetFudanum{
   def addRow(table:LinearLayout,text:String){
-    val item = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail_row,null)
+    val item = LayoutInflater.from(getActivity).inflate(R.layout.kimariji_changelog_row,null)
     val v_text = item.findViewById(R.id.kimariji_changelog_row).asInstanceOf[TextView]
     v_text.setText(Html.fromHtml(text))
     table.addView(item)
@@ -370,11 +370,11 @@ class YomiInfoDetailDialog extends DialogFragment with GetFudanum{
   }
   override def onCreateDialog(saved:Bundle):Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
-    val view = LayoutInflater.from(getActivity).inflate(R.layout.yomi_info_search_detail,null)
+    val view = LayoutInflater.from(getActivity).inflate(R.layout.kimariji_changelog,null)
     val table = view.findViewById(R.id.kimariji_changelog).asInstanceOf[LinearLayout]
     addKimarijiChangelog(table,getFudanum)
     builder
-    .setTitle(getActivity.getString(R.string.yomi_info_search_detail_title))
+    .setTitle(getActivity.getString(R.string.kimariji_changelog_title))
     .setView(view)
     .setPositiveButton(android.R.string.ok,null)
     .create

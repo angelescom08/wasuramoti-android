@@ -5,8 +5,6 @@ Code Refactoring:
   * Move fromAuto and fromSwipe inside bundle in KarutaPlayer
   * Rename JNI files
    - split folders into ogg decoding and Open SLES Player.
-  * Replace `YomiInfoSearchDialog` to `YomiInfoDetailDialog`
-   - also replace `yomi_info_search` to `yomi_info_detail`
   * Call unregisterOnSharedPreferenceChangeListener in somewhere not from onDestroy
    - onDestroy is only called when device is rotated or Activity is finished
    - that means that it would be not called when moved from ConfActivity -> WasuramotiActivity ?
