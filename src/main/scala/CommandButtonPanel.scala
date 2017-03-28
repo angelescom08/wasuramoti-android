@@ -309,7 +309,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     view
   }
   def showKimarijiChangelogDialog(){
-    val dlg = new KimarijiChangelogDialog()
+    val dlg = new KimarijiChangelogDialog
     dlg.setArguments(getArguments)
     dlg.show(getActivity.getSupportFragmentManager,"kimariji_log")
   }
