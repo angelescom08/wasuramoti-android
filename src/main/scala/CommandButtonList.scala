@@ -30,7 +30,6 @@ class CommandButtonList(context:Context,attrs:AttributeSet) extends LinearLayout
       case CommandButtonPanel.PREFIX_DISPLAY | CommandButtonPanel.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
       case CommandButtonPanel.PREFIX_KIMARIJI => R.drawable.ic_action_storage
       case CommandButtonPanel.PREFIX_SWITCH => R.drawable.ic_action_refresh
-      case CommandButtonPanel.PREFIX_SEARCH => R.drawable.ic_action_web_site
     }
     val img = context.getResources.getDrawable(drawable)
     button.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)

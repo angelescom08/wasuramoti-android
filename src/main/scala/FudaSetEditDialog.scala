@@ -14,18 +14,14 @@ class FudaSetEditDialog(
   context:Context,
   is_add:Boolean,
   callback:FudaSetWithSize=>Unit,
-  orig_title:String) extends AlertDialog(context) with View.OnClickListener with CustomAlertDialogTrait{
+  orig_title:String) extends AlertDialog(context) with ButtonListener with CustomAlertDialogTrait{
 
-  val buttonMapping = Map(
+  override def buttonMapping = Map(
       R.id.button_fudasetedit_list -> buttonFudasetEditList _,
       R.id.button_fudasetedit_initial -> buttonFudasetEditInitial _,
       R.id.button_fudasetedit_num -> buttonFudasetEditNum _,
       R.id.fudasetedit_help_html -> helpHtmlClicked _
     )
-
-  override def onClick(view:View){
-    buttonMapping.get(view.getId).foreach{_()}
-  }
 
   var data_id = None:Option[Long]
 
@@ -49,9 +45,7 @@ class FudaSetEditDialog(
     }
     val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
     help_view.setText(Html.fromHtml(context.getString(R.string.fudasetedit_help_html)))
-    for(id <- buttonMapping.keys){
-      view.findViewById(id).setOnClickListener(this)
-    }
+    setButtonMapping(view)
     setViewAndButton(view)
     super.onCreate(bundle)
   }

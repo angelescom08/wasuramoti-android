@@ -143,8 +143,6 @@
     <item>N.SWITCH_LANG|翻訳</item>
     <item>N.SWITCH_MODE|取り札;詠み札</item>
     <item>N.KIMARIJI_LOG|決まり字</item>
-    <item>P.SEARCH_TEXT|詠み句</item>
-    <item>P.SEARCH_AUTHOR|歌人</item>
   </string-array>
 
   <string name="repeat_button_format">%sの句をもう一度</string>
@@ -662,7 +660,7 @@
     </p>
     <div><font color="#CCFFFF"><b>Stream Type</b></font></div>
     <p>
-      Androidにはいくつか音源(Stream)があり，それぞれがボリュームを保持しています．このアプリのデフォルトは<tt>Music</tt>ですが，これを<tt>Ring</tt>に変えると機種によってはイヤホンを付けても本体スピーカーから再生できたりします．
+      Androidにはいくつか使用用途に応じた音源(Stream)があります．このアプリのデフォルトは<tt>音楽</tt>ですが，これを例えば<tt>電話の通話音</tt>に変えると機種によってはイヤホンを付けても本体スピーカーから再生できたりします，ただしその場合は詠み上げの最中に通話アプリを使うと音声が混ったりおかしなことになるかもしれないので注意して下さい．
     </p>
 
     ]]>
@@ -674,10 +672,12 @@
   <string name="rewind_button_invalid">山札に戻すべき札がありません</string>
   <string name="rewind_only_for_shuffle">流しは順番がシャッフルの時のみ有効です</string>
   <string name="conf_kimari_simo">下の句の決まり字を表示</string>
-  <string name="conf_kimari_simo_summary">注意: 決まり字は現代仮名遣いです（けふ→きょう，あふ→おお）</string>
+  <string name="conf_kimari_simo_summary">決まり字は現代仮名遣いです（けふ→きょう，あふ→おお）</string>
   <string name="rewind_button">流し</string>
-
 
   <string name="category_button">ボタン</string>
   <string name="category_misc">いろいろ</string>
+
+  <string name="poem_desc_search_poem">詠み句</string>
+  <string name="poem_desc_search_author">歌人</string>
 </resources>

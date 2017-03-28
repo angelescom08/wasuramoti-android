@@ -17,22 +17,19 @@ class FudaSetWithSize(val title:String, val num:Int){
   }
 
 }
-class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with View.OnClickListener{
+class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with ButtonListener{
   var listItems = new ArrayList[FudaSetWithSize]()
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 
-  val buttonMapping = Map(
+  override def buttonMapping = Map(
       R.id.button_fudaset_edit -> editFudaSet _,
       R.id.button_fudaset_new ->  newFudaSet _,
       R.id.button_fudaset_delete ->  deleteFudaSet _,
       R.id.button_fudaset_copymerge -> copymergeFudaSet _,
       R.id.button_fudaset_reorder -> reorderFudaSet _
     )
-  override def onClick(view:View){
-    buttonMapping.get(view.getId).foreach{_()}
-  }
 
   override def getAbbrValue():String = Globals.db_lock.synchronized{
     val title = getPersistedString("")
@@ -77,9 +74,7 @@ class FudaSetPreference(context:Context,attrs:AttributeSet) extends DialogPrefer
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
     refreshListItems
-    for(id <- buttonMapping.keys){
-      view.findViewById(id).setOnClickListener(this)
-    }
+    setButtonMapping(view)
     return view
   }
 

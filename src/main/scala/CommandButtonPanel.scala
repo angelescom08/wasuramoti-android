@@ -1,12 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 import android.support.v4.app.{DialogFragment,Fragment}
-import android.content.{Context,Intent}
+import android.content.Context
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,LinearLayout,Button}
 import android.os.Bundle
-import android.net.Uri
 import android.text.{Html,Spanned}
-import android.app.{AlertDialog,SearchManager,Dialog}
+import android.app.{AlertDialog,Dialog}
 
 // The constructor of Fragment must be empty since when fragment is recreated,
 // The empty constructor is called.
@@ -19,7 +18,6 @@ object CommandButtonPanel{
   val PREFIX_DISPLAY = "L.DISPLAY"
   val PREFIX_SWITCH = "N.SWITCH"
   val PREFIX_KIMARIJI = "N.KIMARIJI"
-  val PREFIX_SEARCH = "P.SEARCH"
   def newInstance(fudanum:Option[Int]):CommandButtonPanel = {
     val fragment = new CommandButtonPanel
     val args = new Bundle
@@ -48,12 +46,6 @@ object CommandButtonPanel{
   }
 }
 
-trait GetFudanum {
-  self:Fragment =>
-  def getFudanum():Option[Int] = {
-    Option(self.getArguments.getSerializable("fudanum").asInstanceOf[Option[Int]]).flatten
-  }
-}
 
 class CommandButtonPanel extends Fragment with GetFudanum{
   def enableDisplayButton(enabled:Boolean,force:Map[String,Boolean]=Map()){
@@ -107,50 +99,6 @@ class CommandButtonPanel extends Fragment with GetFudanum{
         btn.setText(getSwitchModeButtonText(tag,torifuda_mode))
       }
     }
-  }
-  def doWebSearch(fudanum:Option[Int],mode:String){
-    val query = if(mode == "TEXT"){
-      fudanum.map{ num =>
-        AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(num))
-      }.getOrElse{
-        getActivity.getString(R.string.search_text_default)
-      }
-    }else{
-      fudanum.map{ num =>
-        AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(num)).replace(" ","")
-      }.getOrElse{
-        getActivity.getString(R.string.search_text_default)
-      } + " " + getActivity.getString(R.string.search_text_author)
-    }
-    val f1 = {() =>
-      val intent = new Intent(Intent.ACTION_WEB_SEARCH)
-      intent.putExtra(SearchManager.QUERY,query)
-      Left(intent)
-    }
-    val f2 = {() =>
-      val intent = new Intent(Intent.ACTION_VIEW)
-      intent.setData(Uri.parse("http://www.google.com/search?q="+Uri.encode(query)))
-      Left(intent)
-    }
-    val f3 = {() =>
-      Right({() =>
-        Utils.messageDialog(getActivity,Right(R.string.browser_not_found))
-      })
-    }
-    // scala.util.control.Breaks.break does not work (why?)
-    // Therefore we use `exists` in Traversable trait instead
-    Seq(f1,f2,f3) exists {f=>
-        f() match {
-          case Left(intent) =>
-            try{
-              startActivity(intent)
-              true
-            }catch{
-              case _:android.content.ActivityNotFoundException => false
-            }
-          case Right(g) => {g();true}
-        }
-      }
   }
   def getCurYomiInfoView():Option[YomiInfoView] = {
     val yi = getActivity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
@@ -237,8 +185,6 @@ class CommandButtonPanel extends Fragment with GetFudanum{
               vw.invalidate
               enableDisplayButton(true)
             }
-          }else if(tag.startsWith(CommandButtonPanel.PREFIX_SEARCH+"_")){
-            doWebSearch(getFudanum,tag.split("_")(1))
           }else if(tag == CommandButtonPanel.PREFIX_REWIND+"_PREV"){
             KarutaPlayUtils.rewind(was)
           }else if(tag == CommandButtonPanel.PREFIX_REPLAY+"_LAST"){

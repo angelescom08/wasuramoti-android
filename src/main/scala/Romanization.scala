@@ -3,7 +3,6 @@ package karuta.hpnpwd.wasuramoti
 import android.content.Context
 import android.widget.EditText
 import android.util.AttributeSet
-import java.util.Locale
 
 import com.wanakanajava.WanaKanaJava
 

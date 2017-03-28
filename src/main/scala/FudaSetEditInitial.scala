@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
-import android.view.{View,LayoutInflater,ViewGroup}
+import android.view.{View,ViewGroup}
 import scala.collection.mutable
 
 class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
