@@ -142,6 +142,7 @@
     <item>N.SWITCH_ROMAJI|ローマ字</item>
     <item>N.SWITCH_LANG|翻訳</item>
     <item>N.SWITCH_MODE|取り札;詠み札</item>
+    <item>N.POEM_DESC|歌意</item>
     <item>N.KIMARIJI_LOG|決まり字</item>
   </string-array>
 

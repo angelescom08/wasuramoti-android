@@ -149,6 +149,7 @@
     <item>N.SWITCH_ROMAJI|Romaji</item>
     <item>N.SWITCH_MODE|Torifuda;Yomifuda</item>
     <item>N.KIMARIJI_LOG|Kimariji</item>
+    <item>N.POEM_DESC|Meaning</item>
   </string-array>
 
   <string name="repeat_button_format">Replay %s Half</string>

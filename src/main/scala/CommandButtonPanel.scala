@@ -18,6 +18,7 @@ object CommandButtonPanel{
   val PREFIX_DISPLAY = "L.DISPLAY"
   val PREFIX_SWITCH = "N.SWITCH"
   val PREFIX_KIMARIJI = "N.KIMARIJI"
+  val PREFIX_POEM = "N.POEM"
   def newInstance(fudanum:Option[Int]):CommandButtonPanel = {
     val fragment = new CommandButtonPanel
     val args = new Bundle
@@ -156,6 +157,9 @@ class CommandButtonPanel extends Fragment with GetFudanum{
           val was = getActivity.asInstanceOf[WasuramotiActivity]
           if(tag == CommandButtonPanel.PREFIX_KIMARIJI + "_LOG"){
             showKimarijiChangelogDialog()
+          }else if(tag == CommandButtonPanel.PREFIX_POEM + "_DESC"){
+            PoemDescriptionDialog.newInstance(getFudanum)
+              .show(getActivity.getSupportFragmentManager,"poem_description_dialog")
           }else if(tag == CommandButtonPanel.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true

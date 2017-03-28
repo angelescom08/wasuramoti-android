@@ -114,7 +114,8 @@ class WasuramotiFragment extends Fragment{
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
               if(view.cur_num.nonEmpty){
-                PoemDescriptionDialog.newInstance(view.cur_num).show(getChildFragmentManager,"poem_description_dialog")
+                PoemDescriptionDialog.newInstance(view.cur_num)
+                  .show(getChildFragmentManager,"poem_description_dialog")
               }
               return true
             }
