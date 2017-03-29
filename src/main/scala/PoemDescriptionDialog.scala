@@ -20,16 +20,26 @@ object PoemDescriptionDialog{
 class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonListener{
 
   override def buttonMapping = Map(
-    R.id.poem_desc_search_poem -> {()=>doWebSearch(getFudanum,false)},
-    R.id.poem_desc_search_author -> {()=>doWebSearch(getFudanum,false)}
+    R.id.poem_desc_search_poem -> {()=>doWebSearch(false)},
+    R.id.poem_desc_search_author -> {()=>doWebSearch(false)},
+    R.id.poem_desc_reference -> gotoReference _
     )
   override def onCreateDialog(saved:Bundle):Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.poem_description,null)
     setButtonMapping(view)
-    builder.setView(view).create
+    builder
+      .setView(view).create
   }
-  def doWebSearch(fudanum:Option[Int],search_author:Boolean){
+  def gotoReference(){
+    getFudanum.foreach{ num =>
+      val intent = new Intent(Intent.ACTION_VIEW)
+      intent.setData(Uri.parse("https://www.shigureden.or.jp/about/database_03.html?id="+num))
+      startActivity(intent)
+    }
+  }
+  def doWebSearch(search_author:Boolean){
+    val fudanum = getFudanum
     val query = if(!search_author){
       fudanum.map{ num =>
         AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(num))

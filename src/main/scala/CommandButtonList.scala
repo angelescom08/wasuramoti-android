@@ -19,18 +19,19 @@ class CommandButtonList(context:Context,attrs:AttributeSet) extends LinearLayout
     m_on_click_listener = listener
   }
   def genButton(yiv:Option[YomiInfoView], tag:String,text:String,enabled:Boolean):Button = {
+    import CommandButtonPanel._
     val button = LayoutInflater.from(context).inflate(R.layout.command_button_panel_button,null).asInstanceOf[Button]
     button.setTag(tag)
     button.setText(text)
     button.setEnabled(enabled)
     val drawable = tag.split("_").head match{
-      case CommandButtonPanel.PREFIX_REWIND => R.drawable.ic_action_previous
-      case CommandButtonPanel.PREFIX_REPLAY => R.drawable.ic_action_replay
-      case CommandButtonPanel.PREFIX_NEXT => R.drawable.ic_action_next
-      case CommandButtonPanel.PREFIX_DISPLAY | CommandButtonPanel.PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
-      case CommandButtonPanel.PREFIX_KIMARIJI => R.drawable.ic_action_storage
-      case CommandButtonPanel.PREFIX_SWITCH => R.drawable.ic_action_refresh
-      case CommandButtonPanel.PREFIX_POEM => R.drawable.ic_action_about
+      case PREFIX_REWIND => R.drawable.ic_action_previous
+      case PREFIX_REPLAY => R.drawable.ic_action_replay
+      case PREFIX_NEXT => R.drawable.ic_action_next
+      case PREFIX_DISPLAY | PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
+      case PREFIX_KIMARIJI => R.drawable.ic_action_storage
+      case PREFIX_SWITCH => R.drawable.ic_action_refresh
+      case PREFIX_POEM => R.drawable.ic_action_about
     }
     val img = context.getResources.getDrawable(drawable)
     button.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)

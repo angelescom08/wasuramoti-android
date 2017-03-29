@@ -679,6 +679,9 @@
   <string name="category_button">ボタン</string>
   <string name="category_misc">いろいろ</string>
 
+  <string name="poem_desc_search_label">Web検索:</string>
   <string name="poem_desc_search_poem">詠み句</string>
   <string name="poem_desc_search_author">歌人</string>
+  <string name="poem_desc_reference_label">引用元:</string>
+  <string name="poem_desc_reference">時雨殿</string>
 </resources>

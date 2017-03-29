@@ -148,8 +148,8 @@
     <item>N.SWITCH_LANG|Translate</item>
     <item>N.SWITCH_ROMAJI|Romaji</item>
     <item>N.SWITCH_MODE|Torifuda;Yomifuda</item>
-    <item>N.KIMARIJI_LOG|Kimariji</item>
     <item>N.POEM_DESC|Meaning</item>
+    <item>N.KIMARIJI_LOG|Kimariji</item>
   </string-array>
 
   <string name="repeat_button_format">Replay %s Half</string>
@@ -714,6 +714,9 @@
   <string name="category_button">Button</string>
   <string name="category_misc">Misc</string>
 
+  <string name="poem_desc_search_label">Web Search:</string>
   <string name="poem_desc_search_poem">Poem</string>
   <string name="poem_desc_search_author">Author</string>
+  <string name="poem_desc_reference_label">Source:</string>
+  <string name="poem_desc_reference">Shigureden</string>
 </resources>
