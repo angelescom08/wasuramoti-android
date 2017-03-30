@@ -719,4 +719,10 @@
   <string name="poem_desc_search_author">Author</string>
   <string name="poem_desc_reference_label">Source:</string>
   <string name="poem_desc_reference">Shigureden</string>
+  <string name="poem_desc_body">
+    <![CDATA[
+      %s<br>
+
+    ]]>
+  </string>
 </resources>

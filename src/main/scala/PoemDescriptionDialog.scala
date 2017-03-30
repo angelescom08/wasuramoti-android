@@ -3,9 +3,11 @@ package karuta.hpnpwd.wasuramoti
 import android.support.v4.app.DialogFragment
 import android.app.{AlertDialog,Dialog,SearchManager}
 import android.os.Bundle
+import android.widget.TextView
 import android.view.LayoutInflater
 import android.content.Intent
 import android.net.Uri
+import android.text.Html
 
 object PoemDescriptionDialog{
   def newInstance(fudanum:Option[Int]):PoemDescriptionDialog = {
@@ -21,15 +23,23 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
 
   override def buttonMapping = Map(
     R.id.poem_desc_search_poem -> {()=>doWebSearch(false)},
-    R.id.poem_desc_search_author -> {()=>doWebSearch(false)},
+    R.id.poem_desc_search_author -> {()=>doWebSearch(true)},
     R.id.poem_desc_reference -> gotoReference _
     )
   override def onCreateDialog(saved:Bundle):Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.poem_description,null)
+    getFudanum.foreach{ num =>
+      val poem = AllFuda.get(getActivity,R.array.list_full)(num)
+      val theme = AllFuda.get(getActivity,R.array.poem_theme)(num-1)
+      val desc = AllFuda.get(getActivity,R.array.poem_description)(num-1)
+      val author =AllFuda.get(getActivity,R.array.author)(num)
+      val author_desc = AllFuda.get(getActivity,R.array.author_description)(num-1)
+      val body = getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,theme,desc,author,author_desc)
+      view.findViewById(R.id.poem_desc_body).asInstanceOf[TextView].setText(Html.fromHtml(body))
+    }
     setButtonMapping(view)
-    builder
-      .setView(view).create
+    builder.setView(view).create
   }
   def gotoReference(){
     getFudanum.foreach{ num =>
