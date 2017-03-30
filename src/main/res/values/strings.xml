@@ -148,8 +148,8 @@
     <item>N.SWITCH_LANG|Translate</item>
     <item>N.SWITCH_ROMAJI|Romaji</item>
     <item>N.SWITCH_MODE|Torifuda;Yomifuda</item>
-    <item>N.POEM_DESC|Info</item>
-    <item>N.KIMARIJI_LOG|Kimariji</item>
+    <item>P.POEM_DESC|Info</item>
+    <item>P.KIMARIJI_LOG|Kimariji</item>
   </string-array>
 
   <string name="repeat_button_format">Replay %s Half</string>

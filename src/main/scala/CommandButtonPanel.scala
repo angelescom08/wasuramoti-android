@@ -17,8 +17,8 @@ object CommandButtonPanel{
   val PREFIX_NEXT = "K.NEXT"
   val PREFIX_DISPLAY = "L.DISPLAY"
   val PREFIX_SWITCH = "N.SWITCH"
-  val PREFIX_KIMARIJI = "N.KIMARIJI"
-  val PREFIX_POEM = "N.POEM"
+  val PREFIX_KIMARIJI = "P.KIMARIJI"
+  val PREFIX_POEM = "P.POEM"
   def newInstance(fudanum:Option[Int]):CommandButtonPanel = {
     val fragment = new CommandButtonPanel
     val args = new Bundle
