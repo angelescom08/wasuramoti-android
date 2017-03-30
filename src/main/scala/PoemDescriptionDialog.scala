@@ -53,7 +53,10 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
       view.findViewById(R.id.poem_desc_body).asInstanceOf[TextView].setText(Html.fromHtml(body))
     }
     setButtonMapping(view)
-    builder.setView(view).create
+    builder
+      .setView(view)
+      .setPositiveButton(android.R.string.ok,null)
+      .create
   }
   def gotoReference(){
     getFudanum.foreach{ num =>
