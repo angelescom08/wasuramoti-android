@@ -30,11 +30,18 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.poem_description,null)
     getFudanum.foreach{ num =>
+      val source_id = if(num == 0){
+        R.string.poem_desc_reference_wikipedia
+      }else{
+        R.string.poem_desc_reference_shigureden
+      }
+      view.findViewById(R.id.poem_desc_reference).asInstanceOf[TextView].setText(source_id)
+
       val poem = AllFuda.get(getActivity,R.array.list_full)(num)
-      val theme = AllFuda.get(getActivity,R.array.poem_theme)(num-1)
-      val desc = AllFuda.get(getActivity,R.array.poem_description)(num-1)
+      val theme = AllFuda.get(getActivity,R.array.poem_theme)(num)
+      val desc = AllFuda.get(getActivity,R.array.poem_description)(num)
       val author =AllFuda.get(getActivity,R.array.author)(num)
-      val author_desc = AllFuda.get(getActivity,R.array.author_description)(num-1)
+      val author_desc = AllFuda.get(getActivity,R.array.author_description)(num)
       val body = getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,theme,desc,author,author_desc)
       view.findViewById(R.id.poem_desc_body).asInstanceOf[TextView].setText(Html.fromHtml(body))
     }
@@ -44,7 +51,12 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
   def gotoReference(){
     getFudanum.foreach{ num =>
       val intent = new Intent(Intent.ACTION_VIEW)
-      intent.setData(Uri.parse("https://www.shigureden.or.jp/about/database_03.html?id="+num))
+      val url = if(num == 0){
+        getString(R.string.poem_desc_reference_wikipedia_url)
+      }else{
+        "https://www.shigureden.or.jp/about/database_03.html?id="+num
+      }
+      intent.setData(Uri.parse(url))
       startActivity(intent)
     }
   }
@@ -54,14 +66,14 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
       fudanum.map{ num =>
         AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.list_full)(num))
       }.getOrElse{
-        getActivity.getString(R.string.search_text_default)
+        getString(R.string.search_text_default)
       }
     }else{
       fudanum.map{ num =>
         AllFuda.removeInsideParens(AllFuda.get(getActivity,R.array.author)(num)).replace(" ","")
       }.getOrElse{
-        getActivity.getString(R.string.search_text_default)
-      } + " " + getActivity.getString(R.string.search_text_author)
+        getString(R.string.search_text_default)
+      } + " " + getString(R.string.search_text_author)
     }
     val f1 = {() =>
       val intent = new Intent(Intent.ACTION_WEB_SEARCH)
