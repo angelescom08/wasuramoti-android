@@ -45,7 +45,7 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
         val theme = AllFuda.get(getActivity,R.array.poem_theme)(num)
         getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,theme,desc,author,author_desc)
       }else{
-        val author = AllFuda.get(getActivity,R.array.author_en)(num)
+        val author = AllFuda.get(getActivity,R.array.author_romaji)(num)
         val romaji = AllFuda.get(getActivity,R.array.list_full_romaji)(num).replaceAllLiterally("|"," ")
         val eng =  AllFuda.get(getActivity,R.array.list_full_en)(num).replaceAll("(//|##)"," ")
         getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,romaji,eng,desc,author,author_desc)
