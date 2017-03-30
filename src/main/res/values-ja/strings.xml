@@ -688,7 +688,7 @@
   <string name="poem_desc_body">
     <![CDATA[
     <font color="#66CC99"><u>句</u></font><br>
-    %1$d. %2$s<br>
+    &nbsp;&nbsp;%1$d. %2$s<br>
     <font color="#66CC99"><u>主題</u></font><br>
     &nbsp;&nbsp;%3$s<br>
     <font color="#66CC99"><u>歌意</u></font><br>

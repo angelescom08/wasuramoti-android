@@ -723,8 +723,16 @@
   <string name="poem_desc_reference_wikipedia_url">https://en.wikipedia.org/wiki/Wani_(scholar)</string>
   <string name="poem_desc_body">
     <![CDATA[
-      %s<br>
-
+			<font color="#66CC99"><u>Poem</u></font><br>
+			&nbsp;&nbsp;%1$d. %2$s<br>
+			<font color="#66CC99"><u>Romaji</u></font><br>
+			&nbsp;&nbsp;%3$s<br>
+			<font color="#66CC99"><u>English</u></font><br>
+			&nbsp;&nbsp;%4$s<br>
+			<font color="#66CC99"><u>Meaning</u></font><br>
+			&nbsp;&nbsp;%5$s<br>
+			<font color="#66CC99"><u>Author</u></font><br>
+			&nbsp;&nbsp;%6$s %7$s<br>
     ]]>
   </string>
 </resources>
