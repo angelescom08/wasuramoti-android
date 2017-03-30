@@ -23,10 +23,8 @@ object AllFuda{
     }
   }
 
-  var cache = new mutable.HashMap[Int,Array[String]]
-  // TODO: do we really have to cache resource ? does'nt Android do the job ?
   def get(context:Context,id:Int):Array[String] ={
-    cache.getOrElseUpdate(id,context.getResources.getStringArray(id))
+    context.getResources.getStringArray(id)
   }
 
   val INSIDE_PARENS = """\((.*?)\)""".r
