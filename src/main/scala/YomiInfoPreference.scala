@@ -202,9 +202,8 @@ class QuickConfigDialog extends DialogFragment{
         val act = getActivity.asInstanceOf[WasuramotiActivity]
         which match{
           case 5 =>
-            // Change Intended Use
             dismiss
-            ChangeIntendedUse.run(act,false)
+            IntendedUseDialog.newInstance(false).show(getFragmentManager,"intended_use_dialog")
             return
           case 4 =>
             // Translation

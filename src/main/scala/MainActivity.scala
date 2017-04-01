@@ -506,8 +506,8 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     restartRefreshTimer()
     startDimLockTimer()
     Globals.prefs.foreach{ p =>
-      if(!p.contains("intended_use")){
-        ChangeIntendedUse.run(this,true)
+      if(!p.contains("intended_use") && getSupportFragmentManager.findFragmentByTag("intended_use_dialog") == null){
+        IntendedUseDialog.newInstance(true).show(getSupportFragmentManager,"intended_use_dialog")
       }
     }
     if(NotifyTimerUtils.notify_timers.nonEmpty){
