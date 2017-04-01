@@ -1,6 +1,6 @@
 [About]
   App Name: Hyakunin Isshu - Wasuramoti
-  App Version: 1.0.4
+  App Version: 1.0.5
   Developer: Haruhiro Yoshimoto <pjmtdw@gmail.com>
   Required OS: Android OS version >= 2.2
   Required CPU: ARM, ARM-v7a, x86, MIPS
@@ -62,11 +62,11 @@ __END_CREDITS__
 [How to build apk file]
   Requirements:
     # general installment from package manager in linux
-      IcedTea JDK 7 (or some other Java JDK )
-      scala 2.11.7
+      OpenJDK 7 (or some other Java JDK )
+      scala 2.11.8
       sbt 0.13.12 (A Scala-Based Simple Build Tool)
     # written in project/plugins.sbt and downloaded from github
-      android-sdk-plugin 1.6.10 (https://github.com/scala-android/sbt-android)
+      android-sdk-plugin 1.7.6 (https://github.com/scala-android/sbt-android)
     # downloaded from official Android SDK/NDK site and Android SDK manager
       Android SDK v24 (https://developer.android.com/sdk/index.html#download)
       Android NDK v12 (https://developer.android.com/tools/sdk/ndk/index.html#Installing)
