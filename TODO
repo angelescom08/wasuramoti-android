@@ -61,7 +61,6 @@ Priority High:
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
   * Also test vibrate in notify timer.
   * Add more [] to index.
-  * Use Seekbar for moving poem
   * Search by poem number
   * Show some information on audio volume config
     - current play state
@@ -75,10 +74,6 @@ Priority High:
     - Support other than 22050 mono audio.
   * Add "Enable Equalizer" checkbox.
   * Append all the DB table data compressed in anonymous bug report form.
-  * Sort the poem search result by score
-    - https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
-  * Show move position dialog instead of button list when poem text is long pressed
-  * Able to create poem set which contains range of poem number using GUI
   * Share poem set groups
    - Use https://github.com/kazuho/golombset for generating poem set group URI
   * Add link to http://pjmtdw.github.io/wasuramoti/fudaset.html inside app
@@ -88,9 +83,9 @@ Priority High:
   * Customize order and avaliability of each poem info buttons.
   * Add timeout for Utils.walkdir()
     - Change to Iterative Deepening Depth First Search ?
-  * Add option for switching number of button columns between one and two.
 
 Priority Medium-High:
+  * Add option for switching number of button columns between one and two.
   * Warn that karafuda mode is disabled in memorization mode more user friendly.
   * Forbid deleting last poem set.
   * Encrypt Bug Report
