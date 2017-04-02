@@ -45,4 +45,12 @@ class MainTest extends JUnitSuite with Matchers {
       val found = PoemSearchUtils.doSearch(context,Array(index_poem,index_author),"ぬ")
       found shouldBe Set(1,10,11,13,20,24,28,32,36,37,45,46,52,53,55,57,61,65,72,74,75,78,82,87,90,92,97)
   }
+
+  @Test
+  def testAllFuda(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    val author = AllFuda.get(context,R.array.author)(76)
+    val shrinked = AllFuda.shrinkAuthorParens(author)
+    shrinked shouldBe "法性寺入道前関白太政大臣(ほっしょうじにゅうどうさきのかんぱくだいじょうだいじん)"
+  }
 }

@@ -34,6 +34,14 @@ object AllFuda{
   def onlyInsideParens(s:String):String = {
     INSIDE_PARENS.findAllMatchIn(s).map{_.group(1)}.mkString("")
   }
+
+  // "ABC(123) DEF(456)" => "ABCDEF(123456)"
+  def shrinkAuthorParens(s:String):String = {
+    val sa = removeInsideParens(s).replaceAll(" ","")
+    val sb = onlyInsideParens(s)
+    s"${sa}(${sb})"
+  }
+
   // We cannot use \p{IsHan} in Android DalvikVM
   val FURIGANA_PATTERN = """((\p{InCJKUnifiedIdeographs}|\p{InCJKSymbolsAndPunctuation})+)\((.*?)\)""".r
   def parseFurigana(str:String):Array[(String,String)] = {
