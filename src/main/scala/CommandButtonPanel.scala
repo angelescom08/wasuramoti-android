@@ -109,30 +109,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     }
   }
   override def onCreateView(inflater:LayoutInflater,container:ViewGroup,saved:Bundle):View = {
-    genContentView()
-  }
-
-  def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
-    val orig = getOrigText(tag)
-    val s = if(torifuda_mode){
-      1
-    }else{
-      0
-    }
-    orig.split(";")(s)
-  }
-
-  def haveToEnableDisplayButton(tag:String):Boolean = {
-    val p = Globals.prefs.get
-    tag.split("_")(1) match{
-      case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
-      case "FURIGANA" => ! p.getBoolean("yomi_info_furigana_show",false)
-      case _ => true
-    }
-  }
-
-  def genContentView():View = {
-    val view = LayoutInflater.from(getActivity).inflate(R.layout.command_button_panel,null)
+    val view = inflater.inflate(R.layout.command_button_panel,null)
     val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
     var items = getActivity.getResources.getStringArray(R.array.command_button_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
@@ -258,6 +235,26 @@ class CommandButtonPanel extends Fragment with GetFudanum{
       }})
     view
   }
+
+  def getSwitchModeButtonText(tag:String,torifuda_mode:Boolean):String ={
+    val orig = getOrigText(tag)
+    val s = if(torifuda_mode){
+      1
+    }else{
+      0
+    }
+    orig.split(";")(s)
+  }
+
+  def haveToEnableDisplayButton(tag:String):Boolean = {
+    val p = Globals.prefs.get
+    tag.split("_")(1) match{
+      case s @ ("AUTHOR"|"KAMI"|"SIMO") => ! p.getBoolean("yomi_info_"+s.toLowerCase,false)
+      case "FURIGANA" => ! p.getBoolean("yomi_info_furigana_show",false)
+      case _ => true
+    }
+  }
+
   def showKimarijiChangelogDialog(){
     val dlg = new KimarijiChangelogDialog
     dlg.setArguments(getArguments)
