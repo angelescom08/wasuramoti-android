@@ -14,6 +14,7 @@
   <string name="button_config_lang">言語設定</string>
   <string name="now_playing">再生中</string>
   <string name="now_auto_playing">連続再生中</string>
+  <string name="now_auto_playing_stop">連続: 残り%d分</string>
   <string name="now_stopped">停止</string>
   <string name="now_stopped_auto">%d秒停止</string>
   <string name="now_searching">検索中</string>
@@ -78,6 +79,8 @@
   <string name="conf_autoplay_summary">前の札を詠み終えたら自動的に次の札を詠む</string>
   <string name="autoplay_enable">詠み終えた後自動的に次の札を詠む</string>
   <string name="autoplay_span">間隔:</string>
+  <string name="autoplay_stop">自動停止</string>
+  <string name="autoplay_stop_minutes">停止まで:</string>
   <string name="autoplay_repeat">全部詠み終えたらシャッフルして最初から続ける</string>
 
   <string name="conf_play_after_swipe">移動時に再生</string>

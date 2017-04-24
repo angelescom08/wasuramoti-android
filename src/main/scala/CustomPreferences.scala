@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.text.{TextUtils,Html}
 
 import scala.collection.mutable
+import scala.util.Try
 
 class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   // We can set defaultValue="..." in src/main/res/xml/conf.xml
@@ -74,20 +75,20 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
     val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
     val repeat = view.findViewById(R.id.autoplay_repeat).asInstanceOf[CheckBox]
-    (enable,span,repeat)
+    val stop = view.findViewById(R.id.autoplay_stop).asInstanceOf[CheckBox]
+    val stop_minutes = view.findViewById(R.id.autoplay_stop_minutes).asInstanceOf[TextView]
+    (enable,span,repeat,stop,stop_minutes)
   }
   override def onDialogClosed(positiveResult:Boolean){
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
-        val (enable,span,repeat) = getWidgets(view)
+        val (enable,span,repeat,stop,stop_minutes) = getWidgets(view)
         edit.putBoolean("autoplay_enable",enable.isChecked)
         edit.putBoolean("autoplay_repeat",repeat.isChecked)
-        edit.putLong("autoplay_span",Math.max(1,try{
-            span.getText.toString.toInt
-          }catch{
-            case _:NumberFormatException => 1
-          }))
+        edit.putLong("autoplay_span",Math.max(1,Try{span.getText.toString.toInt}.getOrElse(1)))
+        edit.putBoolean("autoplay_stop",stop.isChecked)
+        edit.putLong("autoplay_stop_minutes",Math.max(1,Try{span.getText.toString.toInt}.getOrElse(30)))
         edit.commit
         notifyChangedPublic
       }
@@ -99,11 +100,13 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val view = LayoutInflater.from(context).inflate(R.layout.autoplay,null)
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
-    val (enable,span,repeat) = getWidgets(view)
+    val (enable,span,repeat,stop,stop_minutes) = getWidgets(view)
     val prefs = Globals.prefs.get
     enable.setChecked(prefs.getBoolean("autoplay_enable",false))
     repeat.setChecked(prefs.getBoolean("autoplay_repeat",false))
     span.setText(prefs.getLong("autoplay_span",DEFAULT_VALUE).toString)
+    stop.setChecked(prefs.getBoolean("autoplay_stop",false))
+    stop_minutes.setText(prefs.getLong("autoplay_stop_minutes",30).toString)
     switchVisibilityByCheckBox(root_view,enable,R.id.autoplay_layout)
     return view
   }

@@ -52,6 +52,7 @@ object Globals {
   var player = None:Option[KarutaPlayer]
   var player_none_reason = None:Option[String]
   var is_playing = false
+  var autoplay_started = None:Option[Long]
   var forceRefresh = false
   var forceRestart = false
   var audio_volume_bkup = None:Option[Int]

@@ -235,7 +235,9 @@ object KarutaPlayUtils{
           releaseResourcesHeldDuringAutoPlay(context)
         }
       }
-      if(auto && !Globals.player.isEmpty){
+      lazy val autoplay_stop = Globals.prefs.get.getBoolean("autoplay_stop",false) &&
+        Globals.autoplay_started.exists{ System.currentTimeMillis - _ > Globals.prefs.get.getLong("autoplay_stop_minutes",30) * 60 * 1000}
+      if(auto && !Globals.player.isEmpty && !autoplay_stop){
         val auto_delay = Globals.prefs.get.getLong("autoplay_span", 3)*1000
         startAutoTimer(auto_delay)
       }

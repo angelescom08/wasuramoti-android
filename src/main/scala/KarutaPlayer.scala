@@ -226,6 +226,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         }
         if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN && Globals.prefs.get.getBoolean("autoplay_enable",false)){
           bundle.putBoolean("autoplay",true)
+          if(!fromAuto){
+            Globals.autoplay_started = Some(System.currentTimeMillis)
+          }
         }
         
         if(set_audio_volume){

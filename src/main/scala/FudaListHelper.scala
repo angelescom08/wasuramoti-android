@@ -166,7 +166,12 @@ object FudaListHelper{
     val status = Some(
         if(Globals.is_playing){
           if(pref.getBoolean("autoplay_enable",false) && !Globals.player.exists(_.is_replay)){
-            res.getString(R.string.now_auto_playing)
+            if(pref.getBoolean("autoplay_stop",false)){
+              val min = pref.getLong("autoplay_stop_minutes",30).toInt
+              res.getString(R.string.now_auto_playing_stop, new java.lang.Integer(min))
+            }else{
+              res.getString(R.string.now_auto_playing)
+            }
           }else{
             res.getString(R.string.now_playing)
           }

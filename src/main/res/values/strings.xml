@@ -15,6 +15,7 @@
   <string name="button_config_lang">Language</string>
   <string name="now_playing">Playing</string>
   <string name="now_auto_playing">Auto Playing</string>
+  <string name="now_auto_playing_stop">Auto: %d min left</string>
   <string name="now_stopped">Stopped</string>
   <string name="now_stopped_auto">Stopped: %d sec</string>
   <string name="now_searching">Searching</string>
@@ -265,6 +266,8 @@
   <string name="conf_autoplay_summary">Start playing next poem when finished.</string>
   <string name="autoplay_enable">Start playing next poem when finished.</string>
   <string name="autoplay_span">Span:</string>
+  <string name="autoplay_stop">Auto Stop</string>
+  <string name="autoplay_stop_minutes">Stop After:</string>
   <string name="autoplay_repeat">After finishing all, shuffle and continue.</string>
 
   <string name="conf_play_after_swipe">Play after Move</string>
