@@ -606,8 +606,6 @@
   <string name="muted_of_audio_focus">---\n他のアプリが音を\n鳴らしているため\n無音で再生します\n---</string>
   <string name="copied_to_clipboard">クリップボードにコピーしました</string>
   <string name="ogg_decode_failed">音声デコード失敗．アプリを再起動すると直るかもしれませんが，これが頻繁に起こるならバグ報告して下さい．</string>
-  <string name="conf_auto_play_warning">※ 自動再生すると「バッテリを消耗させるアプリ」として検出されることもありますが，実際には大してバッテリ消費はしてないはずです．</string>
-
   <string name="audio_decode_test_title">音声のデコードテスト</string>
 
   <!-- canReadError -->

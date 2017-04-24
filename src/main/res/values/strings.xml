@@ -643,7 +643,6 @@
   <string name="muted_of_audio_focus">---\nOther app is playing,\nso we mute the voice.\n---</string>
   <string name="copied_to_clipboard">Copied to clipboard</string>
   <string name="ogg_decode_failed">Audio Decode Failed. Maybe restarting the app may solve the problem. However, give us bug report if this occurs frequently.</string>
-  <string name="conf_auto_play_warning">Note: If you use auto play, this app may be detected as `Battery Consuming App`. \nHowever, it would not actually consume so much battery.</string>
 
   <string name="audio_decode_test_title">Audio Decode Test</string>
 

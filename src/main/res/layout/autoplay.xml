@@ -39,12 +39,7 @@
           android:layout_width="wrap_content" android:layout_height="wrap_content"
           android:text="@string/autoplay_repeat"
           />
-      </LinearLayout>
       <include layout="@layout/horizontal_rule" />
-      <TextView
-        android:layout_height="wrap_content" android:layout_width="wrap_content"
-        android:text="@string/conf_auto_play_warning"
-        android:layout_marginBottom="4dp"
-        />
+      </LinearLayout>
     </LinearLayout>
 </ScrollView>
