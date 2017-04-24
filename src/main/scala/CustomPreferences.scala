@@ -88,7 +88,7 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         edit.putBoolean("autoplay_repeat",repeat.isChecked)
         edit.putLong("autoplay_span",Math.max(1,Try{span.getText.toString.toInt}.getOrElse(1)))
         edit.putBoolean("autoplay_stop",stop.isChecked)
-        edit.putLong("autoplay_stop_minutes",Math.max(1,Try{span.getText.toString.toInt}.getOrElse(30)))
+        edit.putLong("autoplay_stop_minutes",Math.max(1,Try{stop_minutes.getText.toString.toInt}.getOrElse(30)))
         edit.commit
         notifyChangedPublic
       }

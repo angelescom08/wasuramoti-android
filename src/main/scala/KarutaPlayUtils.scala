@@ -235,11 +235,16 @@ object KarutaPlayUtils{
           releaseResourcesHeldDuringAutoPlay(context)
         }
       }
-      lazy val autoplay_stop = Globals.prefs.get.getBoolean("autoplay_stop",false) &&
-        Globals.autoplay_started.exists{ System.currentTimeMillis - _ > Globals.prefs.get.getLong("autoplay_stop_minutes",30) * 60 * 1000}
-      if(auto && !Globals.player.isEmpty && !autoplay_stop){
-        val auto_delay = Globals.prefs.get.getLong("autoplay_span", 3)*1000
-        startAutoTimer(auto_delay)
+      if(auto && !Globals.player.isEmpty){
+
+        val autoplay_stop = Globals.prefs.get.getBoolean("autoplay_stop",false) &&
+          Globals.autoplay_started.exists{ System.currentTimeMillis - _ > Globals.prefs.get.getLong("autoplay_stop_minutes",30) * 60 * 1000}
+        if(autoplay_stop){
+          activity.setButtonTextByState()
+        }else{
+          val auto_delay = Globals.prefs.get.getLong("autoplay_span", 3)*1000
+          startAutoTimer(auto_delay)
+        }
       }
     }
   }
