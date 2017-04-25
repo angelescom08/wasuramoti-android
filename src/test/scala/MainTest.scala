@@ -6,6 +6,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.{Robolectric, RobolectricTestRunner, RuntimeEnvironment}
 import org.scalatest.Matchers
 import org.scalatest.junit.JUnitSuite
+import scala.collection.mutable
 
 @RunWith(classOf[RobolectricTestRunner])
 @Config(
@@ -52,5 +53,25 @@ class MainTest extends JUnitSuite with Matchers {
     val author = AllFuda.get(context,R.array.author)(76)
     val shrinked = AllFuda.shrinkAuthorParens(author)
     shrinked shouldBe "法性寺入道前関白太政大臣(ほっしょうじにゅうどうさきのかんぱくだいじょうだいじん)"
+  }
+  //@Test
+  def testRandomMode(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    Utils.initGlobals(context)
+    Utils.writeFudaSetToDB(context,"Test","め せ ちぎりお ひとも よのなかよ かぜそ みかき おおこ なげけ なにわが あわれ", 11)
+    val edit = Globals.prefs.get.edit
+    edit.putFloat("karafuda_urafuda_prob",0.5f)
+    edit.putInt("karafuda_append_num",3)
+    edit.putBoolean("karafuda_enable",true)
+		edit.putString("fudaset", "Test")
+    edit.commit()
+    FudaListHelper.updateSkipList(context)
+    val stats = mutable.Map[Int,Int]().withDefaultValue(0)
+    for(i <- 1 to 10000){
+      stats(FudaListHelper.queryRandom.get) += 1
+    }
+    for((k,v) <- stats.toSeq.sortBy(_._2)){
+			println(s"${AllFuda.list(k-1)}: ${v}")
+    }
   }
 }
