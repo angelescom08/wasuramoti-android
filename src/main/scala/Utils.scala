@@ -450,10 +450,8 @@ object Utils {
   // (2) Parse /system/etc/vold.fstab -> cannot use since Android >= 4.3 because it is removed.
   // (3) Parse /proc/mounts and find /dev/block/vold/* or vfat -> works until Android <= 4.4 (?)
   // see following for more info:
-  //   http://source.android.com/devices/tech/storage/
   //   http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location
   //   http://stackoverflow.com/questions/11281010/how-can-i-get-external-sd-card-path-for-android-4-0
-  //   https://code.google.com/p/wagic/source/browse/trunk/projects/mtg/Android/src/net/wagic/utils/StorageOptions.java
   // We use third method for Android < 4.0 (see following Updated)
   // [Updated]
   // As for Android >= 4.4 (?) it seems that parsing /proc/mounts does not work anymore since row containing vfat returns invalid path.
@@ -465,7 +463,7 @@ object Utils {
   // This API seems to added since Android >= 4.0 (or 3.2.4 ?) and works valid until at least Android 5.0.2
   // see
   //   core/java/android/os/storage/StorageManager.java
-  //    in https://github.com/android/platform_frameworks_base.git
+  //    in https://github.com/android/platform_frameworks_base 
   def getAllExternalStorageDirectories(context:Context):Set[File] = {
     val ret = mutable.Set[File]()
     val state = Environment.getExternalStorageState
@@ -732,7 +730,7 @@ object Utils {
     }.getOrElse(ic_off)
   }
   // Don't forget that Android >= 5.1 takes at least five seconds to trigger even using setExact
-  //   https://code.google.com/p/android/issues/detail?id=161516
+  //   https://issuetracker.google.com/code/p/android/issues/detail?id=161516
   def alarmManagerSetExact(manager:AlarmManager,typ:Int,triggerAtMillis:Long,operation:PendingIntent){
     if(android.os.Build.VERSION.SDK_INT >= 19){
       manager.setExact(typ,triggerAtMillis,operation)
@@ -806,7 +804,7 @@ object Utils {
   // See:
   //   http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
   //   http://stackoverflow.com/questions/13435654/how-to-grant-temporary-access-to-custom-content-provider-using-flag-grant-read-u
-  //   https://code.google.com/p/android/issues/detail?id=76683
+  //   https://issuetracker.google.com/code/p/android/issues/detail?id=76683
   val HAVE_TO_GRANT_CONTENT_PERMISSION = android.os.Build.VERSION.SDK_INT < 16 
   def grantUriPermissionsForExtraStream(context:Context,intent:Intent,uri:Uri){
     import collection.JavaConversions._

@@ -50,7 +50,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
 
     // Android has a bug RadioGroup.OnCheckedChangeListener is called twice when calling RadioGroup.check().
     // Therefore we use View.OnClickListener instead.
-    //   https://code.google.com/p/android/issues/detail?id=4785
+    //   https://issuetracker.google.com/code/p/android/issues/detail?id=4785
     val custom = view.findViewById(R.id.conf_read_order_each_custom)
     custom.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){

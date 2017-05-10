@@ -445,14 +445,14 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       // Thus this +200ms gives CPU free time and make DalvikVM to run GC and call the native destructor of AudioTrack.
       // Note that calling System.gc() seems to have no effect.
       // See the following for the bug info:
-      //   https://code.google.com/p/android/issues/detail?id=17995
+      //   https://issuetracker.google.com/code/p/android/issues/detail?id=17995
       val play_end_time = buffer_length_millisec+200
 
       // AudioTrack has a bug that onMarkerReached() is never invoked when static mode.
       // Therefore there seems no easy way to do a task when AudioTrack has finished playing.
       // As a workaround, I will start timer that ends when audio length elapsed.
       // See the following for the bug info:
-      //   https://code.google.com/p/android/issues/detail?id=2563
+      //   https://issuetracker.google.com/code/p/android/issues/detail?id=2563
       KarutaPlayUtils.startEndTimer(play_end_time,bundle)
 
       Globals.audio_track_failed_count = 0
@@ -611,7 +611,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     // otherwise it raises AbstractMethodError "abstract method not implemented"
     
     override def doInBackground(unused:AnyRef*):AnyRef = {
-      // According to "Order of execution" in http://developer.android.com/reference/android/os/AsyncTask.html
+      // According to "Order of execution" in https://developer.android.com/reference/android/os/AsyncTask.html
       // > Starting with HONEYCOMB, tasks are executed on a single thread to avoid common application errors caused by parallel execution.
       // Therefore maybe we don't need lock here. However, the behavior of AsyncTask is little bit confusing, so using Scala's Futures and Promises may be better choice.
       // TODO: Using AsyncTask seems not so convenient. maybe we should use Scala's Futures and Promises instead.

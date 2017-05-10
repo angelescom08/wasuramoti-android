@@ -542,7 +542,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
   // also not that this is not called when app is terminated by user using task manager.
   // See:
   //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
-  //   http://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
+  //   https://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
   override def onDestroy(){
     super.onDestroy()
     Utils.deleteCache(getApplicationContext,_=>true)

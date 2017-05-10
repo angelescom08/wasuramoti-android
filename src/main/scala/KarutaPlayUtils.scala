@@ -303,9 +303,9 @@ object KarutaPlayUtils{
               // So we just lower the volume in both cases.
               // TODO: pause/resume when AUDIOFOCUS_LOSS_TRANSIENT/AUDIOFOCUS_GAIN
               // See following link:
-              //  http://developer.android.com/training/managing-audio/audio-focus.html
-              //  https://code.google.com/p/android/issues/detail?id=155984
-              //  https://code.google.com/p/android/issues/detail?id=17995
+              //  https://developer.android.com/guide/topics/media-apps/volume-and-earphones.html#acquiring-focus 
+              //  https://issuetracker.google.com/code/p/android/issues/detail?id=155984
+              //  https://issuetracker.google.com/code/p/android/issues/detail?id=17995
               lowerVolume()
               activity.setButtonTextByState()
             case _ =>

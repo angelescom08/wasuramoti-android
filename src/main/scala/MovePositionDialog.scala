@@ -224,7 +224,7 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
   }
 
   // in Android's Java, regex \p{Alpha} matches to japanese letter
-  //   http://www.ecoop.net/memo/archives/regular-expression-problem-o-android-java.html
+  //   https://www.ecoop.net/memo/archives/regular-expression-problem-o-android-java.html
   lazy val TOO_SHORT_PATTERN = """^[a-zA-Z\uFF21-\uFF3A\uFF41-\uFF5A]$""".r.pattern
   lazy val filter = new Filter(){
       override def performFiltering(constraint:CharSequence):Filter.FilterResults = {

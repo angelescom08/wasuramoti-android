@@ -19,7 +19,7 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   // As for custom DialogPreference, we have to override
   // onSetInitialValue() and onGetDefaultValue() to get it to work.
   // See 'Building a Custom Preference' in android developer document:
-  //   http://developer.android.com/guide/topics/ui/settings.html#Custom
+  //   https://developer.android.com/guide/topics/ui/settings.html#Custom
   // However this solution does not seem to work in Android 4.x+
   // Therefore we use this old dirty hack.
   val DEFAULT_VALUE = "upper_1,lower_1"

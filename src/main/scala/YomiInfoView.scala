@@ -10,7 +10,7 @@ import scala.util.hashing.MurmurHash3
 class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context, attrs)
   with YomiInfoTorifudaTrait with YomiInfoYomifudaTrait with YomiInfoEnglishTrait with YomiInfoRomajiTrait{
   val RENDER_WITH_PATH_THRESHOLD = 496
-  // According to http://developer.android.com/guide/topics/graphics/hardware-accel.html ,
+  // According to https://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
   paint.setColor(context.getResources.getColor(R.color.poem_text_main))
@@ -323,7 +323,7 @@ trait YomiInfoYomifudaTrait{
     marker = num.map{ n =>
       // Black Spade Suit, Red Heart Suit, Red Diamond Suit, Black Club Suit,
       // White Spade Suit, White Heart Suit, White Diamond Suit, White Club Suit
-      // see http://en.wikipedia.org/wiki/Playing_cards_in_Unicode
+      // see https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
       val symbols = Array("\u2660","\u2661","\u2662","\u2663","\u2664","\u2665","\u2666","\u2667")
       val seed = System.currentTimeMillis / (1800 * 1000) // preserve same marker for thirty minutes
       // TODO: is this a correct usage of MurmurHash3 ?

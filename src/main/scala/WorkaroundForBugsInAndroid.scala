@@ -10,9 +10,9 @@ import android.util.AttributeSet
 // This bug was fixed in 4.1.2. However we have to cope with this bug for Android 4.1/4.1.1 users.
 // The following way to patch TextView seems the easiest way to avoid exception.
 // See following URL for more information:
-//   http://code.google.com/p/android/issues/detail?id=35466
-//   http://code.google.com/p/android/issues/detail?id=35412
-//   http://code.google.com/p/android/issues/detail?id=34872
+//   https://issuetracker.google.com/code/p/android/issues/detail?id=35466
+//   https://issuetracker.google.com/code/p/android/issues/detail?id=35412
+//   https://issuetracker.google.com/code/p/android/issues/detail?id=34872
 //
 // Therefore, *ALL* the TextView which uses Html.fromHtml() have to use this class.
 

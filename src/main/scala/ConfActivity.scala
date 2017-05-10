@@ -163,7 +163,7 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
   // also not that this is not called when app is terminated by user using task manager.
   // See:
   //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
-  //   http://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
+  //   https://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
   override def onDestroy(){
     super.onDestroy()
     // TODO: do not call unregisterOnSharedPreferenceChangeListener here, but somewhere else
