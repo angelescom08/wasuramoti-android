@@ -264,6 +264,8 @@
   <string name="conf_move_after_first_phrase_summary">詠みを中断したのが2つ目の句以降なら次の札へ進む</string>
   <string name="conf_move_next_after_done">終了時に次の札へ</string>
   <string name="conf_move_next_after_done_summary">詠みが終了したら次の札へ進む</string>
+  <string name="conf_scroll_delay">遷移の遅延</string>
+  <string name="conf_scroll_delay_summary">次の札に進む際の詠み札表示の遷移を音声より遅らせる</string>
 
   <!-- CATEGORY_DISPLAY -->
   <string name="category_display">表示</string>
