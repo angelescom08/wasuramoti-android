@@ -239,14 +239,16 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
         KarutaPlayUtils.setRewindButtonEnabled(activity,Some(false))
         activity.setButtonTextByState()
-        // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
+        // if is_replay is true, poem text is invalidated in forceYomiInfoView() in onReallyStart, so we dont invalidate here.
         if(YomiInfoUtils.showPoemText && !is_replay){
           if(Utils.readCurNext(activity.getApplicationContext)){
             activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-          }else if(fromAuto && !fromSwipe){
-            activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
-          }else{
-            activity.invalidateYomiInfo()
+          }else if(!bundle.getBoolean("have_to_run_border",false)){
+            if(fromAuto && !fromSwipe){
+              activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
+            }else{
+              activity.invalidateYomiInfo()
+            }
           }
           KarutaPlayUtils.startCheckConsistencyTimers()
         }
@@ -301,8 +303,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
   }
 
   def doWhenBorder(){
-    current_yomi_info = Some(R.id.yomi_info_view_next)
-    activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
+    if(Utils.readCurNext(activity.getApplicationContext)){
+      current_yomi_info = Some(R.id.yomi_info_view_next)
+      activity.scrollYomiInfo(R.id.yomi_info_view_next,true)
+    }else{
+      activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
+    }
   }
 
   def forceYomiInfoView(q:AudioQueue){
@@ -430,7 +436,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       }
 
       if(bundle.getBoolean("have_to_run_border",false)){
-        val t = Math.max(10,cur_millisec-900) // begin 900ms earlier
+        val delay = Globals.prefs.get.getLong("scroll_delay",0) * 1000
+        val t = Math.max(10, delay - 900 + (if(Utils.readCurNext(activity.getApplicationContext)){
+          cur_millisec
+        }else{
+          0
+        }))
         // This timer must be started after makeAudioTrack() since it would take some time to finish
         KarutaPlayUtils.startBorderTimer(t)
       }

@@ -653,7 +653,11 @@ trait MainButtonTrait{
           startDimLockTimer()
         }
         val bundle = new Bundle()
-        bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && Utils.readCurNext(self.getApplicationContext))
+        lazy val have_to_delay = Globals.prefs.get.getLong("scroll_delay",0) > 0
+        bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && (
+          Utils.readCurNext(self.getApplicationContext) ||
+          have_to_delay
+        ))
         bundle.putString("fromSender",KarutaPlayUtils.SENDER_MAIN)
         player.play(bundle,auto_play,from_swipe)
       }
