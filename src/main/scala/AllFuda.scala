@@ -132,14 +132,8 @@ object AllFuda{
                     (R.string.fudaset_five_color_green,Seq(8,9,11,15,17,20,23,26,29,35,36,38,41,42,54,59,68,71,92,93)),
                     (R.string.fudaset_five_color_orange,Seq(19,21,25,27,43,44,45,49,52,53,56,63,64,67,77,88,90,95,98,99)))
 
-  def compareMusumefusahose(x:String,y:String):Boolean = {
-    val x1 = musumefusahoseAll.indexOf(x(0))
-    val y1 = musumefusahoseAll.indexOf(y(0))
-    if( x1 == y1 ){
-      return x.compare(y) < 0
-    }else{
-      return x1.compare(y1) < 0
-    }
+  def orderMusumefusahose(x:String):(Int,String) = {
+    return (musumefusahoseAll.indexOf(x(0)),x)
   }
   def getFudaNum(s:String,kimalist:Seq[String]=list):Int = {
     val r = kimalist.indexOf(s)

@@ -74,4 +74,12 @@ class MainTest extends JUnitSuite with Matchers {
 			println(s"${AllFuda.list(k-1)}: ${v}")
     }
   }
+  @Test
+  def testMakeKimarijiSet(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    AllFuda.init(context)
+    val result = TrieUtils.makeKimarijiSet(Seq("あきの","あさぼらけあ","いまこ","いに","つき","あきか","いまこ","つく","あさぼらけう","みかき","もも","みかの","わたのはらや","せ","みち","わび","ありあ"))
+    result shouldBe Some(("せ つ もも いに いまこ みか みち わたのはらや わび あき あさぼ ありあ",16))
+  }
+
 }
