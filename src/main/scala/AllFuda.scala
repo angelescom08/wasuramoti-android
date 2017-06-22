@@ -137,7 +137,7 @@ object AllFuda{
   }
 
   def sortByMusumefusahose(ar:Seq[Int]):Seq[Int] = {
-    return ar.sortBy({(x:Int) => orderMusumefusahose(AllFuda.list(x - 1))})
+    return ar.sortBy((x:Int) => orderMusumefusahose(AllFuda.list(x - 1)))
   }
 
   def getFudaNum(s:String,kimalist:Seq[String]=list):Int = {

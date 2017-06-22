@@ -479,8 +479,8 @@ object FudaListHelper{
     Utils.withTransaction(db, () =>
       for ( (v,i) <- shuffled.zipWithIndex ){
         val cv = new ContentValues
-        cv.put("read_order",new java.lang.Integer(v))
-        db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array((i+1).toString))
+        cv.put("read_order",new java.lang.Integer(i+1))
+        db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(v.toString))
       })
     db.close()
   }}

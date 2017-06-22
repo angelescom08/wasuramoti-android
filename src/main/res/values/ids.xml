@@ -24,11 +24,13 @@
   <item type="id" name="general_radio_helper_1" />
   <item type="id" name="general_radio_helper_2" />
   <item type="id" name="general_radio_helper_3" />
+  <item type="id" name="general_radio_helper_4" />
 
   <array name="general_radio_helper">
     <item>@id/general_radio_helper_1</item>
     <item>@id/general_radio_helper_2</item>
     <item>@id/general_radio_helper_3</item>
+    <item>@id/general_radio_helper_4</item>
   </array>
 
   <!-- fudasetedit -->

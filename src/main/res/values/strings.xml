@@ -72,7 +72,7 @@
     <item>SHUFFLE|Shuffle|Read one by one from random deck. Same poem would not be read twice.</item>
     <item>RANDOM|Random|Choose one poem from random deck, read it, and give it back to the deck.</item>
     <item>POEM_NUM|Sequential|Read through 1 to 100.</item>
-    <item>MUSUMEFUSAHOSE|Musumefusahose|Read in Mu Su Me Fu Sa Ho Se U Tsu Shi Mo Yu ... order</item>
+    <item>MUSUMEFUSAHOSE|Musume|Read in Mu Su Me Fu Sa Ho Se U Tsu Shi Mo Yu ... order</item>
   </string-array>
 
   <string name="conf_equalizer">Equalizer</string>
