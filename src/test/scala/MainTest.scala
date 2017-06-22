@@ -82,4 +82,13 @@ class MainTest extends JUnitSuite with Matchers {
     result shouldBe Some(("せ つ もも いに いまこ みか みち わたのはらや わび あき あさぼ ありあ",16))
   }
 
+  @Test
+  def testSortByMusumefusahose(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    AllFuda.init(context)
+    val result = AllFuda.sortByMusumefusahose(1 to AllFuda.list.length)
+    result shouldBe(Seq(87, 18, 57, 22, 70, 81, 77, 74, 65, 23, 13, 40, 37, 100, 66, 71, 46, 61, 21, 63, 75, 42, 17, 33, 35, 99, 50, 15, 91, 96, 9, 2, 67, 47, 59, 32, 28, 93, 83, 85, 62, 51, 6, 98, 48, 49, 27, 90, 14, 94, 73, 55, 4, 16, 89, 34, 41, 29, 68, 97, 24, 10, 60, 95, 44, 5, 26, 72, 82, 8, 92, 38, 54, 76, 11, 20, 80, 84, 53, 86, 36, 25, 88, 19, 43, 79, 1, 52, 39, 31, 64, 3, 12, 7, 56, 69, 30, 58, 78, 45))
+
+  }
+
 }

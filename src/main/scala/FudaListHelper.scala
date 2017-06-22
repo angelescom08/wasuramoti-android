@@ -155,7 +155,7 @@ object FudaListHelper{
       }
       if(show_seq){
         val order = Utils.getReadOrder match {
-          case Utils.ReadOrder.PoemNum => res.getString(R.string.message_in_fudanum_order) + " "
+          case Utils.ReadOrder.PoemNum | Utils.ReadOrder.Musumefusahose => res.getString(R.string.message_in_fudanum_order) + " "
           case _ => ""
         }
         order + str
@@ -472,6 +472,7 @@ object FudaListHelper{
     val num_list = (1 to AllFuda.list.length).toList
     val shuffled = Utils.getReadOrder match {
       case Utils.ReadOrder.PoemNum => num_list
+      case Utils.ReadOrder.Musumefusahose => AllFuda.sortByMusumefusahose(num_list)
       case _ => Globals.rand.shuffle(num_list)
     }
     val db = Globals.database.get.getWritableDatabase

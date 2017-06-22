@@ -96,7 +96,7 @@ object Utils {
 
   object ReadOrder extends Enumeration{
     type ReadOrder = Value
-    val Shuffle, Random, PoemNum = Value
+    val Shuffle, Random, PoemNum, Musumefusahose = Value
   }
   object YomiInfoLang extends Enumeration{
     type YomiInfoLang = Value
@@ -250,6 +250,7 @@ object Utils {
     Globals.prefs.get.getString("read_order",null) match {
       case "RANDOM" => ReadOrder.Random
       case "POEM_NUM" => ReadOrder.PoemNum
+      case "MUSUMEFUSAHOSE" => ReadOrder.Musumefusahose
       case _ => ReadOrder.Shuffle
     }
   }

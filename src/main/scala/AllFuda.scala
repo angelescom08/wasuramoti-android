@@ -135,6 +135,11 @@ object AllFuda{
   def orderMusumefusahose(x:String):(Int,String) = {
     return (musumefusahoseAll.indexOf(x(0)),x)
   }
+
+  def sortByMusumefusahose(ar:Seq[Int]):Seq[Int] = {
+    return ar.sortBy({(x:Int) => orderMusumefusahose(AllFuda.list(x - 1))})
+  }
+
   def getFudaNum(s:String,kimalist:Seq[String]=list):Int = {
     val r = kimalist.indexOf(s)
     if( r < 0){

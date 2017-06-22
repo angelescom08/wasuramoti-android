@@ -61,6 +61,7 @@
     <item>SHUFFLE|シャッフル|札を箱の中に入れて良くかき混ぜ，一枚ずつ取り出して詠みます．同じ札は詠まれません．</item>
     <item>RANDOM|ランダム|「箱から一枚取り出して詠み，それを箱の中に戻してかき混ぜる」というのを繰り返します．</item>
     <item>POEM_NUM|歌番号順|1番から順に詠んでいきます．</item>
+    <item>MUSUMEFUSAHOSE|むすめふさほせ|むすめふさほせうつしもゆ…順に詠んでいきます．</item>
   </string-array>
 
   <string name="conf_equalizer">イコライザー</string>
