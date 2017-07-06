@@ -896,7 +896,7 @@ object Utils {
   def htmlAttrFormatter(context:Context,html:String):String = {
     return colorPattern.replaceAllIn(html, _ match { case(m) =>
       Try(attrColor(context,context.getResources.getIdentifier(m.group(1),"attr", context.getPackageName))).map{ color =>
-        val colorHex = Integer.toHexString(0xffffff & color)
+        val colorHex = "%06x".format(0xffffff & color)
         s"color='#${colorHex}'"
       }.getOrElse("")
     })
