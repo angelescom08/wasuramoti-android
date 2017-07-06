@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <attr name="themeName" format="string" />
   <attr name="generalBackgroundColor" format="reference|color"/>
   <attr name="generalTextColor" format="reference|color"/>
   <attr name="horizontalRuleColor" format="reference|color"/>

@@ -880,8 +880,26 @@ object Utils {
   }
   def attrColor(context:Context, attr_id:Int):Int = {
     val typedValue = new TypedValue
-    context.getTheme.resolveAttribute(attr_id, typedValue, true)
+    val resolved = context.getTheme.resolveAttribute(attr_id, typedValue, true)
+    if(!resolved){
+      val attr_name = Try(context.getResources.getResourceName(attr_id)).getOrElse("unknown")
+      val theme_name = {
+        val tv = new TypedValue
+        val rs = context.getTheme.resolveAttribute(R.attr.themeName, tv, true)
+        if(rs){tv.string}else{"unknown"}
+      }
+      throw new RuntimeException(s"attr='${attr_name}' not found in theme='${theme_name}'")
+    }
     return typedValue.data
+  }
+  lazy val colorPattern = """color=['"]\?attr/(.*?)['"]""".r
+  def htmlAttrFormatter(context:Context,html:String):String = {
+    return colorPattern.replaceAllIn(html, _ match { case(m) =>
+      Try(attrColor(context,context.getResources.getIdentifier(m.group(1),"attr", context.getPackageName))).map{ color =>
+        val colorHex = Integer.toHexString(0xffffff & color)
+        s"color='#${colorHex}'"
+      }.getOrElse("")
+    })
   }
 }
 

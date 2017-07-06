@@ -8,6 +8,7 @@
     <item name="textAllCaps">false</item>
     <item name="android:statusBarColor">#222222</item> 
     <!-- our custom attributes -->
+    <item name="themeName">Wasuramoti.MainTheme</item>
     <item name="generalBackgroundColor">#000000</item>
     <item name="generalTextColor">#ffffff</item>
     <item name="horizontalRuleColor">#444444</item>
