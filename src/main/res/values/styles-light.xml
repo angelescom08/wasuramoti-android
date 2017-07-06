@@ -6,6 +6,8 @@
     <item name="actionBarStyle">@style/Wasuramoti.ActionBar.Light</item>
     <item name="textAllCaps">false</item>
     <item name="android:statusBarColor">@color/main_status_bar</item>
+    <item name="general_background">@android:color/white</item>
+    <item name="general_text">@android:color/black</item>
   </style>
   <style name="Wasuramoti.ActionBar.Light" parent="Widget.AppCompat.Light.ActionBar.Solid">
     <item name="background">@drawable/actionbar_shape</item>
