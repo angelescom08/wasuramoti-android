@@ -9,7 +9,7 @@
   <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="#FF9900"
+    android:textColor="?attr/generalRadioDialogItemColor"
     android:paddingLeft="17dp"
     android:paddingBottom="5dp"
     android:tag="radio_text"

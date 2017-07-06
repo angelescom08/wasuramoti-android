@@ -6,8 +6,18 @@
     <item name="actionBarStyle">@style/Wasuramoti.ActionBar.Light</item>
     <item name="textAllCaps">false</item>
     <item name="android:statusBarColor">@color/main_status_bar</item>
-    <item name="general_background">@android:color/white</item>
-    <item name="general_text">@android:color/black</item>
+    <item name="generalBackgroundColor">@android:color/white</item>
+    <item name="generalTextColor">@android:color/black</item>
+    <item name="horizontalRuleColor">#f8f8f8</item>
+    <item name="mailAddrColor">#008e8e</item>
+    <item name="confCurrentValueColor">#ffaf1b</item>
+    <item name="generalRadioDialogItemColor">#ffb84d</item>
+    <item name="memoPanelTitleColor">#4f4f00</item>
+    <item name="memoCountColor">#508650</item>
+    <item name="memoNotCountColor">#ffacac</item>
+    <item name="searchItemSubColor">#7d9fa3</item>
+    <item name="readOrderEachItemColor">#ffb84d</item>
+    <item name="moveSearchNotFoundColor">#a9a9a9</item>
   </style>
   <style name="Wasuramoti.ActionBar.Light" parent="Widget.AppCompat.Light.ActionBar.Solid">
     <item name="background">@drawable/actionbar_shape</item>

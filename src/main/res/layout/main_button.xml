@@ -7,7 +7,7 @@
   android:text="Press Here"
   android:textSize="@dimen/read_button_text_large"
   android:onClick="onMainButtonClick"
-  android:background="?attr/general_background"
-  android:textColor="?attr/general_text"
+  android:background="?attr/generalBackgroundColor"
+  android:textColor="?attr/generalTextColor"
   android:contentDescription="ReadButton"
 />

@@ -31,7 +31,7 @@
       android:textColor="@color/action_bar_primary_text"
     />
     <karuta.hpnpwd.wasuramoti.PatchedTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:textColor="?attr/general_text"
+      android:textColor="?attr/generalTextColor"
       android:textSize="@dimen/title_bar_large_text"
       android:paddingLeft="@dimen/title_bar_margin_each"
       android:id="@id/command_button_kimariji"

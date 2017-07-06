@@ -3,6 +3,6 @@
   android:id="@+id/command_button_fragment"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="?attr/general_background"
-  android:textColor="?attr/general_text"
+  android:background="?attr/generalBackgroundColor"
+  android:textColor="?attr/generalTextColor"
   />

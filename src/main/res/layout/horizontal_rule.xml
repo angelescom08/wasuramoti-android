@@ -7,6 +7,6 @@
   <View
     android:layout_width="0dp" android:layout_height="2dp"
     android:layout_weight="0.8"
-    android:background="#444444"
+    android:background="?attr/horizontalRuleColor"
     />
 </LinearLayout>

@@ -27,7 +27,7 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur2_next1"
@@ -42,7 +42,7 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur2_next1_next2"
@@ -57,7 +57,7 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1_cur2"
@@ -72,7 +72,7 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1_cur2_cur2"
@@ -87,7 +87,7 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         android:text="@string/conf_read_order_value_cur1"
@@ -102,7 +102,7 @@
         android:id="@+id/conf_read_order_value_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF9900"
+        android:textColor="?attr/readOrderEachItemColor"
         android:paddingLeft="17dp"
         android:paddingBottom="5dp"
         />

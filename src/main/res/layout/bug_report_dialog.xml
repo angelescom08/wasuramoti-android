@@ -35,7 +35,7 @@
           android:layout_height="wrap_content"
           android:text="@string/developer_mail_addr"
           android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="#00FFFF"
+          android:textColor="?attr/mailAddrColor"
           android:paddingTop="8dp"
           android:paddingBottom="11dp"
           />

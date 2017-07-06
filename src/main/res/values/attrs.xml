@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <attr name="general_background" format="reference|color"/>
-  <attr name="general_text" format="reference|color"/>
+  <attr name="generalBackgroundColor" format="reference|color"/>
+  <attr name="generalTextColor" format="reference|color"/>
+  <attr name="horizontalRuleColor" format="reference|color"/>
+  <attr name="mailAddrColor" format="reference|color"/>
+  <attr name="confCurrentValueColor" format="reference|color"/>
+  <attr name="generalRadioDialogItemColor" format="reference|color"/>
+  <attr name="memoPanelTitleColor" format="reference|color"/>
+  <attr name="memoCountColor" format="reference|color"/>
+  <attr name="memoNotCountColor" format="reference|color"/>
+  <attr name="searchItemSubColor" format="reference|color"/>
+  <attr name="readOrderEachItemColor" format="reference|color"/>
+  <attr name="moveSearchNotFoundColor" format="reference|color"/>
 </resources>
