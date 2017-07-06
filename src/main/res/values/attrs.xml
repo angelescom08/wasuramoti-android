@@ -12,4 +12,13 @@
   <attr name="searchItemSubColor" format="reference|color"/>
   <attr name="readOrderEachItemColor" format="reference|color"/>
   <attr name="moveSearchNotFoundColor" format="reference|color"/>
+  <attr name="mainActivityBorderColor" format="reference|color"/>
+  <attr name="actionBarDividerColor" format="reference|color"/>
+  <attr name="actionBarPrimaryTextColor" format="reference|color"/>
+  <attr name="actionBarPoemNumColor" format="reference|color"/>
+  <attr name="poemTextMainColor" format="reference|color"/>
+  <attr name="poemTextFuriganaColor" format="reference|color"/>
+  <attr name="kimarijiPrimaryColor" format="reference|color"/>
+  <attr name="kimarijiSecondaryColor" format="reference|color"/>
+  <attr name="kimarijiTertiaryColor" format="reference|color"/>
 </resources>

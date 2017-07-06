@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="horizontal"
-              android:background="@color/main_activity_border"
+              android:background="?attr/mainActivityBorderColor"
               >
   <ViewStub
     android:id="@id/rewind_button_stub"

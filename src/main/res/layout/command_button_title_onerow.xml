@@ -12,11 +12,11 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/title_bar_poem_num"
       android:textSize="@dimen/title_bar_small_text"
-      android:textColor="@color/action_bar_primary_text"
+      android:textColor="?attr/actionBarPrimaryTextColor"
     />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textSize="@dimen/title_bar_large_text"
-      android:textColor="@color/action_bar_poem_num"
+      android:textColor="?attr/actionBarPoemNumColor"
       android:id="@id/command_button_poem_num"
       android:paddingLeft="@dimen/title_bar_margin_each"
     />
@@ -28,7 +28,7 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:text="@string/title_bar_kimariji"
       android:textSize="@dimen/title_bar_small_text"
-      android:textColor="@color/action_bar_primary_text"
+      android:textColor="?attr/actionBarPrimaryTextColor"
     />
     <karuta.hpnpwd.wasuramoti.PatchedTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:textColor="?attr/generalTextColor"

@@ -13,9 +13,9 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   // According to https://developer.android.com/guide/topics/graphics/hardware-accel.html ,
   // `Don't create render objects in draw methods`
   val paint = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint.setColor(context.getResources.getColor(R.color.poem_text_main))
+  paint.setColor(Utils.attrColor(context,R.attr.poemTextMainColor))
   val paint_furigana = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_furigana.setColor(context.getResources.getColor(R.color.poem_text_furigana))
+  paint_furigana.setColor(Utils.attrColor(context,R.attr.poemTextFuriganaColor))
   var cur_num = None:Option[Int]
   var marker = None:Option[String]
   var torifuda_mode = false

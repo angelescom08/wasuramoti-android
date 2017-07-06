@@ -4,7 +4,7 @@
   android:insetTop="-5dp" android:insetLeft="-5dp" android:insetRight="-5dp"
 >
   <shape android:shape="rectangle">
-    <stroke android:width="2dp" android:color="@color/action_bar_divider" />
+    <stroke android:width="2dp" android:color="?attr/actionBarDividerColor" />
     <solid android:color="@android:color/black"/>
   </shape>
 </inset>

@@ -878,6 +878,11 @@ object Utils {
       Log.d("wasuramoti_debug",elem.toString)
     }
   }
+  def attrColor(context:Context, attr_id:Int):Int = {
+    val typedValue = new TypedValue
+    context.getTheme.resolveAttribute(attr_id, typedValue, true)
+    return typedValue.data
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){
