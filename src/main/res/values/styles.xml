@@ -8,8 +8,8 @@
     <item name="textAllCaps">false</item>
     <item name="android:statusBarColor">#222222</item> 
     <!-- our custom attributes -->
-    <item name="generalBackgroundColor">@android:color/black</item>
-    <item name="generalTextColor">@android:color/white</item>
+    <item name="generalBackgroundColor">#000000</item>
+    <item name="generalTextColor">#ffffff</item>
     <item name="horizontalRuleColor">#444444</item>
     <item name="mailAddrColor">#00ffff</item>
     <item name="confCurrentValueColor">#ffa500</item>
@@ -29,6 +29,12 @@
     <item name="kimarijiPrimaryColor">#90ee90</item>
     <item name="kimarijiSecondaryColor">#f0ffff</item>
     <item name="kimarijiTertiaryColor">#555555</item>
+    <item name="gingerButtonOffColor">#333333</item>
+    <item name="gingerButtonOnColor">#88d91d</item>
+    <item name="tableCellBorderColor">#999999</item>
+    <item name="mainButtonPressedColor">#222222</item>
+    <item name="roundBorderBackgroundColor">#222222</item>
+    <item name="roundBorderColor">#9B59B6</item>
 
   </style>
   <style name="Wasuramoti.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
