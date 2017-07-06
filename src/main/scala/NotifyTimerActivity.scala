@@ -110,6 +110,9 @@ class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
   override def onCreate(savedInstanceState: Bundle){
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
+    if(Globals.prefs.get.getBoolean("light_theme", false)){
+      setTheme(R.style.Wasuramoti_SubTheme_Light)
+    }
     setContentView(R.layout.notify_timer)
     NotifyTimerUtils.alarm_manager = Option(getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager])
     val inflater = LayoutInflater.from(this)

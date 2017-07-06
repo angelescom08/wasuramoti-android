@@ -284,6 +284,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext)
 
+    if(Globals.prefs.get.getBoolean("light_theme", false)){
+      setTheme(R.style.Wasuramoti_MainTheme_Light)
+    }
+
     setContentView(R.layout.main_activity)
     
     // since onResume is always called after onCreate, we don't have to set have_to_resume_task = true

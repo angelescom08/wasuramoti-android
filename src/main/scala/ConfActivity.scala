@@ -90,6 +90,9 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
     val context = this
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext())
+    if(Globals.prefs.get.getBoolean("light_theme", false)){
+      setTheme(R.style.Wasuramoti_SubTheme_Light)
+    }
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)
