@@ -26,12 +26,12 @@ class AudioDecodeTestDialog(context:Context) extends AlertDialog(context){
             try{
               reader.withDecodedWav(num,kamisimo,(wb)=>{
                 v.setText(f"[OK] ${wb.audioLength/1000.0}%.2f sec ${path}%s")
-                v.setTextColor(Color.WHITE)
+                v.setTextColor(Utils.attrColor(context,R.attr.decodeTestOkColor))
               })
             }catch{
               case e:Exception =>
                 v.setText(s"[ERROR] '${e.getClass.getSimpleName}: ${e.getMessage}' when decoding ${path}")
-                v.setTextColor(Color.YELLOW)
+                v.setTextColor(Utils.attrColor(context,R.attr.decodeTestErrorColor))
             }
             handler.post(new Runnable(){
               override def run(){

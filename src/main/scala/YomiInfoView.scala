@@ -501,7 +501,7 @@ trait YomiInfoTorifudaTrait{
   val FUDA_EDGE_SIZE = 0.04
 
   val paint_edge = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_edge.setColor(Color.rgb(0,42,17))
+  paint_edge.setColor(Utils.attrColor(self.context,R.attr.torifudaEdgeColor))
   paint_edge.setStyle(Paint.Style.STROKE)
 
   def initTorifuda(){

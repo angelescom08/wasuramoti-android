@@ -13,10 +13,10 @@ class FudaSetReOrderDialog(context:Context,
   )
   extends AlertDialog(context) with CustomAlertDialogTrait{
 
-  val BAR_COLOR_ACTIVE = Color.CYAN
-  val BAR_COLOR_DEFAULT = Color.argb(255,0x44,0x44,0x44)
+  val BAR_COLOR_ACTIVE =  Utils.attrColor(context,R.attr.reorderBarActiveColor)
+  val BAR_COLOR_DEFAULT = Utils.attrColor(context,R.attr.reorderBarDefaultColor)
 
-  val TEXT_COLOR_ACTIVE = Color.GRAY
+  val TEXT_COLOR_ACTIVE = Utils.attrColor(context,R.attr.reorderTextActiveColor)
   var TEXT_COLOR_DEFAULT = None:Option[Int]
 
 
@@ -157,7 +157,7 @@ class FudaSetReOrderDialog(context:Context,
                 }
                 startSwapFrom = None
               case None =>
-                setTextColorOrDefault(v.asInstanceOf[TextView],Some(Color.argb(0xFF,0xA5,0x2A,0x2A)))
+                setTextColorOrDefault(v.asInstanceOf[TextView],Some(Utils.attrColor(context,R.attr.reorderTextDefaultColor)))
                 startSwapFrom = Some(list.indexOfChild(v))
             }
           }

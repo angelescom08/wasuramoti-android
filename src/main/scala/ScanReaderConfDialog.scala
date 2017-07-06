@@ -19,7 +19,7 @@ class ScanReaderConfDialog(context:Context,showParent:()=>Unit) extends AlertDia
     val list = Utils.getAllExternalStorageDirectories(context).map{_.toString}.mkString("\n")
     val tv = view.findViewById(R.id.scan_reader_list).asInstanceOf[TextView]
     tv.setText(list)
-    tv.setTextColor(Color.YELLOW)
+    tv.setTextColor(Utils.attrColor(context,R.attr.scanReaderListColor))
     val path_form = view.findViewById(R.id.scan_reader_additional).asInstanceOf[EditText]
     path_form.setText(Globals.prefs.get.getString("scan_reader_additional","/sdcard"))
     val listener = new DialogInterface.OnClickListener(){

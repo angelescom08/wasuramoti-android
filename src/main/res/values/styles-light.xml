@@ -35,6 +35,14 @@
     <item name="mainButtonPressedColor">#fdfdfd</item>
     <item name="roundBorderBackgroundColor">#fdfdfd</item>
     <item name="roundBorderColor">#f1e7f5</item>
+    <item name="torifudaEdgeColor">#fdfdfd</item>
+    <item name="scanReaderListColor">#4f4f00</item>
+    <item name="decodeTestOkColor">#000000</item>
+    <item name="decodeTestErrorColor">#4f4f00</item>
+    <item name="reorderBarActiveColor">#008e8e</item>
+    <item name="reorderBarDefaultColor">#f8f8f8</item>
+    <item name="reorderTextActiveColor">#e1e1e1</item>
+    <item name="reorderTextDefaultColor">#faf2f2</item>
   </style>
   <style name="Wasuramoti.ActionBar.Light" parent="Widget.AppCompat.Light.ActionBar.Solid">
     <item name="background">@drawable/actionbar_shape</item>
