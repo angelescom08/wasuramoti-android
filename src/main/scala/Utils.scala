@@ -376,7 +376,7 @@ object Utils {
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
     val html = getStringOrResource(context,arg).getOrElse("")
     val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
-    txtview.setText(Html.fromHtml(html))
+    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,html)))
 
     // this makes "<a href='...'></a>" clickable
     txtview.setMovementMethod(LinkMovementMethod.getInstance)

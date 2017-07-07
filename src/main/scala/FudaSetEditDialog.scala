@@ -44,7 +44,7 @@ class FudaSetEditDialog(
       data_id = fs.map{_.id}
     }
     val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
-    help_view.setText(Html.fromHtml(context.getString(R.string.fudasetedit_help_html)))
+    help_view.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,context.getString(R.string.fudasetedit_help_html))))
     setButtonMapping(view)
     setViewAndButton(view)
     super.onCreate(bundle)

@@ -286,7 +286,7 @@ class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPr
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
     val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
-    txtview.setText(Html.fromHtml(message))
+    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,message)))
     builder.setView(view)
     super.onPrepareDialogBuilder(builder)
   }

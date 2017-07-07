@@ -167,17 +167,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      Original Kimariji of this poem is <font color=\"#90EE90\">%s</font>.
+    Original Kimariji of this poem is <font color=\"?attr/kimarijiLogMainColor\">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      The Kimariji inside current fudaset is <font color=\"#90EE90\">%s</font>.
+    The Kimariji inside current fudaset is <font color=\"?attr/kimarijiLogMainColor\">%s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-      Since <font color=\"#EE90EE\">%1$s</font> has already been read, the Kimariji was changed to <font color=\"#90EE90\">%2$s</font>.
+    Since <font color=\"?attr/kimarijiLogSubColor\">%1$s</font> has already been read, the Kimariji was changed to <font color=\"?attr/kimarijiLogMainColor\">%2$s</font>.
     ]]>
   </string>
   <string name="kimariji_changelog_current">It is the current Kimariji.</string>
@@ -397,19 +397,19 @@
     </p>
     <h3>File Name Convention</h3>
     <p>
-      Rename each file to <tt><font color=\"#FFFF00\">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
+      Rename each file to <tt><font color=\"?attr/howToAddMainColor\">[Reciter]_[Poem No.]_[1st=1,2nd=2].ogg</font></tt><br/>
       , where some zeros must be padded to fit three digits. Poem number of Joka is 000.<br/>
-      (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <tt><font color=\"#FFFF00\">inaba_081_2.ogg</font></tt>)
+      (Example: 2nd half of `Hototogisu` read by Inaba &rArr; <tt><font color=\"?attr/howToAddMainColor\">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>Where to Place</h3>
     <p>
-      (1) Make folder named <tt><font color=\"#FFFF00\">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
+      (1) Make folder named <tt><font color=\"?attr/howToAddMainColor\">wasuramoti_reader</font></tt> inside SD card or internal storage. Note: do not make it in a folder which is too deep.
     </p>
     <p>
-      (2) Make folder named <tt><font color=\"#FFFF00\">[Reciter]</font></tt>, and place 202 ogg files in it.
+      (2) Make folder named <tt><font color=\"?attr/howToAddMainColor\">[Reciter]</font></tt>, and place 202 ogg files in it.
     </p>
     <p>
-      (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      (Example: 1st half of `Hananoiroha` read by Inaba &rArr; <tt><font color=\"?attr/howToAddMainColor\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
       After placing is done, open this app, choose `Advanced Config`->`Reciter`->`Execute Scan` to add the reader to the list.
     </p>
     ]]>
@@ -688,19 +688,19 @@
   </string>
   <string name="conf_caution_message">
     <![CDATA[
-    <div><font color="#CCFFFF"><b>Threashold</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>Threashold</b></font></div>
     <p>
       This app is cropping the silence from both head and tail of the audio. The signal lower than threashold will be cropped off. It should be less than <tt>0.01</tt> for low noice audio source.
     </p>
-    <div><font color="#CCFFFF"><b>Fade In/Out</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>Fade In/Out</b></font></div>
     <p>
       It is also applying fade in/out after cropping to avoid clatter. The value should be lower than <tt>0.3</tt> seconds.
     </p>
-    <div><font color="#CCFFFF"><b>OpenSL ES</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>OpenSL ES</b></font></div>
     <p>
       We use <tt>AudioTrack</tt> as default sound engine. However, some device may have problem using it. In the case, enable <tt>OpenSL ES</tt> when something goes wrong with the sound. However it should be avoided whenever possible since it is not Android\'s native engine.
     </p>
-    <div><font color="#CCFFFF"><b>Stream Type</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>Stream Type</b></font></div>
     <p>
       Android has several stream types, and each has their own volume level. We use <tt>Music</tt> as default, but changing it to something like <tt>Ring</tt> may change some behavior (i.e. plays from speaker even when earphone is plugged).
     </p>
@@ -728,15 +728,15 @@
   <string name="poem_desc_reference_wikipedia_url">https://en.wikipedia.org/wiki/Wani_(scholar)</string>
   <string name="poem_desc_body">
     <![CDATA[
-			<font color="#66CC99"><u>Poem</u></font><br>
+			<font color="?attr/poemDescColor"><u>Poem</u></font><br>
       &nbsp;&nbsp;[%1$d] %2$s<br>
-			<font color="#66CC99"><u>Romaji</u></font><br>
+			<font color="?attr/poemDescColor"><u>Romaji</u></font><br>
 			&nbsp;&nbsp;%3$s<br>
-			<font color="#66CC99"><u>Translation 1</u></font><br>
+			<font color="?attr/poemDescColor"><u>Translation 1</u></font><br>
 			&nbsp;&nbsp;%4$s<br>
-			<font color="#66CC99"><u>Translation 2</u></font><br>
+			<font color="?attr/poemDescColor"><u>Translation 2</u></font><br>
 			&nbsp;&nbsp;%5$s<br>
-			<font color="#66CC99"><u>Author</u></font><br>
+			<font color="?attr/poemDescColor"><u>Author</u></font><br>
       &nbsp;&nbsp;%6$s / %7$s<br>
     ]]>
   </string>

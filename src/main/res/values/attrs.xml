@@ -36,4 +36,12 @@
   <attr name="reorderBarDefaultColor" format="reference|color"/>
   <attr name="reorderTextActiveColor" format="reference|color"/>
   <attr name="reorderTextDefaultColor" format="reference|color"/>
+  <attr name="intendedUseValueColor" format="reference|color"/>
+  <attr name="creditSpecialColor" format="reference|color"/>
+  <attr name="kimarijiLogMainColor" format="reference|color"/>
+  <attr name="kimarijiLogSubColor" format="reference|color"/>
+  <attr name="howToAddMainColor" format="reference|color"/>
+  <attr name="howToAddSubColor" format="reference|color"/>
+  <attr name="cautionMessageColor" format="reference|color"/>
+  <attr name="poemDescColor" format="reference|color"/>
 </resources>

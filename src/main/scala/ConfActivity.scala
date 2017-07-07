@@ -138,8 +138,8 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
         .replaceAll("\n","<br>\n")
         .replaceAll(" ","\u00A0")
         .replaceAll("(&lt;.*?&gt;)","<b>$1</b>")
-        .replaceAll("%%(.*)","<font color='#FFFF99'><i>$1</i></font>")
-        .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<font color='#FFFF99'><a href='$1'>$1</a></font>")
+        .replaceAll("%%(.*)","<font color='?attr/creditSpecialColor'><i>$1</i></font>")
+        .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<font color='?attr/creditSpecialColor'><a href='$1'>$1</a></font>")
         fp.close
         val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
         Utils.generalHtmlDialog(context:Context,Left(buf2))

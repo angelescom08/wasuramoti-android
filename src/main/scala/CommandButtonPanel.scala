@@ -265,9 +265,10 @@ class CommandButtonPanel extends Fragment with GetFudanum{
 
 class KimarijiChangelogDialog extends DialogFragment with GetFudanum{
   def addRow(table:LinearLayout,text:String){
-    val item = LayoutInflater.from(getActivity).inflate(R.layout.kimariji_changelog_row,null)
+    val context = getActivity
+    val item = LayoutInflater.from(context).inflate(R.layout.kimariji_changelog_row,null)
     val v_text = item.findViewById(R.id.kimariji_changelog_row).asInstanceOf[TextView]
-    v_text.setText(Html.fromHtml(text))
+    v_text.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,text)))
     table.addView(item)
   }
   def addKimarijiChangelog(table:LinearLayout,fudanum:Option[Int]){

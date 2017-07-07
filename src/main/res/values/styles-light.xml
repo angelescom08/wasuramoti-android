@@ -44,6 +44,14 @@
     <item name="reorderBarDefaultColor">#f8f8f8</item>
     <item name="reorderTextActiveColor">#e1e1e1</item>
     <item name="reorderTextDefaultColor">#faf2f2</item>
+    <item name="intendedUseValueColor">#4f4f00</item>
+    <item name="creditSpecialColor">#404026</item>
+    <item name="kimarijiLogMainColor">#07bb71</item>
+    <item name="kimarijiLogSubColor">#f3aef3</item>
+    <item name="howToAddMainColor">#4f4f00</item>
+    <item name="howToAddSubColor">#4f4f00</item>
+    <item name="cautionMessageColor">#445555</item>
+    <item name="poemDescColor">#74d1a2</item>
   </style>
   <style name="Wasuramoti.ActionBar.Light" parent="Widget.AppCompat.Light.ActionBar.Solid">
     <item name="background">@drawable/actionbar_shape</item>

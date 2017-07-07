@@ -189,7 +189,7 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
     var html = "<big>" + getString(R.string.intended_use_result) + "</big><br>-------<br>" + changes.map({case(k,v)=>
       val kk = getString(k)
       val vv = getString(v)
-      s"""&middot; ${kk} &hellip; <font color="#FFFF00">${vv}</font>"""
+      s"""&middot; ${kk} &hellip; <font color="?attr/intendedUseValueColor">${vv}</font>"""
     }).mkString("<br>")  
     footnote.foreach{
       html += "<br>-------<br><big>" + getString(_) + "</big>"

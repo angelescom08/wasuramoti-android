@@ -163,17 +163,17 @@
   </string>
   <string name="kimariji_changelog_init">
     <![CDATA[
-      百首全体におけるこの札の決まり字は「<font color=\"#90EE90\">%s</font>」です．
+    百首全体におけるこの札の決まり字は「<font color=\"?attr/kimarijiLogMainColor\">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_fudaset">
     <![CDATA[
-      現在の札セット内での決まり字は「<font color=\"#90EE90\">%s</font>」です．
+    現在の札セット内での決まり字は「<font color=\"?attr/kimarijiLogMainColor\">%s</font>」です．
     ]]>
   </string>
   <string name="kimariji_changelog_changed">
     <![CDATA[
-    「<font color=\"#EE90EE\">%1$s</font>」が詠まれたので，決まり字は「<font color=\"#90EE90\">%2$s</font>」になりました．
+    「<font color=\"?attr/kimarijiLogSubColor\">%1$s</font>」が詠まれたので，決まり字は「<font color=\"?attr/kimarijiLogMainColor\">%2$s</font>」になりました．
     ]]>
   </string>
   <string name="kimariji_changelog_current">これが現在の決まり字です．</string>
@@ -360,7 +360,7 @@
     <![CDATA[
     <h3>注意</h3>
     <p>
-      下記の説明は必要最低限のみです．詳しくは「<font color=\"#00FFFF\">わすらもち用読み音声データの作成</font>」でネット検索して下さい．
+      下記の説明は必要最低限のみです．詳しくは「<font color=\"?attr/howToAddSubColor\">わすらもち用読み音声データの作成</font>」でネット検索して下さい．
     </p>
     <h3>音声形式</h3>
     <p>
@@ -369,19 +369,19 @@
     </p>
     <h3>ファイル名</h3>
     <p>
-      各ファイルを <tt><font color=\"#FFFF00\">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前に変更する．<br/>
+      各ファイルを <tt><font color=\"?attr/howToAddMainColor\">[詠み手]_[歌番号]_[上の句=1,下の句=2].ogg</font></tt> という名前に変更する．<br/>
       ただし歌番号は3桁になるように0を先頭に付ける．また序歌は000番とする．<br/>
-      (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color=\"#FFFF00\">inaba_081_2.ogg</font></tt>)
+      (例: 稲葉さんの「ほととぎす」の下の句 &rArr; <tt><font color=\"?attr/howToAddMainColor\">inaba_081_2.ogg</font></tt>)
     </p>
     <h3>配置方法</h3>
     <p>
-      (1) SDカードまたは内部ストレージに <tt><font color=\"#FFFF00\">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
+      (1) SDカードまたは内部ストレージに <tt><font color=\"?attr/howToAddMainColor\">wasuramoti_reader</font></tt> というフォルダを作る．注意: あまり深すぎる階層に作ると認識しません．
     </p>
     <p>
-      (2) そのフォルダの下に <tt><font color=\"#FFFF00\">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
+      (2) そのフォルダの下に <tt><font color=\"?attr/howToAddMainColor\">[詠み手]</font></tt> のフォルダを作り，その下に202個のoggファイルを置く．
     </p>
     <p>
-      (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color=\"#FFFF00\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
+      (例: 稲葉さんの「花の色は」の上の句 &rArr; <tt><font color=\"?attr/howToAddMainColor\">wasuramoti_reader/inaba/inaba_009_1.ogg</font></tt>)<br/><br/>
       以上を配置し，わすらもちの「詳細設定」→「詠み手」→「スキャン開始」すると選択肢に追加される．
     </p>
     ]]>
@@ -651,19 +651,19 @@
   </string>
   <string name="conf_caution_message">
     <![CDATA[
-    <div><font color="#CCFFFF"><b>閾値</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>閾値</b></font></div>
     <p>
       このアプリは間を正確に1秒に保つために音声の先頭と末尾の無音を除去します．閾値以下の音は無音とみなして切り取ります．雑音の少ない音源なら0.01以下にして下さい．
     </p>
-    <div><font color="#CCFFFF"><b>フェードイン/フェードアウト</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>フェードイン/フェードアウト</b></font></div>
     <p>
     無音を除去した後の先頭/末尾を滑らかにするために軽くフェードをかけます．あまり不自然にならないように<tt>0.3</tt>秒以下にして下さい．
     </p>
-    <div><font color="#CCFFFF"><b>OpenSL ES</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>OpenSL ES</b></font></div>
     <p>
     デフォルトの音声エンジンは<tt>AudioTrack</tt>ですが，機種によっては不具合があるかもしれないので，その場合は<tt>OpenSL ES</tt>を有効にして下さい．ただし大多数の機種では無効でも動くはずです．
     </p>
-    <div><font color="#CCFFFF"><b>Stream Type</b></font></div>
+    <div><font color="?attr/cautionMessageColor"><b>Stream Type</b></font></div>
     <p>
       Androidにはいくつか使用用途に応じた音源(Stream)があります．このアプリのデフォルトは<tt>音楽</tt>ですが，これを例えば<tt>電話の通話音</tt>に変えると機種によってはイヤホンを付けても本体スピーカーから再生できたりします，ただしその場合は詠み上げの最中に通話アプリを使うと音声が混じったり予期しない動作をするかもしれないので注意して下さい．
     </p>
@@ -693,13 +693,13 @@
   </string>
   <string name="poem_desc_body">
     <![CDATA[
-    <font color="#66CC99"><u>詠み句</u></font><br>
+    <font color="?attr/poemDescColor"><u>詠み句</u></font><br>
     &nbsp;&nbsp;[%1$d] %2$s<br>
-    <font color="#66CC99"><u>主題</u></font><br>
+    <font color="?attr/poemDescColor"><u>主題</u></font><br>
     &nbsp;&nbsp;%3$s<br>
-    <font color="#66CC99"><u>歌意</u></font><br>
+    <font color="?attr/poemDescColor"><u>歌意</u></font><br>
     &nbsp;&nbsp;%4$s<br>
-    <font color="#66CC99"><u>歌人</u></font><br>
+    <font color="?attr/poemDescColor"><u>歌人</u></font><br>
     &nbsp;&nbsp;%5$s / %6$s<br>
     ]]>
   </string>
