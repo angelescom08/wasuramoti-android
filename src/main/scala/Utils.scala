@@ -906,6 +906,15 @@ object Utils {
       }.getOrElse("")
     })
   }
+
+  def switchFullDialogTheme():Int = {
+    if(Globals.prefs.get.getBoolean("light_theme", false)){
+      android.R.style.Theme_Light_NoTitleBar_Fullscreen
+    }else{
+      android.R.style.Theme_Black_NoTitleBar_Fullscreen
+    }
+
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

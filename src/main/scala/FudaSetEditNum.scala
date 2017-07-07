@@ -7,7 +7,7 @@ import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton,RadioGr
 import android.view.{ViewGroup,View}
 import scala.collection.mutable
 
-class FudaSetEditNumDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+class FudaSetEditNumDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,Utils.switchFullDialogTheme){
 
   val TAG_NUM = R.id.fudasetedit_tag_num
 

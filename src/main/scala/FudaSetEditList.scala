@@ -22,7 +22,7 @@ object FudaSetEditListDialog {
   }
 }
 
-class FudaSetEditListDialog(context:Context,kimarijis:String,callback:String=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+class FudaSetEditListDialog(context:Context,kimarijis:String,callback:String=>Unit) extends Dialog(context,Utils.switchFullDialogTheme){
   import FudaSetEditListDialog.{SortMode,ListItemMode,genDialogMode}
   var sort_mode = SortMode.ABC
 

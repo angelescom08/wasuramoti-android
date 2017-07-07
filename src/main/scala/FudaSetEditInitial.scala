@@ -7,7 +7,7 @@ import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
 import android.view.{View,ViewGroup}
 import scala.collection.mutable
 
-class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen){
+class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,Utils.switchFullDialogTheme){
 
   val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
