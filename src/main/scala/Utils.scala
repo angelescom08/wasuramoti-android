@@ -54,7 +54,7 @@ object Globals {
   var is_playing = false
   var autoplay_started = None:Option[Long]
   var forceRefresh = false
-  var forceRestart = false
+  var forceReloadUI = false
   var audio_volume_bkup = None:Option[Int]
   var audio_track_failed_count = 0
   // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()

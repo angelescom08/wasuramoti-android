@@ -40,7 +40,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
         }
         edit.commit
         notifyChangedPublic
-        Globals.forceRestart = true
+        Globals.forceReloadUI = true
         FudaListHelper.updateSkipList(context)
       }
     }

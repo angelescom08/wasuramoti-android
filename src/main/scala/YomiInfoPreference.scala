@@ -60,7 +60,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         edit.commit
         notifyChangedPublic
       }
-      Globals.forceRestart = true
+      Globals.forceReloadUI = true
     }
     super.onDialogClosed(positiveResult)
   }
@@ -129,7 +129,7 @@ class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) wit
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
     edit.commit
-    Globals.forceRestart = true
+    Globals.forceReloadUI = true
   }
 
   override def onCreate(state:Bundle){
@@ -164,7 +164,7 @@ class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) wit
     edit.putString("yomi_info_torifuda_font",ar_ja(torifuda_font.getSelectedItemPosition))
     edit.putString("yomi_info_english_font",ar_en(english_font.getSelectedItemPosition))
     edit.commit
-    Globals.forceRestart = true
+    Globals.forceReloadUI = true
   }
 
   override def onCreate(state:Bundle){
