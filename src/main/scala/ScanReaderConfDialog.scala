@@ -5,7 +5,6 @@ import android.content.{Context,DialogInterface}
 import android.os.Bundle
 import android.view.{LayoutInflater}
 import android.widget.{TextView,EditText}
-import android.graphics.Color
 import android.text.TextUtils
 import java.io.File
 

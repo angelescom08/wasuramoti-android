@@ -892,12 +892,17 @@ object Utils {
     }
     return typedValue.data
   }
+
+  def colorToHex(color:Int):String = {
+    // remove alpha channel when color is ARGB
+    return "%06x".format(0xffffff & color)
+  }
+
   lazy val colorPattern = """color=['"]\?attr/(.*?)['"]""".r
   def htmlAttrFormatter(context:Context,html:String):String = {
     return colorPattern.replaceAllIn(html, _ match { case(m) =>
       Try(attrColor(context,context.getResources.getIdentifier(m.group(1),"attr", context.getPackageName))).map{ color =>
-        val colorHex = "%06x".format(0xffffff & color)
-        s"color='#${colorHex}'"
+        s"color='#${colorToHex(color)}'"
       }.getOrElse("")
     })
   }

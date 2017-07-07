@@ -32,9 +32,9 @@ object CommandButtonPanel{
         (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
       }else{
         // TODO: cache these values
-        val COLOR_1 = Integer.toHexString(Utils.attrColor(context,R.attr.kimarijiPrimaryColor)).substring(2)
-        val COLOR_2 = Integer.toHexString(Utils.attrColor(context,R.attr.kimarijiSecondaryColor)).substring(2)
-        val COLOR_3 = Integer.toHexString(Utils.attrColor(context,R.attr.kimarijiTertiaryColor)).substring(2)
+        val COLOR_1 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiPrimaryColor)))
+        val COLOR_2 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiSecondaryColor)))
+        val COLOR_3 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiTertiaryColor)))
         val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
         val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
         val k_c = kimari_all.substring(kimari_in_fudaset.length)

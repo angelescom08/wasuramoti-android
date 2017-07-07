@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.{Bundle,Handler}
 import android.view.{LayoutInflater,ViewGroup}
 import android.widget.TextView
-import android.graphics.Color
 
 class AudioDecodeTestDialog(context:Context) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){

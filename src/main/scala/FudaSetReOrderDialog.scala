@@ -6,7 +6,6 @@ import android.content.{ClipData,Context,ContentValues}
 import android.widget.TextView
 import android.app.AlertDialog
 import android.widget.Button
-import android.graphics.Color
 
 class FudaSetReOrderDialog(context:Context,
   callback:()=>Unit
