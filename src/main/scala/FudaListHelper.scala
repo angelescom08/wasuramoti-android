@@ -590,7 +590,7 @@ object FudaListHelper{
     numbers_of_memorized = None
     current_index_with_skip = None
     updateCurrentIndexWithSkip(context)
-    Globals.forceRefresh = true
+    Globals.forceRefreshPlayer = true
   }}
 
   def getOrQueryCurrentIndexWithSkip(context:Context):Int = {

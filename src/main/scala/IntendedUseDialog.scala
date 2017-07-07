@@ -184,7 +184,7 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
     }
     edit.commit()
     FudaListHelper.updateSkipList(getActivity)
-    Globals.forceRefresh = true
+    Globals.forceRefreshPlayer = true
 
     var html = "<big>" + getString(R.string.intended_use_result) + "</big><br>-------<br>" + changes.map({case(k,v)=>
       val kk = getString(k)

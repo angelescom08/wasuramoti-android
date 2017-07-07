@@ -76,7 +76,7 @@ class FudaSetEditDialog(
         Utils.confirmDialog(context,Left(message),() => {
           Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
           callback(new FudaSetWithSize(title,st_size))
-          Globals.forceRefresh = true
+          Globals.forceRefreshPlayer = true
         },func_no=Some({()=>show()}))
       }
     }

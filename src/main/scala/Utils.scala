@@ -53,7 +53,7 @@ object Globals {
   var player_none_reason = None:Option[String]
   var is_playing = false
   var autoplay_started = None:Option[Long]
-  var forceRefresh = false
+  var forceRefreshPlayer = false
   var forceReloadUI = false
   var audio_volume_bkup = None:Option[Int]
   var audio_track_failed_count = 0

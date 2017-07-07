@@ -128,8 +128,8 @@ object AudioHelper{
         if(!readable){
           Globals.player_none_reason = Some(reason)
           None
-        }else if(force || Globals.forceRefresh || num_changed){
-          Globals.forceRefresh = false
+        }else if(force || Globals.forceRefreshPlayer || num_changed){
+          Globals.forceRefreshPlayer = false
 
           old_player.foreach{ p=>
             // mayInterruptIfRunning must be true to set Thread.currentThread.isInterrupted() == true for AsyncTask's thread

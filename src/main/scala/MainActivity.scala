@@ -447,10 +447,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
   // (c) only in onResume() ... put it inside WasuramotiActivity.onResume()
   def doWhenResume(){
     Globals.global_lock.synchronized{
-      if(Globals.forceRefresh){
+      if(Globals.forceRefreshPlayer){
         KarutaPlayUtils.replay_audio_queue = None
       }
-      if(Globals.player.isEmpty || Globals.forceRefresh){
+      if(Globals.player.isEmpty || Globals.forceRefreshPlayer){
         if(! Utils.readFirstFuda && FudaListHelper.getCurrentIndex(this) <=0 ){
           FudaListHelper.moveToFirst(this)
         }

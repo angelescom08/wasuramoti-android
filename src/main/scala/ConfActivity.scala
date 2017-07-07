@@ -102,16 +102,16 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
           case "reader_path"|"read_order_joka"|"joka_enable"|
             "wav_begin_read"|"wav_end_read"|"wav_span_simokami"|"wav_threshold"|
             "wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
-            Globals.forceRefresh = true
+            Globals.forceRefreshPlayer = true
           case "show_replay_last_button" | "show_skip_button" =>
             Globals.forceReloadUI = true
           case "read_order_each" =>
             // we also have to change text of replay_last_button when read_order_each changed
-            Globals.forceRefresh = true
+            Globals.forceRefreshPlayer = true
             Globals.forceReloadUI = true
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
-            Globals.forceRefresh = true
+            Globals.forceRefreshPlayer = true
           case "use_opensles" =>
             if(android.os.Build.VERSION.SDK_INT <= 8 && prefs.getBoolean(key,false)){
               val edit = prefs.edit
