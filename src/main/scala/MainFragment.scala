@@ -52,7 +52,9 @@ class WasuramotiFragment extends Fragment{
     if(YomiInfoUtils.showPoemText){
       stub.inflate()
       read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
-      read_button.setBackgroundResource(R.drawable.main_button)
+      val typedValue = new TypedValue
+      was.getTheme.resolveAttribute(R.attr.mainButtonDrawable, typedValue, true)
+      read_button.setBackgroundResource(typedValue.data)
     }
 
     val frag_stub = root.findViewById(R.id.command_button_stub).asInstanceOf[ViewStub]

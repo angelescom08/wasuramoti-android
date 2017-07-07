@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <attr name="themeName" format="string" />
+  <!-- drawables -->
+  <attr name="actionbarShapeDrawable" format="reference"/>
+  <attr name="gingerbreadBtnCheckOffDrawable" format="reference"/>
+  <attr name="gingerbreadBtnCheckOnDrawable" format="reference"/>
+  <attr name="mainButtonDrawable" format="reference"/>
+  <attr name="roundBorderDrawable" format="reference"/>
+  <attr name="tableCellDrawable" format="reference"/>
+  <!-- colors -->
   <attr name="generalBackgroundColor" format="reference|color"/>
   <attr name="generalTextColor" format="reference|color"/>
   <attr name="horizontalRuleColor" format="reference|color"/>
