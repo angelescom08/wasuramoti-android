@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{AlertDialog,AlarmManager,PendingIntent}
+import android.app.{Activity,AlertDialog,AlarmManager,PendingIntent}
 import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
@@ -53,6 +53,7 @@ object Globals {
   var player_none_reason = None:Option[String]
   var is_playing = false
   var autoplay_started = None:Option[Long]
+  var forceRestart = false
   var forceRefreshPlayer = false
   var forceReloadUI = false
   var audio_volume_bkup = None:Option[Int]
@@ -660,6 +661,19 @@ object Utils {
 
   def setUnderline(view:TextView){
     view.setPaintFlags(view.getPaintFlags | Paint.UNDERLINE_TEXT_FLAG)
+  }
+
+  def restartActivity(activity:Activity){
+    activity.finish
+    try{
+      activity.startActivity(activity.getIntent)
+    }catch{
+      case _:android.content.ActivityNotFoundException =>
+        // Some device might set the empty intent ?
+        // This code is just for sure so you may remove it if you can convince that
+        // all device's activity.getIntent returns valid intent
+        activity.startActivity(new Intent(activity,activity.getClass))
+    }
   }
 
   def restartApplication(context:Context,from_oom:Boolean=false){

@@ -493,6 +493,10 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
       // onCreate returned before loading preference
       return
     }
+    if(Globals.forceRestart){
+      Globals.forceRestart = false
+      Utils.restartActivity(this)
+    }
     if(Globals.forceReloadUI){
       Globals.forceReloadUI = false
       reloadFragment()

@@ -112,6 +112,8 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
           case "read_order" =>
             FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
             Globals.forceRefreshPlayer = true
+          case "light_theme" =>
+            Globals.forceRestart = true
           case "use_opensles" =>
             if(android.os.Build.VERSION.SDK_INT <= 8 && prefs.getBoolean(key,false)){
               val edit = prefs.edit
