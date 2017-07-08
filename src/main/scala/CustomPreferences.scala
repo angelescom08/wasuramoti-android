@@ -332,6 +332,7 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     helper.addItems(items, Some(handler))
     currentId.foreach(helper.radio_group.check(_))
     builder.setPositiveButton(null,null)
+    ids.recycle()
     super.onPrepareDialogBuilder(builder)
   }
 }

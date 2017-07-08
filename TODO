@@ -17,14 +17,11 @@ End of Life:
        - Scala 2.11.8 uses String.isEmpty inside StringLike.split(Char) it won't work in API Level 8
          https://github.com/scala/scala/blob/v2.11.8/src/library/scala/collection/immutable/StringLike.scala#L225
   * [2017-08-01] Migrate to Support v7 Preference
-     - Note: Revision 24.2.0 removes support for Android 2.2 (API level 8) and lower
-     - current preference-v7 is immature, so wait until August 2017.
      - http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
      - AlertDialog -> v7.AlertDialog or v4.DialogFragment (which prevents dismiss on screen rotate)
        - http://stackoverflow.com/questions/7557265/prevent-dialog-dismissal-on-screen-rotation-in-android
      - PreferenceActivity -> v7.AppCompatActivity, v7.PreferenceFragmentCompat
      - DialogPreference -> v7.DialogPreference, v7.PreferenceDialogFragmentCompat
-     - apply Wasuramoti.AppTheme for ConfActivity and NotifyTimerActivity
      - customize style and items in styles.xml and make darker theme
 
   * [20XX-XX-XX] Only support API Level >= 15

@@ -52,9 +52,13 @@ class WasuramotiFragment extends Fragment{
     if(YomiInfoUtils.showPoemText){
       stub.inflate()
       read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
+      // https://stackoverflow.com/questions/12104401/extract-the-background-color-drawable-from-a-typedvalue
       val typedValue = new TypedValue
       was.getTheme.resolveAttribute(R.attr.mainButtonDrawable, typedValue, true)
-      read_button.setBackgroundResource(typedValue.data)
+      val typedArray = was.obtainStyledAttributes(Array(android.R.attr.background))
+      typedArray.getValue(0, typedValue)
+      read_button.setBackgroundResource(typedValue.resourceId)
+      typedArray.recycle()
     }
 
     val frag_stub = root.findViewById(R.id.command_button_stub).asInstanceOf[ViewStub]
