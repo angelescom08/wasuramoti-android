@@ -3,13 +3,14 @@ androidBuild
 scalaVersion := "2.11.8"
 platformTarget in Android := "android-25"
 buildToolsVersion in Android := Some("25.0.2")
+resolvers += "Google Maven Repository" at "https://maven.google.com"
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,
   "org.robolectric" % "robolectric" % "3.2.2" % Test,
   "junit" % "junit" % "4.12" % Test,
-  "com.android.support" % "support-v4" % "24.1.1",
-  android.Dependencies.aar("com.android.support" % "appcompat-v7" % "24.1.1")
+  "com.android.support" % "support-v4" % "25.4.0",
+  android.Dependencies.aar("com.android.support" % "appcompat-v7" % "25.4.0")
   )
 
 // Required for testing
