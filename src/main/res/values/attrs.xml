@@ -3,8 +3,6 @@
   <attr name="themeName" format="string" />
   <!-- drawables -->
   <attr name="actionbarShapeDrawable" format="reference"/>
-  <attr name="gingerbreadBtnCheckOffDrawable" format="reference"/>
-  <attr name="gingerbreadBtnCheckOnDrawable" format="reference"/>
   <attr name="mainButtonDrawable" format="reference"/>
   <attr name="roundBorderDrawable" format="reference"/>
   <attr name="tableCellDrawable" format="reference"/>
@@ -30,8 +28,6 @@
   <attr name="kimarijiPrimaryColor" format="reference|color"/>
   <attr name="kimarijiSecondaryColor" format="reference|color"/>
   <attr name="kimarijiTertiaryColor" format="reference|color"/>
-  <attr name="gingerButtonOffColor" format="reference|color"/>
-  <attr name="gingerButtonOnColor" format="reference|color"/>
   <attr name="tableCellBorderColor" format="reference|color"/>
   <attr name="mainButtonPressedColor" format="reference|color"/>
   <attr name="roundBorderBackgroundColor" format="reference|color"/>

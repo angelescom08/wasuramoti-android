@@ -95,12 +95,12 @@ class MainTest extends JUnitSuite with Matchers {
   def testHtmlAttrFormatter(){
     val context = RuntimeEnvironment.application.getApplicationContext
     context.setTheme(R.style.Wasuramoti_MainTheme)
-    val html = """<font color='?attr/gingerButtonOnColor'>apple</font>
+    val html = """<font color='?attr/confCurrentValueColor'>apple</font>
 <font color='?attr/poemTextFuriganaColor'>banana</font>
 <font color='?attr/torifudaEdgeColor'>candy</font>
 <font color='?attr/hogefugaColor'>dragon</font>"""
     Utils.htmlAttrFormatter(context,html) shouldBe(
-      """<font color='#88d91d'>apple</font>
+      """<font color='#ffa500'>apple</font>
 <font color='#c7effb'>banana</font>
 <font color='#002a11'>candy</font>
 <font >dragon</font>""")

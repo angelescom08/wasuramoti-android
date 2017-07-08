@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Reference:  https://android.googlesource.com/platform/frameworks/support -->
-  <style name="Wasuramoti.SubTheme" parent="Theme.AppCompat">
-    <item name="android:spinnerItemStyle">@style/Wasuramoti.SpinnerItem</item>
-    <item name="android:listChoiceIndicatorMultiple">@drawable/gingerbread_btn_check_dark</item>
-  </style>
-  <style name="Wasuramoti.SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
-    <item name="android:textColor">#000000</item>
-  </style>
   <style name="Wasuramoti.ButtonBar" parent="Widget.AppCompat.ButtonBar" />
   <style name="Wasuramoti.ButtonBarButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog" />
   <style name="Wasuramoti.FudaListButton" parent="Widget.AppCompat.Button" />

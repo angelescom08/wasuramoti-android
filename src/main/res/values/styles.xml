@@ -9,8 +9,6 @@
     <item name="android:statusBarColor">#222222</item> 
     <!-- drawables -->
     <item name="actionbarShapeDrawable">@drawable/actionbar_shape_dark</item>
-    <item name="gingerbreadBtnCheckOffDrawable">@drawable/gingerbread_btn_check_off_dark</item>
-    <item name="gingerbreadBtnCheckOnDrawable">@drawable/gingerbread_btn_check_on_dark</item>
     <item name="mainButtonDrawable">@drawable/main_button_dark</item>
     <item name="roundBorderDrawable">@drawable/round_border_dark</item>
     <item name="tableCellDrawable">@drawable/table_cell_dark</item>
@@ -37,8 +35,6 @@
     <item name="kimarijiPrimaryColor">#90ee90</item>
     <item name="kimarijiSecondaryColor">#f0ffff</item>
     <item name="kimarijiTertiaryColor">#555555</item>
-    <item name="gingerButtonOffColor">#333333</item>
-    <item name="gingerButtonOnColor">#88d91d</item>
     <item name="tableCellBorderColor">#999999</item>
     <item name="mainButtonPressedColor">#222222</item>
     <item name="roundBorderBackgroundColor">#222222</item>
