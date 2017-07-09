@@ -197,7 +197,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         val dlg = new QuickConfigDialog()
         dlg.show(getSupportFragmentManager,"quick_config")
       }
-      case R.id.menu_conf => startActivity(new Intent(this,classOf[ConfActivity]))
+      case R.id.menu_conf => startActivity(new Intent(this,classOf[PrefActivity]))
       case android.R.id.home => {
         // android.R.id.home will be returned when the Application Icon is clicked if we are using android.support.v7.app.ActionBarActivity
       }

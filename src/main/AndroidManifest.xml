@@ -15,6 +15,7 @@ android:versionName="1.0.6" android:versionCode="80" >
         <!-- In order to use startActivityForResult, launchMode must not be set to singleInstance -->
         <activity 
           android:name=".WasuramotiActivity" 
+          android:theme="@style/Wasuramoti.MainTheme"
           android:launchMode="singleTask" 
           android:configChanges="keyboardHidden"
           android:label="@string/app_name"
@@ -31,14 +32,16 @@ android:versionName="1.0.6" android:versionCode="80" >
             </intent-filter>
         </activity>
         <activity
-          android:name=".ConfActivity"
+          android:name=".PrefActivity"
+          android:theme="@style/PreferenceFixTheme"
           android:launchMode="singleTop"
-          android:configChanges="orientation|keyboardHidden"
+          android:configChanges="keyboardHidden"
           />
         <activity
           android:name=".NotifyTimerActivity"
+          android:theme="@style/Wasuramoti.MainTheme"
           android:launchMode="singleTop"
-          android:configChanges="orientation|keyboardHidden"
+          android:configChanges="keyboardHidden"
           android:windowSoftInputMode="stateHidden"
           />
 

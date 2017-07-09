@@ -3,14 +3,24 @@ androidBuild
 scalaVersion := "2.11.8"
 platformTarget in Android := "android-25"
 buildToolsVersion in Android := Some("25.0.2")
-resolvers += "Google Maven Repository" at "https://maven.google.com"
+resolvers ++= Seq(
+  Resolver.jcenterRepo,
+  "Google Maven Repository" at "https://maven.google.com"
+)
+
+val supportLibVer = "25.4.0"
+
+// Until the folling bug is fixed by upstream, we use patched support library instead
+// https://stackoverflow.com/questions/32070670/preferencefragmentcompat-requires-preferencetheme-to-be-set
+// https://github.com/Gericop/Android-Support-Preference-V7-Fix
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,
   "org.robolectric" % "robolectric" % "3.2.2" % Test,
   "junit" % "junit" % "4.12" % Test,
-  "com.android.support" % "support-v4" % "25.4.0",
-  android.Dependencies.aar("com.android.support" % "appcompat-v7" % "25.4.0")
+  "com.android.support" % "support-v4" % supportLibVer,
+  "com.takisoft.fix" % "preference-v7" % "25.4.0.3",
+  android.Dependencies.aar("com.android.support" % "appcompat-v7" % supportLibVer)
   )
 
 // Required for testing
