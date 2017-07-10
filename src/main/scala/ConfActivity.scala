@@ -52,37 +52,6 @@ trait PreferenceCustom extends Preference{
       })
   }
 }
-class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTextPreference(context,aset) with PreferenceCustom{
-  // value of AttributeSet can only be acquired in constructor
-  val unit = aset.getAttributeResourceValue(null,"unit",-1) match{
-    case -1 => ""
-    case x => context.getResources.getString(x)
-  }
-  override def getAbbrValue():String = {
-    getPersistedString("") + unit
-  }
-}
-class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPreference(context,aset) with PreferenceCustom{
-  override def getAbbrValue():String = {
-    val key = getKey()
-    val value = getValue()
-    val resources = context.getResources
-    val get_entry_from_value = (values:Int,entries:Int) => {
-      try{
-        val index = resources.getStringArray(values).indexOf(value)
-        resources.getStringArray(entries)(index)
-      }catch{
-        // Upgrading from older version causes this exception since value is empty.
-        case _:IndexOutOfBoundsException => ""
-      }
-    }
-    key match{
-      case "audio_stream_type" => get_entry_from_value(R.array.conf_audio_stream_type_entryValues,R.array.conf_audio_stream_type_entries)
-      case _ => value
-    }
-  }
-}
-
 class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with RequirePermissionTrait{
 
   override def onCreate(savedInstanceState: Bundle) {

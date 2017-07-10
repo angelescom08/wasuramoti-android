@@ -2,8 +2,9 @@ package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.Preference
-import android.content.SharedPreferences
+import android.support.v7.preference.{Preference,EditTextPreference,ListPreference}
+import android.content.{Context,SharedPreferences}
+import android.util.AttributeSet
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
 
 class PrefActivity extends AppCompatActivity {
@@ -74,3 +75,35 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
     }
   }
 }
+
+class EditTextPreferenceCustom(context:Context,aset:AttributeSet) extends EditTextPreference(context,aset) with CustomPref{
+  // value of AttributeSet can only be acquired in constructor
+  val unit = aset.getAttributeResourceValue(null,"unit",-1) match{
+    case -1 => ""
+    case x => context.getResources.getString(x)
+  }
+  override def getAbbrValue():String = {
+    getPersistedString("") + unit
+  }
+}
+class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPreference(context,aset) with CustomPref{
+  override def getAbbrValue():String = {
+    val key = getKey()
+    val value = getValue()
+    val resources = context.getResources
+    val get_entry_from_value = (values:Int,entries:Int) => {
+      try{
+        val index = resources.getStringArray(values).indexOf(value)
+        resources.getStringArray(entries)(index)
+      }catch{
+        // Upgrading from older version causes this exception since value is empty.
+        case _:IndexOutOfBoundsException => ""
+      }
+    }
+    key match{
+      case "audio_stream_type" => get_entry_from_value(R.array.conf_audio_stream_type_entryValues,R.array.conf_audio_stream_type_entries)
+      case _ => value
+    }
+  }
+}
+

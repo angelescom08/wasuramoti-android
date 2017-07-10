@@ -16,5 +16,23 @@
       android:summary="@string/conf_light_theme_summary"
       android:defaultValue="false"
       />
+      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+        android:key="audio_stream_type"
+        android:title="@string/conf_audio_stream_type"
+        android:summary="@string/conf_audio_stream_type_summary"
+        android:entries="@array/conf_audio_stream_type_entries"
+        android:entryValues="@array/conf_audio_stream_type_entryValues"
+        android:defaultValue="MUSIC"
+        android:widgetLayout="@layout/conf_current_value"
+        />
+        <karuta.hpnpwd.wasuramoti.EditTextPreferenceCustom
+          android:key="dimlock_minutes"
+          android:title="@string/conf_dimlock_minutes"
+          android:summary="@string/conf_dimlock_minutes_summary"
+          android:numeric="integer"
+          android:defaultValue="5"
+          android:widgetLayout="@layout/conf_current_value"
+          unit="@string/conf_unit_minute"
+          />
   </PreferenceCategory>
 </PreferenceScreen>
