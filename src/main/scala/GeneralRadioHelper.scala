@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.content.Context
 import android.widget.{RadioGroup,RadioButton,TextView}
 import android.view.{LayoutInflater,View}
@@ -80,3 +80,4 @@ class GeneralRadioHelper(context:Context, var builder:AlertDialog.Builder = null
     GeneralRadioHelper.setRadioTextClickListener(radio_group, clickHandler)
   }
 }
+

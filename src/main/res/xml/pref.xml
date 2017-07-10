@@ -2,6 +2,13 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/category_global">
+    <karuta.hpnpwd.wasuramoti.ReadOrderPreference
+      android:key="read_order"
+      android:title="@string/conf_read_order_title"
+      android:summary="@string/conf_read_order_summary"
+      android:defaultValue="SHUFFLE"
+      android:widgetLayout="@layout/conf_current_value"
+      />
 
     <CheckBoxPreference
       android:key="light_theme"

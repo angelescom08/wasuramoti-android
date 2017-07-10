@@ -33,7 +33,7 @@ android:versionName="1.0.6" android:versionCode="80" >
         </activity>
         <activity
           android:name=".PrefActivity"
-          android:theme="@style/PreferenceFixTheme"
+          android:theme="@style/Wasuramoti.PrefTheme"
           android:launchMode="singleTop"
           android:configChanges="keyboardHidden"
           />

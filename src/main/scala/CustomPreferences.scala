@@ -291,6 +291,7 @@ class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPr
     super.onPrepareDialogBuilder(builder)
   }
 }
+/*
 class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   override def getAbbrValue():String={
     val persisted = getPersistedString("SHUFFLE")
@@ -336,3 +337,4 @@ class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
     super.onPrepareDialogBuilder(builder)
   }
 }
+*/

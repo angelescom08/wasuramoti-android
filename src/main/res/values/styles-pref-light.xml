@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Wasuramoti.PrefTheme.Light" parent="PreferenceFixTheme.Light">
+    <item name="themeName">Wasuramoti.PrefTheme.Light</item>
+    <item name="generalBackgroundColor">#ffffff</item>
+    <item name="generalTextColor">#000000</item>
+    <item name="horizontalRuleColor">#f8f8f8</item>
+    <item name="mailAddrColor">#008e8e</item>
+    <item name="confCurrentValueColor">#ffaf1b</item>
+    <item name="generalRadioDialogItemColor">#ffb84d</item>
+    <item name="memoPanelTitleColor">#4f4f00</item>
+    <item name="memoCountColor">#508650</item>
+    <item name="memoNotCountColor">#ffacac</item>
+    <item name="searchItemSubColor">#7d9fa3</item>
+    <item name="readOrderEachItemColor">#ffb84d</item>
+    <item name="moveSearchNotFoundColor">#a9a9a9</item>
+    <item name="mainActivityBorderColor">#fdfdfd</item>
+    <item name="actionBarDividerColor">#8fd7f1</item>
+    <item name="actionBarPrimaryTextColor">#8fd7f1</item>
+    <item name="actionBarPoemNumColor">#000000</item>
+    <item name="poemTextMainColor">#000000</item>
+    <item name="poemTextFuriganaColor">#687d83</item>
+    <item name="kimarijiPrimaryColor">#64a664</item>
+    <item name="kimarijiSecondaryColor">#2c2f2f</item>
+    <item name="kimarijiTertiaryColor">#f5f5f5</item>
+    <item name="tableCellBorderColor">#d7d7d7</item>
+    <item name="mainButtonPressedColor">#fdfdfd</item>
+    <item name="roundBorderBackgroundColor">#fdfdfd</item>
+    <item name="roundBorderColor">#f1e7f5</item>
+    <item name="torifudaEdgeColor">#fdfdfd</item>
+    <item name="scanReaderListColor">#4f4f00</item>
+    <item name="decodeTestOkColor">#000000</item>
+    <item name="decodeTestErrorColor">#4f4f00</item>
+    <item name="reorderBarActiveColor">#008e8e</item>
+    <item name="reorderBarDefaultColor">#f8f8f8</item>
+    <item name="reorderTextActiveColor">#e1e1e1</item>
+    <item name="reorderTextDefaultColor">#faf2f2</item>
+    <item name="intendedUseValueColor">#4f4f00</item>
+    <item name="creditSpecialColor">#404026</item>
+    <item name="kimarijiLogMainColor">#07bb71</item>
+    <item name="kimarijiLogSubColor">#f3aef3</item>
+    <item name="howToAddMainColor">#4f4f00</item>
+    <item name="howToAddSubColor">#4f4f00</item>
+    <item name="cautionMessageColor">#445555</item>
+    <item name="poemDescColor">#74d1a2</item>
+  </style>
+</resources>
