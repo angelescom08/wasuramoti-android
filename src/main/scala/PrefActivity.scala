@@ -27,6 +27,7 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
       case _:ReadOrderPreference => PrefWidgets.newInstance[ReadOrderPreferenceFragment](pref.getKey)
       case _:JokaOrderPreference => PrefWidgets.newInstance[JokaOrderPreferenceFragment](pref.getKey)
       case _:AutoPlayPreference => PrefWidgets.newInstance[AutoPlayPreferenceFragment](pref.getKey)
+      case _:DescriptionPreference => PrefWidgets.newInstance[DescriptionPreferenceFragment](pref.getKey)
       case _ => null
     }
     if(fragment != null){

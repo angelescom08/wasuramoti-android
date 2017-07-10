@@ -8,6 +8,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,CompoundButton,LinearLayout}
+import android.text.Html
 
 import scala.reflect.ClassTag
 import scala.collection.mutable
@@ -239,4 +240,28 @@ class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
       context.getResources.getString(R.string.message_disabled)
     }
   }
+}
+
+class DescriptionPreferenceFragment extends PreferenceDialogFragmentCompat {
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[DescriptionPreference]
+    val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
+    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,pref.message)))
+    builder.setView(view)
+    super.onPrepareDialogBuilder(builder)
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+  }
+}
+
+class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
+  // value of AttributeSet can only be acquired in constructor
+  val message = attrs.getAttributeResourceValue(null,"message",-1) match{
+    case -1 => ""
+    case x => context.getResources.getString(x)
+  }
+
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }

@@ -161,19 +161,3 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
     return view
   }
 }
-class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
-  // value of AttributeSet can only be acquired in constructor
-  val message = attrs.getAttributeResourceValue(null,"message",-1) match{
-    case -1 => ""
-    case x => context.getResources.getString(x)
-  }
-
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
-    val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
-    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,message)))
-    builder.setView(view)
-    super.onPrepareDialogBuilder(builder)
-  }
-}
