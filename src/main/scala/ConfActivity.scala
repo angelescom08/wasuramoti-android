@@ -84,7 +84,6 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
 }
 
 class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with RequirePermissionTrait{
-  var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
 
   override def onCreate(savedInstanceState: Bundle) {
     val context = this
@@ -96,40 +95,6 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)
-    listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
-      override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
-        key match{
-          case "reader_path"|"read_order_joka"|"joka_enable"|
-            "wav_begin_read"|"wav_end_read"|"wav_span_simokami"|"wav_threshold"|
-            "wav_fadeout_simo"|"wav_fadein_kami"|"fudaset" =>
-            Globals.forceRefreshPlayer = true
-          case "show_replay_last_button" | "show_skip_button" =>
-            Globals.forceReloadUI = true
-          case "read_order_each" =>
-            // we also have to change text of replay_last_button when read_order_each changed
-            Globals.forceRefreshPlayer = true
-            Globals.forceReloadUI = true
-          case "read_order" =>
-            FudaListHelper.shuffleAndMoveToFirst(getApplicationContext)
-            Globals.forceRefreshPlayer = true
-          case "light_theme" =>
-            Globals.forceRestart = true
-          case "use_opensles" =>
-            if(android.os.Build.VERSION.SDK_INT <= 8 && prefs.getBoolean(key,false)){
-              val edit = prefs.edit
-              edit.putBoolean(key,false)
-              edit.commit()
-              Utils.messageDialog(context,Right(R.string.conf_use_opensles_not_supported))
-            }
-          case _ =>
-        }
-        val pref = findPreference(key)
-        if(pref != null && classOf[PreferenceCustom].isAssignableFrom(pref.getClass)){
-          pref.asInstanceOf[Preference with PreferenceCustom].notifyChangedPublic()
-        }
-      }
-    })
-    Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)
     findPreference("show_credits").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
       override def onPreferenceClick(pref:Preference):Boolean = {
         val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
@@ -164,22 +129,6 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
     Utils.dismissAlertDialog()
   }
   
-  // don't forget that this method may be called when device is rotated
-  // also not that this is not called when app is terminated by user using task manager.
-  // See:
-  //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
-  //   https://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
-  override def onDestroy(){
-    super.onDestroy()
-    // TODO: do not call unregisterOnSharedPreferenceChangeListener here, but somewhere else
-    listener.foreach{ l =>
-      Globals.prefs.foreach{ p =>
-        p.unregisterOnSharedPreferenceChangeListener(l)
-        listener = None
-      }
-    }
-  }
-
   // Note: this will not be called if app was terminated in background
   override def onActivityResult(reqCode:Int, resCode:Int, data:Intent){
     super.onActivityResult(reqCode,resCode,data)

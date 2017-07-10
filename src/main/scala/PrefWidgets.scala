@@ -1,13 +1,30 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
-import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentCompat}
+import android.widget.TextView
+import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder}
 import android.support.v7.app.AlertDialog
 import android.content.Context
 import android.util.AttributeSet
 import scala.reflect.ClassTag
 
 import scala.collection.mutable
+
+trait CustomPref extends Preference{
+  self:{ def getKey():String; def onBindViewHolder(v:PreferenceViewHolder); def notifyChanged()} =>
+  abstract override def onBindViewHolder(v:PreferenceViewHolder) {
+    v.findViewById(R.id.conf_current_value).asInstanceOf[TextView].setText(getAbbrValue())
+    super.onBindViewHolder(v)
+  }
+  def getAbbrValue():String = {
+    super.getPersistedString("")
+  }
+  // We have to call notifyChanged() to to reflect the change to view.
+  // However, notifyChanged() is protected method. Therefore we use this method instead.
+  def notifyChangedPublic(){
+    super.notifyChanged()
+  }
+}
 
 object PrefWidgets {
   // shuld be same as PreferenceDialogFragmentCompat.ARG_KEY
@@ -59,12 +76,23 @@ class ReadOrderPreferenceFragment extends PreferenceDialogFragmentCompat {
   }
 }
 
-class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) {
+class ReadOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref {
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def getPersistedString(default:String):String = {
     super.getPersistedString(default)
   }
   override def persistString(value:String):Boolean = {
     super.persistString(value)
+  }
+  override def getAbbrValue():String={
+    val persisted = getPersistedString("SHUFFLE")
+    val ar = context.getResources.getStringArray(R.array.conf_read_order_entries)
+    for(x <- ar){
+      val Array(key,title,_) = x.split("\\|")
+      if( key == persisted){
+        return title
+      }
+    }
+    return persisted
   }
 }
