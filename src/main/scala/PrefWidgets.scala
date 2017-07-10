@@ -11,6 +11,7 @@ import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,Compound
 
 import scala.reflect.ClassTag
 import scala.collection.mutable
+import scala.util.Try
 
 object PrefUtils {
   def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
@@ -175,6 +176,67 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
       context.getResources.getString(R.string.intended_use_joka_on)
     }else{
       context.getResources.getString(R.string.intended_use_joka_off)
+    }
+  }
+}
+
+
+class AutoPlayPreferenceFragment extends PreferenceDialogFragmentCompat {
+  var root_view = None:Option[View]
+  def getWidgets(view:View) = {
+    val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
+    val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
+    val repeat = view.findViewById(R.id.autoplay_repeat).asInstanceOf[CheckBox]
+    val stop = view.findViewById(R.id.autoplay_stop).asInstanceOf[CheckBox]
+    val stop_minutes = view.findViewById(R.id.autoplay_stop_minutes).asInstanceOf[TextView]
+    (enable,span,repeat,stop,stop_minutes)
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+    val pref = getPreference.asInstanceOf[AutoPlayPreference]
+    if(positiveResult){
+      root_view.foreach{ view =>
+        val edit = Globals.prefs.get.edit
+        val (enable,span,repeat,stop,stop_minutes) = getWidgets(view)
+        edit.putBoolean("autoplay_enable",enable.isChecked)
+        edit.putBoolean("autoplay_repeat",repeat.isChecked)
+        edit.putLong("autoplay_span",Math.max(1,Try{span.getText.toString.toInt}.getOrElse(1)))
+        edit.putBoolean("autoplay_stop",stop.isChecked)
+        edit.putLong("autoplay_stop_minutes",Math.max(1,Try{stop_minutes.getText.toString.toInt}.getOrElse(30)))
+        edit.commit
+        pref.notifyChangedPublic
+      }
+    }
+  }
+  override def onCreateDialogView(context:Context):View = {
+    val pref = getPreference.asInstanceOf[AutoPlayPreference]
+    val view = LayoutInflater.from(context).inflate(R.layout.autoplay,null)
+    // getDialog() returns null on onDialogClosed(), so we save view
+    root_view = Some(view)
+    val (enable,span,repeat,stop,stop_minutes) = getWidgets(view)
+    val prefs = Globals.prefs.get
+    enable.setChecked(prefs.getBoolean("autoplay_enable",false))
+    repeat.setChecked(prefs.getBoolean("autoplay_repeat",false))
+    span.setText(prefs.getLong("autoplay_span",pref.DEFAULT_VALUE).toString)
+    stop.setChecked(prefs.getBoolean("autoplay_stop",false))
+    stop_minutes.setText(prefs.getLong("autoplay_stop_minutes",30).toString)
+    PrefUtils.switchVisibilityByCheckBox(root_view,enable,R.id.autoplay_layout)
+    return view
+  }
+}
+class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref {
+  val DEFAULT_VALUE = 3
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  override def getAbbrValue():String = {
+    val p = Globals.prefs.get
+    val r = context.getResources
+    val auto = p.getBoolean("autoplay_enable",false)
+    if(auto){
+      p.getLong("autoplay_span",DEFAULT_VALUE) + r.getString(R.string.conf_unit_second) +
+        (if(p.getBoolean("autoplay_repeat",false)){
+          "\u21a9" // U+21A9 leftwards arrow with hook
+        }else{""})
+    }else{
+      context.getResources.getString(R.string.message_disabled)
     }
   }
 }

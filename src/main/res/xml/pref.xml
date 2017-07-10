@@ -41,5 +41,12 @@
       android:widgetLayout="@layout/conf_current_value"
       android:defaultValue="upper_1,lower_1"
       />
+    <karuta.hpnpwd.wasuramoti.AutoPlayPreference
+      android:key="autoplay"
+      android:title="@string/conf_autoplay"
+      android:summary="@string/conf_autoplay_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      unit="@string/conf_unit_second"
+      />
   </PreferenceCategory>
 </PreferenceScreen>
