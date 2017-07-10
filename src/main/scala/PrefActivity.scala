@@ -25,6 +25,7 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
   override def onDisplayPreferenceDialog(pref:Preference){
     val fragment = pref match {
       case _:ReadOrderPreference => PrefWidgets.newInstance[ReadOrderPreferenceFragment](pref.getKey)
+      case _:JokaOrderPreference => PrefWidgets.newInstance[JokaOrderPreferenceFragment](pref.getKey)
       case _ => null
     }
     if(fragment != null){

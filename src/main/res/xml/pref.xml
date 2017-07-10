@@ -34,5 +34,12 @@
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_minute"
           />
+    <karuta.hpnpwd.wasuramoti.JokaOrderPreference
+      android:key="read_order_joka"
+      android:title="@string/conf_read_order_joka"
+      android:summary="@string/conf_read_order_joka_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      android:defaultValue="upper_1,lower_1"
+      />
   </PreferenceCategory>
 </PreferenceScreen>

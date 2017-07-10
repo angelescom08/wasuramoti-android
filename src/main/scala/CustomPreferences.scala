@@ -12,61 +12,6 @@ import android.text.{TextUtils,Html}
 import scala.collection.mutable
 import scala.util.Try
 
-class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  // We can set defaultValue="..." in src/main/res/xml/conf.xml
-  // and reflect it to actual preference by calling:
-  //   PreferenceManager.setDefaultValues(context, R.xml.conf, true)
-  // As for custom DialogPreference, we have to override
-  // onSetInitialValue() and onGetDefaultValue() to get it to work.
-  // See 'Building a Custom Preference' in android developer document:
-  //   https://developer.android.com/guide/topics/ui/settings.html#Custom
-  // However this solution does not seem to work in Android 4.x+
-  // Therefore we use this old dirty hack.
-  val DEFAULT_VALUE = "upper_1,lower_1"
-  var root_view = None:Option[View]
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  override def onDialogClosed(positiveResult:Boolean){
-    if(positiveResult){
-      val read_order_joka = Array(R.id.conf_joka_upper_num,R.id.conf_joka_lower_num).map{ rid =>
-        val btn = root_view.get.findViewById(rid).asInstanceOf[RadioGroup].getCheckedRadioButtonId()
-        root_view.get.findViewById(btn).getTag()
-      }.mkString(",")
-      val edit = getEditor
-      val enable = root_view.get.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
-      val (eld,roj) = if(read_order_joka == "upper_0,lower_0"){
-        (false,DEFAULT_VALUE)
-      }else{
-        (enable.isChecked,read_order_joka)
-      }
-      edit.putBoolean("joka_enable",eld)
-      edit.putString(getKey,roj)
-      edit.commit
-      notifyChangedPublic
-    }
-    super.onDialogClosed(positiveResult)
-  }
-  override def onCreateDialogView():View = {
-    super.onCreateDialogView()
-    val view = LayoutInflater.from(context).inflate(R.layout.read_order_joka,null)
-    // getDialog() returns null on onDialogClosed(), so we save view
-    root_view = Some(view)
-    for( t <- getPersistedString(DEFAULT_VALUE).split(",")){
-      view.findViewWithTag(t).asInstanceOf[RadioButton].toggle()
-    }
-    val enable = view.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
-    enable.setChecked(Globals.prefs.get.getBoolean("joka_enable",true))
-    switchVisibilityByCheckBox(root_view,enable,R.id.read_order_joka_layout)
-    return view
-  }
-  override def getAbbrValue():String = {
-    if(Globals.prefs.get.getBoolean("joka_enable",true)){
-      context.getResources.getString(R.string.intended_use_joka_on)
-    }else{
-      context.getResources.getString(R.string.intended_use_joka_off)
-    }
-  }
-}
-
 class AutoPlayPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   val DEFAULT_VALUE = 3
   var root_view = None:Option[View]
