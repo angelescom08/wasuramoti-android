@@ -18,7 +18,13 @@ class PrefActivity extends AppCompatActivity {
   }
 }
 
+object PrefFragment{
+  // same as PreferenceFragmentCompat.DIALOG_FRAGMENT_TAG
+  val DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG"
+}
+
 class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSharedPreferenceChangeListener {
+
   override def onCreatePreferencesFix(state:Bundle, rootKey:String){
     addPreferencesFromResource(R.xml.pref)
   }
@@ -34,11 +40,12 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
       case _:ReadOrderEachPreference => PrefWidgets.newInstance[ReadOrderEachPreferenceFragment](pref.getKey)
       case _:MemorizationPreference => PrefWidgets.newInstance[MemorizationPreferenceFragment](pref.getKey)
       case _:FudaSetPreference => PrefWidgets.newInstance[FudaSetPreferenceFragment](pref.getKey)
+      case _:ReaderListPreference => PrefWidgets.newInstance[ReaderListPreferenceFragment](pref.getKey)
       case _ => null
     }
     if(fragment != null){
       fragment.setTargetFragment(this, 0)
-      fragment.show(getFragmentManager, "android.support.v7.preference.PreferenceFragment.DIALOG")
+      fragment.show(getFragmentManager, PrefFragment.DIALOG_FRAGMENT_TAG)
     }else{
       super.onDisplayPreferenceDialog(pref)
     }

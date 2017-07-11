@@ -3,10 +3,12 @@ package karuta.hpnpwd.wasuramoti
 import scala.collection.mutable.Buffer
 import scala.collection.JavaConversions
 
-import android.preference.ListPreference
+import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
+import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
-import android.app.{AlertDialog,ProgressDialog,Activity}
+import android.app.{ProgressDialog,Activity}
 import android.os.{Environment,AsyncTask}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
@@ -40,52 +42,57 @@ object ReaderList{
       new Absolute(context,path.replaceFirst("ABS:","").replaceFirst("/<>/","/"+Globals.READER_DIR+"/"))
     }
   }
+
+  def showReaderListPref(parent:Fragment, doScan:Boolean){
+    val fragment = PrefWidgets.newInstance[ReaderListPreferenceFragment]("reader_path")
+    fragment.getArguments.putShort("scanFileSystem",if(doScan){1}else{0})
+    fragment.setTargetFragment(parent, 0)
+    fragment.show(parent.getFragmentManager,PrefFragment.DIALOG_FRAGMENT_TAG)
+  }
 }
 
-class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs) with PreferenceCustom{
+class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
   var adapter = None:Option[ArrayAdapter[CharSequence]]
-  var scanFileSystem = false
   class SearchDirectoryTask extends AsyncTask[AnyRef,Void,Boolean] {
     var progress = None:Option[ProgressDialog]
     override def onPreExecute(){
-      if(context.isInstanceOf[Activity]){
-        val activity = context.asInstanceOf[Activity]
-        activity.runOnUiThread(new Runnable{
-            override def run(){
-              if(!activity.isFinishing){
-                val dlg = new ProgressDialog(activity)
-                dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_searching))
-                dlg.getWindow.setGravity(Gravity.BOTTOM)
-                dlg.show
-                progress = Some(dlg)
-              }
+      val activity = getActivity
+      activity.runOnUiThread(new Runnable{
+          override def run(){
+            if(!activity.isFinishing){
+              val dlg = new ProgressDialog(activity)
+              dlg.setMessage(activity.getApplicationContext.getResources.getString(R.string.now_searching))
+              dlg.getWindow.setGravity(Gravity.BOTTOM)
+              dlg.show
+              progress = Some(dlg)
             }
-          })
-      }
+          }
+        })
     }
     override def onPostExecute(rval:Boolean){
-      if(context.isInstanceOf[Activity]){
-        context.asInstanceOf[Activity].runOnUiThread(new Runnable{
-            override def run(){
-              progress.foreach(_.dismiss())
-            }
-          })
-      }
-      FudaListHelper.updateReaders(getEntryValues.filterNot(_=="SCAN_EXEC"))
+      val pref = getPreference.asInstanceOf[ReaderListPreference]
+      getActivity.runOnUiThread(new Runnable{
+        override def run(){
+          progress.foreach(_.dismiss())
+        }
+      })
+      FudaListHelper.updateReaders(pref.getEntryValues.filterNot(_=="SCAN_EXEC"))
 
     }
 
     // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
     // otherwise it raises AbstractMethodError "abstract method not implemented"
     override def doInBackground(unused:AnyRef*):AnyRef = {
+      val context = getContext
+      val pref = getPreference.asInstanceOf[ReaderListPreference]
       val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom(context)
       for(path <- paths){
         Utils.walkDir(path,Globals.READER_SCAN_DEPTH_MAX, f =>{
           if(f.getName == Globals.READER_DIR){
             val files = f.listFiles()
             if(files != null){
-              var entvals = getEntryValues
-              var entries = getEntries
+              var entvals = pref.getEntryValues
+              var entries = pref.getEntries
               val buf = Buffer[CharSequence]()
               for( i <- files if i.isDirectory() && ! entries.contains(i.getName)){
                 entvals :+= (if(path == Environment.getExternalStorageDirectory){
@@ -96,8 +103,8 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
                 entries :+= i.getName
                 buf += i.getName
               }
-              setEntries(entries)
-              setEntryValues(entvals)
+              pref.setEntries(entries)
+              pref.setEntryValues(entvals)
               context.asInstanceOf[Activity].runOnUiThread(new Runnable{
                   override def run(){
                     adapter.foreach{x=>
@@ -115,42 +122,34 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       true.asInstanceOf[AnyRef]
     }
   }
-
-  override def getAbbrValue():String = {
-    val path = getValue()
-    if(path.startsWith("INT:")){
-      path.replaceFirst("INT:","")
-    }else{
-      new File(path).getName()
-    }
-  }
   override def onDialogClosed(positiveResult:Boolean){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[ReaderListPreference]
     if(positiveResult){
-      val prev_value = getValue
-      super.onDialogClosed(positiveResult)
-      val cur_value = getValue
+      val prev_value = pref.getValue
+      val cur_value = pref.getValue
       val activity = context.asInstanceOf[ConfActivity]
       if(cur_value == "SCAN_EXEC"){
-        setValue(prev_value) // cancel
+        pref.setValue(prev_value) // cancel
         if(activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_SCAN)){
-          showDialogPublic(true)
+          ReaderList.showReaderListPref(getTargetFragment,true)
         }
       }else if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
-        setValue(prev_value) // cancel
+        pref.setValue(prev_value) // cancel
       }else{
         val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,cur_value).canReadAll
         if(!ok){
           Utils.messageDialog(context,Left(message))
-          setValue(prev_value) // cancel
+          pref.setValue(prev_value) // cancel
         }else{
           FudaListHelper.saveRestoreReadOrderJoka(prev_value,cur_value,joka_upper,joka_lower)
         }
       }
-    }else{
-      super.onDialogClosed(positiveResult)
     }
   }
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[ReaderListPreference]
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
 
@@ -158,11 +157,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       entvals += "INT:"+x
       entries += x
     }
-    // I don't think switching by scanFileSystem flag is correct way to do this
-    // TODO: override Preference and switch which AlertDialog to show
-    if(scanFileSystem){
+    if(getArguments.getShort("scanFileSystem") == 1){
       new SearchDirectoryTask().execute(new AnyRef())
-      scanFileSystem = false
+      getArguments.putShort("scanFileSystem",0)
     }else{
       for(x <- FudaListHelper.selectNonInternalReaders){
         entvals += x
@@ -172,14 +169,14 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
       entries += context.getResources.getString(R.string.scan_reader_exec)
     }
 
-    setEntries(entries.toArray)
-    setEntryValues(entvals.toArray)
+    pref.setEntries(entries.toArray)
+    pref.setEntryValues(entvals.toArray)
     adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          new ScanReaderConfDialog(context,{()=>showDialogPublic(true)}).show
+          new ScanReaderConfDialog(context,{()=>ReaderList.showReaderListPref(getTargetFragment,true)}).show
         }
       })
 
@@ -194,11 +191,17 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
     })
   }
 
-  def showDialogPublic(doScan:Boolean){
-    if(doScan){
-      scanFileSystem = true
+}
+
+class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPreference(context,attrs) with CustomPref{
+
+  override def getAbbrValue():String = {
+    val path = getValue()
+    if(path.startsWith("INT:")){
+      path.replaceFirst("INT:","")
+    }else{
+      new File(path).getName()
     }
-    showDialog(null)
   }
 }
 

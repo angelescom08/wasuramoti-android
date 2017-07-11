@@ -7,7 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.os.{Bundle,Handler}
 import android.support.v7.app.{AppCompatActivity,ActionBar}
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.{ActivityCompat,FragmentActivity}
 import android.support.v4.content.ContextCompat
 import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
@@ -744,11 +744,11 @@ trait RequirePermissionTrait {
       case REQ_PERM_PREFERENCE_SCAN | REQ_PERM_PREFERENCE_CHOOSE_READER =>
         (R.string.read_external_storage_permission_denied_scan, R.string.read_external_storage_permission_denied_forever_scan,
           ()=>{
-            val pref = self.asInstanceOf[PreferenceActivity].findPreference("reader_path")
-            if(pref != null){
-              pref.asInstanceOf[ReaderListPreference].showDialogPublic(requestCode == REQ_PERM_PREFERENCE_SCAN)
-            }
-          })
+            // TODO: we don't need asInstanceOf[FragmentActivity] when self is already that instance, remove it when ConfActivity is removed from this project
+            val fragment = self.asInstanceOf[FragmentActivity].getSupportFragmentManager.findFragmentById(R.id.pref_fragment)
+            ReaderList.showReaderListPref(fragment,requestCode == REQ_PERM_PREFERENCE_SCAN)
+          }
+          )
     }
 
     val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
