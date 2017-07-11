@@ -1,35 +1,17 @@
 package karuta.hpnpwd.wasuramoti
-import android.preference.DialogPreference
 import android.content.{Context,DialogInterface,SharedPreferences}
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.widget.{SeekBar,CheckBox,Spinner,Button,CompoundButton}
 import android.os.Bundle
-import android.app.{AlertDialog,Dialog}
+import android.app.Dialog
+
+import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentCompat}
+import android.support.v7.app.AlertDialog
 import android.support.v4.app.DialogFragment
 
-class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom with YomiInfoPreferenceTrait{
+class YomiInfoPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
-  override def getAbbrValue():String = {
-    val res_id = if(YomiInfoUtils.showPoemText){
-      if(Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)){
-        R.string.yomi_info_abbrev_torifuda
-      }else{
-        val lang = Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get) 
-        lang match {
-          case Utils.YomiInfoLang.Japanese =>
-            R.string.yomi_info_abbrev_yomifuda
-          case Utils.YomiInfoLang.Romaji =>
-            R.string.yomi_info_abbrev_romaji
-          case Utils.YomiInfoLang.English =>
-            R.string.yomi_info_abbrev_english
-        }
-      }
-    }else{
-      R.string.yomi_info_abbrev_none
-    }
-    context.getResources.getString(res_id)
-  }
   def getWidgets(view:View) = {
     val main = view.findViewById(R.id.yomi_info_show_text).asInstanceOf[CheckBox]
     val furigana_size = view.findViewById(R.id.yomi_info_furigana_width).asInstanceOf[SeekBar]
@@ -42,8 +24,8 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     val show_poem_num = view.findViewById(R.id.yomi_info_show_bar_poem_num).asInstanceOf[CheckBox]
     (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num)
   }
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   override def onDialogClosed(positiveResult:Boolean){
+    val pref = getPreference.asInstanceOf[YomiInfoPreference]
     if(positiveResult){
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
@@ -58,13 +40,13 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
         edit.putBoolean("yomi_info_show_bar_kimari",show_kimari.isChecked)
         edit.putBoolean("yomi_info_show_bar_poem_num",show_poem_num.isChecked)
         edit.commit
-        notifyChangedPublic
+        pref.notifyChangedPublic
       }
       Globals.forceReloadUI = true
     }
-    super.onDialogClosed(positiveResult)
   }
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf, null)
     root_view = Some(view)
     val (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num) = getWidgets(view)
@@ -112,12 +94,35 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
     })
 
     builder.setView(view)
-
     super.onPrepareDialogBuilder(builder)
   }
 }
 
-class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
+class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref with YomiInfoPreferenceTrait{
+  override def getAbbrValue():String = {
+    val res_id = if(YomiInfoUtils.showPoemText){
+      if(Globals.prefs.get.getBoolean("yomi_info_torifuda_mode",false)){
+        R.string.yomi_info_abbrev_torifuda
+      }else{
+        val lang = Utils.YomiInfoLang.getDefaultLangFromPref(Globals.prefs.get) 
+        lang match {
+          case Utils.YomiInfoLang.Japanese =>
+            R.string.yomi_info_abbrev_yomifuda
+          case Utils.YomiInfoLang.Romaji =>
+            R.string.yomi_info_abbrev_romaji
+          case Utils.YomiInfoLang.English =>
+            R.string.yomi_info_abbrev_english
+        }
+      }
+    }else{
+      R.string.yomi_info_abbrev_none
+    }
+    context.getResources.getString(res_id)
+  }
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+}
+
+class YomiInfoConfigLangDialog(context:Context) extends android.app.AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
@@ -146,7 +151,7 @@ class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) wit
   }
 }
 
-class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
+class YomiInfoConfigFontDialog(context:Context) extends android.app.AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val japanese_font = view.findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
     val furigana_font = view.findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]

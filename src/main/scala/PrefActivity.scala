@@ -41,6 +41,7 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
       case _:MemorizationPreference => PrefWidgets.newInstance[MemorizationPreferenceFragment](pref.getKey)
       case _:FudaSetPreference => PrefWidgets.newInstance[FudaSetPreferenceFragment](pref.getKey)
       case _:ReaderListPreference => PrefWidgets.newInstance[ReaderListPreferenceFragment](pref.getKey)
+      case _:YomiInfoPreference => PrefWidgets.newInstance[YomiInfoPreferenceFragment](pref.getKey)
       case _ => null
     }
     if(fragment != null){

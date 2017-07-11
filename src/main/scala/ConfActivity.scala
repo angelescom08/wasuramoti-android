@@ -11,47 +11,6 @@ import android.preference.{Preference,EditTextPreference,ListPreference}
 
 import java.util.regex.Pattern
 
-trait PreferenceCustom extends Preference{
-  self:{ def getKey():String; def onBindView(v:View); def notifyChanged()} =>
-  abstract override def onBindView(v:View) {
-    v.findViewById(R.id.conf_current_value).asInstanceOf[TextView].setText(getAbbrValue())
-    super.onBindView(v)
-  }
-  def getAbbrValue():String = {
-    // I don't now why we cannot use getPersistedString() here
-    Globals.prefs.get.getString(getKey(),"")
-  }
-  // We have to call notifyChanged() to to reflect the change to view.
-  // However, notifyChanged() is protected method. Therefore we use this method.
-  def notifyChangedPublic(){
-    super.notifyChanged()
-  }
-  def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
-    // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
-    val f = (isChecked:Boolean) => {
-      root_view.foreach{ root =>
-        val layout = root.findViewById(layout_id)
-        if(layout != null){
-          val lp = layout.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-          if(isChecked){
-            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            layout.setVisibility(View.VISIBLE)
-          }else{
-            lp.height = 0
-            layout.setVisibility(View.INVISIBLE)
-          }
-          layout.setLayoutParams(lp)
-        }
-      }
-    }
-    f(checkbox.isChecked)
-    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-        override def onCheckedChanged(btn:CompoundButton,isChecked:Boolean){
-          f(isChecked)
-        }
-      })
-  }
-}
 class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with RequirePermissionTrait{
 
   override def onCreate(savedInstanceState: Bundle) {
