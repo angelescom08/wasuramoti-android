@@ -45,7 +45,7 @@ object ReaderList{
 
   def showReaderListPref(parent:Fragment, doScan:Boolean){
     val fragment = PrefWidgets.newInstance[ReaderListPreferenceFragment]("reader_path")
-    fragment.getArguments.putShort("scanFileSystem",if(doScan){1}else{0})
+    fragment.getArguments.putBoolean("scanFileSystem",doScan)
     fragment.setTargetFragment(parent, 0)
     fragment.show(parent.getFragmentManager,PrefFragment.DIALOG_FRAGMENT_TAG)
   }
@@ -157,9 +157,9 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
       entvals += "INT:"+x
       entries += x
     }
-    if(getArguments.getShort("scanFileSystem") == 1){
+    if(getArguments.getBoolean("scanFileSystem")){
       new SearchDirectoryTask().execute(new AnyRef())
-      getArguments.putShort("scanFileSystem",0)
+      getArguments.putBoolean("scanFileSystem",false)
     }else{
       for(x <- FudaListHelper.selectNonInternalReaders){
         entvals += x
