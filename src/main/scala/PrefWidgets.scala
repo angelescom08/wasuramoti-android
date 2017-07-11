@@ -8,13 +8,15 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,CompoundButton,LinearLayout}
-import android.text.Html
+import android.text.{TextUtils,Html}
+import android.media.AudioManager
 
 import scala.reflect.ClassTag
 import scala.collection.mutable
 import scala.util.Try
 
 object PrefUtils {
+  var current_config_dialog = None:Option[PreferenceDialogFragmentCompat]
   def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
     // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
     val f = (isChecked:Boolean) => {
@@ -317,4 +319,103 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
       context.getResources.getString(R.string.message_disabled)
     }
   }
+}
+
+class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
+  var root_view = None:Option[View]
+  override def onDialogClosed(positiveResult:Boolean){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[AudioVolumePreference]
+    PrefUtils.current_config_dialog = None
+    Globals.player.foreach{ p => {
+      Globals.global_lock.synchronized{
+        if(Globals.is_playing){
+          p.stop();
+        }
+      }
+      }}
+    if(positiveResult){
+      root_view.foreach{ view =>
+        val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
+        val new_value = if(check.isChecked){
+          val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
+          Utils.formatFloat("%.2f" , seek.getProgress.toFloat / seek.getMax.toFloat)
+        }else{
+          Globals.audio_volume_bkup = None // do not restore audio volume
+          pref.notifyChangedPublic()
+          ""
+        }
+        pref.persistString(new_value)
+      }
+    }
+    Utils.restoreAudioVolume(context)
+    Globals.player.foreach{ pl =>
+      pl.set_audio_volume = true
+    }
+  }
+  override def onCreateDialogView(context:Context):View = {
+    val pref = getPreference.asInstanceOf[AudioVolumePreference]
+    // we have to access to the current dialog inside KarutaPlayUtils.doAfterConfiguration()
+    PrefUtils.current_config_dialog = Some(this)
+
+    Globals.player.foreach{ pl =>
+      pl.set_audio_volume = false
+    }
+    val view = LayoutInflater.from(context).inflate(R.layout.audio_volume,null)
+    // getDialog() returns null on onDialogClosed(), so we save view
+    root_view = Some(view)
+
+    KarutaPlayUtils.setAudioPlayButton(view,context)
+
+    val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
+    check.setChecked(!TextUtils.isEmpty(pref.getPersistedString("")))
+
+    val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
+
+    pref.withAudioVolume(Unit,{(audio_manager, max_volume, current_volume) =>
+      Globals.audio_volume_bkup = Some(current_volume)
+    })
+    Utils.saveAndSetAudioVolume(context)
+    pref.withAudioVolume(Unit,{(audio_manager, max_volume, current_volume) =>
+      seek.setProgress(((current_volume.toFloat/max_volume.toFloat)*seek.getMax).toInt)
+      seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+        override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
+          val volume = math.min(((progress.toFloat/seek.getMax.toFloat)*max_volume).toInt,max_volume)
+          audio_manager.setStreamVolume(Utils.getAudioStreamType,volume,0)
+        }
+        override def onStartTrackingTouch(bar:SeekBar){
+        }
+        override def onStopTrackingTouch(bar:SeekBar){
+        }
+      })
+    })
+    return view
+  }
+}
+
+class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref{
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+
+  def withAudioVolume(defValue:Any,func:(AudioManager,Int,Int)=>Any):Any = {
+    val audio_manager = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+    if(audio_manager != null){
+      val max_volume = audio_manager.getStreamMaxVolume(Utils.getAudioStreamType)
+      val current_volume = audio_manager.getStreamVolume(Utils.getAudioStreamType)
+      func(audio_manager,max_volume,current_volume)
+    }else{
+      defValue
+    }
+  }
+
+  override def getAbbrValue():String={
+    val volume = getPersistedString("")
+    if(TextUtils.isEmpty(volume)){
+      withAudioVolume("",{(audio_manager,max_volume,current_volume) =>
+        (100 * (current_volume.toFloat / max_volume.toFloat)).toInt
+      }).toString
+    }else{
+      "* " + (100 * Utils.parseFloat(volume)).toInt.toString + " *"
+    }
+  }
+
 }

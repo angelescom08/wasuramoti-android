@@ -250,7 +250,7 @@ object KarutaPlayUtils{
   }
   
   def doAfterSenderConf(bundle:Bundle){
-    Globals.current_config_dialog.foreach{dp=>
+    PrefUtils.current_config_dialog.foreach{dp=>
       val btn = dp.getDialog.findViewById(R.id.audio_play).asInstanceOf[Button]
       if(btn != null){
         Globals.player.foreach{p=>

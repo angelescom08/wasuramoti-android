@@ -12,7 +12,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   var number_of_bands = None:Option[Short]
 
   override def onDialogClosed(positiveResult:Boolean){
-    Globals.current_config_dialog = None
+    PrefUtils.current_config_dialog = None
     if(positiveResult && number_of_bands.nonEmpty){
       persistString(Utils.equalizerToString(makeSeq()))
     }
@@ -141,7 +141,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   override def onCreateDialogView():View = {
     super.onCreateDialogView()
     // we have to access to the current dialog inside KarutaPlayUtils.doAfterConfiguration()
-    Globals.current_config_dialog = Some(this)
+    // TODO: don't forget to uncomment following after implementing this as PreferenceDialogFragmentCompat
+    //PrefUtils.current_config_dialog = Some(this)
 
     val inflater = LayoutInflater.from(context)
     val view = inflater.inflate(R.layout.equalizer, null)

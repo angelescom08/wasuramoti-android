@@ -10,7 +10,7 @@ import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
 import android.os.{Environment,Handler}
-import android.preference.{DialogPreference,PreferenceManager}
+import android.preference.PreferenceManager
 import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
 import android.util.{Log,TypedValue}
@@ -60,8 +60,6 @@ object Globals {
   var audio_track_failed_count = 0
   // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
   var alert_dialog = None:Option[AlertDialog]
-
-  var current_config_dialog = None:Option[DialogPreference]
 }
 
 object Utils {
