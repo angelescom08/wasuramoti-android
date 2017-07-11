@@ -4,10 +4,12 @@ import android.content.{Context,Intent}
 import android.content.pm.PackageInfo
 import android.os.{Build,StatFs}
 import android.annotation.TargetApi
-import android.app.{AlertDialog,ActivityManager}
+import android.app.ActivityManager
 import android.util.{Log,Base64,Base64OutputStream}
 import android.view.{View,LayoutInflater}
 import android.widget.{TextView,Button,Toast}
+
+import android.support.v7.app.AlertDialog
 
 import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream,FileOutputStream,OutputStream}
 import java.nio.ByteBuffer

@@ -1,11 +1,13 @@
 package karuta.hpnpwd.wasuramoti
-import android.support.v4.app.{DialogFragment,Fragment}
 import android.content.Context
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,LinearLayout,Button}
 import android.os.Bundle
 import android.text.{Html,Spanned}
-import android.app.{AlertDialog,Dialog}
+import android.app.Dialog
+
+import android.support.v4.app.{DialogFragment,Fragment}
+import android.support.v7.app.AlertDialog
 
 // The constructor of Fragment must be empty since when fragment is recreated,
 // The empty constructor is called.

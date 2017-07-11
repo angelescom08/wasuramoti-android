@@ -122,7 +122,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
 
-class YomiInfoConfigLangDialog(context:Context) extends android.app.AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
+class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
@@ -151,7 +151,7 @@ class YomiInfoConfigLangDialog(context:Context) extends android.app.AlertDialog(
   }
 }
 
-class YomiInfoConfigFontDialog(context:Context) extends android.app.AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
+class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
   def getWidgets(view:View) = {
     val japanese_font = view.findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
     val furigana_font = view.findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]

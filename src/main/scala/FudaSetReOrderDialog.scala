@@ -4,7 +4,7 @@ import android.view.{View,LayoutInflater,ViewGroup,DragEvent}
 import android.os.Bundle
 import android.content.{ClipData,Context,ContentValues}
 import android.widget.TextView
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.widget.Button
 
 class FudaSetReOrderDialog(context:Context,

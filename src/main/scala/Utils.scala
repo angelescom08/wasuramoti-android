@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{Activity,AlertDialog,AlarmManager,PendingIntent}
+import android.app.{Activity,AlarmManager,PendingIntent}
 import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
@@ -18,6 +18,7 @@ import android.view.{LayoutInflater,View}
 import android.widget.{TextView,ListView,ArrayAdapter,CheckBox}
 
 import android.support.v4.content.FileProvider
+import android.support.v7.app.AlertDialog
 
 import java.io.File
 import java.text.NumberFormat

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.content.Context
 import android.util.AttributeSet
 import android.text.TextUtils
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,CheckBox,EditText}
 

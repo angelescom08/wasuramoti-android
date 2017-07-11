@@ -1,13 +1,15 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.support.v4.app.DialogFragment
-import android.app.{AlertDialog,Dialog,SearchManager}
+import android.app.{Dialog,SearchManager}
 import android.os.Bundle
 import android.widget.TextView
 import android.view.LayoutInflater
 import android.content.Intent
 import android.net.Uri
 import android.text.Html
+
+import android.support.v4.app.DialogFragment
+import android.support.v7.app.AlertDialog
 
 object PoemDescriptionDialog{
   def newInstance(fudanum:Option[Int]):PoemDescriptionDialog = {

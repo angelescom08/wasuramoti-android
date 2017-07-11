@@ -1,10 +1,12 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.support.v4.app.DialogFragment
-import android.app.{AlertDialog,Dialog}
+import android.app.Dialog
 import android.os.Bundle
 import android.content.DialogInterface
 import android.widget.RadioGroup
+
+import android.support.v4.app.DialogFragment
+import android.support.v7.app.AlertDialog
 
 object IntendedUseDialog{
   def newInstance(first_config:Boolean = true):IntendedUseDialog = {

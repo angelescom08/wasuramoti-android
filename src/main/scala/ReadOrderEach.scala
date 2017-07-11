@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.os.Bundle
 import android.widget.{RadioGroup,EditText,TextView}
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 
 class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat with SharedPreferences.OnSharedPreferenceChangeListener {
   var root_view = None:Option[View]

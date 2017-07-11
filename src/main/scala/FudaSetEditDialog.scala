@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.os.Bundle
 import android.content.Context
 import android.text.{TextUtils,Html}

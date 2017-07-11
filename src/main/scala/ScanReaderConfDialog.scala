@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.os.Bundle
 import android.view.{LayoutInflater}

@@ -7,7 +7,7 @@ import android.os.{AsyncTask,Bundle,SystemClock}
 import android.media.audiofx.Equalizer
 import android.widget.Toast
 import android.util.Log
-import android.app.AlertDialog
+import android.support.v7.app.AlertDialog
 import android.content.Context
 
 import scala.collection.mutable

@@ -1,12 +1,14 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.{AlertDialog,Dialog,Activity}
+import android.app.{Dialog,Activity}
 import android.os.{Bundle,Handler}
 import android.view.{View,LayoutInflater,MotionEvent,ViewGroup}
 import android.widget.{TextView,Button,EditText,BaseAdapter,Filter,ListView,Filterable,AdapterView,SeekBar}
-import android.support.v4.app.DialogFragment
 import android.content.Context
 import android.text.{Editable,TextWatcher,TextUtils}
+
+import android.support.v4.app.DialogFragment
+import android.support.v7.app.AlertDialog
 
 import scala.util.Sorting
 import scala.collection.mutable

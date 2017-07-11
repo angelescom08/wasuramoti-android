@@ -1,19 +1,20 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.{Activity,AlertDialog}
+import android.app.Activity
 import android.content.{Intent,IntentFilter,Context,DialogInterface,BroadcastReceiver}
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.os.{Bundle,Handler}
-import android.support.v7.app.{AppCompatActivity,ActionBar}
-import android.support.v4.app.{ActivityCompat,FragmentActivity}
-import android.support.v4.content.ContextCompat
 import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,Toast}
 import android.preference.PreferenceActivity
+
+import android.support.v7.app.{AppCompatActivity,ActionBar,AlertDialog}
+import android.support.v4.app.{ActivityCompat,FragmentActivity}
+import android.support.v4.content.ContextCompat
 
 import org.json.{JSONTokener,JSONObject}
 
