@@ -1,43 +1,39 @@
 package karuta.hpnpwd.wasuramoti
-import android.preference.DialogPreference
+import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentCompat}
 import android.content.{Context,SharedPreferences,DialogInterface}
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.os.Bundle
 import android.widget.{RadioGroup,EditText,TextView}
 import android.app.AlertDialog
-class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  var listener = None:Option[SharedPreferences.OnSharedPreferenceChangeListener] // You have to hold the reference globally since SharedPreferences keeps listeners in a WeakHashMap
-  val DEFAULT_VALUE = "CUR2_NEXT1"
+
+class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat with SharedPreferences.OnSharedPreferenceChangeListener {
   var root_view = None:Option[View]
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-
-
   override def onDialogClosed(positiveResult:Boolean){
+    val pref = getPreference.asInstanceOf[ReadOrderEachPreference]
     if(positiveResult){
       val group = root_view.get.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
       val bid = group.getCheckedRadioButtonId()
       if(bid == R.id.conf_read_order_each_custom){
-        persistString(Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE))
+        pref.persistString(Globals.prefs.get.getString("read_order_each_custom",pref.DEFAULT_VALUE))
       }else{
         val vw = group.findViewById(bid)
-        persistString(vw.getTag.asInstanceOf[String].toUpperCase)
+        pref.persistString(vw.getTag.asInstanceOf[String].toUpperCase)
       }
     }
-    super.onDialogClosed(positiveResult)
   }
 
-  override def onCreateDialogView():View = {
-    super.onCreateDialogView()
+  override def onCreateDialogView(context:Context):View = {
+    val pref = getPreference.asInstanceOf[ReadOrderEachPreference]
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each,null)
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
     val group = view.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
     GeneralRadioHelper.setRadioTextClickListener(group)
-    val value = getPersistedString(DEFAULT_VALUE)
+    val value = pref.getPersistedString(pref.DEFAULT_VALUE)
     val vw = group.findViewWithTag(value.toLowerCase)
     if(vw == null){
-      if(value != Globals.prefs.get.getString("read_order_each_custom",DEFAULT_VALUE)){
+      if(value != Globals.prefs.get.getString("read_order_each_custom",pref.DEFAULT_VALUE)){
         // migrate from abolished option
         val edit = Globals.prefs.get.edit
         edit.putString("read_order_each_custom",value)
@@ -66,29 +62,42 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
       }
     })
 
-    listener = Some(new SharedPreferences.OnSharedPreferenceChangeListener{
-            override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
-              if(key == "read_order_each_custom"){
-                updateCustomCurrent()
-              }
-            }})
     updateCustomCurrent()
-    Globals.prefs.get.registerOnSharedPreferenceChangeListener(listener.get)
     return view
   }
 
   def updateCustomCurrent(){
+    val pref = getPreference.asInstanceOf[ReadOrderEachPreference]
     root_view.foreach{ v =>
       val prefs = Globals.prefs.get
       val abbr = if(prefs.contains("read_order_each_custom")){
-        toAbbrValue(prefs.getString("read_order_each_custom",DEFAULT_VALUE))
+        pref.toAbbrValue(prefs.getString("read_order_each_custom",pref.DEFAULT_VALUE))
       }else{
-        context.getResources.getString(R.string.conf_read_order_value_undefined)
+        getContext.getResources.getString(R.string.conf_read_order_value_undefined)
       }
       v.findViewById(R.id.conf_read_order_value_custom).asInstanceOf[TextView].setText(abbr)
     }
   }
 
+  override def onSharedPreferenceChanged(prefs:SharedPreferences, key:String){
+    if(key == "read_order_each_custom"){
+      updateCustomCurrent()
+    }
+  }
+
+  override def onResume(){
+    super.onResume()
+    Globals.prefs.get.registerOnSharedPreferenceChangeListener(this)
+  }
+  override def onPause(){
+    super.onPause()
+    Globals.prefs.get.unregisterOnSharedPreferenceChangeListener(this)
+  }
+}
+
+class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref{
+  val DEFAULT_VALUE = "CUR2_NEXT1"
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
   def toAbbrValue(value:String):String = {
     val res = context.getResources
     val ar = res.getStringArray(R.array.conf_read_order_abbr_presets)
@@ -104,6 +113,8 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
     val value = getPersistedString(DEFAULT_VALUE)
     toAbbrValue(value)
   }
+
+
 }
 
 
