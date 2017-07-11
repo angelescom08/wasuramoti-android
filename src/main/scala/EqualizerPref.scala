@@ -2,19 +2,19 @@ package karuta.hpnpwd.wasuramoti
 import android.annotation.TargetApi
 import android.util.AttributeSet
 import android.content.Context
-import android.preference.DialogPreference
+import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentCompat}
 import android.view.{View,LayoutInflater}
 import android.widget.{LinearLayout,TextView,SeekBar,Button}
 import android.media.audiofx.Equalizer
 
-class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs){
+class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   var number_of_bands = None:Option[Short]
-
   override def onDialogClosed(positiveResult:Boolean){
+    val pref = getPreference.asInstanceOf[EqualizerPreference]
     PrefUtils.current_config_dialog = None
     if(positiveResult && number_of_bands.nonEmpty){
-      persistString(Utils.equalizerToString(makeSeq()))
+      pref.persistString(Utils.equalizerToString(makeSeq()))
     }
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{
@@ -24,8 +24,8 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
         p.equalizer_seq = None
       }
       }}
-    super.onDialogClosed(positiveResult)
   }
+
   def makeSeq():Utils.EqualizerSeq={
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
@@ -61,7 +61,7 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
 
   def set_button_listeners(view:View){
     // Play Button
-    KarutaPlayUtils.setAudioPlayButton(view,context,Some({
+    KarutaPlayUtils.setAudioPlayButton(view,getContext,Some({
         pl => pl.equalizer_seq = Some(makeSeq())
       }))
     // Reset Button
@@ -138,12 +138,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
   }
 
   @TargetApi(9) // Equalizer requires API >= 9
-  override def onCreateDialogView():View = {
-    super.onCreateDialogView()
+  override def onCreateDialogView(context:Context):View = {
     // we have to access to the current dialog inside KarutaPlayUtils.doAfterConfiguration()
-    // TODO: don't forget to uncomment following after implementing this as PreferenceDialogFragmentCompat
-    //PrefUtils.current_config_dialog = Some(this)
-
+    PrefUtils.current_config_dialog = Some(this)
     val inflater = LayoutInflater.from(context)
     val view = inflater.inflate(R.layout.equalizer, null)
 
@@ -187,4 +184,9 @@ class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPref
     }
     return view
   }
+
+}
+
+class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref {
+
 }
