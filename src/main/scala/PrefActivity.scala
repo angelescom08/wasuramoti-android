@@ -32,6 +32,7 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
       case _:AudioVolumePreference => PrefWidgets.newInstance[AudioVolumePreferenceFragment](pref.getKey)
       case _:EqualizerPreference => PrefWidgets.newInstance[EqualizerPreferenceFragment](pref.getKey)
       case _:ReadOrderEachPreference => PrefWidgets.newInstance[ReadOrderEachPreferenceFragment](pref.getKey)
+      case _:MemorizationPreference => PrefWidgets.newInstance[MemorizationPreferenceFragment](pref.getKey)
       case _ => null
     }
     if(fragment != null){

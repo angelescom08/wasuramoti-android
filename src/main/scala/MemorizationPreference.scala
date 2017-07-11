@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.preference.DialogPreference
+import android.support.v7.preference.{PreferenceDialogFragmentCompat,DialogPreference}
 import android.os.Bundle
 import android.content.Context
 import android.util.AttributeSet
@@ -9,29 +9,23 @@ import android.app.AlertDialog
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,CheckBox,EditText}
 
-class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
+class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
   val TAG_PANEL_ALL = "panel_all"
   val TAG_PANEL_FUDASET = "panel_fudaset"
   var root_view = None:Option[View]
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-  override def getAbbrValue():String={
-    if(getPersistedBoolean(false)){
-      context.getResources.getString(R.string.message_enabled)
-    }else{
-      context.getResources.getString(R.string.message_disabled)
-    }
-  }
   def getWidgets(view:View) = {
     val enable = view.findViewById(R.id.memorization_mode_enable).asInstanceOf[CheckBox]
     enable
   }
   override def onDialogClosed(positiveResult:Boolean){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[MemorizationPreference]
     if(positiveResult){
       root_view.foreach{ view =>
-        val edit = getEditor
+        val edit = pref.getSharedPreferences.edit
         val enable = getWidgets(view)
         val is_c = enable.isChecked
-        edit.putBoolean(getKey,is_c)
+        edit.putBoolean(pref.getKey,is_c)
         if(is_c){
           if(!YomiInfoUtils.showPoemText){
             YomiInfoUtils.setPoemTextVisibility(edit,true)
@@ -39,12 +33,11 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
           }
         }
         edit.commit
-        notifyChangedPublic
+        pref.notifyChangedPublic
         Globals.forceReloadUI = true
         FudaListHelper.updateSkipList(context)
       }
     }
-    super.onDialogClosed(positiveResult)
   }
 
   def setMemCount(panel:View,onlyInFudaset:Boolean) = {
@@ -72,6 +65,7 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
   }
 
   def genPanel(onlyInFudaset:Boolean):View = {
+    val context = getContext
     val (tag,title,reset_cond) = if(onlyInFudaset){
       val tt = "** " + Globals.prefs.get.getString("fudaset","") + " **"
       val rc = "WHERE skip = 2"
@@ -121,12 +115,12 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     panel
   }
 
-  override def onCreateDialogView():View = {
-    super.onCreateDialogView()
+  override def onCreateDialogView(context:Context):View = {
+    val pref = getPreference.asInstanceOf[MemorizationPreference]
     val view = LayoutInflater.from(context).inflate(R.layout.memorization_conf,null)
     root_view = Some(view)
     val enable = getWidgets(view)
-    val memorization_mode = getPersistedBoolean(false)
+    val memorization_mode = pref.getPersistedBoolean(false)
     enable.setChecked(memorization_mode)
 
     val container = view.findViewById(R.id.memorization_panel_container).asInstanceOf[ViewGroup]
@@ -139,7 +133,17 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     container.addView(genPanel(false))
     view
   }
+}
 
+class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref{
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  override def getAbbrValue():String={
+    if(getPersistedBoolean(false)){
+      context.getResources.getString(R.string.message_enabled)
+    }else{
+      context.getResources.getString(R.string.message_disabled)
+    }
+  }
 }
 
 class MemorizationFudaSetDialog(context:Context,

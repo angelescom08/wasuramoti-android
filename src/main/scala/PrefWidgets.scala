@@ -65,6 +65,12 @@ trait CustomPref extends Preference{
   override def persistString(value:String):Boolean = {
     super.persistString(value)
   }
+  override def getPersistedBoolean(default:Boolean):Boolean = {
+    super.getPersistedBoolean(default)
+  }
+  override def persistBoolean(value:Boolean):Boolean = {
+    super.persistBoolean(value)
+  }
 
 
 }
