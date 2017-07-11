@@ -9,6 +9,12 @@
           message="@string/conf_caution_message"
           android:key="dummy_conf_caution"
           />
+    <karuta.hpnpwd.wasuramoti.KarafudaPreference
+      android:key="karafuda"
+      android:title="@string/conf_karafuda"
+      android:summary="@string/conf_karafuda_summary"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <karuta.hpnpwd.wasuramoti.ReadOrderPreference
       android:key="read_order"
       android:title="@string/conf_read_order_title"

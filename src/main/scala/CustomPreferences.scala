@@ -12,58 +12,6 @@ import android.text.{TextUtils,Html}
 import scala.collection.mutable
 import scala.util.Try
 
-class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
-  var root_view = None:Option[View]
-  def getWidgets(view:View) = {
-    val rand = view.findViewById(R.id.karafuda_urafuda_prob).asInstanceOf[SeekBar]
-    val num = view.findViewById(R.id.karafuda_append_num).asInstanceOf[TextView]
-    val enable = view.findViewById(R.id.karafuda_enable).asInstanceOf[CheckBox]
-    (enable,num,rand)
-  }
-  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
-
-  override def getAbbrValue():String={
-    if(Globals.prefs.get.getBoolean("karafuda_enable",false)){
-      Globals.prefs.get.getInt("karafuda_append_num",0).toString + context.getResources.getString(R.string.karafuda_unit)
-    }else{
-      context.getResources.getString(R.string.message_disabled)
-    }
-  }
-  override def onDialogClosed(positiveResult:Boolean){
-    if(positiveResult){
-      root_view.foreach{ view =>
-        val edit = Globals.prefs.get.edit
-        val (enable,num,rand) = getWidgets(view)
-        edit.putBoolean("karafuda_enable",enable.isChecked)
-        edit.putInt("karafuda_append_num",try{
-            num.getText.toString.toInt
-          }catch{
-            case _:NumberFormatException => 0
-          })
-        edit.putFloat("karafuda_urafuda_prob",rand.getProgress.toFloat/rand.getMax.toFloat)
-        edit.commit
-        notifyChangedPublic
-        FudaListHelper.updateSkipList(context)
-      }
-
-    }
-    super.onDialogClosed(positiveResult)
-  }
-  override def onCreateDialogView():View = {
-    super.onCreateDialogView()
-    val view = LayoutInflater.from(context).inflate(R.layout.karafuda,null)
-    // getDialog() returns null on onDialogClosed(), so we save view
-    root_view = Some(view)
-    val (enable,num,rand) = getWidgets(view)
-    val prefs = Globals.prefs.get
-    enable.setChecked(prefs.getBoolean("karafuda_enable",false))
-    num.setText(prefs.getInt("karafuda_append_num",0).toString)
-    rand.setProgress((prefs.getFloat("karafuda_urafuda_prob",0.5f)*rand.getMax).toInt)
-    switchVisibilityByCheckBox(root_view,enable,R.id.karafuda_layout)
-    return view
-  }
-
-}
 
 class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with PreferenceCustom{
   var root_view = None:Option[View]
