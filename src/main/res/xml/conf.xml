@@ -207,6 +207,7 @@
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_playback_detail">
         <karuta.hpnpwd.wasuramoti.DescriptionPreference
+          android:key="dummy_description"
           android:title="@string/conf_caution"
           android:summary="@string/conf_caution_summary"
           message="@string/conf_caution_message" />
@@ -255,6 +256,10 @@
         />
     </PreferenceScreen>
     <Preference android:title="@string/conf_show_credits" android:summary="@string/conf_show_credits_summary" android:key="show_credits"/>
-    <Preference android:title="@string/conf_bug_report" android:summary="@string/conf_bug_report_summary" android:key="bug_report"/>
+    <karuta.hpnpwd.BugReportPreference
+      android:key="dummy_bug_report"
+      android:title="@string/conf_bug_report"
+      android:summary="@string/conf_bug_report_summary"
+      />
   </PreferenceCategory>
 </PreferenceScreen>

@@ -5,11 +5,12 @@ import android.content.pm.PackageInfo
 import android.os.{Build,StatFs}
 import android.annotation.TargetApi
 import android.app.ActivityManager
-import android.util.{Log,Base64,Base64OutputStream}
+import android.util.{Log,Base64,Base64OutputStream,AttributeSet}
 import android.view.{View,LayoutInflater}
 import android.widget.{TextView,Button,Toast}
 
 import android.support.v7.app.AlertDialog
+import android.support.v7.preference.{PreferenceDialogFragmentCompat,DialogPreference}
 
 import java.io.{File,RandomAccessFile,PrintWriter,ByteArrayOutputStream,FileOutputStream,OutputStream}
 import java.nio.ByteBuffer
@@ -20,6 +21,42 @@ import scala.collection.mutable
 
 trait BugReportable{
   def toBugReport():String
+}
+
+class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
+    val view = LayoutInflater.from(context).inflate(R.layout.bug_report_dialog,null)
+    val mail = view.findViewById(R.id.developer_mail_addr).asInstanceOf[TextView]
+    Utils.setUnderline(mail)
+    mail.setOnClickListener(new View.OnClickListener(){
+      override def onClick(view:View){
+        BugReport.sendMailToDeveloper(context) 
+      }
+    })
+    mail.setOnLongClickListener(new View.OnLongClickListener(){
+      override def onLongClick(v:View):Boolean = {
+        Utils.copyToClipBoard(context,"wasuramoti developer mail address",context.getResources.getString(R.string.developer_mail_addr))
+        Toast.makeText(context,R.string.copied_to_clipboard,Toast.LENGTH_SHORT).show()
+        return true
+      }
+    })
+    val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]
+    form.setOnClickListener(new View.OnClickListener(){
+      override def onClick(view:View){
+        BugReport.showAnonymousForm(context)
+      }
+    })
+    builder.setView(view)
+
+    super.onPrepareDialogBuilder(builder)
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+  }
+}
+
+class BugReportPreference(context:Context, attrs:AttributeSet) extends DialogPreference(context,attrs) {
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
 
 object BugReport{
@@ -65,36 +102,6 @@ object BugReport{
     dir.listFiles.collect{
       case f if f.isFile => s"(name:${f.getName},size:${f.length},crc32:${getCRC(f)})"
     }
-  }
-
-  def showBugReportDialog(context:Context){
-    val builder = new AlertDialog.Builder(context)
-    val view = LayoutInflater.from(context).inflate(R.layout.bug_report_dialog,null)
-    val mail = view.findViewById(R.id.developer_mail_addr).asInstanceOf[TextView]
-    Utils.setUnderline(mail)
-    mail.setOnClickListener(new View.OnClickListener(){
-      override def onClick(view:View){
-        sendMailToDeveloper(context) 
-      }
-    })
-    mail.setOnLongClickListener(new View.OnLongClickListener(){
-      override def onLongClick(v:View):Boolean = {
-        Utils.copyToClipBoard(context,"wasuramoti developer mail address",context.getResources.getString(R.string.developer_mail_addr))
-        Toast.makeText(context,R.string.copied_to_clipboard,Toast.LENGTH_SHORT).show()
-        return true
-      }
-    })
-    val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]
-    form.setOnClickListener(new View.OnClickListener(){
-      override def onClick(view:View){
-        showAnonymousForm(context)
-      }
-    })
-
-    builder.setNegativeButton(android.R.string.cancel,null)
-      .setTitle(R.string.conf_bug_report)
-      .setView(view)
-    Utils.showDialogAndSetGlobalRef(builder.create)
   }
 
   def sendMailToDeveloper(context:Context){
