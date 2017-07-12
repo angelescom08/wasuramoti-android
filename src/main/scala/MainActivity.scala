@@ -693,6 +693,7 @@ trait WasuramotiBaseTrait {
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
     item.getItemId match {
       case android.R.id.home => {
+        // android.R.id.home will be returned when the Application Icon is clicked if we are using android.support.v7.app.ActionBarActivity
         self.finish()
       }
       case _ => {}
@@ -702,7 +703,7 @@ trait WasuramotiBaseTrait {
 }
 
 trait RequirePermissionTrait {
-  self:Activity =>
+  self:FragmentActivity =>
   val REQ_PERM_MAIN_ACTIVITY = 1
   val REQ_PERM_PREFERENCE_SCAN = 2
   val REQ_PERM_PREFERENCE_CHOOSE_READER = 3
@@ -745,8 +746,7 @@ trait RequirePermissionTrait {
       case REQ_PERM_PREFERENCE_SCAN | REQ_PERM_PREFERENCE_CHOOSE_READER =>
         (R.string.read_external_storage_permission_denied_scan, R.string.read_external_storage_permission_denied_forever_scan,
           ()=>{
-            // TODO: we don't need asInstanceOf[FragmentActivity] when self is already that instance, remove it when ConfActivity is removed from this project
-            val fragment = self.asInstanceOf[FragmentActivity].getSupportFragmentManager.findFragmentById(R.id.pref_fragment)
+            val fragment = self.getSupportFragmentManager.findFragmentById(R.id.pref_fragment)
             ReaderList.showReaderListPref(fragment,requestCode == REQ_PERM_PREFERENCE_SCAN)
           }
           )

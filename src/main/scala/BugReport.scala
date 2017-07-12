@@ -31,7 +31,7 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
     Utils.setUnderline(mail)
     mail.setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        BugReport.sendMailToDeveloper(context) 
+        sendMailToDeveloper(context) 
       }
     })
     mail.setOnLongClickListener(new View.OnLongClickListener(){
@@ -44,12 +44,64 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
     val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]
     form.setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        BugReport.showAnonymousForm(context)
+        showAnonymousForm(context)
       }
     })
     builder.setView(view)
 
     super.onPrepareDialogBuilder(builder)
+  }
+  def sendMailToDeveloper(context:Context){
+    val address = context.getResources.getString(R.string.developer_mail_addr)
+    val subject = context.getResources.getString(R.string.bug_report_subject)
+    val intent = new Intent(Intent.ACTION_SEND)
+    intent.setType("message/rfc822")
+    intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
+    intent.putExtra(Intent.EXTRA_SUBJECT,subject)
+    try{
+      val file = Utils.getProvidedFile(context,Utils.ProvidedBugReport,true)
+      val ostream = new FileOutputStream(file)
+      try{
+        BugReport.writeBugReportToGzip(context,ostream)
+      }finally{
+        ostream.close()
+      }
+      val attachment = Utils.getProvidedUri(context,file)
+      if(Utils.HAVE_TO_GRANT_CONTENT_PERMISSION){
+        Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
+      }
+      intent.putExtra(Intent.EXTRA_STREAM,attachment)
+    }catch{
+      case _:Throwable => None
+    }
+    val msg = context.getResources.getString(R.string.choose_mailer)
+    try{
+      getActivity.asInstanceOf[PrefActivity].startActivityForResult(Intent.createChooser(intent,msg),BugReport.CLEAN_PROVIDED_REQUEST)
+    }catch{
+      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_mail))
+    }
+  }
+
+  def showAnonymousForm(context:Context){
+    val file = Utils.getProvidedFile(context,Utils.ProvidedAnonymousForm,true)
+    val post_url = context.getResources.getString(R.string.bug_report_url)
+    val bug_report = BugReport.writeBugReportToBase64(context)
+    val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
+    val writer = new PrintWriter(file)
+    try{
+      writer.write(html)
+    }finally{
+      writer.close()
+    }
+    val uri = Utils.getProvidedUri(context,file)
+    val intent = new Intent(Intent.ACTION_VIEW,uri)
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    val msg = context.getResources.getString(R.string.choose_browser)
+    try{
+      getActivity.asInstanceOf[PrefActivity].startActivityForResult(Intent.createChooser(intent,msg),BugReport.CLEAN_PROVIDED_REQUEST)
+    }catch{
+      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
+    }
   }
   override def onDialogClosed(positiveResult:Boolean){
   }
@@ -104,58 +156,6 @@ object BugReport{
     }
   }
 
-  def sendMailToDeveloper(context:Context){
-    val address = context.getResources.getString(R.string.developer_mail_addr)
-    val subject = context.getResources.getString(R.string.bug_report_subject)
-    val intent = new Intent(Intent.ACTION_SEND)
-    intent.setType("message/rfc822")
-    intent.putExtra(Intent.EXTRA_EMAIL,Array(address))
-    intent.putExtra(Intent.EXTRA_SUBJECT,subject)
-    try{
-      val file = Utils.getProvidedFile(context,Utils.ProvidedBugReport,true)
-      val ostream = new FileOutputStream(file)
-      try{
-        writeBugReportToGzip(context,ostream)
-      }finally{
-        ostream.close()
-      }
-      val attachment = Utils.getProvidedUri(context,file)
-      if(Utils.HAVE_TO_GRANT_CONTENT_PERMISSION){
-        Utils.grantUriPermissionsForExtraStream(context,intent,attachment)
-      }
-      intent.putExtra(Intent.EXTRA_STREAM,attachment)
-    }catch{
-      case _:Throwable => None
-    }
-    val msg = context.getResources.getString(R.string.choose_mailer)
-    try{
-      context.asInstanceOf[ConfActivity].startActivityForResult(Intent.createChooser(intent,msg),CLEAN_PROVIDED_REQUEST)
-    }catch{
-      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_mail))
-    }
-  }
-
-  def showAnonymousForm(context:Context){
-    val file = Utils.getProvidedFile(context,Utils.ProvidedAnonymousForm,true)
-    val post_url = context.getResources.getString(R.string.bug_report_url)
-    val bug_report = BugReport.writeBugReportToBase64(context)
-    val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
-    val writer = new PrintWriter(file)
-    try{
-      writer.write(html)
-    }finally{
-      writer.close()
-    }
-    val uri = Utils.getProvidedUri(context,file)
-    val intent = new Intent(Intent.ACTION_VIEW,uri)
-    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    val msg = context.getResources.getString(R.string.choose_browser)
-    try{
-      context.asInstanceOf[ConfActivity].startActivityForResult(Intent.createChooser(intent,msg),CLEAN_PROVIDED_REQUEST)
-    }catch{
-      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
-    }
-  }
   def writeBugReportToBase64(context:Context):String = {
     val bao = new ByteArrayOutputStream()
     val base64 = new Base64OutputStream(bao, Base64.DEFAULT|Base64.NO_WRAP)

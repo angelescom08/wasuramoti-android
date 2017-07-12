@@ -115,6 +115,12 @@
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_misc">
+        <CheckBoxPreference
+          android:key="light_theme"
+          android:title="@string/conf_light_theme"
+          android:summary="@string/conf_light_theme_summary"
+          android:defaultValue="false"
+          />
         <karuta.hpnpwd.wasuramoti.EqualizerPreference
           android:key="effect_equalizer_seq"
           android:title="@string/conf_equalizer"
@@ -128,12 +134,6 @@
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_display">
-        <CheckBoxPreference
-          android:key="light_theme"
-          android:title="@string/conf_light_theme"
-          android:summary="@string/conf_light_theme_summary"
-          android:defaultValue="false"
-          />
         <CheckBoxPreference
           android:key="show_message_when_moved"
           android:title="@string/conf_show_message_when_moved"

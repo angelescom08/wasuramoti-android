@@ -26,7 +26,7 @@ class ScanReaderConfDialog(context:Context,showParent:()=>Unit) extends AlertDia
           which match{
             case DialogInterface.BUTTON_POSITIVE => {
               val path = path_form.getText.toString
-              val activity = context.asInstanceOf[ConfActivity]
+              val activity = getOwnerActivity.asInstanceOf[PrefActivity]
               if(TextUtils.isEmpty(path) || new File(path).isDirectory){
                 val edit = Globals.prefs.get.edit
                 edit.putString("scan_reader_additional",path)

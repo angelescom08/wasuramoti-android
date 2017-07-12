@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
-import android.app.{ProgressDialog,Activity}
+import android.app.ProgressDialog
 import android.os.{Environment,AsyncTask}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
@@ -105,7 +105,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
               }
               pref.setEntries(entries)
               pref.setEntryValues(entvals)
-              context.asInstanceOf[Activity].runOnUiThread(new Runnable{
+              getActivity.runOnUiThread(new Runnable{
                   override def run(){
                     adapter.foreach{x=>
                      for(i <- buf){
@@ -128,7 +128,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
     if(positiveResult){
       val prev_value = pref.getValue
       val cur_value = pref.getValue
-      val activity = context.asInstanceOf[ConfActivity]
+      val activity = getActivity.asInstanceOf[PrefActivity]
       if(cur_value == "SCAN_EXEC"){
         pref.setValue(prev_value) // cancel
         if(activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_SCAN)){
