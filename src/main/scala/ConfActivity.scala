@@ -23,25 +23,6 @@ class ConfActivity extends PreferenceActivity with WasuramotiBaseTrait with Requ
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
     addPreferencesFromResource(R.xml.conf)
-    findPreference("show_credits").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-      override def onPreferenceClick(pref:Preference):Boolean = {
-        val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
-        val fp = context.getAssets.open("README"+suffix)
-        val pat1 = Pattern.compile(".*__BEGIN_CREDITS__",Pattern.DOTALL)
-        val pat2 = Pattern.compile("__END_CREDITS__.*",Pattern.DOTALL)
-        val buf = TextUtils.htmlEncode(Utils.readStream(fp))
-        .replaceAll("\n","<br>\n")
-        .replaceAll(" ","\u00A0")
-        .replaceAll("(&lt;.*?&gt;)","<b>$1</b>")
-        .replaceAll("%%(.*)","<font color='?attr/creditSpecialColor'><i>$1</i></font>")
-        .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<font color='?attr/creditSpecialColor'><a href='$1'>$1</a></font>")
-        fp.close
-        val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
-        Utils.generalHtmlDialog(context:Context,Left(buf2))
-
-        return false
-      }
-    })
   }
 
   override def onPause(){

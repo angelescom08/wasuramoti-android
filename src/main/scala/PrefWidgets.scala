@@ -15,6 +15,8 @@ import scala.reflect.ClassTag
 import scala.collection.mutable
 import scala.util.Try
 
+import java.util.regex.Pattern
+
 object PrefUtils {
   var current_config_dialog = None:Option[PreferenceDialogFragmentCompat]
   def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
@@ -423,5 +425,33 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
       "* " + (100 * Utils.parseFloat(volume)).toInt.toString + " *"
     }
   }
+}
 
+class CreditsPreferenceFragment extends PreferenceDialogFragmentCompat {
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
+    val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
+    val fp = context.getAssets.open("README"+suffix)
+    val pat1 = Pattern.compile(".*__BEGIN_CREDITS__",Pattern.DOTALL)
+    val pat2 = Pattern.compile("__END_CREDITS__.*",Pattern.DOTALL)
+    val buf = TextUtils.htmlEncode(Utils.readStream(fp))
+    .replaceAll("\n","<br>\n")
+    .replaceAll(" ","\u00A0")
+    .replaceAll("(&lt;.*?&gt;)","<b>$1</b>")
+    .replaceAll("%%(.*)","<font color='?attr/creditSpecialColor'><i>$1</i></font>")
+    .replaceAll("(https?://[a-zA-Z0-9/._%-]*)","<font color='?attr/creditSpecialColor'><a href='$1'>$1</a></font>")
+    fp.close
+    val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
+    val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
+    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,buf2)))
+    builder.setView(view)
+    super.onPrepareDialogBuilder(builder)
+  }
+  override def onDialogClosed(positiveResult:Boolean){
+  }
+}
+
+class CreditsPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) {
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
