@@ -20,9 +20,6 @@ End of Life:
      - http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
      - AlertDialog -> v7.AlertDialog or v4.DialogFragment (which prevents dismiss on screen rotate)
        - http://stackoverflow.com/questions/7557265/prevent-dialog-dismissal-on-screen-rotation-in-android
-     - PreferenceActivity -> v7.AppCompatActivity, v7.PreferenceFragmentCompat
-     - DialogPreference -> v7.DialogPreference, v7.PreferenceDialogFragmentCompat
-     - customize style and items in styles.xml and make darker theme
 
   * [20XX-XX-XX] Only support API Level >= 15
       - you can use LinearLayout's android:showDividers and android:divider

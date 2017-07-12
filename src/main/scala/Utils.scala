@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{Activity,AlarmManager,PendingIntent}
+import android.app.{Activity,AlarmManager,PendingIntent,Dialog}
 import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
-import android.os.{Environment,Handler}
+import android.os.{Environment,Handler,Bundle}
 import android.preference.PreferenceManager
 import android.text.method.LinkMovementMethod
 import android.text.{TextUtils,Html}
@@ -17,6 +17,7 @@ import android.util.{Log,TypedValue}
 import android.view.{LayoutInflater,View}
 import android.widget.{TextView,ListView,ArrayAdapter,CheckBox}
 
+import android.support.v4.app.{FragmentActivity,DialogFragment}
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 
@@ -59,8 +60,6 @@ object Globals {
   var forceReloadUI = false
   var audio_volume_bkup = None:Option[Int]
   var audio_track_failed_count = 0
-  // TODO: use DialogFragment instead of holding the global reference of AlertDialog and dismissing at onPause()
-  var alert_dialog = None:Option[AlertDialog]
 }
 
 object Utils {
@@ -304,19 +303,6 @@ object Utils {
     db.endTransaction
   }
 
-  // save dialog instance to variable so that it can be dismissed by dismissAlertDialog()
-  def showDialogAndSetGlobalRef(dialog:AlertDialog, func_done:()=>Unit = {()=>Unit}){
-    // AlaertDialog.Builder.setOnDismissListener() was added on API >= 17 so we use Dialog.setOnDismissListener() instead
-    dialog.setOnDismissListener(new DialogInterface.OnDismissListener(){
-        override def onDismiss(interface:DialogInterface){
-          func_done()
-          Globals.alert_dialog = None
-        }
-      })
-    dialog.show()
-    Globals.alert_dialog = Some(dialog)
-  }
-
   def getStringOrResource(context:Context,arg:Either[String,Int]):Option[String] = {
     Option(arg).map{
       case Left(x) => x
@@ -351,7 +337,7 @@ object Utils {
       })
     .setNegativeButton(android.R.string.no,nega_handler)
     .create
-    showDialogAndSetGlobalRef(dialog)
+    showDialogOrFragment(context,dialog)
   }
   def messageDialog(
     context:Context,
@@ -364,7 +350,7 @@ object Utils {
     val dialog = builder
       .setPositiveButton(android.R.string.ok,null)
       .create
-    showDialogAndSetGlobalRef(dialog, func_done)
+    showDialogOrFragment(context, dialog, func_done)
   }
 
   def generalHtmlDialog(
@@ -385,7 +371,7 @@ object Utils {
       .setPositiveButton(android.R.string.ok,null)
       .setView(view)
       .create
-    showDialogAndSetGlobalRef(dialog, func_done)
+    showDialogOrFragment(context, dialog, func_done)
   }
 
   def generalCheckBoxConfirmDialog(
@@ -410,7 +396,7 @@ object Utils {
         .setNegativeButton(android.R.string.no,null)
         .setView(view)
         .create
-      showDialogAndSetGlobalRef(dialog)
+      showDialogOrFragment(context, dialog)
   }
 
   def listDialog(
@@ -435,13 +421,9 @@ object Utils {
             d.dismiss()
           }
         })
-      showDialogAndSetGlobalRef(builder.create)
+      showDialogOrFragment(context, builder.create)
   }
 
-  def dismissAlertDialog(){
-    Globals.alert_dialog.foreach{_.dismiss}
-    Globals.alert_dialog = None
-  }
   // Getting internal and external storage path is a big mess in android.
   // Android's Environment.getExternalStorageDirectory does not actually return external SD card's path.
   // Instead, it returns internal storage path for most devices.
@@ -928,8 +910,31 @@ object Utils {
     }
 
   }
+  def showDialogOrFragment(context:Context, dialog:Dialog, func_done:()=>Unit={()=>Unit}){
+    if(context.isInstanceOf[FragmentActivity]){
+      val activity = context.asInstanceOf[FragmentActivity]
+      val fragment = new DialogFragment {
+        override def onCreateDialog(state:Bundle):Dialog = {
+          return dialog
+        }
+        override def onDismiss(di:DialogInterface){
+          func_done()
+          super.onDismiss(di)
+        }
+      }
+      fragment.show(activity.getSupportFragmentManager,"karuta.hpnpwd.wasuramoti.SHOW_DIALOG_OR_FRAGMENT")
+    }else{
+      // Fallback to normal dialog. However this should not happen.
+      // TODO: raise warning, throw exception, or assure that following code never happens by always passing FragmentManager to this function
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener(){
+        override def onDismiss(interface:DialogInterface){
+          func_done()
+        }
+      })
+      dialog.show()
+    }
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){
 }
-

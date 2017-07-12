@@ -10,7 +10,8 @@ import android.widget.{CheckBox,EditText,ImageView,LinearLayout,TextView}
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
-import android.support.v4.app.{NotificationCompat,TaskStackBuilder}
+
+import android.support.v4.app.{NotificationCompat,TaskStackBuilder,FragmentActivity}
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,7 +73,7 @@ object NotifyTimerUtils {
   }
 }
 
-class NotifyTimerActivity extends Activity with WasuramotiBaseTrait{
+class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
   var current_ringtone = None:Option[Ringtone]
   val timer_icons = List(
     (R.drawable.baby_tux,13), // icon_id, default_minutes

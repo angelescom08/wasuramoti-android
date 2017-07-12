@@ -533,10 +533,6 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     run_dimlock = None
     run_refresh_text.foreach(handler.removeCallbacks(_))
     run_refresh_text = None
-    // Since android:configChanges="orientation" is not set to WasuramotiActivity,
-    // we have to close the dialog at onPause() to avoid window leak.
-    // without this, window leak occurs when rotating the device when dialog is shown.
-    Utils.dismissAlertDialog()
     broadcast_receiver.foreach{ brc =>
       unregisterReceiver(brc)
       broadcast_receiver = None
