@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="Wasuramoti.PrefTheme" parent="PreferenceFixTheme">
+    <!-- drawables -->
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_dark</item>
+    <item name="mainButtonDrawable">@drawable/main_button_dark</item>
+    <item name="roundBorderDrawable">@drawable/round_border_dark</item>
+    <item name="tableCellDrawable">@drawable/table_cell_dark</item>
+    <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.PrefTheme</item>
     <item name="generalBackgroundColor">#000000</item>
     <item name="generalTextColor">#ffffff</item>

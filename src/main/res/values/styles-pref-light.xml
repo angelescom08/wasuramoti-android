@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="Wasuramoti.PrefTheme.Light" parent="PreferenceFixTheme.Light">
+    <!-- drawables -->
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_light</item>
+    <item name="mainButtonDrawable">@drawable/main_button_light</item>
+    <item name="roundBorderDrawable">@drawable/round_border_light</item>
+    <item name="tableCellDrawable">@drawable/table_cell_light</item>
+    <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.PrefTheme.Light</item>
     <item name="generalBackgroundColor">#ffffff</item>
     <item name="generalTextColor">#000000</item>

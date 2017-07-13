@@ -255,12 +255,12 @@
         android:widgetLayout="@layout/conf_current_value"
         />
     </PreferenceScreen>
-    <karuta.hpnpwd.CreditsPreference 
+    <karuta.hpnpwd.wasuramoti.CreditsPreference
       android:key="dummy_credits"
       android:title="@string/conf_show_credits"
       android:summary="@string/conf_show_credits_summary"
       />
-    <karuta.hpnpwd.BugReportPreference
+    <karuta.hpnpwd.wasuramoti.BugReportPreference
       android:key="dummy_bug_report"
       android:title="@string/conf_bug_report"
       android:summary="@string/conf_bug_report_summary"
