@@ -913,15 +913,7 @@ object Utils {
   def showDialogOrFragment(context:Context, dialog:Dialog, func_done:()=>Unit={()=>Unit}){
     if(context.isInstanceOf[FragmentActivity]){
       val activity = context.asInstanceOf[FragmentActivity]
-      val fragment = new DialogFragment {
-        override def onCreateDialog(state:Bundle):Dialog = {
-          return dialog
-        }
-        override def onDismiss(di:DialogInterface){
-          func_done()
-          super.onDismiss(di)
-        }
-      }
+      val fragment = new MessageDialogFragment(dialog,func_done)
       fragment.show(activity.getSupportFragmentManager,"karuta.hpnpwd.wasuramoti.SHOW_DIALOG_OR_FRAGMENT")
     }else{
       // Fallback to normal dialog. However this should not happen.
@@ -933,6 +925,17 @@ object Utils {
       })
       dialog.show()
     }
+  }
+}
+
+
+class MessageDialogFragment(dialog:Dialog,func_done:()=>Unit) extends DialogFragment {
+  override def onCreateDialog(state:Bundle):Dialog = {
+    return dialog
+  }
+  override def onDismiss(di:DialogInterface){
+    func_done()
+    super.onDismiss(di)
   }
 }
 
