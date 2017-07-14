@@ -31,7 +31,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     cur_num.foreach{ num =>
       if(num == 0){
         // TODO: include joka to memorization mode
-        Utils.messageDialog(context,Right(R.string.memorization_warn_joka))
+        CommonDialog.messageDialog(context,Right(R.string.memorization_warn_joka))
       }else{
         FudaListHelper.switchMemorized(num)
       }

@@ -102,7 +102,7 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
           val edit = prefs.edit
           edit.putBoolean(key,false)
           edit.commit()
-          Utils.messageDialog(context,Right(R.string.conf_use_opensles_not_supported))
+          CommonDialog.messageDialog(context,Right(R.string.conf_use_opensles_not_supported))
         }
       case _ =>
     }

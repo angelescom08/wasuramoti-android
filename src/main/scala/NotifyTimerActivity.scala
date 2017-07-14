@@ -184,7 +184,7 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
   }
   def onTimerStartClick(v:View){
     if(NotifyTimerUtils.alarm_manager.isEmpty){
-      Utils.messageDialog(this,Right(R.string.alarm_service_not_supported))
+      CommonDialog.messageDialog(this,Right(R.string.alarm_service_not_supported))
       return
     }
     setAllTimeAlarm

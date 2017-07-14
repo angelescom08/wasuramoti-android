@@ -100,7 +100,7 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
     }
     val f3 = {() =>
       Right({() =>
-        Utils.messageDialog(getActivity,Right(R.string.browser_not_found))
+        CommonDialog.messageDialog(getActivity,Right(R.string.browser_not_found))
       })
     }
     // scala.util.control.Breaks.break does not work (why?)

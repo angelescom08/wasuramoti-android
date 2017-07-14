@@ -29,7 +29,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
         if(is_c){
           if(!YomiInfoUtils.showPoemText){
             YomiInfoUtils.setPoemTextVisibility(edit,true)
-            Utils.messageDialog(context,Right(R.string.memorization_warn_yomi_info_view))
+            CommonDialog.messageDialog(context,Right(R.string.memorization_warn_yomi_info_view))
           }
         }
         edit.commit
@@ -85,7 +85,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
         if(panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
           new MemorizationFudaSetDialog(context,onlyInFudaset,true,reset_cond,setMemCountAll).show()
         }else{
-          Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
+          CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
       }
     })
@@ -95,7 +95,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
         if(panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
           new MemorizationFudaSetDialog(context,onlyInFudaset,false,reset_cond,setMemCountAll).show()
         }else{
-          Utils.messageDialog(context,Right(R.string.memorization_fudaset_empty))
+          CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
       }
     })
@@ -105,7 +105,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
           Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
             FudaListHelper.resetMemorized(reset_cond)
             FudaListHelper.updateSkipList(context)
-            Utils.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+            CommonDialog.messageDialog(context,Right(R.string.memorization_mode_reset_done))
             setMemCountAll()
           })}})
 
@@ -179,7 +179,7 @@ class MemorizationFudaSetDialog(context:Context,
           FudaListHelper.updateSkipList(context)
         }
         callback()
-        Utils.messageDialog(context,Right(R.string.memorization_fudaset_created))
+        CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_created))
     }
   }
   override def onCreate(state:Bundle){

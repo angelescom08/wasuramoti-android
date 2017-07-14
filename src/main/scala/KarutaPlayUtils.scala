@@ -54,7 +54,7 @@ object KarutaPlayUtils{
             case None =>
               handler.post(new Runnable(){
                 override def run(){
-                  Utils.messageDialog(context,Right(R.string.player_error_noplay))
+                  CommonDialog.messageDialog(context,Right(R.string.player_error_noplay))
                 }
               })
           }
@@ -68,7 +68,7 @@ object KarutaPlayUtils{
       return
     }
     if(Utils.getReadOrder != Utils.ReadOrder.Shuffle){
-      Utils.messageDialog(activity,Right(R.string.rewind_only_for_shuffle))
+      CommonDialog.messageDialog(activity,Right(R.string.rewind_only_for_shuffle))
       return
     }
     val ci = FudaListHelper.getCurrentIndex(activity)
@@ -89,11 +89,11 @@ object KarutaPlayUtils{
           })
         }catch{
           case _:ArrayIndexOutOfBoundsException =>
-            Utils.messageDialog(activity,Right(R.string.rewind_button_invalid))
+            CommonDialog.messageDialog(activity,Right(R.string.rewind_button_invalid))
             return
         }
       case None =>
-        Utils.messageDialog(activity,Right(R.string.rewind_button_invalid))
+        CommonDialog.messageDialog(activity,Right(R.string.rewind_button_invalid))
     }
   }
 

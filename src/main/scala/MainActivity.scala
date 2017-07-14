@@ -52,7 +52,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     setIntent(new Intent(this,this.getClass))
     dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
       case "fudaset" => importFudaset(dataString)
-      case "from_oom" => Utils.messageDialog(this,Right(R.string.from_oom_message))
+      case "from_oom" => CommonDialog.messageDialog(this,Right(R.string.from_oom_message))
       case m => Utils.messageDialog(this,Left(s"'${m}' is not correct intent data for ACTION_VIEW for wasuramoti"))
     }
   }
@@ -616,7 +616,7 @@ trait MainButtonTrait{
       if(Globals.player.isEmpty){
         if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
           FudaListHelper.getOrQueryNumbersToRead() == 0){
-          Utils.messageDialog(self,Right(R.string.all_memorized))
+          CommonDialog.messageDialog(self,Right(R.string.all_memorized))
         }else if(FudaListHelper.allReadDone(self.getApplicationContext())){
           val custom = (builder:AlertDialog.Builder) => {
             builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
@@ -633,7 +633,7 @@ trait MainButtonTrait{
         }else if(Globals.player_none_reason.nonEmpty){
           Utils.messageDialog(self,Left(Globals.player_none_reason.get))
         }else{
-          Utils.messageDialog(self,Right(R.string.player_none_reason_unknown))
+          CommonDialog.messageDialog(self,Right(R.string.player_none_reason_unknown))
         }
         return
       }
@@ -756,7 +756,7 @@ trait RequirePermissionTrait {
         }else{
           if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
             // permission is denied for first time, or denied with never ask again turned off
-            Utils.messageDialog(this,Right(deniedMessage))
+            CommonDialog.messageDialog(this,Right(deniedMessage))
           }else{
             // permission is denied, with never ask again turned on
             Utils.confirmDialog(this,Right(deniedForeverMessage),()=>{

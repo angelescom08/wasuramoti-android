@@ -78,7 +78,7 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
     try{
       getActivity.asInstanceOf[PrefActivity].startActivityForResult(Intent.createChooser(intent,msg),BugReport.CLEAN_PROVIDED_REQUEST)
     }catch{
-      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_mail))
+      case _:android.content.ActivityNotFoundException => CommonDialog.messageDialog(context,Right(R.string.activity_not_found_for_mail))
     }
   }
 
@@ -100,7 +100,7 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
     try{
       getActivity.asInstanceOf[PrefActivity].startActivityForResult(Intent.createChooser(intent,msg),BugReport.CLEAN_PROVIDED_REQUEST)
     }catch{
-      case _:android.content.ActivityNotFoundException => Utils.messageDialog(context,Right(R.string.activity_not_found_for_html))
+      case _:android.content.ActivityNotFoundException => CommonDialog.messageDialog(context,Right(R.string.activity_not_found_for_html))
     }
   }
   override def onDialogClosed(positiveResult:Boolean){
