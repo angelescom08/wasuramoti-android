@@ -10,7 +10,7 @@ import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
 import android.os.{Environment,Handler,Bundle}
-import android.preference.PreferenceManager
+import android.support.v7.preference.PreferenceManager
 import android.text.{TextUtils,Html}
 import android.util.{Log,TypedValue}
 import android.view.{LayoutInflater,View}
