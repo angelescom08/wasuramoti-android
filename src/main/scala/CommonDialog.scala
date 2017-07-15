@@ -9,19 +9,37 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 
 import android.support.v7.app.AlertDialog
-import android.support.v4.app.{FragmentActivity,DialogFragment}
+import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment}
 
 object CommonDialog {
+  trait CallBackListener {
+    def onCommonDialogResult(dialogId:Int, bundle:Bundle)
+  }
+
   class MessageDialogFragment extends DialogFragment {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
-      if(!args.containsKey("message")){
-        throw new RuntimeException("messageId not in arguments")
-      }
       val message = args.getString("message")
       new AlertDialog.Builder(getContext)
-        .setPositiveButton(android.R.string.ok,null)
         .setMessage(message)
+        .setPositiveButton(android.R.string.ok,null)
+        .create
+    }
+  }
+  class ConfirmDialogFragment extends DialogFragment {
+    override def onCreateDialog(state:Bundle):Dialog = {
+      val args = super.getArguments
+      val message = args.getString("message")
+      val result = args.getBundle("result")
+      val dialogId = args.getInt("dialog_id")
+      new AlertDialog.Builder(getContext)
+        .setMessage(message)
+        .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
+          override def onClick(interface:DialogInterface,which:Int){
+            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogResult(dialogId, result)
+          }
+        })
+        .setNegativeButton(android.R.string.no,null)
         .create
     }
   }
@@ -35,34 +53,6 @@ object CommonDialog {
       case Right(x) => context.getResources.getString(x)
     }
   }
-  def confirmDialog(
-    context:Context,
-    arg:Either[String,Int],
-    func_yes:()=>Unit,
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity,
-    func_no:Option[()=>Unit]=None
-  ){
-    val builder = custom(new AlertDialog.Builder(context))
-    builder.setMessage(getStringOrResource(context,arg))
-    val nega_handler = func_no match {
-      case None => null
-      case Some(func) =>
-        new DialogInterface.OnClickListener(){
-          override def onClick(interface:DialogInterface,which:Int){
-            func()
-          }
-        }
-    }
-    val dialog:AlertDialog = builder
-    .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
-        override def onClick(interface:DialogInterface,which:Int){
-          func_yes()
-        }
-      })
-    .setNegativeButton(android.R.string.no,nega_handler)
-    .create
-    showDialogOrFragment(context,dialog)
-  }
   def messageDialog(context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new MessageDialogFragment
@@ -71,20 +61,22 @@ object CommonDialog {
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
-  def messageDialog(
-    context:Context,
-    arg:Either[String,Int],
-    func_done:()=>Unit = {()=>Unit},
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
+  def confirmDialog(
+    parent:Fragment with CallBackListener,
+    message:Either[String,Int],
+    dialogId:Int,
+    result:Bundle
   ){
-    val builder = custom(new AlertDialog.Builder(context))
-    builder.setMessage(getStringOrResource(context,arg))
-    val dialog = builder
-      .setPositiveButton(android.R.string.ok,null)
-      .create
-    showDialogOrFragment(context, dialog, func_done)
+    val manager = parent.getFragmentManager
+    val fragment = new ConfirmDialogFragment
+    val bundle = new Bundle
+    bundle.putString("message", getStringOrResource(fragment.getContext, message))
+    bundle.putInt("dialog_id", dialogId)
+    bundle.putBundle("result", result)
+    fragment.setArguments(bundle)
+    fragment.setTargetFragment(parent, 0)
+    fragment.show(manager, "common_dialog_confirm")
   }
-
   def generalHtmlDialog(
     context:Context,
     arg:Either[String,Int],

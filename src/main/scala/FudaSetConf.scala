@@ -8,7 +8,7 @@ import android.view.{View,LayoutInflater}
 import android.widget.{AdapterView,ArrayAdapter,Spinner}
 import java.util.ArrayList
 
-class FudaSetWithSize(val title:String, val num:Int){
+case class FudaSetWithSize(val title:String, val num:Int){
   override def toString():String = {
     title + " (" + num + ")"
   }
@@ -17,10 +17,23 @@ class FudaSetWithSize(val title:String, val num:Int){
   }
 }
 
-class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with ButtonListener {
+trait FudaSetEditListener {
+  def onFudaSetEditListenerResult(isAdd:Boolean, origFs:FudaSetWithSize, newFs:FudaSetWithSize)
+}
+
+class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with ButtonListener with FudaSetEditListener{
   var listItems = new ArrayList[FudaSetWithSize]()
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
+  override def onFudaSetEditListenerResult(isAdd: Boolean, origFs:FudaSetWithSize, newFs:FudaSetWithSize){
+    if(isAdd){
+      addFudaSetToSpinner(newFs)
+    }else{
+      val pos = spinner.get.getSelectedItemPosition
+      adapter.get.remove(origFs)
+      adapter.get.insert(newFs,pos)
+    }
+  }
   override def buttonMapping = Map(
       R.id.button_fudaset_edit -> editFudaSet _,
       R.id.button_fudaset_new ->  newFudaSet _,
@@ -75,18 +88,10 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with Butt
   }
   def editFudaSetBase(is_add:Boolean,orig_fs:FudaSetWithSize=null){
     val context = getContext
-    val callback = (fudaset_with_size:FudaSetWithSize)=>{
-      if(is_add){
-        addFudaSetToSpinner(fudaset_with_size)
-      }else{
-        val pos = spinner.get.getSelectedItemPosition
-        adapter.get.remove(orig_fs)
-        adapter.get.insert(fudaset_with_size,pos)
-      }
-    }
     val orig_title = Option(orig_fs).map(_.title).getOrElse("")
-    val dialog = FudaSetEditDialogFragment.newInstance(is_add,orig_title) 
-    dialog.show(getFragmentManager,"fudaset_edit_dialog")
+    val fragment = FudaSetEditDialogFragment.newInstance(is_add,orig_title,orig_fs) 
+    fragment.setTargetFragment(this,0)
+    fragment.show(getFragmentManager,"fudaset_edit_dialog")
   }
   def newFudaSet(){
     editFudaSetBase(true)

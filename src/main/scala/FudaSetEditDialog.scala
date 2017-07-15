@@ -15,128 +15,145 @@ import scala.collection.mutable
 
 
 object FudaSetEditDialogFragment {
-  def newInstance(isAdd:Boolean,origTitle:String):FudaSetEditDialogFragment = {
+  def newInstance(isAdd:Boolean,origTitle:String,origFs:FudaSetWithSize):FudaSetEditDialogFragment = {
     val fragment = new FudaSetEditDialogFragment
     val bundle = new Bundle
-    bundle.putBoolean("isAdd",isAdd)
-    bundle.putString("origTitle",origTitle)
+    bundle.putBoolean("is_add",isAdd)
+    bundle.putString("orig_title",origTitle)
+    bundle.putSerializable("orig_fs", origFs)
     fragment.setArguments(bundle)
     return fragment
   }
 }
 
-class FudaSetEditDialogFragment extends DialogFragment {
+class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBackListener{
+  val self = this
+  override def onCommonDialogResult(dialogId:Int, bundle:Bundle){
+    val kimari = bundle.getString("kimari")
+    val title = bundle.getString("title")
+    val stSize =  bundle.getInt("st_size")
+    val origTitle = bundle.getSerializable("orig_title").asInstanceOf[Option[String]]
+    Utils.writeFudaSetToDB(getContext,title,kimari,stSize,origTitle)
+
+    val args = super.getArguments
+    val isAdd = args.getBoolean("is_add")
+    val origFs = args.getSerializable("orig_fs").asInstanceOf[FudaSetWithSize]
+    val newFs = new FudaSetWithSize(title,stSize)
+    getTargetFragment.asInstanceOf[FudaSetEditListener].onFudaSetEditListenerResult(isAdd,origFs,newFs)
+
+    Globals.forceRefreshPlayer = true
+    dismiss
+  }
   override def onCreateDialog(state:Bundle):Dialog = {
     val args = super.getArguments
-    val isAdd = args.getBoolean("isAdd")
-    val origTitle = args.getString("origTitle")
+    val isAdd = args.getBoolean("is_add")
+    val origTitle = args.getString("orig_title")
     new FudaSetEditDialog(getContext,isAdd,origTitle)
   }
+  class FudaSetEditDialog(
+    context:Context,
+    is_add:Boolean,
+    orig_title:String) extends CustomAlertDialog(context) with ButtonListener{
+
+    override def buttonMapping = Map(
+        R.id.button_fudasetedit_list -> buttonFudasetEditList _,
+        R.id.button_fudasetedit_initial -> buttonFudasetEditInitial _,
+        R.id.button_fudasetedit_num -> buttonFudasetEditNum _,
+        R.id.fudasetedit_help_html -> helpHtmlClicked _
+      )
+
+    var data_id = None:Option[Long]
+
+    def makeKimarijiSetFromBodyView(body_view:LocalizationEditText):Option[(String,Int)] = {
+      val PATTERN_HIRAGANA = "[あ-ん]+".r
+      var text = body_view.getLocalizationText()
+      text = AllFuda.replaceFudaNumPattern(text)
+      TrieUtils.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
+    }
+
+    override def onCreate(bundle:Bundle){
+      setTitle(R.string.fudasetedit_title)
+      val view = LayoutInflater.from(context).inflate(R.layout.fudaset_edit,null)
+      val title_view = view.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
+      val body_view = view.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+      if(!is_add){
+        title_view.setText(orig_title)
+        val fs = FudaListHelper.selectFudasetByTitle(orig_title)
+        fs.foreach{ f => body_view.setLocalizationText(f.body) }
+        data_id = fs.map{_.id}
+      }
+      val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
+      help_view.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,context.getString(R.string.fudasetedit_help_html))))
+      setButtonMapping(view)
+      setView(view)
+      super.onCreate(bundle)
+
+    }
+
+    def helpHtmlClicked(){
+      Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
+    }
+
+    override def doWhenClose():Boolean = {
+     Globals.db_lock.synchronized{
+        val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
+        val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+        val title = title_view.getText.toString
+        if(TextUtils.isEmpty(title)){
+          CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
+          return false
+        }
+        if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
+          CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
+          return false
+        }
+        makeKimarijiSetFromBodyView(body_view) match {
+        case None =>
+          CommonDialog.messageDialog(context,Right(R.string.fudasetedit_setempty))
+          return false
+        case Some((kimari,st_size)) =>
+          val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
+          val result = new Bundle()
+          result.getString("kimari",kimari)
+          result.putString("title",title)
+          result.putInt("st_size",st_size)
+          result.putSerializable("orig_title",if(is_add){None}else{Some(orig_title)})
+          CommonDialog.confirmDialog(self,Left(message),0,result)
+        }
+      }
+      return false
+    }
+    def getCurrentKimarijis():String={
+      val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+      return makeKimarijiSetFromBodyView(body_view).map{_._1}.getOrElse("")
+    }
+    def buttonFudasetEditList(){
+      val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+      val kms = getCurrentKimarijis
+      val d = new FudaSetEditListDialog(context,kms,{body_view.setLocalizationText(_)})
+      d.show()
+    }
+
+    def appendNums(st:Set[Int]){
+      val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+      val kms = getCurrentKimarijis
+      val curs = TrieUtils.makeHaveToRead(kms)
+      val sts = st.map{(x:Int)=>AllFuda.list(x-1)}
+      val str = TrieUtils.makeKimarijiSet((curs++sts).toSeq).map{_._1}.getOrElse("")
+      body_view.setLocalizationText(str)
+    }
+
+    def buttonFudasetEditInitial(){
+      val dialog = new FudaSetEditInitialDialog(context,appendNums)
+      dialog.show()
+    }
+    def buttonFudasetEditNum(){
+      val dialog = new FudaSetEditNumDialog(context,appendNums)
+      dialog.show()
+    }
+  }
 }
 
-// TODO: callback:FudaSetWithSize=>Unit,
-class FudaSetEditDialog(
-  context:Context,
-  is_add:Boolean,
-  orig_title:String) extends CustomAlertDialog(context) with ButtonListener{
-
-  override def buttonMapping = Map(
-      R.id.button_fudasetedit_list -> buttonFudasetEditList _,
-      R.id.button_fudasetedit_initial -> buttonFudasetEditInitial _,
-      R.id.button_fudasetedit_num -> buttonFudasetEditNum _,
-      R.id.fudasetedit_help_html -> helpHtmlClicked _
-    )
-
-  var data_id = None:Option[Long]
-
-  def makeKimarijiSetFromBodyView(body_view:LocalizationEditText):Option[(String,Int)] = {
-    val PATTERN_HIRAGANA = "[あ-ん]+".r
-    var text = body_view.getLocalizationText()
-    text = AllFuda.replaceFudaNumPattern(text)
-    TrieUtils.makeKimarijiSet(PATTERN_HIRAGANA.findAllIn(text).toList)
-  }
-
-  override def onCreate(bundle:Bundle){
-    setTitle(R.string.fudasetedit_title)
-    val view = LayoutInflater.from(context).inflate(R.layout.fudaset_edit,null)
-    val title_view = view.findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-    val body_view = view.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-    if(!is_add){
-      title_view.setText(orig_title)
-      val fs = FudaListHelper.selectFudasetByTitle(orig_title)
-      fs.foreach{ f => body_view.setLocalizationText(f.body) }
-      data_id = fs.map{_.id}
-    }
-    val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
-    help_view.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,context.getString(R.string.fudasetedit_help_html))))
-    setButtonMapping(view)
-    setView(view)
-    super.onCreate(bundle)
-
-  }
-
-  def helpHtmlClicked(){
-    Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
-  }
-
-  override def doWhenClose():Boolean = {
-   Globals.db_lock.synchronized{
-      val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
-      val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-      val title = title_view.getText.toString
-      if(TextUtils.isEmpty(title)){
-        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
-        return false
-      }
-      if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
-        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
-        return false
-      }
-      makeKimarijiSetFromBodyView(body_view) match {
-      case None =>
-        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_setempty))
-        return false
-      case Some((kimari,st_size)) =>
-        val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
-        Utils.confirmDialog(context,Left(message),() => {
-          Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
-          //callback(new FudaSetWithSize(title,st_size))
-          Globals.forceRefreshPlayer = true
-          dismiss
-        })
-      }
-    }
-    return false
-  }
-  def getCurrentKimarijis():String={
-    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-    return makeKimarijiSetFromBodyView(body_view).map{_._1}.getOrElse("")
-  }
-  def buttonFudasetEditList(){
-    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-    val kms = getCurrentKimarijis
-    val d = new FudaSetEditListDialog(context,kms,{body_view.setLocalizationText(_)})
-    d.show()
-  }
-
-  def appendNums(st:Set[Int]){
-    val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
-    val kms = getCurrentKimarijis
-    val curs = TrieUtils.makeHaveToRead(kms)
-    val sts = st.map{(x:Int)=>AllFuda.list(x-1)}
-    val str = TrieUtils.makeKimarijiSet((curs++sts).toSeq).map{_._1}.getOrElse("")
-    body_view.setLocalizationText(str)
-  }
-
-  def buttonFudasetEditInitial(){
-    val dialog = new FudaSetEditInitialDialog(context,appendNums)
-    dialog.show()
-  }
-  def buttonFudasetEditNum(){
-    val dialog = new FudaSetEditNumDialog(context,appendNums)
-    dialog.show()
-  }
-}
 
 object FudaSetEditUtils{
 
