@@ -114,7 +114,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBac
         case Some((kimari,st_size)) =>
           val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
           val result = new Bundle()
-          result.getString("kimari",kimari)
+          result.putString("kimari",kimari)
           result.putString("title",title)
           result.putInt("st_size",st_size)
           result.putSerializable("orig_title",if(is_add){None}else{Some(orig_title)})
