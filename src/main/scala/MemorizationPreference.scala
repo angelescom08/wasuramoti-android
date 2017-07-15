@@ -151,14 +151,14 @@ class MemorizationFudaSetDialog(context:Context,
   memorized:Boolean,
   reset_cond:String,
   callback:()=>Unit)
-  extends AlertDialog(context) with CustomAlertDialogTrait{
+  extends CustomAlertDialog(context){
 
-  override def doWhenClose(view:View){
-    val title_view = view.findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
+  override def doWhenClose():Boolean = {
+    val title_view = findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
-      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
-      return
+      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
+      return false
     }
     val ids = (onlyInFudaset,memorized) match{
       case (true,true) =>
@@ -171,15 +171,18 @@ class MemorizationFudaSetDialog(context:Context,
         FudaListHelper.getHaveToReadFromDBAsIntAlt("memorized = 0")
     }
     TrieUtils.makeKimarijiSetFromNumList(ids.toSeq) match{
-      case None => // do nothing, this should not happen
+      case None =>
+        // do nothing, this should not happen
+        return false
       case Some((kimari,st_size))=>
         Utils.writeFudaSetToDB(context,title,kimari,st_size)
-        if(Option(view.findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
+        if(Option(findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
           FudaListHelper.resetMemorized(reset_cond)
           FudaListHelper.updateSkipList(context)
         }
         callback()
         CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_created))
+        return true
     }
   }
   override def onCreate(state:Bundle){
@@ -199,7 +202,7 @@ class MemorizationFudaSetDialog(context:Context,
       cb.setVisibility(View.GONE)
     }
 
-    setViewAndButton(root)
+    setView(root)
     super.onCreate(state) 
   }
 }

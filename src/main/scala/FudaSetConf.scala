@@ -85,8 +85,8 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with Butt
       }
     }
     val orig_title = Option(orig_fs).map(_.title).getOrElse("")
-    val dialog = new FudaSetEditDialog(context,is_add,callback,orig_title) 
-    dialog.show()
+    val dialog = FudaSetEditDialogFragment.newInstance(is_add,orig_title) 
+    dialog.show(getFragmentManager,"fudaset_edit_dialog")
   }
   def newFudaSet(){
     editFudaSetBase(true)

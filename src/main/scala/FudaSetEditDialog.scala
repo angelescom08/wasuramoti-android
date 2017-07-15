@@ -1,20 +1,44 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.support.v7.app.AlertDialog
 import android.os.Bundle
 import android.content.Context
 import android.text.{TextUtils,Html}
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton,ListView}
+import android.app.Dialog
+
+import android.support.v7.app.{AlertDialog,AppCompatDialog}
+import android.support.v4.app.DialogFragment
 
 import scala.collection.JavaConversions
 import scala.collection.mutable
 
+
+object FudaSetEditDialogFragment {
+  def newInstance(isAdd:Boolean,origTitle:String):FudaSetEditDialogFragment = {
+    val fragment = new FudaSetEditDialogFragment
+    val bundle = new Bundle
+    bundle.putBoolean("isAdd",isAdd)
+    bundle.putString("origTitle",origTitle)
+    fragment.setArguments(bundle)
+    return fragment
+  }
+}
+
+class FudaSetEditDialogFragment extends DialogFragment {
+  override def onCreateDialog(state:Bundle):Dialog = {
+    val args = super.getArguments
+    val isAdd = args.getBoolean("isAdd")
+    val origTitle = args.getString("origTitle")
+    new FudaSetEditDialog(getContext,isAdd,origTitle)
+  }
+}
+
+// TODO: callback:FudaSetWithSize=>Unit,
 class FudaSetEditDialog(
   context:Context,
   is_add:Boolean,
-  callback:FudaSetWithSize=>Unit,
-  orig_title:String) extends AlertDialog(context) with ButtonListener with CustomAlertDialogTrait{
+  orig_title:String) extends CustomAlertDialog(context) with ButtonListener{
 
   override def buttonMapping = Map(
       R.id.button_fudasetedit_list -> buttonFudasetEditList _,
@@ -46,40 +70,43 @@ class FudaSetEditDialog(
     val help_view = view.findViewById(R.id.fudasetedit_help_html).asInstanceOf[TextView]
     help_view.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,context.getString(R.string.fudasetedit_help_html))))
     setButtonMapping(view)
-    setViewAndButton(view)
+    setView(view)
     super.onCreate(bundle)
+
   }
 
   def helpHtmlClicked(){
     Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
   }
 
-  override def doWhenClose(view:View){
+  override def doWhenClose():Boolean = {
    Globals.db_lock.synchronized{
       val title_view = findViewById(R.id.fudasetedit_name).asInstanceOf[EditText]
       val body_view = findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
       val title = title_view.getText.toString
       if(TextUtils.isEmpty(title)){
-        Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty),{()=>show()})
-        return
+        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
+        return false
       }
       if(FudaListHelper.isDuplicatedFudasetTitle(title,is_add,data_id)){
-        Utils.messageDialog(context,Right(R.string.fudasetedit_titleduplicated),{()=>show()})
-        return
+        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
+        return false
       }
       makeKimarijiSetFromBodyView(body_view) match {
       case None =>
-        Utils.messageDialog(context,Right(R.string.fudasetedit_setempty),{()=>show()})
-        return
+        CommonDialog.messageDialog(context,Right(R.string.fudasetedit_setempty))
+        return false
       case Some((kimari,st_size)) =>
         val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
         Utils.confirmDialog(context,Left(message),() => {
           Utils.writeFudaSetToDB(context,title,kimari,st_size,if(is_add){None}else{Some(orig_title)})
-          callback(new FudaSetWithSize(title,st_size))
+          //callback(new FudaSetWithSize(title,st_size))
           Globals.forceRefreshPlayer = true
-        },func_no=Some({()=>show()}))
+          dismiss
+        })
       }
     }
+    return false
   }
   def getCurrentKimarijis():String={
     val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]

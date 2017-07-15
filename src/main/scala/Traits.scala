@@ -1,9 +1,11 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.support.v7.app.AlertDialog
 import android.view.View
-import android.content.DialogInterface
+import android.content.{DialogInterface,Context}
+import android.os.Bundle
+
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 
 trait GetFudanum {
   self:Fragment =>
@@ -12,20 +14,30 @@ trait GetFudanum {
   }
 }
 
-trait CustomAlertDialogTrait{
-  self:AlertDialog =>
-  def doWhenClose(view:View)
-  def setViewAndButton(view:View){
-    self.setView(view)
-    self.setButton(DialogInterface.BUTTON_POSITIVE,self.getContext.getResources.getString(android.R.string.ok),new DialogInterface.OnClickListener(){
-      override def onClick(dialog:DialogInterface,which:Int){
-        doWhenClose(view)
-        dismiss()
+// Override AlertDialog so that it does not close on button click
+abstract class CustomAlertDialog(context:Context) extends AlertDialog(context){
+  def doWhenClose():Boolean
+
+  override def onCreate(bundle:Bundle){
+    setButton(DialogInterface.BUTTON_POSITIVE,getContext.getResources.getString(android.R.string.ok),null.asInstanceOf[DialogInterface.OnClickListener])
+    setButton(DialogInterface.BUTTON_NEGATIVE,getContext.getResources.getString(android.R.string.cancel),null.asInstanceOf[DialogInterface.OnClickListener])
+    // the button will be setup here
+    // https://github.com/android/platform_frameworks_base/blob/master/core/java/com/android/internal/app/AlertController.java
+    super.onCreate(bundle)
+
+    // overwrite the button's behavior
+    val positive = findViewById(android.R.id.button1)
+    val negative = findViewById(android.R.id.button2)
+    positive.setOnClickListener(new View.OnClickListener{
+      override def onClick(v:View){
+        if(doWhenClose){
+          dismiss
+        }
       }
     })
-    self.setButton(DialogInterface.BUTTON_NEGATIVE,self.getContext.getResources.getString(android.R.string.cancel),new DialogInterface.OnClickListener(){
-      override def onClick(dialog:DialogInterface,which:Int){
-        dismiss()
+    negative.setOnClickListener(new View.OnClickListener{
+      override def onClick(v:View){
+        dismiss
       }
     })
   }

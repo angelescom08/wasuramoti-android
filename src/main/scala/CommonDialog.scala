@@ -15,13 +15,13 @@ object CommonDialog {
   class MessageDialogFragment extends DialogFragment {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
-      if(!args.containsKey("messageId")){
+      if(!args.containsKey("message")){
         throw new RuntimeException("messageId not in arguments")
       }
-      val messageId = args.getInt("messageId")
+      val message = args.getString("message")
       new AlertDialog.Builder(getContext)
-        .setMessage(messageId)
         .setPositiveButton(android.R.string.ok,null)
+        .setMessage(message)
         .create
     }
   }
@@ -29,8 +29,8 @@ object CommonDialog {
   def showDialogOrFragment(context:Context, dialog:Dialog, func_done:()=>Unit={()=>Unit}){
     // TODO: remove this function
   }
-  def getStringOrResource(context:Context,arg:Either[String,Int]):Option[String] = {
-    Option(arg).map{
+  def getStringOrResource(context:Context,arg:Either[String,Int]):String = {
+    arg match {
       case Left(x) => x
       case Right(x) => context.getResources.getString(x)
     }
@@ -43,8 +43,7 @@ object CommonDialog {
     func_no:Option[()=>Unit]=None
   ){
     val builder = custom(new AlertDialog.Builder(context))
-    // TODO: can't we use setMessage(Int) instead of context.getResources().getString() ?
-    getStringOrResource(context,arg).foreach{builder.setMessage(_)}
+    builder.setMessage(getStringOrResource(context,arg))
     val nega_handler = func_no match {
       case None => null
       case Some(func) =>
@@ -64,11 +63,11 @@ object CommonDialog {
     .create
     showDialogOrFragment(context,dialog)
   }
-  def messageDialog(context:Context,messageId:Int){
+  def messageDialog(context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new MessageDialogFragment
     val bundle = new Bundle
-    bundle.putInt("messageId", messageId)
+    bundle.putString("message", getStringOrResource(context,message))
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
@@ -79,7 +78,7 @@ object CommonDialog {
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
     val builder = custom(new AlertDialog.Builder(context))
-    getStringOrResource(context,arg).foreach{builder.setMessage(_)}
+    builder.setMessage(getStringOrResource(context,arg))
     val dialog = builder
       .setPositiveButton(android.R.string.ok,null)
       .create
@@ -93,7 +92,7 @@ object CommonDialog {
     custom:AlertDialog.Builder=>AlertDialog.Builder = identity
   ){
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = getStringOrResource(context,arg).getOrElse("")
+    val html = getStringOrResource(context,arg)
     val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
     txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,html)))
 
@@ -117,8 +116,8 @@ object CommonDialog {
       val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
       val vtext = view.findViewById(R.id.checkbox_dialog_text).asInstanceOf[TextView]
       val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
-      getStringOrResource(context,arg_text).foreach(vtext.setText(_))
-      getStringOrResource(context,arg_checkbox).foreach(vcheckbox.setText(_))
+      vtext.setText(getStringOrResource(context,arg_text))
+      vcheckbox.setText(getStringOrResource(context,arg_checkbox))
       val dialog = custom(new AlertDialog.Builder(context))
         .setPositiveButton(android.R.string.ok,
           new DialogInterface.OnClickListener(){

@@ -122,46 +122,48 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
 
-class YomiInfoConfigLangDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
-  def getWidgets(view:View) = {
-    val show_trans = view.findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
-    val default_lang =  view.findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
+class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait {
+  def getWidgets() = {
+    val show_trans = findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
+    val default_lang =  findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
     (show_trans,default_lang)
   }
-  override def doWhenClose(view:View){
+  override def doWhenClose():Boolean = {
     val edit = Globals.prefs.get.edit
-    val (show_trans,default_lang) = getWidgets(view)
+    val (show_trans,default_lang) = getWidgets
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
     edit.commit
     Globals.forceReloadUI = true
+    return true
   }
 
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_lang, null)
 
-    val (show_trans,default_lang) = getWidgets(view)
+    setTitle(R.string.yomi_info_conf_lang_title)
+    setView(view)
+    super.onCreate(state)
+
+    val (show_trans,default_lang) = getWidgets
     val prefs = Globals.prefs.get
     show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     default_lang.setSelection(lang.id)
-    setTitle(R.string.yomi_info_conf_lang_title)
-    setViewAndButton(view)
-    super.onCreate(state)
   }
 }
 
-class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) with YomiInfoPreferenceTrait with CustomAlertDialogTrait{
-  def getWidgets(view:View) = {
-    val japanese_font = view.findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
-    val furigana_font = view.findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]
-    val torifuda_font =  view.findViewById(R.id.yomi_info_torifuda_font).asInstanceOf[Spinner]
-    val english_font =  view.findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
+class YomiInfoConfigFontDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait{
+  def getWidgets = {
+    val japanese_font = findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
+    val furigana_font = findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]
+    val torifuda_font =  findViewById(R.id.yomi_info_torifuda_font).asInstanceOf[Spinner]
+    val english_font =  findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
     (japanese_font,furigana_font,torifuda_font,english_font)
   }
-  override def doWhenClose(view:View){
+  override def doWhenClose():Boolean = {
     val edit = Globals.prefs.get.edit
-    val (japanese_font,furigana_font,torifuda_font,english_font) = getWidgets(view)
+    val (japanese_font,furigana_font,torifuda_font,english_font) = getWidgets
     val ar_en = context.getResources.getStringArray(R.array.yomi_info_english_fonts_values)
     val ar_ja = context.getResources.getStringArray(JP_FONT_VALUES_ID)
     YomiInfoUtils.setPoemTextFont(edit,ar_ja(japanese_font.getSelectedItemPosition))
@@ -170,12 +172,16 @@ class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) wit
     edit.putString("yomi_info_english_font",ar_en(english_font.getSelectedItemPosition))
     edit.commit
     Globals.forceReloadUI = true
+    return false
   }
 
   override def onCreate(state:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.yomi_info_conf_font, null)
+    setTitle(R.string.yomi_info_conf_font_title)
+    setView(view)
+    super.onCreate(state)
 
-    val (japanese_font,furigana_font,torifuda_font,english_font) = getWidgets(view)
+    val (japanese_font,furigana_font,torifuda_font,english_font) = getWidgets
     val prefs = Globals.prefs.get
 
     japanese_font.setSelection(getIndexFromValue(context,YomiInfoUtils.getPoemTextFont))
@@ -183,9 +189,6 @@ class YomiInfoConfigFontDialog(context:Context) extends AlertDialog(context) wit
     torifuda_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_torifuda_font",YomiInfoUtils.DEFAULT_FONT)))
     english_font.setSelection(getIndexFromValue(context,prefs.getString("yomi_info_english_font","Serif"),R.array.yomi_info_english_fonts_values))
 
-    setTitle(R.string.yomi_info_conf_font_title)
-    setViewAndButton(view)
-    super.onCreate(state)
   }
 }
 

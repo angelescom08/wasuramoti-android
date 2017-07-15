@@ -10,7 +10,7 @@ import android.widget.Button
 class FudaSetReOrderDialog(context:Context,
   callback:()=>Unit
   )
-  extends AlertDialog(context) with CustomAlertDialogTrait{
+  extends CustomAlertDialog(context){
 
   val BAR_COLOR_ACTIVE =  Utils.attrColor(context,R.attr.reorderBarActiveColor)
   val BAR_COLOR_DEFAULT = Utils.attrColor(context,R.attr.reorderBarDefaultColor)
@@ -19,8 +19,8 @@ class FudaSetReOrderDialog(context:Context,
   var TEXT_COLOR_DEFAULT = None:Option[Int]
 
 
-  override def doWhenClose(view:View){
-    val list = view.findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
+  override def doWhenClose():Boolean = {
+    val list = findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
     val fudaset_ids = (0 until list.getChildCount).map{ i=>
       Option(list.getChildAt(i).getTag(R.id.tag_fudaset_id))
     }.flatten
@@ -34,6 +34,7 @@ class FudaSetReOrderDialog(context:Context,
     })
     db.close()
     callback()
+    return true
   }
 
   def setBorderColor(v:View,color:Int){
@@ -184,7 +185,7 @@ class FudaSetReOrderDialog(context:Context,
       addBorder()
     }
     setTitle(R.string.fudaset_reorder_title)
-    setViewAndButton(root) 
+    setView(root) 
     super.onCreate(state)
   }
 
