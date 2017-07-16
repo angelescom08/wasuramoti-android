@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
 import android.app.ProgressDialog
-import android.os.{Environment,AsyncTask}
+import android.os.{Environment,AsyncTask,Bundle}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
 import java.io.{IOException,File,FileOutputStream}
@@ -147,8 +147,10 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
       }
     }
   }
-  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+  
+  override def onCreate(state:Bundle){
     val context = getContext
+    // we have to set entries and entyvalues before onCreate or you get IllegalStateException: ListPreference requires an entries array and an entryValues array
     val pref = getPreference.asInstanceOf[ReaderListPreference]
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
@@ -171,12 +173,20 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
 
     pref.setEntries(entries.toArray)
     pref.setEntryValues(entvals.toArray)
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,JavaConversions.bufferAsJavaList(entries)))
+
+    super.onCreate(state)
+  }
+
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
+    val context = getContext
+    val pref = getPreference.asInstanceOf[ReaderListPreference]
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,pref.getEntries))
     builder.setAdapter(adapter.get,null)
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
-          new ScanReaderConfDialog(context,{()=>ReaderList.showReaderListPref(getTargetFragment,true)}).show
+          val fragment = new ScanReaderConfDialogFragment
+          fragment.show(getFragmentManager,"scan_reader_conf_dialog")
         }
       })
 

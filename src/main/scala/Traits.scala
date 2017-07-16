@@ -14,15 +14,17 @@ trait GetFudanum {
   }
 }
 
-// Override AlertDialog so that it does not close on button click
 abstract class CustomAlertDialog(context:Context) extends AlertDialog(context){
   def doWhenClose():Boolean
 
   override def onCreate(bundle:Bundle){
+    // overwrite AlertDialog so that it does not close dialog on button click
+    // Reference: https://github.com/android/platform_frameworks_base/blob/master/core/java/com/android/internal/app/AlertController.java
+    // tell AlertDialog to show the buttons
     setButton(DialogInterface.BUTTON_POSITIVE,getContext.getResources.getString(android.R.string.ok),null.asInstanceOf[DialogInterface.OnClickListener])
     setButton(DialogInterface.BUTTON_NEGATIVE,getContext.getResources.getString(android.R.string.cancel),null.asInstanceOf[DialogInterface.OnClickListener])
-    // the button will be setup here
-    // https://github.com/android/platform_frameworks_base/blob/master/core/java/com/android/internal/app/AlertController.java
+
+    // the button instance will be generated in AlertDialog.onCreate()
     super.onCreate(bundle)
 
     // overwrite the button's behavior
