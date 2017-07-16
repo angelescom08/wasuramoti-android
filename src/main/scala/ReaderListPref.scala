@@ -139,7 +139,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
       }else{
         val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,cur_value).canReadAll
         if(!ok){
-          Utils.messageDialog(context,Left(message))
+          CommonDialog.messageDialog(context,Left(message))
           pref.setValue(prev_value) // cancel
         }else{
           FudaListHelper.saveRestoreReadOrderJoka(prev_value,cur_value,joka_upper,joka_lower)

@@ -13,16 +13,27 @@ import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment}
 
 object CommonDialog {
   trait CallBackListener {
-    def onCommonDialogResult(dialogId:Int, bundle:Bundle)
+    def onCommonDialogCallback(bundle:Bundle)
   }
 
   class MessageDialogFragment extends DialogFragment {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
       val message = args.getString("message")
-      new AlertDialog.Builder(getContext)
+      val builder = new AlertDialog.Builder(getContext)
+      val listener = if(args.containsKey("callback_bundle")){
+        val callbackBundle = args.getBundle("callback_bundle")
+        new DialogInterface.OnClickListener(){
+          override def onClick(interface:DialogInterface,which:Int){
+            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
+          }
+        }
+      }else{
+        null
+      }
+      builder
         .setMessage(message)
-        .setPositiveButton(android.R.string.ok,null)
+        .setPositiveButton(android.R.string.ok,listener)
         .create
     }
   }
@@ -30,13 +41,12 @@ object CommonDialog {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
       val message = args.getString("message")
-      val result = args.getBundle("result")
-      val dialogId = args.getInt("dialog_id")
+      val callbackBundle = args.getBundle("callback_bundle")
       new AlertDialog.Builder(getContext)
         .setMessage(message)
         .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
           override def onClick(interface:DialogInterface,which:Int){
-            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogResult(dialogId, result)
+            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
           }
         })
         .setNegativeButton(android.R.string.no,null)
@@ -44,35 +54,31 @@ object CommonDialog {
     }
   }
 
-  def showDialogOrFragment(context:Context, dialog:Dialog, func_done:()=>Unit={()=>Unit}){
-    // TODO: remove this function
-  }
   def getStringOrResource(context:Context,arg:Either[String,Int]):String = {
     arg match {
       case Left(x) => x
       case Right(x) => context.getResources.getString(x)
     }
   }
-  def messageDialog(context:Context,message:Either[String,Int]){
+  def messageDialog(context:Context,message:Either[String,Int],callbackBundle:Option[Bundle]=None){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new MessageDialogFragment
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(context,message))
+    callbackBundle.foreach{bundle.putBundle("callback_bundle",_)}
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
   def confirmDialog(
     parent:Fragment with CallBackListener,
     message:Either[String,Int],
-    dialogId:Int,
-    result:Bundle
+    callbackBundle:Bundle
   ){
     val manager = parent.getFragmentManager
     val fragment = new ConfirmDialogFragment
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(fragment.getContext, message))
-    bundle.putInt("dialog_id", dialogId)
-    bundle.putBundle("result", result)
+    bundle.putBundle("callback_bundle", callbackBundle)
     fragment.setArguments(bundle)
     fragment.setTargetFragment(parent, 0)
     fragment.show(manager, "common_dialog_confirm")
@@ -95,7 +101,6 @@ object CommonDialog {
       .setPositiveButton(android.R.string.ok,null)
       .setView(view)
       .create
-    showDialogOrFragment(context, dialog, func_done)
   }
 
   def generalCheckBoxConfirmDialog(
@@ -120,7 +125,6 @@ object CommonDialog {
         .setNegativeButton(android.R.string.no,null)
         .setView(view)
         .create
-      showDialogOrFragment(context, dialog)
   }
 
   def listDialog(
@@ -145,6 +149,5 @@ object CommonDialog {
             d.dismiss()
           }
         })
-      showDialogOrFragment(context, builder.create)
   }
 }

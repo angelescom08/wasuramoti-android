@@ -28,7 +28,7 @@ object FudaSetEditDialogFragment {
 
 class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBackListener{
   val self = this
-  override def onCommonDialogResult(dialogId:Int, bundle:Bundle){
+  override def onCommonDialogCallback(bundle:Bundle){
     val kimari = bundle.getString("kimari")
     val title = bundle.getString("title")
     val stSize =  bundle.getInt("st_size")
@@ -118,7 +118,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBac
           result.putString("title",title)
           result.putInt("st_size",st_size)
           result.putSerializable("orig_title",if(is_add){None}else{Some(orig_title)})
-          CommonDialog.confirmDialog(self,Left(message),0,result)
+          CommonDialog.confirmDialog(self,Left(message),result)
         }
       }
       return false

@@ -157,7 +157,7 @@ class MemorizationFudaSetDialog(context:Context,
     val title_view = findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
-      Utils.messageDialog(context,Right(R.string.fudasetedit_titleempty))
+      CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
       return false
     }
     val ids = (onlyInFudaset,memorized) match{

@@ -146,7 +146,6 @@ class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
               dismiss()
             }
             case Right(msg_id) => {
-              // we have to re-show this dialog since BUTTON_{POSITIVE,NEGATIVE,NEUTRAL} closes the dialog
               Utils.messageDialog(context,Right(msg_id),{()=>show()})
             }
           }

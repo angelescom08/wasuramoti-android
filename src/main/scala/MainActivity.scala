@@ -53,7 +53,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
       case "fudaset" => importFudaset(dataString)
       case "from_oom" => CommonDialog.messageDialog(this,Right(R.string.from_oom_message))
-      case m => Utils.messageDialog(this,Left(s"'${m}' is not correct intent data for ACTION_VIEW for wasuramoti"))
+      case m => CommonDialog.messageDialog(this,Left(s"'${m}' is not correct intent data for ACTION_VIEW for wasuramoti"))
     }
   }
 
@@ -90,12 +90,12 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         }
         val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) +
         "\n" + res.mkString("\n")
-        Utils.messageDialog(this,Left(msg))
+        CommonDialog.messageDialog(this,Left(msg))
       })
     }catch{
       case e:Exception => {
         val msg = getResources.getString(R.string.confirm_action_view_fudaset_fail) + "\n" + e.toString
-        Utils.messageDialog(this,Left(msg))
+        CommonDialog.messageDialog(this,Left(msg))
       }
     }
   }
@@ -631,7 +631,7 @@ trait MainButtonTrait{
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
           // do nothing since checkRequestMarshmallowPermission shows the dialog when permission denied
         }else if(Globals.player_none_reason.nonEmpty){
-          Utils.messageDialog(self,Left(Globals.player_none_reason.get))
+          CommonDialog.messageDialog(self,Left(Globals.player_none_reason.get))
         }else{
           CommonDialog.messageDialog(self,Right(R.string.player_none_reason_unknown))
         }

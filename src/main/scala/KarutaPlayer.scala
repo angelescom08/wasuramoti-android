@@ -328,7 +328,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         mid.foreach{mm =>
           activity.runOnUiThread(new Runnable{
             override def run(){
-              Utils.messageDialog(activity,mm)
+              CommonDialog.messageDialog(activity,mm)
             }
          })
         }
