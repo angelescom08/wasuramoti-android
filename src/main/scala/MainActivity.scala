@@ -20,7 +20,7 @@ import org.json.{JSONTokener,JSONObject}
 
 import scala.collection.mutable
 
-class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with MainButtonTrait with RequirePermissionTrait{
+class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with RequirePermissionTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -468,7 +468,7 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
         }
       }
     }
-    this.setVolumeControlStream(Utils.getAudioStreamType)
+    setVolumeControlStream(Utils.getAudioStreamType)
     KarutaPlayUtils.setReplayButtonEnabled(this,
       if(Globals.is_playing){
         Some(false)
@@ -587,23 +587,19 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     }
   }
 
-}
-
-trait MainButtonTrait{
-  self:WasuramotiActivity =>
   def onMainButtonClick(v:View) {
     doPlay(from_main_button=true)
   }
   def moveToNextFuda(showToast:Boolean = true, fromAuto:Boolean = false){
     val is_shuffle = ! Utils.isRandom
     if(is_shuffle){
-      FudaListHelper.moveNext(self.getApplicationContext())
+      FudaListHelper.moveNext(this.getApplicationContext())
     }
     // In random mode, there is a possibility that same pairs of fuda are read in a row.
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
-    self.refreshAndSetButton(!is_shuffle,fromAuto)
-    if(Utils.readCurNext(self.getApplicationContext)){
+    this.refreshAndSetButton(!is_shuffle,fromAuto)
+    if(Utils.readCurNext(this.getApplicationContext)){
       invalidateYomiInfo()
     }
     if(showToast && Globals.prefs.get.getBoolean("show_message_when_moved",true)){
@@ -616,8 +612,8 @@ trait MainButtonTrait{
       if(Globals.player.isEmpty){
         if(Globals.prefs.get.getBoolean("memorization_mode",false) &&
           FudaListHelper.getOrQueryNumbersToRead() == 0){
-          CommonDialog.messageDialog(self,Right(R.string.all_memorized))
-        }else if(FudaListHelper.allReadDone(self.getApplicationContext())){
+          CommonDialog.messageDialog(this,Right(R.string.all_memorized))
+        }else if(FudaListHelper.allReadDone(this.getApplicationContext())){
           val custom = (builder:AlertDialog.Builder) => {
             builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
               override def onClick(dialog:DialogInterface, which:Int){
@@ -625,15 +621,15 @@ trait MainButtonTrait{
               }
             })
           }
-          Utils.messageDialog(self,Right(R.string.all_read_done),custom=custom)
+          Utils.messageDialog(this,Right(R.string.all_read_done),custom=custom)
         }else if(
           Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
           // do nothing since checkRequestMarshmallowPermission shows the dialog when permission denied
         }else if(Globals.player_none_reason.nonEmpty){
-          CommonDialog.messageDialog(self,Left(Globals.player_none_reason.get))
+          CommonDialog.messageDialog(this,Left(Globals.player_none_reason.get))
         }else{
-          CommonDialog.messageDialog(self,Right(R.string.player_none_reason_unknown))
+          CommonDialog.messageDialog(this,Right(R.string.player_none_reason_unknown))
         }
         return
       }
@@ -658,7 +654,7 @@ trait MainButtonTrait{
           startDimLockTimer()
         }
         val bundle = new Bundle()
-        bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && Utils.readCurNext(self.getApplicationContext))
+        bundle.putBoolean("have_to_run_border",YomiInfoUtils.showPoemText && Utils.readCurNext(this.getApplicationContext))
         bundle.putString("fromSender",KarutaPlayUtils.SENDER_MAIN)
         player.play(bundle,auto_play,from_swipe)
       }
