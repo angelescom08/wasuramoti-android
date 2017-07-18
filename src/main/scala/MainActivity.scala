@@ -20,7 +20,8 @@ import org.json.{JSONTokener,JSONObject}
 import scala.collection.mutable
 
 class WasuramotiActivity extends AppCompatActivity
-    with ActivityDebugTrait with RequirePermissionTrait with CommonDialog.CustomDialog{
+    with ActivityDebugTrait with RequirePermissionTrait
+    with CommonDialog.CustomDialog with CommonDialog.CallbackListener{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -608,12 +609,21 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   override def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder){
-    if(Option(bundle).exists(_.getString("tag") == "all_read_done")){
+    if(bundle.getString("tag") == "all_read_done"){
       builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface, which:Int){
           showShuffleDialog()
         }
       })
+    }
+  }
+
+  override def onCommonDialogCallback(bundle:Bundle){
+    if(bundle.getString("tag") == "already_reported_expection"){
+      throw new AlreadyReportedException(bundle.getString("error_message"))
+    }else{
+      // we have to also call RequirePermissionTrait's method since it extends CommonDialog.CallbackListener
+      super[RequirePermissionTrait].onCommonDialogCallback(bundle)
     }
   }
 
@@ -699,7 +709,7 @@ trait WasuramotiBaseTrait {
   }
 }
 
-trait RequirePermissionTrait extends CommonDialog.CallBackListener{
+trait RequirePermissionTrait extends CommonDialog.CallbackListener{
   self:FragmentActivity =>
   val REQ_PERM_MAIN_ACTIVITY = 1
   val REQ_PERM_PREFERENCE_SCAN = 2

@@ -320,12 +320,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
 
   def onReallyStart(bundle:Bundle, fromAuto:Boolean){
     // Since makeMusicTrack() waits for decode task to ends and often takes a long time, we do it in another thread to avoid ANR.
-    // Note: when calling Utils.messageDialog, you have to use activity.runOnUithread
     // TODO: using global_lock here will cause ANR since WasuramotiActivity.onMainButtonClick uses same lock.
     val thread = new Thread(new Runnable(){override def run(){
     Globals.global_lock.synchronized{
       val abort_playing = (mid:Option[Either[String,Int]]) => {
         mid.foreach{mm =>
+          // Note: when calling CommonDialog.messageDialog, you have to use activity.runOnUithread
           activity.runOnUiThread(new Runnable{
             override def run(){
               CommonDialog.messageDialog(activity,mm)
@@ -674,7 +674,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
                   activity.runOnUiThread(new Runnable{
                       override def run(){
                         val msg = activity.getResources.getString(R.string.error_ioerror,e.getMessage)
-                        Utils.messageDialog(activity,Left(msg),{()=>throw new AlreadyReportedException(e.getMessage)})
+                        val bundle = new Bundle
+                        bundle.putString("tag","already_reported_expection")
+                        bundle.putString("error_message",e.getMessage)
+                        CommonDialog.messageDialogWithCallback(Right(activity),Left(msg),bundle)
                       }
                   })
                   return Right(new OggDecodeFailException("IOException: "+e.getMessage))

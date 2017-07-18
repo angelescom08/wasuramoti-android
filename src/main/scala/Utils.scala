@@ -803,13 +803,6 @@ object Utils {
     func_no:Option[()=>Unit]=None
   ){
   }
-  def messageDialog(
-    context:Context,
-    arg:Either[String,Int],
-    func_done:()=>Unit = {()=>Unit},
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
-  ){
-  }
   def generalHtmlDialog(
     context:Context,
     arg:Either[String,Int],

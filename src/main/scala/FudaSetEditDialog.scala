@@ -25,23 +25,25 @@ object FudaSetEditDialogFragment {
   }
 }
 
-class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBackListener{
+class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallbackListener{
   val self = this
   override def onCommonDialogCallback(bundle:Bundle){
-    val kimari = bundle.getString("kimari")
-    val title = bundle.getString("title")
-    val stSize =  bundle.getInt("st_size")
-    val origTitle = bundle.getSerializable("orig_title").asInstanceOf[Option[String]]
-    Utils.writeFudaSetToDB(getContext,title,kimari,stSize,origTitle)
+    if(bundle.getString("tag") == "fudasetedit_dialog_closed"){
+      val kimari = bundle.getString("kimari")
+      val title = bundle.getString("title")
+      val stSize =  bundle.getInt("st_size")
+      val origTitle = bundle.getSerializable("orig_title").asInstanceOf[Option[String]]
+      Utils.writeFudaSetToDB(getContext,title,kimari,stSize,origTitle)
 
-    val args = super.getArguments
-    val isAdd = args.getBoolean("is_add")
-    val origFs = args.getSerializable("orig_fs").asInstanceOf[FudaSetWithSize]
-    val newFs = new FudaSetWithSize(title,stSize)
-    getTargetFragment.asInstanceOf[FudaSetEditListener].onFudaSetEditListenerResult(isAdd,origFs,newFs)
+      val args = super.getArguments
+      val isAdd = args.getBoolean("is_add")
+      val origFs = args.getSerializable("orig_fs").asInstanceOf[FudaSetWithSize]
+      val newFs = new FudaSetWithSize(title,stSize)
+      getTargetFragment.asInstanceOf[FudaSetEditListener].onFudaSetEditListenerResult(isAdd,origFs,newFs)
 
-    Globals.forceRefreshPlayer = true
-    dismiss
+      Globals.forceRefreshPlayer = true
+      dismiss
+    }
   }
   override def onCreateDialog(state:Bundle):Dialog = {
     val args = super.getArguments
@@ -113,6 +115,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBac
         case Some((kimari,st_size)) =>
           val message = context.getString(R.string.fudasetedit_confirm,new java.lang.Integer(st_size))
           val result = new Bundle()
+          result.putString("tag","fudasetedit_dialog_closed")
           result.putString("kimari",kimari)
           result.putString("title",title)
           result.putInt("st_size",st_size)

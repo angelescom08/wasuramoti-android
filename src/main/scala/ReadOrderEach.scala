@@ -141,7 +141,7 @@ class ReadOrderEachCustomDialog(context:Context) extends CustomAlertDialog(conte
         true
       }
       case Right(msg_id) => {
-        Utils.messageDialog(context,Right(msg_id))
+        CommonDialog.messageDialog(context,Right(msg_id))
         false
       }
     }

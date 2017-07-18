@@ -24,7 +24,7 @@ object CommonDialog {
   }
 
 
-  trait CallBackListener {
+  trait CallbackListener {
     def onCommonDialogCallback(bundle:Bundle)
   }
 
@@ -40,11 +40,11 @@ object CommonDialog {
         case TargetType.FRAGMENT => getTargetFragment
         case null => null
       }
-      val callbackBundle = args.getBundle("callback_bundle")
-      val listener = if(callbackTarget != null && callbackTarget.isInstanceOf[CallBackListener]){
+      val callbackBundle = Option(args.getBundle("callback_bundle")).getOrElse(new Bundle)
+      val listener = if(callbackTarget != null && callbackTarget.isInstanceOf[CallbackListener]){
         new DialogInterface.OnClickListener(){
           override def onClick(interface:DialogInterface,which:Int){
-            callbackTarget.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
+            callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(callbackBundle)
           }
         }
       }else{
@@ -83,7 +83,7 @@ object CommonDialog {
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
-  // TODO: use something like `Fragment with CallBackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
+  // TODO: use something like `Fragment with CallbackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
   type EitherFragmentActivity = Either[Fragment,FragmentActivity]
   def messageDialogWithCallback(
     parent:EitherFragmentActivity,
