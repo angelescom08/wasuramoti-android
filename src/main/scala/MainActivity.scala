@@ -626,7 +626,7 @@ class WasuramotiActivity extends AppCompatActivity
         }else if(FudaListHelper.allReadDone(this.getApplicationContext())){
           val bundle = new Bundle
           bundle.putString("tag", "read_all_done")
-          CommonDialog.messageDialog(Right(this),Right(R.string.all_read_done),bundle)
+          CommonDialog.messageDialogWithCallback(Right(this),Right(R.string.all_read_done),bundle)
         }else if(
           Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
@@ -699,11 +699,22 @@ trait WasuramotiBaseTrait {
   }
 }
 
-trait RequirePermissionTrait {
+trait RequirePermissionTrait extends CommonDialog.CallBackListener{
   self:FragmentActivity =>
   val REQ_PERM_MAIN_ACTIVITY = 1
   val REQ_PERM_PREFERENCE_SCAN = 2
   val REQ_PERM_PREFERENCE_CHOOSE_READER = 3
+  val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+
+  override def onCommonDialogCallback(bundle:Bundle){
+    if(bundle.getString("tag") == "require_permission_retry"){
+      requirePermission(bundle.getInt("req_code"))
+    }
+  }
+
+  def requirePermission(reqCode:Int){
+    ActivityCompat.requestPermissions(this,Array(REQ_PERM_PERMISSION),reqCode)
+  }
 
   // References:
   //   https://developer.android.com/training/permissions/requesting.html
@@ -714,15 +725,16 @@ trait RequirePermissionTrait {
     if(android.os.Build.VERSION.SDK_INT < 23){
       return true
     }
-    val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
-    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,reqPerm)){
-      val reqfunc = {()=>ActivityCompat.requestPermissions(this,Array(reqPerm),reqCode)}
-      if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
+    val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,REQ_PERM_PERMISSION)){
+      if(ActivityCompat.shouldShowRequestPermissionRationale(this,REQ_PERM_PERMISSION)){
          // permission was previously denied, with never ask again turned off.
-         Utils.messageDialog(this,Right(R.string.read_external_storage_permission_rationale),reqfunc)
+         val bundle = new Bundle
+         bundle.putInt("req_code", reqCode)
+         CommonDialog.messageDialogWithCallback(Right(this),Right(R.string.read_external_storage_permission_rationale),bundle)
       }else{
          // we previously never called requestPermission, or permission was denied with never ask again turned on.
-         reqfunc()
+         requirePermission(reqCode)
       }
       return false
     }else{
@@ -749,13 +761,13 @@ trait RequirePermissionTrait {
           )
     }
 
-    val reqPerm = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
     for((perm,grant) <- permissions.zip(grantResults)){
-      if(perm == reqPerm){
+      if(perm == REQ_PERM_PERMISSION){
         if(grant == PackageManager.PERMISSION_GRANTED){
           grantedAction()
         }else{
-          if(ActivityCompat.shouldShowRequestPermissionRationale(this,reqPerm)){
+          if(ActivityCompat.shouldShowRequestPermissionRationale(this,REQ_PERM_PERMISSION)){
             // permission is denied for first time, or denied with never ask again turned off
             CommonDialog.messageDialog(this,Right(deniedMessage))
           }else{

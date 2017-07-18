@@ -85,14 +85,14 @@ object CommonDialog {
   }
   // TODO: use something like `Fragment with CallBackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
   type EitherFragmentActivity = Either[Fragment,FragmentActivity]
-  def messageDialog(
+  def messageDialogWithCallback(
     parent:EitherFragmentActivity,
     message:Either[String,Int],
     callbackBundle:Bundle
     ){
       baseDialog(DialogType.MESSAGE,parent,message,callbackBundle)
   }
-  def confirmDialog(
+  def confirmDialogWithCallback(
     parent:EitherFragmentActivity,
     message:Either[String,Int],
     callbackBundle:Bundle
