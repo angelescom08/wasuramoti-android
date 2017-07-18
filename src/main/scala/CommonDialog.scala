@@ -12,45 +12,59 @@ import android.support.v7.app.AlertDialog
 import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment}
 
 object CommonDialog {
+
+  object TargetType extends Enumeration {
+    type TargetType = Value
+    val ACTIVITY, FRAGMENT = Value
+  }
+
+  object DialogType extends Enumeration {
+    type DialogType = Value
+    val MESSAGE, CONFIRM = Value
+  }
+
+
   trait CallBackListener {
     def onCommonDialogCallback(bundle:Bundle)
   }
 
-  class MessageDialogFragment extends DialogFragment {
+  trait CustomDialog {
+    def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder)
+  }
+
+  class CommonDialogFragment extends DialogFragment {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
-      val message = args.getString("message")
-      val builder = new AlertDialog.Builder(getContext)
-      val listener = if(args.containsKey("callback_bundle")){
-        val callbackBundle = args.getBundle("callback_bundle")
+      val callbackTarget = args.getSerializable("callback_target").asInstanceOf[TargetType.TargetType] match {
+        case TargetType.ACTIVITY => getActivity
+        case TargetType.FRAGMENT => getTargetFragment
+        case null => null
+      }
+      val callbackBundle = args.getBundle("callback_bundle")
+      val listener = if(callbackTarget != null && callbackTarget.isInstanceOf[CallBackListener]){
         new DialogInterface.OnClickListener(){
           override def onClick(interface:DialogInterface,which:Int){
-            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
+            callbackTarget.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
           }
         }
       }else{
         null
       }
+      val builder = new AlertDialog.Builder(getContext)
+      args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType] match {
+        case DialogType.MESSAGE =>
+          builder.setPositiveButton(android.R.string.ok,listener)
+        case DialogType.CONFIRM => 
+          builder.setPositiveButton(android.R.string.yes,listener)
+          builder.setNegativeButton(android.R.string.no,null)
+
+      }
       builder
-        .setMessage(message)
-        .setPositiveButton(android.R.string.ok,listener)
-        .create
-    }
-  }
-  class ConfirmDialogFragment extends DialogFragment {
-    override def onCreateDialog(state:Bundle):Dialog = {
-      val args = super.getArguments
-      val message = args.getString("message")
-      val callbackBundle = args.getBundle("callback_bundle")
-      new AlertDialog.Builder(getContext)
-        .setMessage(message)
-        .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
-          override def onClick(interface:DialogInterface,which:Int){
-            getTargetFragment.asInstanceOf[CallBackListener].onCommonDialogCallback(callbackBundle)
-          }
-        })
-        .setNegativeButton(android.R.string.no,null)
-        .create
+        .setMessage(args.getString("message"))
+      if(callbackTarget.isInstanceOf[CustomDialog]){
+        callbackTarget.asInstanceOf[CustomDialog].customCommonDialog(callbackBundle, builder)
+      }
+      builder.create
     }
   }
 
@@ -60,29 +74,58 @@ object CommonDialog {
       case Right(x) => context.getResources.getString(x)
     }
   }
-  def messageDialog(context:Context,message:Either[String,Int],callbackBundle:Option[Bundle]=None){
+  def messageDialog(context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
-    val fragment = new MessageDialogFragment
+    val fragment = new CommonDialogFragment
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(context,message))
-    callbackBundle.foreach{bundle.putBundle("callback_bundle",_)}
+    bundle.putSerializable("dialog_type",DialogType.MESSAGE)
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
-  def confirmDialog(
-    parent:Fragment with CallBackListener,
+  // TODO: use something like `Fragment with CallBackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
+  type EitherFragmentActivity = Either[Fragment,FragmentActivity]
+  def messageDialog(
+    parent:EitherFragmentActivity,
     message:Either[String,Int],
     callbackBundle:Bundle
-  ){
-    val manager = parent.getFragmentManager
-    val fragment = new ConfirmDialogFragment
+    ){
+      baseDialog(DialogType.MESSAGE,parent,message,callbackBundle)
+  }
+  def confirmDialog(
+    parent:EitherFragmentActivity,
+    message:Either[String,Int],
+    callbackBundle:Bundle
+     ){
+      baseDialog(DialogType.CONFIRM,parent,message,callbackBundle)
+  }
+
+  def baseDialog(
+    dialogType:DialogType.DialogType,
+    parent: EitherFragmentActivity,
+    message:Either[String,Int],
+    callbackBundle:Bundle
+    ){
+    val manager = parent match {
+      case Left(fragment) => fragment.getFragmentManager
+      case Right(activity) => activity.getSupportFragmentManager
+    }
+    val fragment = new CommonDialogFragment 
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(fragment.getContext, message))
     bundle.putBundle("callback_bundle", callbackBundle)
+    bundle.putSerializable("callback_target", parent match {
+      case Left(fragment) => TargetType.FRAGMENT
+      case Right(activity) => TargetType.ACTIVITY
+    })
+    bundle.putSerializable("dialog_type",dialogType)
     fragment.setArguments(bundle)
-    fragment.setTargetFragment(parent, 0)
-    fragment.show(manager, "common_dialog_confirm")
+    if(parent.isLeft){
+      fragment.setTargetFragment(parent.left.get, 0)
+    }
+    fragment.show(manager, "common_dialog_base")
   }
+
   def generalHtmlDialog(
     context:Context,
     arg:Either[String,Int],

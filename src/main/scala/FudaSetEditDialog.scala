@@ -3,11 +3,10 @@ package karuta.hpnpwd.wasuramoti
 import android.os.Bundle
 import android.content.Context
 import android.text.{TextUtils,Html}
-import android.view.{View,LayoutInflater,ViewGroup}
+import android.view.{LayoutInflater,ViewGroup}
 import android.widget.{EditText,TextView,ArrayAdapter,Filter,ToggleButton,ListView}
 import android.app.Dialog
 
-import android.support.v7.app.{AlertDialog,AppCompatDialog}
 import android.support.v4.app.DialogFragment
 
 import scala.collection.JavaConversions
@@ -118,7 +117,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallBac
           result.putString("title",title)
           result.putInt("st_size",st_size)
           result.putSerializable("orig_title",if(is_add){None}else{Some(orig_title)})
-          CommonDialog.confirmDialog(self,Left(message),result)
+          CommonDialog.confirmDialog(Left(self),Left(message),result)
         }
       }
       return false

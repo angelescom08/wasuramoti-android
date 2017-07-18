@@ -11,12 +11,12 @@ import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
 import android.os.{Environment,Handler,Bundle}
 import android.support.v7.preference.PreferenceManager
-import android.text.{TextUtils,Html}
+import android.text.{TextUtils}
 import android.util.{Log,TypedValue}
-import android.view.{LayoutInflater,View}
+import android.view.View
 import android.widget.{TextView,ListView,ArrayAdapter,CheckBox}
 
-import android.support.v4.app.{FragmentActivity,DialogFragment}
+import android.support.v4.app.DialogFragment
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 

@@ -10,7 +10,6 @@ import android.util.{Base64,TypedValue}
 import android.view.animation.{AnimationUtils,Interpolator}
 import android.view.{View,Menu,MenuItem,WindowManager,ViewStub}
 import android.widget.{ImageView,Button,RelativeLayout,TextView,LinearLayout,Toast}
-import android.preference.PreferenceActivity
 
 import android.support.v7.app.{AppCompatActivity,ActionBar,AlertDialog}
 import android.support.v4.app.{ActivityCompat,FragmentActivity}
@@ -20,7 +19,8 @@ import org.json.{JSONTokener,JSONObject}
 
 import scala.collection.mutable
 
-class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with RequirePermissionTrait{
+class WasuramotiActivity extends AppCompatActivity
+    with ActivityDebugTrait with RequirePermissionTrait with CommonDialog.CustomDialog{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -607,6 +607,16 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
     }
   }
 
+  override def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder){
+    if(Option(bundle).exists(_.getString("tag") == "all_read_done")){
+      builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
+        override def onClick(dialog:DialogInterface, which:Int){
+          showShuffleDialog()
+        }
+      })
+    }
+  }
+
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
     Globals.global_lock.synchronized{
       if(Globals.player.isEmpty){
@@ -614,14 +624,9 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
           FudaListHelper.getOrQueryNumbersToRead() == 0){
           CommonDialog.messageDialog(this,Right(R.string.all_memorized))
         }else if(FudaListHelper.allReadDone(this.getApplicationContext())){
-          val custom = (builder:AlertDialog.Builder) => {
-            builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
-              override def onClick(dialog:DialogInterface, which:Int){
-                showShuffleDialog()
-              }
-            })
-          }
-          Utils.messageDialog(this,Right(R.string.all_read_done),custom=custom)
+          val bundle = new Bundle
+          bundle.putString("tag", "read_all_done")
+          CommonDialog.messageDialog(Right(this),Right(R.string.all_read_done),bundle)
         }else if(
           Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){

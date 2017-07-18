@@ -8,7 +8,6 @@ import android.widget.{TextView,EditText}
 import android.text.TextUtils
 
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 
 import java.io.File
 

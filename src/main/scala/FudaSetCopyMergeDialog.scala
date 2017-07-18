@@ -4,7 +4,6 @@ import android.view.{View,LayoutInflater}
 import android.os.Bundle
 import android.content.Context
 import android.widget.{ArrayAdapter,ListView,EditText}
-import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 
 class FudaSetCopyMergeDialog(

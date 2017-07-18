@@ -1,7 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
 import scala.collection.mutable.Buffer
-import scala.collection.JavaConversions
 
 import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
 import android.support.v4.app.Fragment
