@@ -118,7 +118,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
 }
 
 
-class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
+class ReadOrderEachCustomDialog(context:Context) extends CustomAlertDialog(context){
   def parseCustomOrder(str:String):Either[String,Int] = {
     val s = str.split(Array('/','.',',')).zip(Array("CUR","NEXT")).map{case (s,t) => s.filter("12".contains(_)).map(t+_)}.flatten.mkString("_")
     if(s.startsWith("CUR")){
@@ -130,34 +130,28 @@ class ReadOrderEachCustomDialog(context:Context) extends AlertDialog(context){
   def toOrigValue(value:String):String = {
     value.replaceFirst("NEXT","/").filter("12/".contains(_))
   }
+
+  override def doWhenClose():Boolean = {
+    val edit_text = findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
+    parseCustomOrder(edit_text.getText.toString) match {
+      case Left(txt:String) => {
+        val edit = Globals.prefs.get.edit
+        edit.putString("read_order_each_custom",txt)
+        edit.commit()
+        true
+      }
+      case Right(msg_id) => {
+        Utils.messageDialog(context,Right(msg_id))
+        false
+      }
+    }
+  }
   override def onCreate(bundle:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each_custom,null)
     setView(view)
     setTitle(context.getString(R.string.conf_read_order_each_custom_title))
     val edit_text = view.findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
     edit_text.setText(toOrigValue(Globals.prefs.get.getString("read_order_each_custom","")))
-    val listener_ok = new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          parseCustomOrder(edit_text.getText.toString) match {
-            case Left(txt:String) => {
-              val edit = Globals.prefs.get.edit
-              edit.putString("read_order_each_custom",txt)
-              edit.commit()
-              dismiss()
-            }
-            case Right(msg_id) => {
-              Utils.messageDialog(context,Right(msg_id),{()=>show()})
-            }
-          }
-        }
-    }
-    val listener_cancel = new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface,which:Int){
-          dismiss()
-        }
-    }
-    setButton(DialogInterface.BUTTON_POSITIVE,context.getResources.getString(android.R.string.ok),listener_ok)
-    setButton(DialogInterface.BUTTON_NEGATIVE,context.getResources.getString(android.R.string.cancel),listener_cancel)
     super.onCreate(bundle)
   }
 }
