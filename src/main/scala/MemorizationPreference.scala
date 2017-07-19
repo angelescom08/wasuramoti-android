@@ -8,13 +8,23 @@ import android.text.TextUtils
 import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.{TextView,CheckBox,EditText}
 
-class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
+class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with CommonDialog.CallbackListener{
   val TAG_PANEL_ALL = "panel_all"
   val TAG_PANEL_FUDASET = "panel_fudaset"
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
     val enable = view.findViewById(R.id.memorization_mode_enable).asInstanceOf[CheckBox]
     enable
+  }
+  override def onCommonDialogCallback(bundle:Bundle){
+    if(bundle.getString("tag") == "reset_memorized"){
+      val context = getContext
+      val reset_cond = bundle.getString("reset_cond")
+      FudaListHelper.resetMemorized(reset_cond)
+      FudaListHelper.updateSkipList(context)
+      CommonDialog.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+      setMemCountAll()
+    }
   }
   override def onDialogClosed(positiveResult:Boolean){
     val context = getContext
@@ -99,14 +109,15 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat {
       }
     })
     
+    val fragment = this
     panel.findViewById(R.id.memorization_panel_reset_memorized).setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
-          Utils.confirmDialog(context,Right(R.string.memorization_mode_reset_confirm), {()=>
-            FudaListHelper.resetMemorized(reset_cond)
-            FudaListHelper.updateSkipList(context)
-            CommonDialog.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-            setMemCountAll()
-          })}})
+          val bundle = new Bundle
+          bundle.putString("tag","reset_memorized")
+          bundle.putString("reset_cond",reset_cond)
+          CommonDialog.confirmDialogWithCallback(Left(fragment),Right(R.string.memorization_mode_reset_confirm),bundle)
+        }
+    })
 
     val title_view = panel.findViewById(R.id.memorization_panel_title).asInstanceOf[TextView]
     title_view.setText(title)
