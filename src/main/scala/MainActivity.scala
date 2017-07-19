@@ -67,32 +67,16 @@ class WasuramotiActivity extends AppCompatActivity
     try{
       val data = dataString.split("/").last
       val bytes = Base64.decode(data,Base64.URL_SAFE)
-      val str = new String(bytes,"UTF-8")
-      val obj = new JSONTokener(str).nextValue.asInstanceOf[JSONObject]
+      val jsonString = new String(bytes,"UTF-8")
+      val obj = new JSONTokener(jsonString).nextValue.asInstanceOf[JSONObject]
       val title = obj.keys.next.asInstanceOf[String]
       val ar = obj.getJSONArray(title)
-      Utils.confirmDialog(this,Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),{ () =>
-        var count = 0
-        val res = (0 until ar.length).map{ i =>
-          val o = ar.get(i).asInstanceOf[JSONObject]
-          val name = o.keys.next.asInstanceOf[String]
-          val n = BigInt(o.getString(name),36)
-          val a = mutable.Buffer[Int]()
-          for(j <- 0 until n.bitLength){
-            if ( ((n >> j) & 1) == 1 ){
-              a += j + 1
-            }
-          }
-          val r = TrieUtils.makeKimarijiSetFromNumList(a.toList).exists{
-            case (kimari,st_size) =>
-              Utils.writeFudaSetToDB(this,name,kimari,st_size)
-          }
-          (if(r){count+=1;"[OK]"}else{"[NG]"}) + " " + name
-        }
-        val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) +
-        "\n" + res.mkString("\n")
-        CommonDialog.messageDialog(this,Left(msg))
-      })
+      val bundle = new Bundle
+      bundle.putString("tag","import_fudaset")
+      bundle.putString("json",jsonString)
+      CommonDialog.confirmDialogWithCallback(Right(this),
+        Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),
+        bundle)
     }catch{
       case e:Exception => {
         val msg = getResources.getString(R.string.confirm_action_view_fudaset_fail) + "\n" + e.toString
@@ -177,10 +161,9 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   def showShuffleDialog(){
-    Utils.confirmDialog(this,Right(R.string.menu_shuffle_confirm), ()=>{
-        FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
-        refreshAndInvalidate()
-    })
+    val bundle = new Bundle
+    bundle.putString("tag","do_shuffle")
+    CommonDialog.confirmDialogWithCallback(Right(this),Right(R.string.menu_shuffle_confirm),bundle)
   }
 
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
@@ -626,6 +609,34 @@ class WasuramotiActivity extends AppCompatActivity
         val includeCur = bundle.getBoolean("include_cur")
         FudaListHelper.rewind(this,includeCur)
         refreshAndInvalidate()
+      case "do_shuffle" =>
+        FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
+        refreshAndInvalidate()
+      case "import_fudaset" =>
+        val jsonString = bundle.getString("json")
+        val obj = new JSONTokener(jsonString).nextValue.asInstanceOf[JSONObject]
+        val title = obj.keys.next.asInstanceOf[String]
+        val ar = obj.getJSONArray(title)
+        var count = 0
+        val res = (0 until ar.length).map{ i =>
+          val o = ar.get(i).asInstanceOf[JSONObject]
+          val name = o.keys.next.asInstanceOf[String]
+          val n = BigInt(o.getString(name),36)
+          val a = mutable.Buffer[Int]()
+          for(j <- 0 until n.bitLength){
+            if ( ((n >> j) & 1) == 1 ){
+              a += j + 1
+            }
+          }
+          val r = TrieUtils.makeKimarijiSetFromNumList(a.toList).exists{
+            case (kimari,st_size) =>
+              Utils.writeFudaSetToDB(this,name,kimari,st_size)
+          }
+          (if(r){count+=1;"[OK]"}else{"[NG]"}) + " " + name
+        }
+        val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) +
+        "\n" + res.mkString("\n")
+        CommonDialog.messageDialog(this,Left(msg))
       case _ =>
         // we have to also call RequirePermissionTrait's method since it extends CommonDialog.CallbackListener
         super[RequirePermissionTrait].onCommonDialogCallback(bundle)
@@ -722,8 +733,14 @@ trait RequirePermissionTrait extends CommonDialog.CallbackListener{
   val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
 
   override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "require_permission_retry"){
-      requirePermission(bundle.getInt("req_code"))
+    bundle.getString("tag") match {
+      case "require_permission_retry" =>
+        requirePermission(bundle.getInt("req_code"))
+      case "show_application_settings" =>
+        val intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", getPackageName(), null)
+        intent.setData(uri)
+        startActivity(intent)
     }
   }
 
@@ -787,12 +804,9 @@ trait RequirePermissionTrait extends CommonDialog.CallbackListener{
             CommonDialog.messageDialog(this,Right(deniedMessage))
           }else{
             // permission is denied, with never ask again turned on
-            Utils.confirmDialog(this,Right(deniedForeverMessage),()=>{
-              val intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-              val uri = Uri.fromParts("package", getPackageName(), null)
-              intent.setData(uri)
-              startActivity(intent)
-            })
+            val bundle = new Bundle
+            bundle.putString("tag","show_application_settings")
+            CommonDialog.confirmDialogWithCallback(Right(this),Right(deniedForeverMessage),bundle)
           }
         }
       }

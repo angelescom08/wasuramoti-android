@@ -112,8 +112,6 @@ Priority Low:
   * Able to change style / theme
   * Able to record the voice of the player and use it as reader.
   * Score the recoded voice (whether it is as good as the official karuta reader). 
-  * As for Utils.confirmDialog() and Utils.messageDialog() , use DialogFlagment instead of AltertDialog.
-    (Need to use fragment first since we have to call setTargetFragment to get the result).
   * Pitch and Speed change using picola and FFT (or audio library such as RubberBand or SoundTouch)
   * Support Android Wear
   * Support Chromecast
