@@ -20,7 +20,7 @@ object CommonDialog {
 
   object DialogType extends Enumeration {
     type DialogType = Value
-    val MESSAGE, CONFIRM = Value
+    val MESSAGE, CONFIRM, HTML = Value
   }
 
 
@@ -50,17 +50,25 @@ object CommonDialog {
       }else{
         null
       }
+      val message = args.getString("message")
       val builder = new AlertDialog.Builder(getContext)
       args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType] match {
         case DialogType.MESSAGE =>
           builder.setPositiveButton(android.R.string.ok,listener)
+          builder.setMessage(message)
         case DialogType.CONFIRM => 
           builder.setPositiveButton(android.R.string.yes,listener)
           builder.setNegativeButton(android.R.string.no,null)
-
+          builder.setMessage(message)
+        case DialogType.HTML =>
+          builder.setPositiveButton(android.R.string.ok,listener)
+          val view = LayoutInflater.from(getContext).inflate(R.layout.general_scroll,null)
+          val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+          txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(getContext,message)))
+          // this makes "<a href='...'></a>" clickable
+          txtview.setMovementMethod(LinkMovementMethod.getInstance)
+          builder.setView(view)
       }
-      builder
-        .setMessage(args.getString("message"))
       if(callbackTarget.isInstanceOf[CustomDialog]){
         callbackTarget.asInstanceOf[CustomDialog].customCommonDialog(callbackBundle, builder)
       }
@@ -75,14 +83,21 @@ object CommonDialog {
     }
   }
   def messageDialog(context:Context,message:Either[String,Int]){
+    baseDialog(DialogType.MESSAGE,context,message)
+  }
+  def generalHtmlDialog(context:Context,message:Either[String,Int]){
+    baseDialog(DialogType.HTML,context,message)
+  }
+  def baseDialog(dialogType:DialogType.DialogType,context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new CommonDialogFragment
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(context,message))
-    bundle.putSerializable("dialog_type",DialogType.MESSAGE)
+    bundle.putSerializable("dialog_type",dialogType)
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
+
   // TODO: use something like `Fragment with CallbackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
   type EitherFragmentActivity = Either[Fragment,FragmentActivity]
   def messageDialogWithCallback(
@@ -90,17 +105,24 @@ object CommonDialog {
     message:Either[String,Int],
     callbackBundle:Bundle
     ){
-      baseDialog(DialogType.MESSAGE,parent,message,callbackBundle)
+      baseDialogWithCallback(DialogType.MESSAGE,parent,message,callbackBundle)
   }
   def confirmDialogWithCallback(
     parent:EitherFragmentActivity,
     message:Either[String,Int],
     callbackBundle:Bundle
      ){
-      baseDialog(DialogType.CONFIRM,parent,message,callbackBundle)
+      baseDialogWithCallback(DialogType.CONFIRM,parent,message,callbackBundle)
+  }
+  def generalHtmlDialogWithCallback(
+    parent:EitherFragmentActivity,
+    message:Either[String,Int],
+    callbackBundle:Bundle
+    ){
+      baseDialogWithCallback(DialogType.HTML,parent,message,callbackBundle)
   }
 
-  def baseDialog(
+  def baseDialogWithCallback(
     dialogType:DialogType.DialogType,
     parent: EitherFragmentActivity,
     message:Either[String,Int],
@@ -124,26 +146,6 @@ object CommonDialog {
       fragment.setTargetFragment(parent.left.get, 0)
     }
     fragment.show(manager, "common_dialog_base")
-  }
-
-  def generalHtmlDialog(
-    context:Context,
-    arg:Either[String,Int],
-    func_done:()=>Unit={()=>Unit},
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
-  ){
-    val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val html = getStringOrResource(context,arg)
-    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
-    txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,html)))
-
-    // this makes "<a href='...'></a>" clickable
-    txtview.setMovementMethod(LinkMovementMethod.getInstance)
-
-    val dialog = custom(new AlertDialog.Builder(context))
-      .setPositiveButton(android.R.string.ok,null)
-      .setView(view)
-      .create
   }
 
   def generalCheckBoxConfirmDialog(

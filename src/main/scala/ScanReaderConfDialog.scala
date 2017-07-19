@@ -58,7 +58,7 @@ class ScanReaderConfDialog(context:Context) extends CustomAlertDialog(context){
     val neutral = findViewById(android.R.id.button3)
     neutral.setOnClickListener(new View.OnClickListener{
       override def onClick(v:View){
-        Utils.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html))
+        CommonDialog.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html))
       }
     })
   }

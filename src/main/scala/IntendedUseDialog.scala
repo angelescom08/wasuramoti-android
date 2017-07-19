@@ -20,7 +20,12 @@ object IntendedUseDialog{
   }
 }
 
-class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener{
+class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener with CommonDialog.CustomDialog{
+  override def customCommonDialog(bundle:Bundle,builder:AlertDialog.Builder){
+    if(bundle.getString("tag") == "intended_use_result_title"){
+      builder.setTitle(R.string.intended_use_result_title)
+    }
+  }
   override def onCreateDialog(saved:Bundle):Dialog = {
     val first_config = getArguments.getShort("first_config") == 1
     val helper = new GeneralRadioHelper(getActivity)
@@ -196,10 +201,9 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
     footnote.foreach{
       html += "<br>-------<br><big>" + getString(_) + "</big>"
     }
-    val hcustom = (builder:AlertDialog.Builder) => {
-      builder.setTitle(R.string.intended_use_result_title)
-    }
-    Utils.generalHtmlDialog(getActivity,Left(html),custom = hcustom)
+    val bundle = new Bundle
+    bundle.putString("tag","intended_use_result_title")
+    CommonDialog.generalHtmlDialogWithCallback(Left(this),Left(html),bundle)
     getActivity.asInstanceOf[WasuramotiActivity].reloadFragment()
     dismiss()
   }

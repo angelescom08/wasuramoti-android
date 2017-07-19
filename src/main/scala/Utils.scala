@@ -795,13 +795,6 @@ object Utils {
   // dummy functions which is moved to CommonDialog.scala, left for WIP work
   // TODO: remove when implement is done
   //
-  def generalHtmlDialog(
-    context:Context,
-    arg:Either[String,Int],
-    func_done:()=>Unit={()=>Unit},
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
-  ){
-  }
   def generalCheckBoxConfirmDialog(
     context:Context,
     arg_text:Either[String,Int],

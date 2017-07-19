@@ -92,7 +92,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
     }
 
     def helpHtmlClicked(){
-      Utils.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
+      CommonDialog.generalHtmlDialog(context,Right(R.string.fudasetedit_fudanum_html))
     }
 
     override def doWhenClose():Boolean = {
