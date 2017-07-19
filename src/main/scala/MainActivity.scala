@@ -619,11 +619,16 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "already_reported_expection"){
-      throw new AlreadyReportedException(bundle.getString("error_message"))
-    }else{
-      // we have to also call RequirePermissionTrait's method since it extends CommonDialog.CallbackListener
-      super[RequirePermissionTrait].onCommonDialogCallback(bundle)
+    bundle.getString("tag") match {
+      case "already_reported_expection" =>
+        throw new AlreadyReportedException(bundle.getString("error_message"))
+      case "karutaplay_rewind" =>
+        val includeCur = bundle.getBoolean("include_cur")
+        FudaListHelper.rewind(this,includeCur)
+        refreshAndInvalidate()
+      case _ =>
+        // we have to also call RequirePermissionTrait's method since it extends CommonDialog.CallbackListener
+        super[RequirePermissionTrait].onCommonDialogCallback(bundle)
     }
   }
 
