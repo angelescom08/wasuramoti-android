@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater}
 import android.widget.{AdapterView,ArrayAdapter,Spinner}
+import android.os.Bundle
 import java.util.ArrayList
 
 case class FudaSetWithSize(val title:String, val num:Int){
@@ -21,10 +22,25 @@ trait FudaSetEditListener {
   def onFudaSetEditListenerResult(isAdd:Boolean, origFs:FudaSetWithSize, newFs:FudaSetWithSize)
 }
 
-class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with ButtonListener with FudaSetEditListener{
+class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
+  with ButtonListener with FudaSetEditListener with CommonDialog.CallbackListener{
   var listItems = new ArrayList[FudaSetWithSize]()
   var adapter = None:Option[ArrayAdapter[FudaSetWithSize]]
   var spinner = None:Option[Spinner]
+  
+  override def onCommonDialogCallback(bundle:Bundle){
+    if(bundle.getString("tag") == "fudaset_delete_confirmed"){
+      Globals.db_lock.synchronized{
+        val pos = bundle.getInt("pos")
+        val fs = adapter.get.getItem(pos)
+        val db = Globals.database.get.getWritableDatabase
+        db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
+        db.close()
+        adapter.get.remove(fs)
+      }
+    }
+  }
+
   override def onFudaSetEditListenerResult(isAdd: Boolean, origFs:FudaSetWithSize, newFs:FudaSetWithSize){
     if(isAdd){
       addFudaSetToSpinner(newFs)
@@ -113,12 +129,10 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat with Butt
     }
     val fs = adapter.get.getItem(pos)
     val message = context.getResources.getString(R.string.fudaset_confirmdelete,fs.title)
-    Utils.confirmDialog(context,Left(message), () => Globals.db_lock.synchronized{
-      val db = Globals.database.get.getWritableDatabase
-      db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
-      db.close()
-      adapter.get.remove(fs)
-    })
+    val bundle = new Bundle
+    bundle.putString("tag","fudaset_delete_confirmed")
+    bundle.putInt("pos",pos)
+    CommonDialog.confirmDialogWithCallback(Left(this), Left(message), bundle)
   }}
   def copymergeFudaSet(){
     new FudaSetCopyMergeDialog(getContext, addFudaSetToSpinner).show()
