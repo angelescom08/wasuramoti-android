@@ -11,6 +11,8 @@ import android.text.method.LinkMovementMethod
 import android.support.v7.app.AlertDialog
 import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment}
 
+import scala.reflect.ClassTag
+
 object CommonDialog {
 
   object TargetType extends Enumeration {
@@ -23,13 +25,54 @@ object CommonDialog {
     val MESSAGE, CONFIRM, HTML, CHECKBOX = Value
   }
 
-
   trait CallbackListener {
     def onCommonDialogCallback(bundle:Bundle)
   }
 
   trait CustomDialog {
     def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder)
+  }
+
+  trait WrappableDialog {
+    var callbackListener:CallbackListener = null
+    var extraArguments:Bundle = null
+  }
+
+  class DialogWrapperFragment extends DialogFragment {
+    override def onCreateDialog(state:Bundle):Dialog = {
+      val args = super.getArguments
+      val classTag = args.getSerializable("class_tag").asInstanceOf[ClassTag[Dialog]]
+      val extraArgs = args.getBundle("extra_args")
+      val dialog = classTag.runtimeClass.getConstructor(classOf[Context]).newInstance(getContext).asInstanceOf[Dialog]
+      val callbackTarget = args.getSerializable("callback_target").asInstanceOf[TargetType.TargetType] match {
+        case TargetType.ACTIVITY => getActivity
+        case TargetType.FRAGMENT => getTargetFragment
+      }
+      if(dialog.isInstanceOf[WrappableDialog]){
+        val wrappable = dialog.asInstanceOf[WrappableDialog]
+        wrappable.callbackListener = callbackTarget.asInstanceOf[CallbackListener] 
+        wrappable.extraArguments = extraArgs
+        
+      }
+      dialog
+    }
+  }
+
+  def showWrappedDialog[C <: Dialog](parent:EitherFragmentActivity,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
+    val fragment = new DialogWrapperFragment
+    val bundle = new Bundle
+    bundle.putSerializable("class_tag",tag)
+    bundle.putBundle("extra_args",extraArgs)
+    bundle.putSerializable("callback_target", parent match {
+      case Left(fragment) => TargetType.FRAGMENT
+      case Right(activity) => TargetType.ACTIVITY
+    })
+    val (_,manager) = getContextAndManager(parent)
+    if(parent.isLeft){
+      fragment.setTargetFragment(parent.left.get, 0)
+    }
+    val name = tag.toString.toLowerCase.replaceAllLiterally(".","_")
+    fragment.show(manager, name)
   }
 
   class CommonDialogFragment extends DialogFragment {
