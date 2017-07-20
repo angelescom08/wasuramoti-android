@@ -795,14 +795,6 @@ object Utils {
   // dummy functions which is moved to CommonDialog.scala, left for WIP work
   // TODO: remove when implement is done
   //
-  def generalCheckBoxConfirmDialog(
-    context:Context,
-    arg_text:Either[String,Int],
-    arg_checkbox:Either[String,Int],
-    func_yes:(CheckBox)=>Unit,
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
-    ){
-  }
   def listDialog(
     context:Context,
     title_id:Int,

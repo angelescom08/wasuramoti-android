@@ -213,45 +213,55 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     eql.isEmpty || ! eql.forall{  _ < 0.05}
   }
 
+  def playWithoutConfirm(bundle:Bundle,fromAuto:Boolean=false,fromSwipe:Boolean=false){
+    Globals.global_lock.synchronized{
+      if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity)){
+        Toast.makeText(activity.getApplicationContext,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
+        return
+      }
+      if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN && Globals.prefs.get.getBoolean("autoplay_enable",false)){
+        bundle.putBoolean("autoplay",true)
+        if(!fromAuto){
+          Globals.autoplay_started = Some(System.currentTimeMillis)
+        }
+      }
+      
+      if(set_audio_volume){
+        Utils.saveAndSetAudioVolume(activity.getApplicationContext())
+      }
+      Globals.is_playing = true
+      is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
+      KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
+      KarutaPlayUtils.setRewindButtonEnabled(activity,Some(false))
+      activity.setButtonTextByState()
+      // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
+      if(YomiInfoUtils.showPoemText && !is_replay){
+        if(Utils.readCurNext(activity.getApplicationContext)){
+          activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
+        }else if(fromAuto && !fromSwipe){
+          activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
+        }else{
+          activity.invalidateYomiInfo()
+        }
+        KarutaPlayUtils.startCheckConsistencyTimers()
+      }
+      // do the rest in another thread
+      onReallyStart(bundle, fromAuto)
+    }
+  }
+
 
   def play(bundle:Bundle,fromAuto:Boolean=false,fromSwipe:Boolean=false){
     Globals.global_lock.synchronized{
       if(Globals.is_playing){
         return
       }
-      val rest_start = () => {
-        if(!fromAuto && !KarutaPlayUtils.requestAudioFocus(activity)){
-          Toast.makeText(activity.getApplicationContext,R.string.stopped_since_audio_focus,Toast.LENGTH_SHORT).show()
-          return
-        }
-        if(bundle.getString("fromSender") == KarutaPlayUtils.SENDER_MAIN && Globals.prefs.get.getBoolean("autoplay_enable",false)){
-          bundle.putBoolean("autoplay",true)
-          if(!fromAuto){
-            Globals.autoplay_started = Some(System.currentTimeMillis)
-          }
-        }
-        
-        if(set_audio_volume){
-          Utils.saveAndSetAudioVolume(activity.getApplicationContext())
-        }
-        Globals.is_playing = true
-        is_replay = bundle.getString("fromSender") == KarutaPlayUtils.SENDER_REPLAY
-        KarutaPlayUtils.setReplayButtonEnabled(activity,Some(false))
-        KarutaPlayUtils.setRewindButtonEnabled(activity,Some(false))
-        activity.setButtonTextByState()
-        // if is_replay is true, poem text is invalidated in forceYomiInfoView(), so we dont invalidate here.
-        if(YomiInfoUtils.showPoemText && !is_replay){
-          if(Utils.readCurNext(activity.getApplicationContext)){
-            activity.scrollYomiInfo(R.id.yomi_info_view_cur,false)
-          }else if(fromAuto && !fromSwipe){
-            activity.scrollYomiInfo(R.id.yomi_info_view_next,true,Some({() => activity.invalidateYomiInfo()}))
-          }else{
-            activity.invalidateYomiInfo()
-          }
-          KarutaPlayUtils.startCheckConsistencyTimers()
-        }
-        // do the rest in another thread
-        onReallyStart(bundle, fromAuto)
+      lazy val baseBundle = {
+        val b = new Bundle
+        b.putBundle("play_bundle",bundle)
+        b.putBoolean("from_auto",fromAuto)
+        b.putBoolean("from_swipe",fromSwipe)
+        b
       }
       // We don't need to confirm both volume_alert and ringer_mode_alert since volume_alert implies ringer_mode_alert.
       // That is because ringer_mode_alert is intended to "Don't play sound when silent mode", and if the volume is low,
@@ -261,33 +271,18 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
          Array(KarutaPlayUtils.SENDER_MAIN,KarutaPlayUtils.SENDER_REPLAY).contains(bundle.getString("fromSender"))
       if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_volume)
         && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
-        val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_volume_alert) } 
-        Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),
-          (cbox) => {
-            KarutaPlayUtils.last_confirmed_for_volume = Some(cur_time)
-            if(cbox.isChecked){
-              val edit = Globals.prefs.get.edit
-              edit.putBoolean("volume_alert",false)
-              edit.commit()
-            }
-            rest_start()
-          }, custom)
+        val args = baseBundle
+        args.putString("tag","volume_alert_confirm")
+        CommonDialog.generalCheckBoxConfirmDialogWithCallback(
+          Right(activity),Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),args)
       }else if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_ringer_mode) &&
         Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
-        val custom = (builder:AlertDialog.Builder) => { builder.setTitle(R.string.conf_ringer_mode_alert) } 
-        Utils.generalCheckBoxConfirmDialog(activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),
-          (cbox) => {
-            KarutaPlayUtils.last_confirmed_for_ringer_mode = Some(cur_time)
-            if(cbox.isChecked){
-              val edit = Globals.prefs.get.edit
-              edit.putBoolean("ringer_mode_alert",false)
-              edit.commit()
-            }
-            rest_start()
-          }, custom)
-        
+        val args = baseBundle
+        args.putString("tag","ringer_mode_alert_confirm")
+        CommonDialog.generalCheckBoxConfirmDialogWithCallback(
+          Right(activity),Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),args)
       }else{
-        rest_start()
+        playWithoutConfirm(bundle,fromAuto,fromSwipe)
       }
     }
   }

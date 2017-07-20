@@ -592,12 +592,17 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   override def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder){
-    if(bundle.getString("tag") == "all_read_done"){
-      builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
-        override def onClick(dialog:DialogInterface, which:Int){
-          showShuffleDialog()
-        }
-      })
+    bundle.getString("tag") match {
+      case "all_read_done" =>
+        builder.setNeutralButton(R.string.menu_shuffle, new DialogInterface.OnClickListener(){
+          override def onClick(dialog:DialogInterface, which:Int){
+            showShuffleDialog()
+          }
+        })
+      case "volume_alert_confirm" =>
+         builder.setTitle(R.string.conf_volume_alert) 
+      case "ringer_mode_alert_confirm" =>
+         builder.setTitle(R.string.conf_ringer_mode_alert) 
     }
   }
 
@@ -612,6 +617,36 @@ class WasuramotiActivity extends AppCompatActivity
       case "do_shuffle" =>
         FudaListHelper.shuffleAndMoveToFirst(getApplicationContext())
         refreshAndInvalidate()
+      case "volume_alert_confirm" => Globals.global_lock.synchronized{
+        val cur_time = java.lang.System.currentTimeMillis
+        KarutaPlayUtils.last_confirmed_for_volume = Some(cur_time)
+        if(bundle.getBoolean("checked")){
+          val edit = Globals.prefs.get.edit
+          edit.putBoolean("volume_alert",false)
+          edit.commit()
+        }
+        if(bundle.getInt("which") == DialogInterface.BUTTON_POSITIVE){
+          val playBundle = bundle.getBundle("play_bundle")
+          val fromAuto = bundle.getBoolean("from_auto")
+          val fromSwipe = bundle.getBoolean("from_swipe")
+          Globals.player.get.playWithoutConfirm(playBundle,fromAuto,fromSwipe)
+        }
+      }
+      case "ringer_mode_alert_confirm" => Globals.global_lock.synchronized{
+        val cur_time = java.lang.System.currentTimeMillis
+        KarutaPlayUtils.last_confirmed_for_ringer_mode = Some(cur_time)
+        if(bundle.getBoolean("checked")){
+          val edit = Globals.prefs.get.edit
+          edit.putBoolean("ringer_mode_alert",false)
+          edit.commit()
+        }
+        if(bundle.getInt("which") == DialogInterface.BUTTON_POSITIVE){
+          val playBundle = bundle.getBundle("play_bundle")
+          val fromAuto = bundle.getBoolean("from_auto")
+          val fromSwipe = bundle.getBoolean("from_swipe")
+          Globals.player.get.playWithoutConfirm(playBundle,fromAuto,fromSwipe)
+        }
+      }
       case "import_fudaset" =>
         val jsonString = bundle.getString("json")
         val obj = new JSONTokener(jsonString).nextValue.asInstanceOf[JSONObject]

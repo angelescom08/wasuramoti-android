@@ -20,7 +20,7 @@ object CommonDialog {
 
   object DialogType extends Enumeration {
     type DialogType = Value
-    val MESSAGE, CONFIRM, HTML = Value
+    val MESSAGE, CONFIRM, HTML, CHECKBOX = Value
   }
 
 
@@ -41,18 +41,32 @@ object CommonDialog {
         case null => null
       }
       val callbackBundle = Option(args.getBundle("callback_bundle")).getOrElse(new Bundle)
+      val dialogType = args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType]
       val listener = if(callbackTarget != null && callbackTarget.isInstanceOf[CallbackListener]){
-        new DialogInterface.OnClickListener(){
-          override def onClick(interface:DialogInterface,which:Int){
-            callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(callbackBundle)
+        if(dialogType == DialogType.CHECKBOX){
+          new DialogInterface.OnClickListener(){
+            override def onClick(interface:DialogInterface,which:Int){
+              val bundle = callbackBundle.clone.asInstanceOf[Bundle]
+              val checkbox = getView.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+              bundle.putBoolean("checked",checkbox.isChecked)
+              bundle.putInt("which",which)
+              callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(bundle)
+            }
+          }
+        }else{
+          new DialogInterface.OnClickListener(){
+            override def onClick(interface:DialogInterface,which:Int){
+              callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(callbackBundle)
+            }
           }
         }
       }else{
         null
       }
       val message = args.getString("message")
-      val builder = new AlertDialog.Builder(getContext)
-      args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType] match {
+      val context = getContext
+      val builder = new AlertDialog.Builder(context)
+      dialogType match {
         case DialogType.MESSAGE =>
           builder.setPositiveButton(android.R.string.ok,listener)
           builder.setMessage(message)
@@ -62,11 +76,20 @@ object CommonDialog {
           builder.setMessage(message)
         case DialogType.HTML =>
           builder.setPositiveButton(android.R.string.ok,listener)
-          val view = LayoutInflater.from(getContext).inflate(R.layout.general_scroll,null)
+          val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
           val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
-          txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(getContext,message)))
+          txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,message)))
           // this makes "<a href='...'></a>" clickable
           txtview.setMovementMethod(LinkMovementMethod.getInstance)
+          builder.setView(view)
+        case DialogType.CHECKBOX =>
+          builder.setPositiveButton(android.R.string.ok,listener)
+          builder.setNegativeButton(android.R.string.no,listener)
+          val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
+          val vtext = view.findViewById(R.id.checkbox_dialog_text).asInstanceOf[TextView]
+          val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+          vtext.setText(message)
+          vcheckbox.setText(args.getString("message_checkbox"))
           builder.setView(view)
       }
       if(callbackTarget.isInstanceOf[CustomDialog]){
@@ -122,54 +145,50 @@ object CommonDialog {
       baseDialogWithCallback(DialogType.HTML,parent,message,callbackBundle)
   }
 
+  def generalCheckBoxConfirmDialogWithCallback(
+    parent:EitherFragmentActivity,
+    message:Either[String,Int],
+    message_checkbox:Either[String,Int],
+    callbackBundle:Bundle
+    ){
+      val extraArgs = new Bundle
+    val (context,_) = getContextAndManager(parent)
+      extraArgs.putString("message_checkbox",getStringOrResource(context, message_checkbox))
+      baseDialogWithCallback(DialogType.CHECKBOX,parent,message,callbackBundle,extraArgs)
+  }
+
+  def getContextAndManager(parent:EitherFragmentActivity) = {
+    parent match {
+      case Left(fragment) => (fragment.getContext,fragment.getFragmentManager)
+      case Right(activity) => (activity,activity.getSupportFragmentManager)
+    }
+  }
+
   def baseDialogWithCallback(
     dialogType:DialogType.DialogType,
     parent: EitherFragmentActivity,
     message:Either[String,Int],
-    callbackBundle:Bundle
+    callbackBundle:Bundle,
+    extraArgs:Bundle = null
     ){
-    val manager = parent match {
-      case Left(fragment) => fragment.getFragmentManager
-      case Right(activity) => activity.getSupportFragmentManager
-    }
     val fragment = new CommonDialogFragment 
     val bundle = new Bundle
-    bundle.putString("message", getStringOrResource(fragment.getContext, message))
+    val (context,manager) = getContextAndManager(parent)
+    bundle.putString("message", getStringOrResource(context, message))
     bundle.putBundle("callback_bundle", callbackBundle)
     bundle.putSerializable("callback_target", parent match {
       case Left(fragment) => TargetType.FRAGMENT
       case Right(activity) => TargetType.ACTIVITY
     })
     bundle.putSerializable("dialog_type",dialogType)
+    if(extraArgs != null){
+      bundle.putAll(extraArgs)
+    }
     fragment.setArguments(bundle)
     if(parent.isLeft){
       fragment.setTargetFragment(parent.left.get, 0)
     }
     fragment.show(manager, "common_dialog_base")
-  }
-
-  def generalCheckBoxConfirmDialog(
-    context:Context,
-    arg_text:Either[String,Int],
-    arg_checkbox:Either[String,Int],
-    func_yes:(CheckBox)=>Unit,
-    custom:AlertDialog.Builder=>AlertDialog.Builder = identity
-    ){
-      val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
-      val vtext = view.findViewById(R.id.checkbox_dialog_text).asInstanceOf[TextView]
-      val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
-      vtext.setText(getStringOrResource(context,arg_text))
-      vcheckbox.setText(getStringOrResource(context,arg_checkbox))
-      val dialog = custom(new AlertDialog.Builder(context))
-        .setPositiveButton(android.R.string.ok,
-          new DialogInterface.OnClickListener(){
-            override def onClick(interface:DialogInterface,which:Int){
-              func_yes(vcheckbox)
-            }
-        })
-        .setNegativeButton(android.R.string.no,null)
-        .setView(view)
-        .create
   }
 
   def listDialog(
