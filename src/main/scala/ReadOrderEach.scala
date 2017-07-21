@@ -50,7 +50,7 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
     val custom = view.findViewById(R.id.conf_read_order_each_custom)
     custom.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        new ReadOrderEachCustomDialog(context).show()
+        CommonDialog.showWrappedDialog[ReadOrderEachCustomDialog](getFragmentManager)
       }
     })
     val custom_text = view.findViewById(R.id.conf_read_order_value_custom)
@@ -58,7 +58,7 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
       override def onClick(v:View){
         // group.check() does not trigger OnClickListener, so we have to show dialog after it.
         group.check(R.id.conf_read_order_each_custom)
-        new ReadOrderEachCustomDialog(context).show()
+        CommonDialog.showWrappedDialog[ReadOrderEachCustomDialog](getFragmentManager)
       }
     })
 

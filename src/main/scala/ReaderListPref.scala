@@ -195,7 +195,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
 
     builder.setPositiveButton(R.string.button_test, new DialogInterface.OnClickListener(){
       override def onClick(dialog:DialogInterface,which:Int){
-        new AudioDecodeTestDialog(context).show
+        CommonDialog.showWrappedDialog[AudioDecodeTestDialog](getFragmentManager)
       }
     })
   }

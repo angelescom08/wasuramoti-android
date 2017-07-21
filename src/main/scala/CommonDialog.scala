@@ -9,7 +9,7 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 
 import android.support.v7.app.AlertDialog
-import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment}
+import android.support.v4.app.{FragmentActivity,DialogFragment,Fragment,FragmentManager}
 
 import scala.reflect.ClassTag
 
@@ -47,6 +47,7 @@ object CommonDialog {
       val callbackTarget = args.getSerializable("callback_target").asInstanceOf[TargetType.TargetType] match {
         case TargetType.ACTIVITY => getActivity
         case TargetType.FRAGMENT => getTargetFragment
+        case null => null
       }
       if(dialog.isInstanceOf[WrappableDialog]){
         val wrappable = dialog.asInstanceOf[WrappableDialog]
@@ -57,19 +58,35 @@ object CommonDialog {
       dialog
     }
   }
+  // wrap Dialog with Fragment
+  def showWrappedDialog[C <: Dialog](manager:FragmentManager,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
+    wrappedDialogBase(Right(manager),extraArgs)
+  }
 
-  def showWrappedDialog[C <: Dialog](parent:CallbackListener,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
+  def showWrappedDialogWithCallback[C <: Dialog](parent:CallbackListener,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
+    wrappedDialogBase(Left(parent),extraArgs)
+  }
+
+  def wrappedDialogBase[C <: Dialog](
+    target:Either[CallbackListener,FragmentManager],extraArgs:Bundle=new Bundle)
+  (implicit tag:ClassTag[C]){
     val fragment = new DialogWrapperFragment
     val bundle = new Bundle
     bundle.putSerializable("class_tag",tag)
     bundle.putBundle("extra_args",extraArgs)
-    bundle.putSerializable("callback_target", parent match {
-      case _:Fragment => TargetType.FRAGMENT
-      case _:FragmentActivity => TargetType.ACTIVITY
-    })
-    val (_,manager) = getContextAndManager(parent)
-    if(parent.isInstanceOf[Fragment]){
-      fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
+    if(target.isLeft){
+      val parent = target.left.get
+      bundle.putSerializable("callback_target", parent match {
+        case _:Fragment => TargetType.FRAGMENT
+        case _:FragmentActivity => TargetType.ACTIVITY
+      })
+      if(parent.isInstanceOf[Fragment]){
+        fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
+      }
+    }
+    val manager = target match {
+      case Left(parent) => getContextAndManager(parent)._2
+      case Right(manager) => manager
     }
     val name = tag.toString.toLowerCase.replaceAllLiterally(".","_")
     fragment.show(manager, name)
@@ -154,6 +171,7 @@ object CommonDialog {
   def generalHtmlDialog(context:Context,message:Either[String,Int]){
     baseDialog(DialogType.HTML,context,message)
   }
+  // TODO: replace Context with FragmentManager since casting Context to FragmentActivity is not always safe
   def baseDialog(dialogType:DialogType.DialogType,context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new CommonDialogFragment

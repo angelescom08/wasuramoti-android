@@ -82,14 +82,13 @@ class YomiInfoPreferenceFragment extends PreferenceDialogFragmentCompat {
     val btn_lang = view.findViewById(R.id.yomi_info_conf_button_lang).asInstanceOf[Button]
     btn_lang.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
-          val dlg = new YomiInfoConfigLangDialog(context)
-          dlg.show
+          CommonDialog.showWrappedDialog[YomiInfoConfigLangDialog](getFragmentManager)
         }
     })
     val btn_font = view.findViewById(R.id.yomi_info_conf_button_font).asInstanceOf[Button]
     btn_font.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
-          new YomiInfoConfigFontDialog(context).show()
+          CommonDialog.showWrappedDialog[YomiInfoConfigFontDialog](getFragmentManager)
         }
     })
 
