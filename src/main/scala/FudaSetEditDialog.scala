@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment
 
 import scala.collection.JavaConversions
 import scala.collection.mutable
+import scala.collection.immutable.ListSet
 
 
 object FudaSetEditDialogFragment {
@@ -28,21 +29,25 @@ object FudaSetEditDialogFragment {
 class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.CallbackListener{
   val self = this
   override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "fudasetedit_dialog_closed"){
-      val kimari = bundle.getString("kimari")
-      val title = bundle.getString("title")
-      val stSize =  bundle.getInt("st_size")
-      val origTitle = bundle.getSerializable("orig_title").asInstanceOf[Option[String]]
-      Utils.writeFudaSetToDB(getContext,title,kimari,stSize,origTitle)
+    bundle.getString("tag") match {
+      case "fudasetedit_dialog_closed" =>
+        val kimari = bundle.getString("kimari")
+        val title = bundle.getString("title")
+        val stSize =  bundle.getInt("st_size")
+        val origTitle = bundle.getSerializable("orig_title").asInstanceOf[Option[String]]
+        Utils.writeFudaSetToDB(getContext,title,kimari,stSize,origTitle)
 
-      val args = super.getArguments
-      val isAdd = args.getBoolean("is_add")
-      val origFs = args.getSerializable("orig_fs").asInstanceOf[FudaSetWithSize]
-      val newFs = new FudaSetWithSize(title,stSize)
-      getTargetFragment.asInstanceOf[FudaSetEditListener].onFudaSetEditListenerResult(isAdd,origFs,newFs)
+        val args = super.getArguments
+        val isAdd = args.getBoolean("is_add")
+        val origFs = args.getSerializable("orig_fs").asInstanceOf[FudaSetWithSize]
+        val newFs = new FudaSetWithSize(title,stSize)
+        getTargetFragment.asInstanceOf[FudaSetEditListener].onFudaSetEditListenerResult(isAdd,origFs,newFs)
 
-      Globals.forceRefreshPlayer = true
-      dismiss
+        Globals.forceRefreshPlayer = true
+        dismiss
+      case "fudaset_edit_num_done" | "fudaset_edit_initial_done" =>
+        val fudaset = bundle.getSerializable("set").asInstanceOf[ListSet[Int]]
+        getDialog.asInstanceOf[FudaSetEditDialog].appendNums(fudaset)
     }
   }
   override def onCreateDialog(state:Bundle):Dialog = {
@@ -146,12 +151,10 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
     }
 
     def buttonFudasetEditInitial(){
-      val dialog = new FudaSetEditInitialDialog(context,appendNums)
-      dialog.show()
+      CommonDialog.showWrappedDialogWithCallback[FudaSetEditInitialDialog](self)
     }
     def buttonFudasetEditNum(){
-      val dialog = new FudaSetEditNumDialog(context,appendNums)
-      dialog.show()
+      CommonDialog.showWrappedDialogWithCallback[FudaSetEditNumDialog](self)
     }
   }
 }

@@ -5,9 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.{LinearLayout,ToggleButton,ListView,CompoundButton}
 import android.view.{View,ViewGroup}
-import scala.collection.mutable
 
-class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extends Dialog(context,Utils.switchFullDialogTheme){
+import scala.collection.mutable
+import scala.collection.immutable.ListSet
+
+class FudaSetEditInitialDialog(context:Context)
+  extends Dialog(context,Utils.switchFullDialogTheme) with CommonDialog.WrappableDialog
+  {
 
   val TAG_INITIAL = R.id.fudasetedit_tag_initial
 
@@ -67,7 +71,10 @@ class FudaSetEditInitialDialog(context:Context,callback:(Set[Int])=>Unit) extend
     findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
-        callback(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num).toSet)
+        val bundle = new Bundle
+        bundle.putString("tag","fudaset_edit_initial_done")
+        bundle.putSerializable("set",ListSet(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num):_*))
+        callbackListener.onCommonDialogCallback(bundle)
         dismiss()
       }
     })
