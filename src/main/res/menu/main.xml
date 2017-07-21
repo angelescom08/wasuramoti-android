@@ -4,7 +4,7 @@
   >
   <item
     android:id="@+id/action_settings"
-    android:icon="@drawable/ic_action_settings"
+    android:icon="?attr/settingsIconDrawable"
     android:title="@string/menu_settings"
     wasuramoti:showAsAction="always">
     <menu>

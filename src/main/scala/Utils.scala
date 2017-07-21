@@ -581,12 +581,22 @@ object Utils {
     return r
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
+    // TODO: we should use Theme#resolveAttribute to get the drawable of theme instead of switching by isLight
+    val isLight = Globals.prefs.get.getBoolean("light_theme", false)
     val Array(prefix,postfix) = tag.split("_")
     val is_mem = prefix == CommandButtonPanel.PREFIX_MEMORIZE
     val (ic_on,ic_off) = if(is_mem){
-      (R.drawable.ic_action_important,R.drawable.ic_action_not_important)
+      if(isLight){
+        (R.drawable.light_ic_action_important,R.drawable.light_ic_action_not_important)
+      }else{
+        (R.drawable.ic_action_important,R.drawable.ic_action_not_important)
+      }
     }else{
-      (R.drawable.ic_action_brightness_high,R.drawable.ic_action_brightness_low)
+      if(isLight){
+        (R.drawable.light_ic_action_brightness_high,R.drawable.light_ic_action_brightness_low)
+      }else{
+        (R.drawable.ic_action_brightness_high,R.drawable.ic_action_brightness_low)
+      }
     }
     yiv.flatMap{vw =>
       val rx = if(is_mem){

@@ -12,6 +12,7 @@
     <item name="mainButtonDrawable">@drawable/main_button_dark</item>
     <item name="roundBorderDrawable">@drawable/round_border_dark</item>
     <item name="tableCellDrawable">@drawable/table_cell_dark</item>
+    <item name="settingsIconDrawable">@drawable/ic_action_settings</item>
     <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.MainTheme</item>
     <item name="generalBackgroundColor">#000000</item>

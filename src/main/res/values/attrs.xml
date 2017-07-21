@@ -6,6 +6,7 @@
   <attr name="mainButtonDrawable" format="reference"/>
   <attr name="roundBorderDrawable" format="reference"/>
   <attr name="tableCellDrawable" format="reference"/>
+  <attr name="settingsIconDrawable" format="reference"/>
   <!-- colors -->
   <attr name="generalBackgroundColor" format="reference|color"/>
   <attr name="generalTextColor" format="reference|color"/>

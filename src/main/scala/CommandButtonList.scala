@@ -24,14 +24,46 @@ class CommandButtonList(context:Context,attrs:AttributeSet) extends LinearLayout
     button.setTag(tag)
     button.setText(text)
     button.setEnabled(enabled)
+    // TODO: we should use Theme#resolveAttribute to get the drawable of theme instead of switching by isLight
+    val isLight = Globals.prefs.get.getBoolean("light_theme", false)
     val drawable = tag.split("_").head match{
-      case PREFIX_REWIND => R.drawable.ic_action_previous
-      case PREFIX_REPLAY => R.drawable.ic_action_replay
-      case PREFIX_NEXT => R.drawable.ic_action_next
+      case PREFIX_REWIND => 
+        if(isLight){
+          R.drawable.light_ic_action_previous
+        }else{
+          R.drawable.ic_action_previous
+        }
+      case PREFIX_REPLAY =>
+        if(isLight){
+          R.drawable.light_ic_action_replay
+        }else{
+          R.drawable.ic_action_replay
+        }
+      case PREFIX_NEXT =>
+        if(isLight){
+          R.drawable.light_ic_action_next
+        }else{
+          R.drawable.ic_action_next
+        }
       case PREFIX_DISPLAY | PREFIX_MEMORIZE => Utils.getButtonDrawableId(yiv,tag)
-      case PREFIX_KIMARIJI => R.drawable.ic_action_storage
-      case PREFIX_SWITCH => R.drawable.ic_action_refresh
-      case PREFIX_POEM => R.drawable.ic_action_about
+      case PREFIX_KIMARIJI =>
+        if(isLight){
+          R.drawable.light_ic_action_storage
+        }else{
+          R.drawable.ic_action_storage
+        }
+      case PREFIX_SWITCH =>
+        if(isLight){
+          R.drawable.light_ic_action_refresh
+        }else{
+          R.drawable.ic_action_refresh
+        }
+      case PREFIX_POEM =>
+        if(isLight){
+          R.drawable.light_ic_action_about
+        }else{
+          R.drawable.ic_action_about
+        }
     }
     val img = context.getResources.getDrawable(drawable)
     button.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)

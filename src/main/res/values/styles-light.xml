@@ -12,6 +12,7 @@
     <item name="mainButtonDrawable">@drawable/main_button_light</item>
     <item name="roundBorderDrawable">@drawable/round_border_light</item>
     <item name="tableCellDrawable">@drawable/table_cell_light</item>
+    <item name="settingsIconDrawable">@drawable/light_ic_action_settings</item>
     <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.MainTheme.Light</item>
     <item name="generalBackgroundColor">#ffffff</item>
