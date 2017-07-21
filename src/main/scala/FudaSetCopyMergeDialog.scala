@@ -6,10 +6,8 @@ import android.content.Context
 import android.widget.{ArrayAdapter,ListView,EditText}
 import android.text.TextUtils
 
-class FudaSetCopyMergeDialog(
-  context:Context,
-  callback:FudaSetWithSize=>Unit
-  ) extends CustomAlertDialog(context){
+class FudaSetCopyMergeDialog(context:Context)
+  extends CustomAlertDialog(context) with CommonDialog.WrappableDialog{
 
   class FudaSetItem(val id:Long, val title:String, val set_size:Int){
     override def toString():String = {
@@ -43,7 +41,10 @@ class FudaSetCopyMergeDialog(
     val newset = FudaListHelper.queryMergedFudaset(items.map{_.id})
     newset.foreach{case (body,st_size) =>
       Utils.writeFudaSetToDB(context,title,body,st_size)
-      callback(new FudaSetWithSize(title,st_size))
+      val bundle = new Bundle
+      bundle.putString("tag","fudaset_copymerge_done")
+      bundle.putSerializable("fudaset",new FudaSetWithSize(title,st_size))
+      callbackListener.onCommonDialogCallback(bundle)
     }
   }
     return true

@@ -29,15 +29,18 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
   var spinner = None:Option[Spinner]
   
   override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "fudaset_delete_confirmed"){
-      Globals.db_lock.synchronized{
-        val pos = bundle.getInt("pos")
-        val fs = adapter.get.getItem(pos)
-        val db = Globals.database.get.getWritableDatabase
-        db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
-        db.close()
-        adapter.get.remove(fs)
-      }
+    bundle.getString("tag") match {
+      case "fudaset_delete_confirmed" => 
+        Globals.db_lock.synchronized{
+          val pos = bundle.getInt("pos")
+          val fs = adapter.get.getItem(pos)
+          val db = Globals.database.get.getWritableDatabase
+          db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
+          db.close()
+          adapter.get.remove(fs)
+        }
+      case "fudaset_copymerge_done" =>
+        addFudaSetToSpinner(bundle.getSerializable("fudaset").asInstanceOf[FudaSetWithSize])
     }
   }
 
@@ -135,7 +138,7 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     CommonDialog.confirmDialogWithCallback(this, Left(message), bundle)
   }}
   def copymergeFudaSet(){
-    new FudaSetCopyMergeDialog(getContext, addFudaSetToSpinner).show()
+    CommonDialog.showWrappedDialogWithCallback[FudaSetCopyMergeDialog](this)
   }
   def reorderFudaSet(){
     new FudaSetReOrderDialog(getContext, refreshListItems).show()
