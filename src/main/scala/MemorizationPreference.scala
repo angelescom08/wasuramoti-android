@@ -17,13 +17,16 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     enable
   }
   override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "reset_memorized"){
-      val context = getContext
-      val reset_cond = bundle.getString("reset_cond")
-      FudaListHelper.resetMemorized(reset_cond)
-      FudaListHelper.updateSkipList(context)
-      CommonDialog.messageDialog(context,Right(R.string.memorization_mode_reset_done))
-      setMemCountAll()
+    bundle.getString("tag") match {
+      case "reset_memorized" => 
+        val context = getContext
+        val reset_cond = bundle.getString("reset_cond")
+        FudaListHelper.resetMemorized(reset_cond)
+        FudaListHelper.updateSkipList(context)
+        CommonDialog.messageDialog(context,Right(R.string.memorization_mode_reset_done))
+        setMemCountAll()
+      case "set_mem_count_all" =>
+        setMemCountAll()
     }
   }
   override def onDialogClosed(positiveResult:Boolean){
@@ -89,10 +92,11 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     panel.setTag(tag)
     setMemCount(panel,onlyInFudaset)
 
+    val fragment = this
     panel.findViewById(R.id.memorization_panel_save_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         if(panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
-          new MemorizationFudaSetDialog(context,onlyInFudaset,true,reset_cond,setMemCountAll).show()
+          MemorizationFudaSetDialog.show(fragment,onlyInFudaset,true,reset_cond)
         }else{
           CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
@@ -102,14 +106,13 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     panel.findViewById(R.id.memorization_panel_save_not_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         if(panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
-          new MemorizationFudaSetDialog(context,onlyInFudaset,false,reset_cond,setMemCountAll).show()
+          MemorizationFudaSetDialog.show(fragment,onlyInFudaset,false,reset_cond)
         }else{
           CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
         }
       }
     })
     
-    val fragment = this
     panel.findViewById(R.id.memorization_panel_reset_memorized).setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
           val bundle = new Bundle
@@ -155,13 +158,20 @@ class MemorizationPreference(context:Context,attrs:AttributeSet) extends DialogP
     }
   }
 }
-
-class MemorizationFudaSetDialog(context:Context,
-  onlyInFudaset:Boolean,
-  memorized:Boolean,
-  reset_cond:String,
-  callback:()=>Unit)
-  extends CustomAlertDialog(context){
+object MemorizationFudaSetDialog {
+  def show(target:CommonDialog.CallbackListener,onlyInFudaset:Boolean,memorized:Boolean,resetCond:String){
+    val extraArgs = new Bundle
+    extraArgs.putBoolean("only_in_fudaset",onlyInFudaset)
+    extraArgs.putBoolean("memorized",memorized)
+    extraArgs.putString("reset_cond",resetCond)
+    CommonDialog.showWrappedDialogWithCallback[MemorizationFudaSetDialog](target,extraArgs)
+  }
+}
+class MemorizationFudaSetDialog(context:Context)
+  extends CustomAlertDialog(context) with CommonDialog.WrappableDialog{
+  val onlyInFudaset = extraArguments.getBoolean("only_in_fudaset")
+  val memorized = extraArguments.getBoolean("memorized")
+  val resetCond = extraArguments.getString("reset_cond")
 
   override def doWhenClose():Boolean = {
     val title_view = findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
@@ -187,10 +197,12 @@ class MemorizationFudaSetDialog(context:Context,
       case Some((kimari,st_size))=>
         Utils.writeFudaSetToDB(context,title,kimari,st_size)
         if(Option(findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
-          FudaListHelper.resetMemorized(reset_cond)
+          FudaListHelper.resetMemorized(resetCond)
           FudaListHelper.updateSkipList(context)
         }
-        callback()
+        val bundle = new Bundle
+        bundle.putString("tag","set_mem_count_all")
+        callbackListener.onCommonDialogCallback(bundle)
         CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_created))
         return true
     }
