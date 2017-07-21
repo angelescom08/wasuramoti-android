@@ -20,12 +20,18 @@ object FudaSetEditListDialog {
   def genDialogMode(sort_mode:SortMode.SortMode,list_item_mode:ListItemMode.ListItemMode):String = {
     Array(sort_mode.toString,list_item_mode.toString).mkString(",")
   }
+  def show(target:CommonDialog.CallbackListener,kimarijis:String){
+    val bundle = new Bundle
+    bundle.putString("kimarijis",kimarijis)
+    CommonDialog.showWrappedDialogWithCallback(target,bundle)
+  }
 }
 
-class FudaSetEditListDialog(context:Context,kimarijis:String,callback:String=>Unit) extends Dialog(context,Utils.switchFullDialogTheme){
+class FudaSetEditListDialog(context:Context) extends Dialog(context,Utils.switchFullDialogTheme)
+  with CommonDialog.WrappableDialog{
   import FudaSetEditListDialog.{SortMode,ListItemMode,genDialogMode}
+  val kimarijis = extraArguments.getString("kimarijis")
   var sort_mode = SortMode.ABC
-
   var list_item_mode = ListItemMode.KIMARIJI
 
   class FudaListItem(val str:String, val fudanum:Int) {
@@ -152,7 +158,10 @@ class FudaSetEditListDialog(context:Context,kimarijis:String,callback:String=>Un
           case None => ""
           case Some((s,_)) => s
         }
-        callback(body)
+        val bundle = new Bundle
+        bundle.putString("tag","fudaset_edit_list_done")
+        bundle.putString("body",body)
+        callbackListener.onCommonDialogCallback(bundle)
         dismiss()
       }
     })

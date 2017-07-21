@@ -48,6 +48,11 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
       case "fudaset_edit_num_done" | "fudaset_edit_initial_done" =>
         val fudaset = bundle.getSerializable("set").asInstanceOf[ListSet[Int]]
         getDialog.asInstanceOf[FudaSetEditDialog].appendNums(fudaset)
+      case "fudaset_edit_list_done" =>
+        val body_view = getView.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+        val body = bundle.getString("body")
+        body_view.setLocalizationText(body)
+
     }
   }
   override def onCreateDialog(state:Bundle):Dialog = {
@@ -135,10 +140,8 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
       return makeKimarijiSetFromBodyView(body_view).map{_._1}.getOrElse("")
     }
     def buttonFudasetEditList(){
-      val body_view = this.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
       val kms = getCurrentKimarijis
-      val d = new FudaSetEditListDialog(context,kms,{body_view.setLocalizationText(_)})
-      d.show()
+      FudaSetEditListDialog.show(self,kms)
     }
 
     def appendNums(st:Set[Int]){
