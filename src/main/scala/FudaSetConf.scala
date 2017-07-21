@@ -41,6 +41,9 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
         }
       case "fudaset_copymerge_done" =>
         addFudaSetToSpinner(bundle.getSerializable("fudaset").asInstanceOf[FudaSetWithSize])
+
+      case "fudaset_reorder_done" =>
+        refreshListItems
     }
   }
 
@@ -141,7 +144,7 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     CommonDialog.showWrappedDialogWithCallback[FudaSetCopyMergeDialog](this)
   }
   def reorderFudaSet(){
-    new FudaSetReOrderDialog(getContext, refreshListItems).show()
+    CommonDialog.showWrappedDialogWithCallback[FudaSetReOrderDialog](this)
   }
 }
 

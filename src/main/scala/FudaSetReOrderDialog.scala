@@ -6,10 +6,8 @@ import android.content.{ClipData,Context,ContentValues}
 import android.widget.TextView
 import android.widget.Button
 
-class FudaSetReOrderDialog(context:Context,
-  callback:()=>Unit
-  )
-  extends CustomAlertDialog(context){
+class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
+  with CommonDialog.WrappableDialog{
 
   val BAR_COLOR_ACTIVE =  Utils.attrColor(context,R.attr.reorderBarActiveColor)
   val BAR_COLOR_DEFAULT = Utils.attrColor(context,R.attr.reorderBarDefaultColor)
@@ -32,7 +30,9 @@ class FudaSetReOrderDialog(context:Context,
       }
     })
     db.close()
-    callback()
+    val bundle = new Bundle
+    bundle.putString("tag","fudaset_reorder_done")
+    callbackListener.onCommonDialogCallback(bundle)
     return true
   }
 
