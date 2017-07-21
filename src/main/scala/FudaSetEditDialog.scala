@@ -120,7 +120,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
           result.putString("title",title)
           result.putInt("st_size",st_size)
           result.putSerializable("orig_title",if(is_add){None}else{Some(orig_title)})
-          CommonDialog.confirmDialogWithCallback(Left(self),Left(message),result)
+          CommonDialog.confirmDialogWithCallback(self,Left(message),result)
         }
       }
       return false

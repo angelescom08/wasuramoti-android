@@ -132,7 +132,7 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     val bundle = new Bundle
     bundle.putString("tag","fudaset_delete_confirmed")
     bundle.putInt("pos",pos)
-    CommonDialog.confirmDialogWithCallback(Left(this), Left(message), bundle)
+    CommonDialog.confirmDialogWithCallback(this, Left(message), bundle)
   }}
   def copymergeFudaSet(){
     new FudaSetCopyMergeDialog(getContext, addFudaSetToSpinner).show()

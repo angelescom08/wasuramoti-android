@@ -29,7 +29,7 @@ object CommonDialog {
     def onCommonDialogCallback(bundle:Bundle)
   }
 
-  trait CustomDialog {
+  trait CustomDialog extends CallbackListener{
     def customCommonDialog(bundle:Bundle, builder:AlertDialog.Builder)
   }
 
@@ -58,18 +58,18 @@ object CommonDialog {
     }
   }
 
-  def showWrappedDialog[C <: Dialog](parent:EitherFragmentActivity,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
+  def showWrappedDialog[C <: Dialog](parent:CallbackListener,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
     val fragment = new DialogWrapperFragment
     val bundle = new Bundle
     bundle.putSerializable("class_tag",tag)
     bundle.putBundle("extra_args",extraArgs)
     bundle.putSerializable("callback_target", parent match {
-      case Left(fragment) => TargetType.FRAGMENT
-      case Right(activity) => TargetType.ACTIVITY
+      case _:Fragment => TargetType.FRAGMENT
+      case _:FragmentActivity => TargetType.ACTIVITY
     })
     val (_,manager) = getContextAndManager(parent)
-    if(parent.isLeft){
-      fragment.setTargetFragment(parent.left.get, 0)
+    if(parent.isInstanceOf[Fragment]){
+      fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
     }
     val name = tag.toString.toLowerCase.replaceAllLiterally(".","_")
     fragment.show(manager, name)
@@ -164,24 +164,22 @@ object CommonDialog {
     fragment.show(manager, "common_dialog_message")
   }
 
-  // TODO: use something like `Fragment with CallbackListener`, `FragmentActivity with CallbackListener`, `Fragmnet with CustomDialog` to assure type safety
-  type EitherFragmentActivity = Either[Fragment,FragmentActivity]
   def messageDialogWithCallback(
-    parent:EitherFragmentActivity,
+    parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle
     ){
       baseDialogWithCallback(DialogType.MESSAGE,parent,message,callbackBundle)
   }
   def confirmDialogWithCallback(
-    parent:EitherFragmentActivity,
+    parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle
      ){
       baseDialogWithCallback(DialogType.CONFIRM,parent,message,callbackBundle)
   }
   def generalHtmlDialogWithCallback(
-    parent:EitherFragmentActivity,
+    parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle
     ){
@@ -189,7 +187,7 @@ object CommonDialog {
   }
 
   def generalCheckBoxConfirmDialogWithCallback(
-    parent:EitherFragmentActivity,
+    parent:CallbackListener,
     message:Either[String,Int],
     message_checkbox:Either[String,Int],
     callbackBundle:Bundle
@@ -200,16 +198,16 @@ object CommonDialog {
       baseDialogWithCallback(DialogType.CHECKBOX,parent,message,callbackBundle,extraArgs)
   }
 
-  def getContextAndManager(parent:EitherFragmentActivity) = {
+  def getContextAndManager(parent:CallbackListener) = {
     parent match {
-      case Left(fragment) => (fragment.getContext,fragment.getFragmentManager)
-      case Right(activity) => (activity,activity.getSupportFragmentManager)
+      case fragment:Fragment => (fragment.getContext,fragment.getFragmentManager)
+      case activity:FragmentActivity => (activity,activity.getSupportFragmentManager)
     }
   }
 
   def baseDialogWithCallback(
     dialogType:DialogType.DialogType,
-    parent: EitherFragmentActivity,
+    parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle,
     extraArgs:Bundle = null
@@ -220,16 +218,16 @@ object CommonDialog {
     bundle.putString("message", getStringOrResource(context, message))
     bundle.putBundle("callback_bundle", callbackBundle)
     bundle.putSerializable("callback_target", parent match {
-      case Left(fragment) => TargetType.FRAGMENT
-      case Right(activity) => TargetType.ACTIVITY
+      case _:Fragment => TargetType.FRAGMENT
+      case _:FragmentActivity => TargetType.ACTIVITY
     })
     bundle.putSerializable("dialog_type",dialogType)
     if(extraArgs != null){
       bundle.putAll(extraArgs)
     }
     fragment.setArguments(bundle)
-    if(parent.isLeft){
-      fragment.setTargetFragment(parent.left.get, 0)
+    if(parent.isInstanceOf[Fragment]){
+      fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
     }
     fragment.show(manager, "common_dialog_base")
   }

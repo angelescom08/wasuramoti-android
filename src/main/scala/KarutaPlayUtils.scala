@@ -86,7 +86,7 @@ object KarutaPlayUtils{
           val bundle = new Bundle
           bundle.putString("tag","karutaplay_rewind")
           bundle.putBoolean("include_cur",include_cur)
-          CommonDialog.confirmDialogWithCallback(Right(activity),Left(message),bundle)
+          CommonDialog.confirmDialogWithCallback(activity,Left(message),bundle)
         }catch{
           case _:ArrayIndexOutOfBoundsException =>
             CommonDialog.messageDialog(activity,Right(R.string.rewind_button_invalid))

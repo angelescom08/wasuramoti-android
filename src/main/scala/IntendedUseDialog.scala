@@ -20,7 +20,11 @@ object IntendedUseDialog{
   }
 }
 
-class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener with CommonDialog.CustomDialog{
+class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener
+  with CommonDialog.CustomDialog{
+  override def onCommonDialogCallback(bundle:Bundle){
+    // Do Nothing
+  }
   override def customCommonDialog(bundle:Bundle,builder:AlertDialog.Builder){
     if(bundle.getString("tag") == "intended_use_result_title"){
       builder.setTitle(R.string.intended_use_result_title)
@@ -203,7 +207,7 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
     }
     val bundle = new Bundle
     bundle.putString("tag","intended_use_result_title")
-    CommonDialog.generalHtmlDialogWithCallback(Left(this),Left(html),bundle)
+    CommonDialog.generalHtmlDialogWithCallback(this,Left(html),bundle)
     getActivity.asInstanceOf[WasuramotiActivity].reloadFragment()
     dismiss()
   }

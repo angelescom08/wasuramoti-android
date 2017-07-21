@@ -115,7 +115,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
           val bundle = new Bundle
           bundle.putString("tag","reset_memorized")
           bundle.putString("reset_cond",reset_cond)
-          CommonDialog.confirmDialogWithCallback(Left(fragment),Right(R.string.memorization_mode_reset_confirm),bundle)
+          CommonDialog.confirmDialogWithCallback(fragment,Right(R.string.memorization_mode_reset_confirm),bundle)
         }
     })
 

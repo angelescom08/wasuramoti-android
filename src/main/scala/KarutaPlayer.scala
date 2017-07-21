@@ -274,13 +274,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         val args = baseBundle
         args.putString("tag","volume_alert_confirm")
         CommonDialog.generalCheckBoxConfirmDialogWithCallback(
-          Right(activity),Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),args)
+          activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),args)
       }else if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_ringer_mode) &&
         Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
         val args = baseBundle
         args.putString("tag","ringer_mode_alert_confirm")
         CommonDialog.generalCheckBoxConfirmDialogWithCallback(
-          Right(activity),Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),args)
+          activity,Right(R.string.conf_ringer_mode_alert_confirm),Right(R.string.never_confirm_again),args)
       }else{
         playWithoutConfirm(bundle,fromAuto,fromSwipe)
       }
@@ -672,7 +672,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
                         val bundle = new Bundle
                         bundle.putString("tag","already_reported_expection")
                         bundle.putString("error_message",e.getMessage)
-                        CommonDialog.messageDialogWithCallback(Right(activity),Left(msg),bundle)
+                        CommonDialog.messageDialogWithCallback(activity,Left(msg),bundle)
                       }
                   })
                   return Right(new OggDecodeFailException("IOException: "+e.getMessage))

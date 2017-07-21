@@ -21,7 +21,7 @@ import scala.collection.mutable
 
 class WasuramotiActivity extends AppCompatActivity
     with ActivityDebugTrait with RequirePermissionTrait
-    with CommonDialog.CustomDialog with CommonDialog.CallbackListener{
+    with CommonDialog.CustomDialog{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -74,7 +74,7 @@ class WasuramotiActivity extends AppCompatActivity
       val bundle = new Bundle
       bundle.putString("tag","import_fudaset")
       bundle.putString("json",jsonString)
-      CommonDialog.confirmDialogWithCallback(Right(this),
+      CommonDialog.confirmDialogWithCallback(this,
         Left(getResources.getString(R.string.confirm_action_view_fudaset,title,new java.lang.Integer(ar.length))),
         bundle)
     }catch{
@@ -163,7 +163,7 @@ class WasuramotiActivity extends AppCompatActivity
   def showShuffleDialog(){
     val bundle = new Bundle
     bundle.putString("tag","do_shuffle")
-    CommonDialog.confirmDialogWithCallback(Right(this),Right(R.string.menu_shuffle_confirm),bundle)
+    CommonDialog.confirmDialogWithCallback(this,Right(R.string.menu_shuffle_confirm),bundle)
   }
 
   override def onOptionsItemSelected(item: MenuItem):Boolean = {
@@ -687,7 +687,7 @@ class WasuramotiActivity extends AppCompatActivity
         }else if(FudaListHelper.allReadDone(this.getApplicationContext())){
           val bundle = new Bundle
           bundle.putString("tag", "read_all_done")
-          CommonDialog.messageDialogWithCallback(Right(this),Right(R.string.all_read_done),bundle)
+          CommonDialog.messageDialogWithCallback(this,Right(R.string.all_read_done),bundle)
         }else if(
           Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))
           && !checkRequestMarshmallowPermission(REQ_PERM_MAIN_ACTIVITY)){
@@ -798,7 +798,7 @@ trait RequirePermissionTrait extends CommonDialog.CallbackListener{
          // permission was previously denied, with never ask again turned off.
          val bundle = new Bundle
          bundle.putInt("req_code", reqCode)
-         CommonDialog.messageDialogWithCallback(Right(this),Right(R.string.read_external_storage_permission_rationale),bundle)
+         CommonDialog.messageDialogWithCallback(this,Right(R.string.read_external_storage_permission_rationale),bundle)
       }else{
          // we previously never called requestPermission, or permission was denied with never ask again turned on.
          requirePermission(reqCode)
@@ -841,7 +841,7 @@ trait RequirePermissionTrait extends CommonDialog.CallbackListener{
             // permission is denied, with never ask again turned on
             val bundle = new Bundle
             bundle.putString("tag","show_application_settings")
-            CommonDialog.confirmDialogWithCallback(Right(this),Right(deniedForeverMessage),bundle)
+            CommonDialog.confirmDialogWithCallback(this,Right(deniedForeverMessage),bundle)
           }
         }
       }
