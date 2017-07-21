@@ -22,7 +22,7 @@ object CommonDialog {
 
   object DialogType extends Enumeration {
     type DialogType = Value
-    val MESSAGE, CONFIRM, HTML, CHECKBOX = Value
+    val MESSAGE, CONFIRM, HTML, CHECKBOX, LIST = Value
   }
 
   trait CallbackListener {
@@ -151,6 +151,18 @@ object CommonDialog {
           vtext.setText(message)
           vcheckbox.setText(args.getString("message_checkbox"))
           builder.setView(view)
+        case DialogType.LIST =>
+          builder.setNegativeButton(R.string.button_cancel,null)
+          builder.setTitle("message")
+          val items = context.getResources().getStringArray(args.getInt("items_id"))
+          builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
+            override def onClick(d:DialogInterface,position:Int){
+              val bundle = callbackBundle.clone.asInstanceOf[Bundle]
+              bundle.putInt("position",position)
+              callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(bundle)
+              d.dismiss()
+            }
+          })
       }
       if(callbackTarget.isInstanceOf[CustomDialog]){
         callbackTarget.asInstanceOf[CustomDialog].customCommonDialog(callbackBundle, builder)
@@ -203,6 +215,17 @@ object CommonDialog {
     ){
       baseDialogWithCallback(DialogType.HTML,parent,message,callbackBundle)
   }
+  def generalListDialogWithCallback(
+    parent:CallbackListener,
+    title:Either[String,Int],
+    items_id:Int,
+    callbackBundle:Bundle
+  ){
+    val extraArgs = new Bundle
+    extraArgs.putInt("items_id",items_id)
+    baseDialogWithCallback(DialogType.LIST,parent,title,callbackBundle,extraArgs)
+
+  }
 
   def generalCheckBoxConfirmDialogWithCallback(
     parent:CallbackListener,
@@ -211,7 +234,7 @@ object CommonDialog {
     callbackBundle:Bundle
     ){
       val extraArgs = new Bundle
-    val (context,_) = getContextAndManager(parent)
+      val (context,_) = getContextAndManager(parent)
       extraArgs.putString("message_checkbox",getStringOrResource(context, message_checkbox))
       baseDialogWithCallback(DialogType.CHECKBOX,parent,message,callbackBundle,extraArgs)
   }
@@ -250,27 +273,4 @@ object CommonDialog {
     fragment.show(manager, "common_dialog_base")
   }
 
-  def listDialog(
-    context:Context,
-    title_id:Int,
-    items_id:Int,
-    funcs:Array[()=>Unit]){
-      val items = context.getResources().getStringArray(items_id)
-      val builder = new AlertDialog.Builder(context)
-      builder.setTitle(title_id)
-      builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
-          override def onClick(d:DialogInterface,position:Int){
-            if(position > funcs.length){
-              return
-            }
-            funcs(position)()
-            d.dismiss()
-          }
-        })
-      builder.setNegativeButton(R.string.button_cancel,new DialogInterface.OnClickListener(){
-          override def onClick(d:DialogInterface,position:Int){
-            d.dismiss()
-          }
-        })
-  }
 }

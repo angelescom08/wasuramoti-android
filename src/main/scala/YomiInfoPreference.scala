@@ -202,8 +202,26 @@ trait YomiInfoPreferenceTrait{
   }
 }
 
-class QuickConfigDialog extends DialogFragment{
+class QuickConfigDialog extends DialogFragment with CommonDialog.CallbackListener{
+  override def onCommonDialogCallback(bundle:Bundle){
+    if(bundle.getString("tag") == "quicklang_dialog"){
+      val position = bundle.getInt("position")
+      val lang = Utils.YomiInfoLang.values.toArray.apply(position)
+      val edit = Globals.prefs.get.edit
+      YomiInfoUtils.showPoemTextAndTitleBar(edit)
+      edit.putString("yomi_info_default_lang",lang.toString)
+      if(lang == Utils.YomiInfoLang.Japanese){
+        edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
+      }else{
+        edit.putBoolean("yomi_info_show_translate_button",true)
+        edit.putBoolean("yomi_info_author",false)
+      }
+      edit.commit
+      getActivity.asInstanceOf[WasuramotiActivity].reloadFragment
+    }
+  }
   override def onCreateDialog(saved:Bundle):Dialog = {
+    val fragment = this
     val listener = new DialogInterface.OnClickListener{
       override def onClick(dialog:DialogInterface,which:Int){
         val act = getActivity.asInstanceOf[WasuramotiActivity]
@@ -213,28 +231,10 @@ class QuickConfigDialog extends DialogFragment{
             IntendedUseDialog.newInstance(false).show(getFragmentManager,"intended_use_dialog")
             return
           case 4 =>
-            // Translation
-            val activity = getActivity // calling getActivity() inside switch_lang raises NullPointerException
-            val switch_lang = (lang:Utils.YomiInfoLang.YomiInfoLang) => {
-              () => {
-                val edit = Globals.prefs.get.edit
-                YomiInfoUtils.showPoemTextAndTitleBar(edit)
-                edit.putString("yomi_info_default_lang",lang.toString)
-                if(lang == Utils.YomiInfoLang.Japanese){
-                  edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(activity))
-                }else{
-                  edit.putBoolean("yomi_info_show_translate_button",true)
-                  edit.putBoolean("yomi_info_author",false)
-                }
-                edit.commit
-                act.reloadFragment
-              }
-            }
             dismiss
-            Utils.listDialog(getActivity,
-              R.string.quicklang_title,
-              R.array.yomi_info_default_languages,
-              Utils.YomiInfoLang.values.toArray.map(switch_lang(_)))
+            val bundle = new Bundle
+            bundle.putString("tag","quicklang_dialog")
+            CommonDialog.generalListDialogWithCallback(fragment,Right(R.string.quicklang_title),R.array.yomi_info_default_languages,bundle)
             return
           case _ =>
             None
