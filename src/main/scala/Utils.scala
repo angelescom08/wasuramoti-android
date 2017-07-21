@@ -792,16 +792,6 @@ object Utils {
 
   }
 
-  // dummy functions which is moved to CommonDialog.scala, left for WIP work
-  // TODO: remove when implement is done
-  //
-  def listDialog(
-    context:Context,
-    title_id:Int,
-    items_id:Int,
-    funcs:Array[()=>Unit]){
-  }
-
 }
 
 
