@@ -49,7 +49,8 @@ object PrefUtils {
 trait CustomPref extends Preference{
   self:{ def getKey():String; def onBindViewHolder(v:PreferenceViewHolder); def notifyChanged()} =>
   abstract override def onBindViewHolder(v:PreferenceViewHolder) {
-    v.findViewById(R.id.conf_current_value).asInstanceOf[TextView].setText(getAbbrValue())
+    Option(v.findViewById(R.id.conf_current_value).asInstanceOf[TextView])
+      .foreach{_.setText(getAbbrValue)}
     super.onBindViewHolder(v)
   }
   def getAbbrValue():String = {

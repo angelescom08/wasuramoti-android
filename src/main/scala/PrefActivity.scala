@@ -1,8 +1,9 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.{Preference,EditTextPreference,ListPreference}
+import android.support.v7.preference.{Preference,EditTextPreference,ListPreference,PreferenceScreen}
 import android.content.{Context,SharedPreferences,Intent}
 import android.util.AttributeSet
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
@@ -41,8 +42,9 @@ object PrefFragment{
   val DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG"
 }
 
-class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSharedPreferenceChangeListener {
-
+class PrefFragment extends PreferenceFragmentCompat
+  with SharedPreferences.OnSharedPreferenceChangeListener
+  with android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
   override def onCreatePreferencesFix(state:Bundle, rootKey:String){
     addPreferencesFromResource(R.xml.conf)
   }
@@ -110,6 +112,19 @@ class PrefFragment extends PreferenceFragmentCompat with SharedPreferences.OnSha
     if(pref != null && classOf[CustomPref].isAssignableFrom(pref.getClass)){
       pref.asInstanceOf[Preference with CustomPref].notifyChangedPublic()
     }
+  }
+
+  // support library does not support clicking sub-screen
+  // https://stackoverflow.com/questions/34701740/preference-sub-screen-not-opening-when-using-support-v7-preference
+  // the following fix does not solve the problem completely, since when back button is pressed, it closes the PrefActivity and goes back to WasuramotiActivity
+  // TODO: show parent screen when back button is pressed
+  override def getCallbackFragment():Fragment = {
+    this
+  }
+
+  override def onPreferenceStartScreen(pref:android.support.v7.preference.PreferenceFragmentCompat,screen:PreferenceScreen):Boolean = {
+    pref.setPreferenceScreen(screen)
+    return true
   }
 }
 
