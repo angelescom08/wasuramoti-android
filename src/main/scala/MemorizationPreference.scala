@@ -167,6 +167,8 @@ object MemorizationFudaSetDialog {
     CommonDialog.showWrappedDialogWithCallback[MemorizationFudaSetDialog](target,extraArgs)
   }
 }
+
+@KeepConstructor
 class MemorizationFudaSetDialog(context:Context)
   extends CustomAlertDialog(context) with CommonDialog.WrappableDialog{
   val onlyInFudaset = extraArguments.getBoolean("only_in_fudaset")

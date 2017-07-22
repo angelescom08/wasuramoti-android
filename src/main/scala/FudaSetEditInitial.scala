@@ -9,6 +9,7 @@ import android.view.{View,ViewGroup}
 import scala.collection.mutable
 import scala.collection.immutable.ListSet
 
+@KeepConstructor
 class FudaSetEditInitialDialog(context:Context)
   extends Dialog(context,Utils.switchFullDialogTheme) with CommonDialog.WrappableDialog
   {

@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.{ArrayAdapter,ListView,EditText}
 import android.text.TextUtils
 
+@KeepConstructor
 class FudaSetCopyMergeDialog(context:Context)
   extends CustomAlertDialog(context) with CommonDialog.WrappableDialog{
 

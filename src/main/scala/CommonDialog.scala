@@ -58,7 +58,11 @@ object CommonDialog {
       dialog
     }
   }
-  // wrap Dialog with Fragment
+
+  // NOTE: The dialog class which uses showWrappedDialog and showWrappedDialogWithCallback method
+  //       shuld be annotated by @KeepConstructor. This is maybe because we pass ClassTag as serializable,
+  //       and Proguard cannot determine that we need the constructor.
+
   def showWrappedDialog[C <: Dialog](manager:FragmentManager,extraArgs:Bundle=new Bundle)(implicit tag:ClassTag[C]){
     wrappedDialogBase(Right(manager),extraArgs)
   }

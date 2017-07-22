@@ -118,6 +118,7 @@ class ReadOrderEachPreference(context:Context,attrs:AttributeSet) extends Dialog
 }
 
 
+@KeepConstructor
 class ReadOrderEachCustomDialog(context:Context) extends CustomAlertDialog(context){
   def parseCustomOrder(str:String):Either[String,Int] = {
     val s = str.split(Array('/','.',',')).zip(Array("CUR","NEXT")).map{case (s,t) => s.filter("12".contains(_)).map(t+_)}.flatten.mkString("_")

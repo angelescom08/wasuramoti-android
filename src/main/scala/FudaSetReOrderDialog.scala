@@ -6,6 +6,7 @@ import android.content.{ClipData,Context,ContentValues}
 import android.widget.TextView
 import android.widget.Button
 
+@KeepConstructor
 class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
   with CommonDialog.WrappableDialog{
 

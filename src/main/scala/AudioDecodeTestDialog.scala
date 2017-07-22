@@ -6,6 +6,7 @@ import android.os.{Bundle,Handler}
 import android.view.{LayoutInflater,ViewGroup}
 import android.widget.TextView
 
+@KeepConstructor
 class AudioDecodeTestDialog(context:Context) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.audio_decode_test,null)

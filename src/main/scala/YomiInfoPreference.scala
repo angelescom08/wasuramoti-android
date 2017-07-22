@@ -121,6 +121,7 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
 
+@KeepConstructor
 class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait {
   def getWidgets() = {
     val show_trans = findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
@@ -152,6 +153,7 @@ class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(contex
   }
 }
 
+@KeepConstructor
 class YomiInfoConfigFontDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait{
   def getWidgets = {
     val japanese_font = findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]

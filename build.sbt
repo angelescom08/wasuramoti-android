@@ -43,7 +43,8 @@ scalacOptions in Compile ++= Seq(
 useProguard := true
 proguardOptions in Android ++= Seq(
   "-keepattributes Signature",
-  "-verbose"
+  "-verbose",
+  "-keepclassmembers @karuta.hpnpwd.wasuramoti.KeepConstructor class * { <init>(android.content.Context); }"
   )
 
 shrinkResources in Android := true
