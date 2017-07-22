@@ -603,6 +603,8 @@ class WasuramotiActivity extends AppCompatActivity
          builder.setTitle(R.string.conf_volume_alert) 
       case "ringer_mode_alert_confirm" =>
          builder.setTitle(R.string.conf_ringer_mode_alert) 
+      case _ =>
+        // Do Nothing
     }
   }
 

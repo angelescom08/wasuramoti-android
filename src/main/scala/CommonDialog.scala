@@ -89,6 +89,7 @@ object CommonDialog {
       case Right(manager) => manager
     }
     val name = tag.toString.toLowerCase.replaceAllLiterally(".","_")
+    fragment.setArguments(bundle)
     fragment.show(manager, name)
   }
 
