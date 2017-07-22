@@ -173,7 +173,7 @@ class YomiInfoConfigFontDialog(context:Context) extends CustomAlertDialog(contex
     edit.putString("yomi_info_english_font",ar_en(english_font.getSelectedItemPosition))
     edit.commit
     Globals.forceReloadUI = true
-    return false
+    return true
   }
 
   override def onCreate(state:Bundle){
@@ -204,39 +204,21 @@ trait YomiInfoPreferenceTrait{
   }
 }
 
-class QuickConfigDialog extends DialogFragment with CommonDialog.CallbackListener{
-  override def onCommonDialogCallback(bundle:Bundle){
-    if(bundle.getString("tag") == "quicklang_dialog"){
-      val position = bundle.getInt("position")
-      val lang = Utils.YomiInfoLang.values.toArray.apply(position)
-      val edit = Globals.prefs.get.edit
-      YomiInfoUtils.showPoemTextAndTitleBar(edit)
-      edit.putString("yomi_info_default_lang",lang.toString)
-      if(lang == Utils.YomiInfoLang.Japanese){
-        edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
-      }else{
-        edit.putBoolean("yomi_info_show_translate_button",true)
-        edit.putBoolean("yomi_info_author",false)
-      }
-      edit.commit
-      getActivity.asInstanceOf[WasuramotiActivity].reloadFragment
-    }
-  }
+class QuickConfigDialog extends DialogFragment{
   override def onCreateDialog(saved:Bundle):Dialog = {
-    val fragment = this
     val listener = new DialogInterface.OnClickListener{
       override def onClick(dialog:DialogInterface,which:Int){
         val act = getActivity.asInstanceOf[WasuramotiActivity]
         which match{
           case 5 =>
-            dismiss
             IntendedUseDialog.newInstance(false).show(getFragmentManager,"intended_use_dialog")
+            dismiss
             return
           case 4 =>
-            dismiss
             val bundle = new Bundle
             bundle.putString("tag","quicklang_dialog")
-            CommonDialog.generalListDialogWithCallback(fragment,Right(R.string.quicklang_title),R.array.yomi_info_default_languages,bundle)
+            CommonDialog.generalListDialogWithCallback(getActivity.asInstanceOf[WasuramotiActivity],Right(R.string.quicklang_title),R.array.yomi_info_default_languages,bundle)
+            dismiss
             return
           case _ =>
             None

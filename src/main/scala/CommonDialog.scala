@@ -158,7 +158,7 @@ object CommonDialog {
           builder.setView(view)
         case DialogType.LIST =>
           builder.setNegativeButton(R.string.button_cancel,null)
-          builder.setTitle("message")
+          builder.setTitle(message)
           val items = context.getResources().getStringArray(args.getInt("items_id"))
           builder.setItems(items.map{_.asInstanceOf[CharSequence]},new DialogInterface.OnClickListener(){
             override def onClick(d:DialogInterface,position:Int){

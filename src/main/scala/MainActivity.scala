@@ -674,6 +674,20 @@ class WasuramotiActivity extends AppCompatActivity
         val msg = getResources.getString(R.string.confirm_action_view_fudaset_done,new java.lang.Integer(count)) +
         "\n" + res.mkString("\n")
         CommonDialog.messageDialog(this,Left(msg))
+      case "quicklang_dialog" =>
+        val position = bundle.getInt("position")
+        val lang = Utils.YomiInfoLang.values.toArray.apply(position)
+        val edit = Globals.prefs.get.edit
+        YomiInfoUtils.showPoemTextAndTitleBar(edit)
+        edit.putString("yomi_info_default_lang",lang.toString)
+        if(lang == Utils.YomiInfoLang.Japanese){
+          edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(this))
+        }else{
+          edit.putBoolean("yomi_info_show_translate_button",true)
+          edit.putBoolean("yomi_info_author",false)
+        }
+        edit.commit
+        reloadFragment
       case _ =>
         // we have to also call RequirePermissionTrait's method since it extends CommonDialog.CallbackListener
         super[RequirePermissionTrait].onCommonDialogCallback(bundle)

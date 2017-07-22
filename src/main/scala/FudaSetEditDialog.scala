@@ -49,7 +49,7 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
         val fudaset = bundle.getSerializable("set").asInstanceOf[ListSet[Int]]
         getDialog.asInstanceOf[FudaSetEditDialog].appendNums(fudaset)
       case "fudaset_edit_list_done" =>
-        val body_view = getView.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
+        val body_view = getDialog.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
         val body = bundle.getString("body")
         body_view.setLocalizationText(body)
 
