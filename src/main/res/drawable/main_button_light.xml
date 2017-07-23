@@ -7,7 +7,7 @@
   </item>
   <item ns0:state_pressed="true">
     <shape>
-      <solid ns0:color="#fdfdfd" />
+      <solid ns0:color="#cccccc" />
     </shape>
   </item>
 </selector>

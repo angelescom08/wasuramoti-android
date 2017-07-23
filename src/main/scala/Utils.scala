@@ -784,7 +784,7 @@ object Utils {
     return "%06x".format(0xffffff & color)
   }
 
-  lazy val colorPattern = """color=['"]\?attr/(.*?)['"]""".r
+  lazy val colorPattern = """color=['"]?\?attr/(\w+)['"]?""".r
   def htmlAttrFormatter(context:Context,html:String):String = {
     return colorPattern.replaceAllIn(html, _ match { case(m) =>
       Try(attrColor(context,context.getResources.getIdentifier(m.group(1),"attr", context.getPackageName))).map{ color =>
