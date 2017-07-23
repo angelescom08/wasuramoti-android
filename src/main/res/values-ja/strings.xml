@@ -277,7 +277,7 @@
   <string name="conf_show_current_index">何番目の札か表示</string>
   <string name="conf_show_current_index_summary">次に詠まれる札が何首目なのかを表示</string>
   <string name="conf_light_theme">明るいテーマ</string>
-  <string name="conf_light_theme_summary">背景色を白色に，文字を黒色にする</string>
+  <string name="conf_light_theme_summary">背景を白色に，文字を黒色にする</string>
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">時間</string>

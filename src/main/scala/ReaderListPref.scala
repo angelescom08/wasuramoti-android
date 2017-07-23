@@ -126,6 +126,8 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
     val pref = getPreference.asInstanceOf[ReaderListPreference]
     if(positiveResult){
       val prev_value = pref.getValue
+      // PreferenceDialogFragmentCompat#onDialogClosed sets the value
+      super.onDialogClosed(positiveResult)
       val cur_value = pref.getValue
       val activity = getActivity.asInstanceOf[PrefActivity]
       if(cur_value == "SCAN_EXEC"){
