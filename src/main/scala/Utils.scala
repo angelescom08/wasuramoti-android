@@ -804,16 +804,5 @@ object Utils {
 
 }
 
-
-class MessageDialogFragment(dialog:Dialog,func_done:()=>Unit) extends DialogFragment {
-  override def onCreateDialog(state:Bundle):Dialog = {
-    return dialog
-  }
-  override def onDismiss(di:DialogInterface){
-    func_done()
-    super.onDismiss(di)
-  }
-}
-
 class AlreadyReportedException(s:String) extends Exception(s){
 }
