@@ -12,21 +12,10 @@ Code Refactoring:
    - raise error if there's no detail
 
 End of Life:
-  * [2017-08-01] Only support API Level >= 9
-     - We can now use StringLike.split(Char) since String.isEmpty() is implementend in API Level >= 9
-       - Scala 2.11.8 uses String.isEmpty inside StringLike.split(Char) it won't work in API Level 8
-         https://github.com/scala/scala/blob/v2.11.8/src/library/scala/collection/immutable/StringLike.scala#L225
-  * [2017-08-01] Migrate to Support v7 Preference
-     - http://developer.android.com/guide/topics/ui/settings.html#BackCompatHeaders
-     - AlertDialog -> v7.AlertDialog or v4.DialogFragment (which prevents dismiss on screen rotate)
-       - http://stackoverflow.com/questions/7557265/prevent-dialog-dismissal-on-screen-rotation-in-android
-
   * [20XX-XX-XX] Only support API Level >= 15
       - you can use LinearLayout's android:showDividers and android:divider
         http://stackoverflow.com/questions/4259467/in-android-how-to-make-space-between-linearlayout-children
       - you can remove src/main/res/*-{small,normal,large} since it supports sw<N>dp, w<N>dp, h<N>dp identifier
-
-
 
 Future Android:
   [Android 6.0]
@@ -52,6 +41,8 @@ Future Android:
       - https://developer.android.com/guide/topics/resources/icu4j-framework.html
 
 Priority High:
+  * Save member variables of Activity and Fragment at onSaveInstanceState()
+    - and also global variables ? 
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
   * Also test vibrate in notify timer.
   * Add more [] to index.
