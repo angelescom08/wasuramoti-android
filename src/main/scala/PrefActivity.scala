@@ -8,7 +8,7 @@ import android.content.{Context,SharedPreferences,Intent}
 import android.util.AttributeSet
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
 
-class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait with RequirePermissionTrait{
+class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait{
   override def onCreate(state:Bundle){
     super.onCreate(state)
     Utils.initGlobals(getApplicationContext())
@@ -18,6 +18,7 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait with Requi
     setContentView(R.layout.pref_activity)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
+    RequirePermission.addFragment(getSupportFragmentManager)
   }
   // Note: this will not be called if app was terminated in background
   override def onActivityResult(reqCode:Int, resCode:Int, data:Intent){

@@ -1,0 +1,120 @@
+package karuta.hpnpwd.wasuramoti
+
+import android.os.Bundle
+import android.net.Uri
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.provider.Settings
+
+import android.support.v4.app.{ActivityCompat,Fragment,FragmentManager}
+import android.support.v4.content.ContextCompat
+
+object RequirePermission {
+  val REQ_PERM_MAIN_ACTIVITY = 1
+  val REQ_PERM_PREFERENCE_SCAN = 2
+  val REQ_PERM_PREFERENCE_CHOOSE_READER = 3
+  val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+  val FRAGMENT_TAG = "require_permission_fragment"
+
+  // add headless fragment. should be called in Activity#onCreate 
+  def addFragment(manager:FragmentManager){
+    if(manager.findFragmentByTag(FRAGMENT_TAG) == null){
+      val fragment = new RequirePermissionFragment
+      manager.beginTransaction.add(fragment,FRAGMENT_TAG).commit
+    }
+  }
+  def getFragment(manager:FragmentManager):RequirePermissionFragment = {
+    return manager.findFragmentByTag(FRAGMENT_TAG).asInstanceOf[RequirePermissionFragment]
+  }
+}
+
+// this fragment will be used as headless fragment
+class RequirePermissionFragment extends Fragment with CommonDialog.CallbackListener{
+  import RequirePermission._
+
+  override def onCreate(state:Bundle){
+    super.onCreate(state)
+    setRetainInstance(true) // won't be destroyed by activity's lifecylcle
+  }
+
+  override def onCommonDialogCallback(bundle:Bundle){
+    bundle.getString("tag") match {
+      case "require_permission_retry" =>
+        requirePermission(bundle.getInt("req_code"))
+      case "show_application_settings" =>
+        val intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", getContext.getPackageName, null)
+        intent.setData(uri)
+        startActivity(intent)
+    }
+  }
+
+  def requirePermission(reqCode:Int){
+    ActivityCompat.requestPermissions(getActivity,Array(REQ_PERM_PERMISSION),reqCode)
+  }
+
+  // References:
+  //   https://developer.android.com/training/permissions/requesting.html
+  //   http://sys1yagi.hatenablog.com/entry/2015/11/07/185539
+  //   http://quesera2.hatenablog.jp/entry/2016/04/29/165124
+  //   http://stackoverflow.com/questions/30719047/android-m-check-runtime-permission-how-to-determine-if-the-user-checked-nev
+  def checkRequestMarshmallowPermission(reqCode:Int):Boolean = {
+    if(android.os.Build.VERSION.SDK_INT < 23){
+      return true
+    }
+    val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext,REQ_PERM_PERMISSION)){
+      if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity,REQ_PERM_PERMISSION)){
+         // permission was previously denied, with never ask again turned off.
+         val bundle = new Bundle
+         bundle.putInt("req_code", reqCode)
+         CommonDialog.messageDialogWithCallback(this,Right(R.string.read_external_storage_permission_rationale),bundle)
+      }else{
+         // we previously never called requestPermission, or permission was denied with never ask again turned on.
+         requirePermission(reqCode)
+      }
+      return false
+    }else{
+      return true
+    }
+  }
+
+  override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
+    if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN,REQ_PERM_PREFERENCE_CHOOSE_READER).contains(requestCode)){
+      return
+    }
+    val (deniedMessage,deniedForeverMessage,grantedAction) = requestCode match {
+      case REQ_PERM_MAIN_ACTIVITY =>
+        (R.string.read_external_storage_permission_denied, R.string.read_external_storage_permission_denied_forever,
+          ()=>{
+            Globals.player = AudioHelper.refreshKarutaPlayer(getActivity.asInstanceOf[WasuramotiActivity], Globals.player, true)
+          })
+      case REQ_PERM_PREFERENCE_SCAN | REQ_PERM_PREFERENCE_CHOOSE_READER =>
+        (R.string.read_external_storage_permission_denied_scan, R.string.read_external_storage_permission_denied_forever_scan,
+          ()=>{
+            val fragment = getFragmentManager.findFragmentById(R.id.pref_fragment)
+            ReaderList.showReaderListPref(fragment,requestCode == REQ_PERM_PREFERENCE_SCAN)
+          }
+          )
+    }
+
+    val REQ_PERM_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+    for((perm,grant) <- permissions.zip(grantResults)){
+      if(perm == REQ_PERM_PERMISSION){
+        if(grant == PackageManager.PERMISSION_GRANTED){
+          grantedAction()
+        }else{
+          if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity,REQ_PERM_PERMISSION)){
+            // permission is denied for first time, or denied with never ask again turned off
+            CommonDialog.messageDialog(getContext,Right(deniedMessage))
+          }else{
+            // permission is denied, with never ask again turned on
+            val bundle = new Bundle
+            bundle.putString("tag","show_application_settings")
+            CommonDialog.confirmDialogWithCallback(this,Right(deniedForeverMessage),bundle)
+          }
+        }
+      }
+    }
+  }
+}

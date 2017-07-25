@@ -125,25 +125,25 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
     if(positiveResult){
-      val prev_value = pref.getValue
+      val prevValue = pref.getValue
       // PreferenceDialogFragmentCompat#onDialogClosed sets the value
       super.onDialogClosed(positiveResult)
-      val cur_value = pref.getValue
-      val activity = getActivity.asInstanceOf[PrefActivity]
-      if(cur_value == "SCAN_EXEC"){
-        pref.setValue(prev_value) // cancel
-        if(activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_SCAN)){
+      val curValue = pref.getValue
+      val reqFragment = RequirePermission.getFragment(getFragmentManager)
+      if(curValue == "SCAN_EXEC"){
+        pref.setValue(prevValue) // cancel
+        if(reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)){
           ReaderList.showReaderListPref(getTargetFragment,true)
         }
-      }else if(Utils.isExternalReaderPath(cur_value) && !activity.checkRequestMarshmallowPermission(activity.REQ_PERM_PREFERENCE_CHOOSE_READER)){
-        pref.setValue(prev_value) // cancel
+      }else if(Utils.isExternalReaderPath(curValue) && !reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_CHOOSE_READER)){
+        pref.setValue(prevValue) // cancel
       }else{
-        val (ok,message,joka_upper,joka_lower) = ReaderList.makeReader(context,cur_value).canReadAll
+        val (ok,message,jokaUpper,jokaLower) = ReaderList.makeReader(context,curValue).canReadAll
         if(!ok){
           CommonDialog.messageDialog(context,Left(message))
-          pref.setValue(prev_value) // cancel
+          pref.setValue(prevValue) // cancel
         }else{
-          FudaListHelper.saveRestoreReadOrderJoka(prev_value,cur_value,joka_upper,joka_lower)
+          FudaListHelper.saveRestoreReadOrderJoka(prevValue,curValue,jokaUpper,jokaLower)
         }
       }
     }

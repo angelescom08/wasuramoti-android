@@ -1,6 +1,7 @@
 Code Refactoring:
   * Use camel case for variable names.
   * Avoid holding reference to WasuramotiActivity in Karutaplayer, and use Utils.runOnUiThread instead.
+   - hold reference to Karutaplayer in service
   * Use scala.util.Try instead of try ... catch -> Note: fatal exception would not be catched with scala.util.Try.
   * Move fromAuto and fromSwipe inside bundle in KarutaPlayer
   * Rename JNI files
