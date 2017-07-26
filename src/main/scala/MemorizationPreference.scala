@@ -171,9 +171,10 @@ object MemorizationFudaSetDialog {
 @KeepConstructor
 class MemorizationFudaSetDialog(context:Context)
   extends CustomAlertDialog(context) with CommonDialog.WrappableDialog{
-  val onlyInFudaset = extraArguments.getBoolean("only_in_fudaset")
-  val memorized = extraArguments.getBoolean("memorized")
-  val resetCond = extraArguments.getString("reset_cond")
+  // we have to get from extraArguments lazily since it is set after constructor is called
+  lazy val onlyInFudaset = extraArguments.getBoolean("only_in_fudaset")
+  lazy val memorized = extraArguments.getBoolean("memorized")
+  lazy val resetCond = extraArguments.getString("reset_cond")
 
   override def doWhenClose():Boolean = {
     val title_view = findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
