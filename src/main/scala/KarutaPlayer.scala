@@ -319,10 +319,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     Globals.global_lock.synchronized{
       val abort_playing = (mid:Option[Either[String,Int]]) => {
         mid.foreach{mm =>
-          // Note: when calling CommonDialog.messageDialog, you have to use activity.runOnUithread
+          // this dialog might be shown in background, so we use showMessageDialogOrEnqueue()
           activity.runOnUiThread(new Runnable{
             override def run(){
-              CommonDialog.messageDialog(activity,mm)
+              activity.showMessageDialogOrEnqueue(mm)
             }
          })
         }

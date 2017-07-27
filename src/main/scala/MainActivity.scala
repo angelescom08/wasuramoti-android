@@ -15,7 +15,7 @@ import org.json.{JSONTokener,JSONObject}
 import scala.collection.mutable
 
 class WasuramotiActivity extends AppCompatActivity
-    with ActivityDebugTrait
+    with ActivityDebugTrait with CommonDialog.DialogStateHandler
     with CommonDialog.CustomDialog with CommonDialog.CallbackListener{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0

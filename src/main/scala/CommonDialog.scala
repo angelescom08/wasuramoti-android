@@ -25,7 +25,61 @@ object CommonDialog {
     val MESSAGE, CONFIRM, HTML, CHECKBOX, LIST = Value
   }
 
-  trait CallbackListener {
+  // We get IllegalStateException when we try to commit the FragmentTransaction, or call DialogFrament#show, which actually calls commit(), after onSaveInstanceState.
+  // The easy workaround is using commitAllowingStateLoss() instead of commit(), however, it is a last resort.
+  // Instead, we save the state to member variable when the activity is not visible (after onPause()), and show dialog in onResumeFragments()
+  // reference:
+  //   https://medium.com/inloop/demystifying-androids-commitallowingstateloss-cb9011a544cc
+  //   http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
+  //   https://stackoverflow.com/questions/10114324/show-dialogfragment-from-onactivityresult
+  //   https://stackoverflow.com/questions/8040280/how-to-handle-handler-messages-when-activity-fragment-is-paused
+  trait DialogStateHandler{
+    self: FragmentActivity =>
+    // since we only have to show latest dialog, we don't need queue
+    var commonDialogState:Bundle = new Bundle
+    var isCommonDialogShowable:Boolean = false
+    override def onResumeFragments(){
+      self.onResume()
+      isCommonDialogShowable = true
+      if(commonDialogState != null){
+        showMessageDialogFromBundle(commonDialogState)
+      }
+      commonDialogState = null
+    }
+    override def onPause(){
+      isCommonDialogShowable = false
+      self.onPause()
+    }
+    // this should be used for Dialog which has a possibility that to be shown when Activity is not visible. e.g. when Activity is in background, or the device is locked.
+    def showMessageDialogOrEnqueue(arg:Either[String,Int]){
+      val bundle = new Bundle
+      val message = getStringOrResource(this,arg)
+      bundle.putString("message", message)
+      bundle.putSerializable("dialog_type",DialogType.MESSAGE)
+      if(isCommonDialogShowable){
+        showMessageDialogFromBundle(bundle)
+      }else{
+        commonDialogState = bundle.clone.asInstanceOf[Bundle]
+      }
+    }
+    def showMessageDialogFromBundle(bundle:Bundle){
+      val fragment = new CommonDialogFragment
+      val manager = self.getSupportFragmentManager
+      fragment.setArguments(bundle)
+      fragment.show(manager, "common_dialog_base")
+    }
+    override def onSaveInstanceState(state:Bundle){
+      state.putBundle("common_dialog_state",commonDialogState)
+      self.onSaveInstanceState(state)
+    }
+    override def onCreate(state:Bundle){
+      self.onCreate(state)
+      commonDialogState = state.getBundle("common_dialog_state")
+    }
+  }
+  
+
+  trait CallbackListener{
     def onCommonDialogCallback(bundle:Bundle)
   }
 
