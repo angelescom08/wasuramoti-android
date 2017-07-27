@@ -4,21 +4,19 @@ import android.annotation.TargetApi
 import android.app.{Activity,AlarmManager,PendingIntent,Dialog}
 import android.content.res.Resources
 import android.content.pm.PackageManager
-import android.content.{DialogInterface,Context,SharedPreferences,Intent,ContentValues}
+import android.content.{Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Paint
 import android.media.{AudioTrack,AudioManager}
 import android.net.Uri
-import android.os.{Environment,Handler,Bundle}
+import android.os.{Environment,Handler}
 import android.support.v7.preference.PreferenceManager
 import android.text.{TextUtils}
 import android.util.{Log,TypedValue}
 import android.view.View
-import android.widget.{TextView,ListView,ArrayAdapter,CheckBox}
+import android.widget.{TextView,ListView,ArrayAdapter}
 
-import android.support.v4.app.DialogFragment
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AlertDialog
 
 import java.io.File
 import java.text.NumberFormat
