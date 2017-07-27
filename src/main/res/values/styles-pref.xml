@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="Wasuramoti.PrefTheme" parent="PreferenceFixTheme">
+    <item name="textAllCaps">false</item>
     <!-- drawables -->
     <item name="actionbarShapeDrawable">@drawable/actionbar_shape_dark</item>
     <item name="mainButtonDrawable">@drawable/main_button_dark</item>

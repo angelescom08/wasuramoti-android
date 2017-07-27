@@ -6,7 +6,6 @@
     <!-- system defined attributes -->
     <item name="actionBarStyle">@style/Wasuramoti.ActionBar</item>
     <item name="textAllCaps">false</item>
-    <item name="android:statusBarColor">#222222</item> 
     <!-- drawables -->
     <item name="actionbarShapeDrawable">@drawable/actionbar_shape_dark</item>
     <item name="mainButtonDrawable">@drawable/main_button_dark</item>
