@@ -167,8 +167,9 @@ object CommonDialog {
         if(dialogType == DialogType.CHECKBOX){
           new DialogInterface.OnClickListener(){
             override def onClick(interface:DialogInterface,which:Int){
+              val dialog = interface.asInstanceOf[Dialog]
               val bundle = callbackBundle.clone.asInstanceOf[Bundle]
-              val checkbox = getView.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+              val checkbox = dialog.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
               bundle.putBoolean("checked",checkbox.isChecked)
               bundle.putInt("which",which)
               callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(bundle)
