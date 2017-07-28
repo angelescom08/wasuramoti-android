@@ -8,7 +8,9 @@ import android.content.{Context,SharedPreferences,Intent}
 import android.util.AttributeSet
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
 
-class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait{
+class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
+    with RequirePermission.OnRequirePermissionCallback
+{
   override def onCreate(state:Bundle){
     super.onCreate(state)
     Utils.initGlobals(getApplicationContext())
@@ -18,7 +20,10 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait{
     setContentView(R.layout.pref_activity)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
-    RequirePermission.addFragment(getSupportFragmentManager)
+    RequirePermission.addFragment(getSupportFragmentManager,
+      R.string.read_external_storage_permission_denied_scan,
+      R.string.read_external_storage_permission_denied_forever_scan
+      )
   }
   // Note: this will not be called if app was terminated in background
   override def onActivityResult(reqCode:Int, resCode:Int, data:Intent){
@@ -35,6 +40,10 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait{
       }
       Utils.cleanProvidedFile(this,true)
     }
+  }
+  override def onRequirePermissionGranted(requestCode:Int){
+    val doScan = requestCode == RequirePermission.REQ_PERM_PREFERENCE_SCAN
+    ReaderList.showReaderListPref(getSupportFragmentManager, doScan)
   }
 }
 

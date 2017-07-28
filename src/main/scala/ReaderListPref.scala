@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import scala.collection.mutable.Buffer
 
 import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
-import android.support.v4.app.Fragment
+import android.support.v4.app.{Fragment,FragmentManager}
 import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
@@ -42,11 +42,12 @@ object ReaderList{
     }
   }
 
-  def showReaderListPref(parent:Fragment, doScan:Boolean){
+  def showReaderListPref(manager:FragmentManager, doScan:Boolean){
+    val parent = manager.findFragmentById(R.id.pref_fragment)
     val fragment = PrefWidgets.newInstance[ReaderListPreferenceFragment]("reader_path")
     fragment.getArguments.putBoolean("scanFileSystem",doScan)
     fragment.setTargetFragment(parent, 0)
-    fragment.show(parent.getFragmentManager,PrefFragment.DIALOG_FRAGMENT_TAG)
+    fragment.show(manager,PrefFragment.DIALOG_FRAGMENT_TAG)
   }
 }
 
@@ -133,7 +134,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
       if(curValue == "SCAN_EXEC"){
         pref.setValue(prevValue) // cancel
         if(reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)){
-          ReaderList.showReaderListPref(getTargetFragment,true)
+          ReaderList.showReaderListPref(getFragmentManager,true)
         }
       }else if(Utils.isExternalReaderPath(curValue) && !reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_CHOOSE_READER)){
         pref.setValue(prevValue) // cancel

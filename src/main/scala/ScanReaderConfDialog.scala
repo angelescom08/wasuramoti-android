@@ -25,7 +25,10 @@ class ScanReaderConfDialogFragment extends DialogFragment {
         edit.putString("scan_reader_additional",path)
         edit.commit
         val reqFragment = RequirePermission.getFragment(self.getFragmentManager)
-        return reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)
+        if(reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)){
+          ReaderList.showReaderListPref(getFragmentManager,true)
+        }
+        return true
       }else{
         CommonDialog.messageDialog(context,Right(R.string.scan_reader_invalid_path))
         return false

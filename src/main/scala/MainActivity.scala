@@ -16,7 +16,9 @@ import scala.collection.mutable
 
 class WasuramotiActivity extends AppCompatActivity
     with ActivityDebugTrait with CommonDialog.DialogStateHandler
-    with CommonDialog.CustomDialog with CommonDialog.CallbackListener{
+    with CommonDialog.CustomDialog with CommonDialog.CallbackListener
+    with RequirePermission.OnRequirePermissionCallback
+    {
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
   var release_lock = None:Option[()=>Unit]
@@ -283,7 +285,10 @@ class WasuramotiActivity extends AppCompatActivity
       view.setContentDescription("MainDebugInfo")
       layout.addView(view)
     }
-    RequirePermission.addFragment(getSupportFragmentManager)
+    RequirePermission.addFragment(getSupportFragmentManager,
+      R.string.read_external_storage_permission_denied,
+      R.string.read_external_storage_permission_denied_forever
+      )
   }
   def showProgress(){
     val v = getSupportActionBar.getCustomView
@@ -684,6 +689,10 @@ class WasuramotiActivity extends AppCompatActivity
         edit.commit
         reloadFragment
     }
+  }
+
+  override def onRequirePermissionGranted(requestCode:Int){
+    Globals.player = AudioHelper.refreshKarutaPlayer(this, Globals.player, true)
   }
 
   def doPlay(auto_play:Boolean = false, from_main_button:Boolean = false, from_swipe:Boolean = false){
