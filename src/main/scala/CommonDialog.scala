@@ -36,10 +36,10 @@ object CommonDialog {
   trait DialogStateHandler{
     self: FragmentActivity =>
     // since we only have to show latest dialog, we don't need queue
-    var commonDialogState:Bundle = new Bundle
+    var commonDialogState:Bundle = null
     var isCommonDialogShowable:Boolean = false
     override def onResumeFragments(){
-      self.onResume()
+      self.onResumeFragments()
       isCommonDialogShowable = true
       if(commonDialogState != null){
         showMessageDialogFromBundle(commonDialogState)
@@ -74,7 +74,9 @@ object CommonDialog {
     }
     override def onCreate(state:Bundle){
       self.onCreate(state)
-      commonDialogState = state.getBundle("common_dialog_state")
+      if(state != null){
+        commonDialogState = state.getBundle("common_dialog_state")
+      }
     }
   }
   
