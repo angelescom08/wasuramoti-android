@@ -13,12 +13,12 @@
   android:orientation="horizontal" >
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_memorized"
-    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
     android:paddingRight="6dp"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:id="@+id/memorization_panel_memorized_count"
-    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textAppearance="@style/TextAppearance.AppCompat.Large"
     android:textColor="?attr/memoCountColor"
     />
 </LinearLayout>
@@ -36,12 +36,12 @@
   android:orientation="horizontal" >
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:text="@string/memorization_not_memorized"
-    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
     android:paddingRight="6dp"
     />
   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:id="@+id/memorization_panel_not_memorized_count"
-    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textAppearance="@style/TextAppearance.AppCompat.Large"
     android:textColor="?attr/memoNotCountColor"
     />
 </LinearLayout>
