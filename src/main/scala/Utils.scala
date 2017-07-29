@@ -791,8 +791,18 @@ object Utils {
     })
   }
 
+  def usePrefLightTheme():Boolean = {
+    // Android 2.x has a bug that the activity theme is not applied to PreferenceScreen,
+    // Therefore, we won't use light theme for PreferenceActivity in those devices.
+    // Since we could not check the bug in API LEVEL 11..14 because x86 emulator image does not exist,
+    // we set light theme only for API >= 15
+    // Reference:
+    //  https://issuetracker.google.com/issues/36910297
+    android.os.Build.VERSION.SDK_INT >= 15 && Globals.prefs.get.getBoolean("light_theme", false) 
+  }
+
   def switchFullDialogTheme():Int = {
-    if(Globals.prefs.get.getBoolean("light_theme", false)){
+    if(usePrefLightTheme){
       android.R.style.Theme_Light_NoTitleBar_Fullscreen
     }else{
       android.R.style.Theme_Black_NoTitleBar_Fullscreen

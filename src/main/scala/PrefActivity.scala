@@ -14,7 +14,7 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
   override def onCreate(state:Bundle){
     super.onCreate(state)
     Utils.initGlobals(getApplicationContext())
-    if(Globals.prefs.get.getBoolean("light_theme", false)){
+    if(Utils.usePrefLightTheme){
       setTheme(R.style.Wasuramoti_PrefTheme_Light)
     }
     setContentView(R.layout.pref_activity)
