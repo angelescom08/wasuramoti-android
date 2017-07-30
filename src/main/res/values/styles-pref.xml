@@ -53,4 +53,11 @@
     <item name="poemDescColor">#66cc99</item>
 
   </style>
+  <style name="Wasuramoti.PrefTheme.Gingerbread" parent="Wasuramoti.PrefTheme">
+    <item name="android:textViewStyle">@style/GingerbreadTextStyle</item>
+  </style>
+
+  <style name="GingerbreadTextStyle" parent="android:Widget.TextView">
+    <item name="android:textColor">#cccccc</item>
+  </style>
 </resources>

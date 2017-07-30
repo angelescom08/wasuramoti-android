@@ -182,7 +182,7 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_spinner_dropdown_item,pref.getEntries))
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,pref.getEntries))
     builder.setAdapter(adapter.get,null)
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
