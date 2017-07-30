@@ -1,11 +1,15 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.{Preference,EditTextPreference,ListPreference,PreferenceScreen}
 import android.content.{Context,SharedPreferences,Intent}
 import android.util.AttributeSet
+import android.view.{View,ViewGroup}
+import android.widget.{CheckBox,LinearLayout,CompoundButton}
+
+import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.{Preference,EditTextPreference,ListPreference,PreferenceScreen,PreferenceDialogFragmentCompat}
+
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
 
 class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
@@ -14,7 +18,7 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
   override def onCreate(state:Bundle){
     super.onCreate(state)
     Utils.initGlobals(getApplicationContext())
-    setTheme(Utils.switchPrefTheme)
+    setTheme(PrefUtils.switchPrefTheme)
     setContentView(R.layout.pref_activity)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
@@ -167,3 +171,59 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
   }
 }
 
+object PrefUtils {
+  var current_config_dialog = None:Option[PreferenceDialogFragmentCompat]
+  def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
+    // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
+    val f = (isChecked:Boolean) => {
+      root_view.foreach{ root =>
+        val layout = root.findViewById(layout_id)
+        if(layout != null){
+          val lp = layout.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
+          if(isChecked){
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            layout.setVisibility(View.VISIBLE)
+          }else{
+            lp.height = 0
+            layout.setVisibility(View.INVISIBLE)
+          }
+          layout.setLayoutParams(lp)
+        }
+      }
+    }
+    f(checkbox.isChecked)
+    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        override def onCheckedChanged(btn:CompoundButton,isChecked:Boolean){
+          f(isChecked)
+        }
+      })
+  }
+
+  // Android 2.x has a bug that the activity theme is not applied to PreferenceScreen correctly,
+  // Therefore, we won't use light theme for PreferenceActivity in those devices.
+  // Since we could not check the bug in API LEVEL 11..14 because x86 emulator image does not exist,
+  // we set light theme only for API >= 15
+  // also, the text color is wrong (TextView is black) in Android 2.x so we fix it
+  // Reference:
+  //  https://issuetracker.google.com/issues/36910297
+  val USE_LIGHT_THEME_LEVEL = 15
+  def switchPrefTheme():Int = {
+    if(android.os.Build.VERSION.SDK_INT < USE_LIGHT_THEME_LEVEL){
+      R.style.Wasuramoti_PrefTheme_Gingerbread
+    }else if(Globals.prefs.get.getBoolean("light_theme", false)){
+      R.style.Wasuramoti_PrefTheme_Light
+    }else{
+      R.style.Wasuramoti_PrefTheme
+    }
+  }
+
+  def switchFullDialogTheme():Int = {
+    if(android.os.Build.VERSION.SDK_INT >= USE_LIGHT_THEME_LEVEL && 
+       Globals.prefs.get.getBoolean("light_theme", false)){
+      android.R.style.Theme_Light_NoTitleBar_Fullscreen
+    }else{
+      android.R.style.Theme_Black_NoTitleBar_Fullscreen
+    }
+
+  }
+}

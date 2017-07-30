@@ -51,7 +51,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     val kimarijis = getArguments.getString("kimarijis")
     new FudaSetEditListDialog(getContext,kimarijis)
   }
-  class FudaSetEditListDialog(context:Context,kimarijis:String) extends Dialog(context,Utils.switchFullDialogTheme)
+  class FudaSetEditListDialog(context:Context,kimarijis:String) extends Dialog(context,PrefUtils.switchFullDialogTheme)
     with CommonDialog.WrappableDialog{
     import FudaSetEditListDialog.{SortMode,ListItemMode,genDialogMode}
     var sort_mode = SortMode.ABC

@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{Activity,AlarmManager,PendingIntent,Dialog}
+import android.app.{Activity,AlarmManager,PendingIntent}
 import android.content.res.Resources
 import android.content.pm.PackageManager
 import android.content.{Context,SharedPreferences,Intent,ContentValues}
@@ -790,35 +790,6 @@ object Utils {
       }.getOrElse("")
     })
   }
-
-  // Android 2.x has a bug that the activity theme is not applied to PreferenceScreen correctly,
-  // Therefore, we won't use light theme for PreferenceActivity in those devices.
-  // Since we could not check the bug in API LEVEL 11..14 because x86 emulator image does not exist,
-  // we set light theme only for API >= 15
-  // also, the text color is wrong (TextView is black) in Android 2.x so we fix it
-  // Reference:
-  //  https://issuetracker.google.com/issues/36910297
-  val USE_LIGHT_THEME_LEVEL = 15
-  def switchPrefTheme():Int = {
-    if(android.os.Build.VERSION.SDK_INT < USE_LIGHT_THEME_LEVEL){
-      R.style.Wasuramoti_PrefTheme_Gingerbread
-    }else if(Globals.prefs.get.getBoolean("light_theme", false)){
-      R.style.Wasuramoti_PrefTheme_Light
-    }else{
-      R.style.Wasuramoti_PrefTheme
-    }
-  }
-
-  def switchFullDialogTheme():Int = {
-    if(android.os.Build.VERSION.SDK_INT >= USE_LIGHT_THEME_LEVEL && 
-       Globals.prefs.get.getBoolean("light_theme", false)){
-      android.R.style.Theme_Light_NoTitleBar_Fullscreen
-    }else{
-      android.R.style.Theme_Black_NoTitleBar_Fullscreen
-    }
-
-  }
-
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

@@ -6,8 +6,8 @@ import android.support.v7.preference.{Preference,DialogPreference,PreferenceDial
 import android.support.v7.app.AlertDialog
 import android.content.Context
 import android.util.AttributeSet
-import android.view.{View,LayoutInflater,ViewGroup}
-import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox,CompoundButton,LinearLayout}
+import android.view.{View,LayoutInflater}
+import android.widget.{TextView,RadioGroup,RadioButton,SeekBar,CheckBox}
 import android.text.{TextUtils,Html}
 import android.media.AudioManager
 
@@ -16,35 +16,6 @@ import scala.collection.mutable
 import scala.util.Try
 
 import java.util.regex.Pattern
-
-object PrefUtils {
-  var current_config_dialog = None:Option[PreferenceDialogFragmentCompat]
-  def switchVisibilityByCheckBox(root_view:Option[View],checkbox:CheckBox,layout_id:Int){
-    // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
-    val f = (isChecked:Boolean) => {
-      root_view.foreach{ root =>
-        val layout = root.findViewById(layout_id)
-        if(layout != null){
-          val lp = layout.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
-          if(isChecked){
-            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            layout.setVisibility(View.VISIBLE)
-          }else{
-            lp.height = 0
-            layout.setVisibility(View.INVISIBLE)
-          }
-          layout.setLayoutParams(lp)
-        }
-      }
-    }
-    f(checkbox.isChecked)
-    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-        override def onCheckedChanged(btn:CompoundButton,isChecked:Boolean){
-          f(isChecked)
-        }
-      })
-  }
-}
 
 trait CustomPref extends Preference{
   self:{ def getKey():String; def onBindViewHolder(v:PreferenceViewHolder); def notifyChanged()} =>
@@ -56,8 +27,11 @@ trait CustomPref extends Preference{
   def getAbbrValue():String = {
     super.getPersistedString("")
   }
+
+  // The following methods are not public methods, so we override it to be public
+
   // We have to call notifyChanged() to to reflect the change to view.
-  // However, notifyChanged() is protected method. Therefore we use this method instead.
+  // TODO: change signature to `override def notifyChanged()`
   def notifyChangedPublic(){
     super.notifyChanged()
   }
@@ -74,8 +48,6 @@ trait CustomPref extends Preference{
   override def persistBoolean(value:Boolean):Boolean = {
     super.persistBoolean(value)
   }
-
-
 }
 
 object PrefWidgets {

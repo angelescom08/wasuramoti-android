@@ -1,18 +1,19 @@
 package karuta.hpnpwd.wasuramoti
 
-import scala.collection.mutable.Buffer
-
-import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
-import android.support.v4.app.{Fragment,FragmentManager}
-import android.support.v7.app.AlertDialog
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
 import android.app.ProgressDialog
 import android.os.{Environment,AsyncTask,Bundle}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
-import java.io.{IOException,File,FileOutputStream}
+
+import android.support.v4.app.FragmentManager
+import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
+import android.support.v7.app.AlertDialog
+
 import karuta.hpnpwd.audio.OggVorbisDecoder
+import java.io.{IOException,File,FileOutputStream}
+import scala.collection.mutable.Buffer
 
 object ReaderList{
   def setDefaultReader(context:Context){

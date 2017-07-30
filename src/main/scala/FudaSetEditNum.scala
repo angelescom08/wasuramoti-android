@@ -11,7 +11,7 @@ import scala.collection.immutable.ListSet
 
 @KeepConstructor
 class FudaSetEditNumDialog(context:Context)
-  extends Dialog(context,Utils.switchFullDialogTheme) with CommonDialog.WrappableDialog
+  extends Dialog(context,PrefUtils.switchFullDialogTheme) with CommonDialog.WrappableDialog
   {
 
   val TAG_NUM = R.id.fudasetedit_tag_num
