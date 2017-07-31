@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.provider.Settings
 import android.app.Activity
 
-import android.support.v4.app.{ActivityCompat,Fragment,FragmentManager}
+import android.support.v4.app.{ActivityCompat,Fragment,FragmentManager,FragmentActivity}
 import android.support.v4.content.ContextCompat
 
 object RequirePermission {
@@ -32,7 +32,31 @@ object RequirePermission {
     return manager.findFragmentByTag(FRAGMENT_TAG).asInstanceOf[RequirePermissionFragment]
   }
   trait OnRequirePermissionCallback {
+    self:FragmentActivity =>
     def onRequirePermissionGranted(requestCode:Int)
+    case class ReqPermArgs(requestCode:Int, permissions:Array[String], grantResults:Array[Int])
+    var ableToHandleReqPerm:Boolean = false
+    var reqPermArgs:Option[ReqPermArgs] = None 
+    override def onResumeFragments(){
+      self.onResumeFragments()
+      ableToHandleReqPerm = true
+      reqPermArgs.foreach{args =>
+        RequirePermission.getFragment(self.getSupportFragmentManager)
+        .onRequestPermissionsResult(args.requestCode,args.permissions,args.grantResults)
+        reqPermArgs = None
+      }
+    }
+    override def onPause(){
+      ableToHandleReqPerm = false
+      self.onPause()
+    }
+    override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
+      if(ableToHandleReqPerm){
+        RequirePermission.getFragment(self.getSupportFragmentManager).onRequestPermissionsResult(requestCode,permissions,grantResults)
+      }else{
+        reqPermArgs = Some(ReqPermArgs(requestCode, permissions, grantResults))
+      }
+    }
   }
 }
 
@@ -101,7 +125,9 @@ class RequirePermissionFragment extends Fragment with CommonDialog.CallbackListe
     }
   }
 
-  // TODO: use FragmentCompat instead of ActivityCompat in support-v13 library if we determine not to support API < 13
+  // TODO: use FragmentCompat instead of ActivityCompat in support-v13 library if we determine not to support API < 13.
+  // In that case, the Fragment.onRequestPermissionsResult is called instead of FragmentActivity.onRequestPermissionsResult is called
+  // so you don't need to handle it in OnRequirePermissionCallback trait
   override def onRequestPermissionsResult(requestCode:Int, permissions:Array[String], grantResults:Array[Int]){
     if(!Seq(REQ_PERM_MAIN_ACTIVITY,REQ_PERM_PREFERENCE_SCAN,REQ_PERM_PREFERENCE_CHOOSE_READER).contains(requestCode)){
       return
