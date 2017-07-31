@@ -32,12 +32,12 @@ class WasuramotiActivity extends AppCompatActivity
     super.onNewIntent(intent)
     // Since Android core system cannot determine whether or not the new intent is important for us,
     // We have to set intent by our own.
-    // We can rely on fact that onResume() is called after onNewIntent()
+    // We can rely on fact that onResumeFragments() is called after onNewIntent()
     setIntent(intent)
   }
   def handleActionView(){
     val intent = getIntent
-    // Android 2.x sends same intent at onResume() even after setIntent() is called if resumed from shown list where home button is long pressed.
+    // Android 2.x sends same intent at onResumeFragments() even after setIntent() is called if resumed from shown list where home button is long pressed.
     // Therefore we check FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY flag to distinguish it.
     if(intent == null ||
       intent.getAction != Intent.ACTION_VIEW ||
@@ -272,7 +272,7 @@ class WasuramotiActivity extends AppCompatActivity
 
     setContentView(R.layout.main_activity)
     
-    // since onResume is always called after onCreate, we don't have to set have_to_resume_task = true
+    // since onResumeFragments is always called after onCreate, we don't have to set have_to_resume_task = true
     val fragment = WasuramotiFragment.newInstance(false)
 
     getSupportFragmentManager.beginTransaction.replace(R.id.activity_placeholder, fragment).commit
@@ -427,9 +427,9 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   // code which have to be done:
-  // (a) after reloadFragment() or in onResume() ... put it inside WasuramotiActivity.doWhenResume()
+  // (a) after reloadFragment() or in onResumeFragments() ... put it inside WasuramotiActivity.doWhenResume()
   // (b) after reloadFragment() or after onCreate() ... put it inside WasuramotiFragment.onViewCreated()
-  // (c) only in onResume() ... put it inside WasuramotiActivity.onResume()
+  // (c) only in onResumeFragments() ... put it inside WasuramotiActivity.onResumeFragments()
   def doWhenResume(){
     Globals.global_lock.synchronized{
       if(Globals.forceRefreshPlayer){
@@ -472,8 +472,8 @@ class WasuramotiActivity extends AppCompatActivity
       }
   }
 
-  override def onResume(){
-    super.onResume()
+  override def onResumeFragments(){
+    super.onResumeFragments()
     if( Globals.prefs.isEmpty ){
       // onCreate returned before loading preference
       return
