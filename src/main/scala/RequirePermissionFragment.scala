@@ -64,7 +64,9 @@ object RequirePermission {
     }
     override def onCreate(state:Bundle){
       self.onCreate(state)
-      reqPermArgs = state.getSerializable("require_permission_result").asInstanceOf[ReqPermArgs]
+      if(state != null){
+        reqPermArgs = state.getSerializable("require_permission_result").asInstanceOf[ReqPermArgs]
+      }
     }
   }
 }
