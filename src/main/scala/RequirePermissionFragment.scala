@@ -36,14 +36,15 @@ object RequirePermission {
     def onRequirePermissionGranted(requestCode:Int)
     case class ReqPermArgs(requestCode:Int, permissions:Array[String], grantResults:Array[Int])
     var ableToHandleReqPerm:Boolean = false
-    var reqPermArgs:Option[ReqPermArgs] = None 
+    var reqPermArgs:ReqPermArgs = null
     override def onResumeFragments(){
       self.onResumeFragments()
       ableToHandleReqPerm = true
-      reqPermArgs.foreach{args =>
+      if(reqPermArgs != null){
         RequirePermission.getFragment(self.getSupportFragmentManager)
-        .onRequestPermissionsResult(args.requestCode,args.permissions,args.grantResults)
-        reqPermArgs = None
+        .onRequestPermissionsResult(
+          reqPermArgs.requestCode,reqPermArgs.permissions,reqPermArgs.grantResults)
+        reqPermArgs = null
       }
     }
     override def onPause(){
@@ -54,8 +55,16 @@ object RequirePermission {
       if(ableToHandleReqPerm){
         RequirePermission.getFragment(self.getSupportFragmentManager).onRequestPermissionsResult(requestCode,permissions,grantResults)
       }else{
-        reqPermArgs = Some(ReqPermArgs(requestCode, permissions, grantResults))
+        reqPermArgs = ReqPermArgs(requestCode, permissions, grantResults)
       }
+    }
+    override def onSaveInstanceState(state:Bundle){
+      state.putSerializable("require_permission_result", reqPermArgs)
+      self.onSaveInstanceState(state)
+    }
+    override def onCreate(state:Bundle){
+      self.onCreate(state)
+      reqPermArgs = state.getSerializable("require_permission_result").asInstanceOf[ReqPermArgs]
     }
   }
 }
