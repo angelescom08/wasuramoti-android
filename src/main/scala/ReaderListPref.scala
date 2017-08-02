@@ -183,7 +183,14 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,pref.getEntries))
+    // entries must be mutable list if you want to call .add(), or you get UnsupportedOperationException
+    // reference:
+    //   https://stackoverflow.com/questions/3200551/unable-to-modify-arrayadapter-in-listview-unsupportedoperationexception
+    //   https://stackoverflow.com/questions/157944/create-arraylist-from-array
+    // :_* is required for varargs
+    // reference: https://stackoverflow.com/questions/11125931/what-does-do-when-calling-a-java-vararg-method-from-scala
+    val entries = new java.util.ArrayList(java.util.Arrays.asList[CharSequence](pref.getEntries:_*))
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,entries))
     builder.setAdapter(adapter.get,null)
 
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
