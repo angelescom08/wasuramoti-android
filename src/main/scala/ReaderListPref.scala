@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.widget.{ArrayAdapter}
 
 import android.support.v4.app.FragmentManager
-import android.support.v7.preference.{ListPreference,ListPreferenceDialogFragmentCompat}
+import android.support.v7.preference.{ListPreference,PreferenceDialogFragmentCompat}
 import android.support.v7.app.AlertDialog
 
 import karuta.hpnpwd.audio.OggVorbisDecoder
@@ -16,6 +16,7 @@ import java.io.{IOException,File,FileOutputStream}
 import scala.collection.mutable.Buffer
 
 object ReaderList{
+
   def setDefaultReader(context:Context){
     if(!Globals.prefs.get.contains("reader_path")){
       for(p <- context.getAssets.list(Globals.ASSETS_READER_DIR)){
@@ -52,7 +53,9 @@ object ReaderList{
   }
 }
 
-class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
+
+// We don't use ListPreferenceDialogFragmentCompat since it does not support mutating entries after onCreate
+class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with DialogInterface.OnClickListener{
   var adapter = None:Option[ArrayAdapter[CharSequence]]
   class SearchDirectoryTask extends AsyncTask[AnyRef,Void,Boolean] {
     var progress = None:Option[ProgressDialog]
@@ -108,11 +111,11 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
               pref.setEntryValues(entvals)
               getActivity.runOnUiThread(new Runnable{
                   override def run(){
-                    adapter.foreach{x=>
+                    adapter.foreach{ad=>
                      for(i <- buf){
-                       x.add(i)
+                       ad.add(i)
                      }
-                     x.notifyDataSetChanged()
+                     ad.notifyDataSetChanged()
                    }
                   }
                 })
@@ -123,37 +126,32 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
       true.asInstanceOf[AnyRef]
     }
   }
-  override def onDialogClosed(positiveResult:Boolean){
+
+  override def onClick(dialog:DialogInterface, which:Int){
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
-    if(positiveResult){
-      val prevValue = pref.getValue
-      // PreferenceDialogFragmentCompat#onDialogClosed sets the value
-      super.onDialogClosed(positiveResult)
-      val curValue = pref.getValue
-      val reqFragment = RequirePermission.getFragment(getFragmentManager)
-      if(curValue == "SCAN_EXEC"){
-        pref.setValue(prevValue) // cancel
-        if(reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)){
-          ReaderList.showReaderListPref(getFragmentManager,true)
-        }
-      }else if(Utils.isExternalReaderPath(curValue) && !reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_CHOOSE_READER)){
-        pref.setValue(prevValue) // cancel
+    val prevValue= pref.getValue
+    val curValue = pref.getEntryValues.apply(which).toString
+    val reqFragment = RequirePermission.getFragment(getFragmentManager)
+    if(curValue == "SCAN_EXEC"){
+      if(reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_SCAN)){
+        ReaderList.showReaderListPref(getFragmentManager,true)
+      }
+    }else if(Utils.isExternalReaderPath(curValue) && !reqFragment.checkRequestMarshmallowPermission(RequirePermission.REQ_PERM_PREFERENCE_CHOOSE_READER)){
+    }else{
+      val (ok,message,jokaUpper,jokaLower) = ReaderList.makeReader(context,curValue).canReadAll
+      if(!ok){
+        CommonDialog.messageDialog(context,Left(message))
       }else{
-        val (ok,message,jokaUpper,jokaLower) = ReaderList.makeReader(context,curValue).canReadAll
-        if(!ok){
-          CommonDialog.messageDialog(context,Left(message))
-          pref.setValue(prevValue) // cancel
-        }else{
-          FudaListHelper.saveRestoreReadOrderJoka(prevValue,curValue,jokaUpper,jokaLower)
-        }
+        FudaListHelper.saveRestoreReadOrderJoka(prevValue,curValue,jokaUpper,jokaLower)
+        pref.setValue(curValue)
       }
     }
+    dialog.dismiss
   }
-  
+
   override def onCreate(state:Bundle){
     val context = getContext
-    // we have to set entries and entyvalues before onCreate or you get IllegalStateException: ListPreference requires an entries array and an entryValues array
     val pref = getPreference.asInstanceOf[ReaderListPreference]
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
@@ -200,15 +198,17 @@ class ReaderListPreferenceFragment extends ListPreferenceDialogFragmentCompat {
         }
       })
 
-    // we have to call onPrepareDialogBuilder before calling setPositiveButton
-    // since ListPreference.onPrepareDialogBuilder() calls builder.setPositiveButton(null, null)
-    super.onPrepareDialogBuilder(builder)
+    // since we do not use ListPreferenceDialogFragmentCompat, we have to call setSingleChoiceItems by our own
+    builder.setSingleChoiceItems(adapter.get, -1, this)
 
     builder.setPositiveButton(R.string.button_test, new DialogInterface.OnClickListener(){
       override def onClick(dialog:DialogInterface,which:Int){
         CommonDialog.showWrappedDialog[AudioDecodeTestDialog](getFragmentManager)
       }
     })
+  }
+
+  override def onDialogClosed(positiveResult:Boolean){
   }
 
 }
