@@ -128,6 +128,11 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
   }
 
   override def onClick(dialog:DialogInterface, which:Int){
+    // `which` will be DialogInterface.BUTTON_NEGATIVE if cancel button is pressed
+    if(which < 0){
+      dialog.dismiss
+      return
+    }
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
     val prevValue= pref.getValue
@@ -191,15 +196,15 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
     adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,entries))
     builder.setAdapter(adapter.get,null)
 
+    // since we do not use ListPreferenceDialogFragmentCompat, we have to call setSingleChoiceItems by our own
+    builder.setSingleChoiceItems(adapter.get, -1, this)
+
     builder.setNeutralButton(R.string.button_config, new DialogInterface.OnClickListener(){
         override def onClick(dialog:DialogInterface,which:Int){
           val fragment = new ScanReaderConfDialogFragment
           fragment.show(getFragmentManager,"scan_reader_conf_dialog")
         }
       })
-
-    // since we do not use ListPreferenceDialogFragmentCompat, we have to call setSingleChoiceItems by our own
-    builder.setSingleChoiceItems(adapter.get, -1, this)
 
     builder.setPositiveButton(R.string.button_test, new DialogInterface.OnClickListener(){
       override def onClick(dialog:DialogInterface,which:Int){
