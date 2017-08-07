@@ -270,13 +270,6 @@ object CommonDialog {
      ){
       baseDialogWithCallback(DialogType.CONFIRM,parent,message,callbackBundle)
   }
-  def generalHtmlDialogWithCallback(
-    parent:CallbackListener,
-    message:Either[String,Int],
-    callbackBundle:Bundle
-    ){
-      baseDialogWithCallback(DialogType.HTML,parent,message,callbackBundle)
-  }
   def generalListDialogWithCallback(
     parent:CallbackListener,
     title:Either[String,Int],

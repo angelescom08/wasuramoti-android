@@ -20,16 +20,7 @@ object IntendedUseDialog{
   }
 }
 
-class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener
-  with CommonDialog.CustomDialog{
-  override def onCommonDialogCallback(bundle:Bundle){
-    // Do Nothing
-  }
-  override def customCommonDialog(bundle:Bundle,builder:AlertDialog.Builder){
-    if(bundle.getString("tag") == "intended_use_result_title"){
-      builder.setTitle(R.string.intended_use_result_title)
-    }
-  }
+class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListener{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val first_config = getArguments.getShort("first_config") == 1
     val helper = new GeneralRadioHelper(getActivity)
@@ -205,11 +196,8 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
     footnote.foreach{
       html += "<br>-------<br><big>" + getString(_) + "</big>"
     }
-    val bundle = new Bundle
-    bundle.putString("tag","intended_use_result_title")
-    CommonDialog.generalHtmlDialogWithCallback(this,Left(html),bundle)
+    CommonDialog.generalHtmlDialog(getContext,Left(html))
     getActivity.asInstanceOf[WasuramotiActivity].reloadFragment()
-    dismiss()
   }
 }
 

@@ -529,7 +529,6 @@
       下記のように設定しました．変更は「簡易設定」&rArr;「使用目的変更」からできます．
     ]]>
   </string>
-  <string name="intended_use_result_title">設定完了</string>
   <string name="intended_use_poem_text">詠み句の表示</string>
   <string name="intended_use_read_order">詠み順</string>
   <string name="intended_use_joka">序歌</string>

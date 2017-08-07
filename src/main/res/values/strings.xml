@@ -559,7 +559,6 @@
       Configured as follows. You can change it from `Quick Config` &rArr; `Change Intended Use`.
     ]]>
   </string>
-  <string name="intended_use_result_title">Config Done</string>
   <string name="intended_use_poem_text">Poem Text</string>
   <string name="intended_use_read_order">Read Order</string>
   <string name="intended_use_joka">Joka</string>
