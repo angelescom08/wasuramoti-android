@@ -3,7 +3,7 @@ LIBDIR = libs
 ROOT = $(shell git rev-parse --show-toplevel)
 FILES = stb_vorbis decode_file
 
-$(LIBDIR)/libstbvorbis.so: $(addsuffix .o, $(addprefix $(LIBDIR)/, $(FILES)))
+$(LIBDIR)/libwsrmtvorbis.so: $(addsuffix .o, $(addprefix $(LIBDIR)/, $(FILES)))
 	gcc -shared -Wl,-soname,$(@F).$(VERSION) -o $@ $^
 
 $(LIBDIR)/%.o: $(ROOT)/src/main/jni/%.c

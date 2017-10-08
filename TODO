@@ -44,6 +44,7 @@ Future Android:
 Priority High:
   * Save member variables of Activity and Fragment at onSaveInstanceState()
     - and also global variables ? 
+  * remove initDynAsset()
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
   * Also test vibrate in notify timer.
   * Add more [] to index.

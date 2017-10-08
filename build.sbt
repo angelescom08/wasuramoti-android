@@ -14,13 +14,17 @@ val supportLibVer = "25.4.0"
 // https://stackoverflow.com/questions/32070670/preferencefragmentcompat-requires-preferencetheme-to-be-set
 // https://github.com/Gericop/Android-Support-Preference-V7-Fix
 
+// Relinker is in distributed using jcenter
+resolvers += Resolver.jcenterRepo
+
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % Test,
   "org.robolectric" % "robolectric" % "3.2.2" % Test,
   "junit" % "junit" % "4.12" % Test,
   "com.android.support" % "support-v4" % supportLibVer,
   "com.takisoft.fix" % "preference-v7" % "25.4.0.3",
-  android.Dependencies.aar("com.android.support" % "appcompat-v7" % supportLibVer)
+  aar("com.android.support" % "appcompat-v7" % supportLibVer),
+  "com.getkeepsafe.relinker" % "relinker" % "1.2.2"
   )
 
 // Required for testing

@@ -14,6 +14,8 @@ import org.json.{JSONTokener,JSONObject}
 
 import scala.collection.mutable
 
+import karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
+
 class WasuramotiActivity extends AppCompatActivity
     with ActivityDebugTrait with CommonDialog.DialogStateHandler
     with CommonDialog.CustomDialog with CommonDialog.CallbackListener
@@ -265,6 +267,11 @@ class WasuramotiActivity extends AppCompatActivity
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext)
+
+    OggVorbisDecoder.loadLibrary(getApplicationContext)
+
+    // TODO: only load when "use_opensles" option is set
+    OpenSLESPlayer.loadLibrary(getApplicationContext)
 
     if(Globals.prefs.get.getBoolean("light_theme", false)){
       setTheme(R.style.Wasuramoti_MainTheme_Light)
