@@ -14,9 +14,9 @@
 #
 LOCAL_PATH := $(call my-dir)
 
-# stbvorbis
+# wsrmtvorbis
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libstbvorbis
+LOCAL_MODULE    := libwsrmtvorbis
 LOCAL_LDLIBS := -llog -ldl
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 $(warning Compiling '$(LOCAL_MODULE)' ..) 
@@ -30,7 +30,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 # opensles
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libslesplayer
+LOCAL_MODULE    := libwsrmtslesplay
 LOCAL_LDLIBS := -llog -lOpenSLES
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 $(warning Compiling '$(LOCAL_MODULE)' ..) 

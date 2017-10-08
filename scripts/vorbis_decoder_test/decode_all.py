@@ -16,7 +16,7 @@ class StbVorbisInfo(Structure):
             ("max_frame_size", c_int)
     ]
 
-lib = cdll.LoadLibrary("./libs/libstbvorbis.so")
+lib = cdll.LoadLibrary("./libs/libwsrmtvorbis.so")
 
 for path in glob.glob(PLAYER_DIR+"/**/*.ogg"):
     info = StbVorbisInfo()

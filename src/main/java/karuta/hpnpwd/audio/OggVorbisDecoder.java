@@ -24,7 +24,7 @@ public class OggVorbisDecoder {
       return;
     }
     try{
-      System.loadLibrary("stbvorbis");
+      System.loadLibrary("wsrmtvorbis");
       if(android.os.Build.VERSION.SDK_INT >= 9){
         library_loaded = initDynAsset();
       }else{
@@ -32,7 +32,7 @@ public class OggVorbisDecoder {
       }
     }catch(UnsatisfiedLinkError e){
       unsatisfied_link_error = e;
-      Log.e("wasuramoti", "cannot load stbvorbis", e);
+      Log.e("wasuramoti", "cannot load wsrmtvorbis", e);
     }
   }
 

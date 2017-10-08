@@ -6,10 +6,10 @@ public class OpenSLESPlayer {
   public static boolean library_loaded = false;
   static{
     try{
-      System.loadLibrary("slesplayer");
+      System.loadLibrary("wsrmtslesplay");
       library_loaded = true;
     }catch(UnsatisfiedLinkError e){
-      Log.e("wasuramoti", "cannot load slesplayer", e);
+      Log.e("wasuramoti", "cannot load wsrmtslesplay", e);
     }
   }
   // implemented in src/main/jni/native-audio-jni.c 
