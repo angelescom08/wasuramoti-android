@@ -190,7 +190,7 @@ object BugReport{
     try{
       writer.println("[stb_vorbis]")
       import karuta.hpnpwd.audio.OggVorbisDecoder
-      OggVorbisDecoder.loadStbVorbis()
+      OggVorbisDecoder.loadLibrary(context)
       writer.println(s"loaded=${OggVorbisDecoder.library_loaded}")
       writer.println(s"error=${OggVorbisDecoder.unsatisfied_link_error}")
       writer.println(s"verify=[\n${OggVorbisDecoder.reportApi(context,"data/verify.dat")}]")

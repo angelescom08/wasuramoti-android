@@ -19,6 +19,8 @@ import org.json.{JSONTokener,JSONObject}
 
 import scala.collection.mutable
 
+import karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
+
 class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with MainButtonTrait with RequirePermissionTrait{
   val MINUTE_MILLISEC = 60000
   var haseo_count = 0
@@ -283,6 +285,11 @@ class WasuramotiActivity extends AppCompatActivity with ActivityDebugTrait with 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     Utils.initGlobals(getApplicationContext)
+
+    OggVorbisDecoder.loadLibrary(getApplicationContext)
+
+    // TODO: only load when "use_opensles" option is set
+    OpenSLESPlayer.loadLibrary(getApplicationContext)
 
     setContentView(R.layout.main_activity)
     

@@ -58,6 +58,7 @@ Future Android:
       - https://developer.android.com/guide/topics/resources/icu4j-framework.html
 
 Priority High:
+  * remove initDynAsset()
   * When starting notify timer, alert that "It is silent mode, so may not hear sound".
   * Also test vibrate in notify timer.
   * Add more [] to index.
