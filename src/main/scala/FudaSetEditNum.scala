@@ -68,6 +68,8 @@ class FudaSetEditNumDialog(context:Context)
       val row = new LinearLayout(context)
       for(c <- s){
         val btn = new ToggleButton(context)
+        val width = context.getResources.getDimension(R.dimen.fudasetedit_digit_button_width).toInt
+        btn.setLayoutParams(new ViewGroup.LayoutParams(width,ViewGroup.LayoutParams.WRAP_CONTENT))
         btn.setTag(TAG_NUM,c)
         btn.setText(c.toString)
         btn.setTextOn(c.toString)
