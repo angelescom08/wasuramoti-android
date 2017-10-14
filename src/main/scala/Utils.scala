@@ -243,7 +243,7 @@ object Utils {
   }
 
   def getReadOrder():ReadOrder.ReadOrder = {
-    Globals.prefs.get.getString("taminsky",null) match {
+    Globals.prefs.get.getString("read_order",null) match {
       case "RANDOM" => ReadOrder.Random
       case "POEM_NUM" => ReadOrder.PoemNum
       case "MUSUMEFUSAHOSE" => ReadOrder.Musumefusahose
