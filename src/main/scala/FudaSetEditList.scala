@@ -147,15 +147,12 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
           list_item_mode = ListItemMode.withName(lim)
         }
       }
-      setOnDismissListener(new DialogInterface.OnDismissListener(){
-          override def onDismiss(di:DialogInterface){
-            Globals.prefs.foreach{ p =>
-              val str = genDialogMode(sort_mode,list_item_mode)
-              p.edit.putString("fudaset_edit_list_dlg_mode",str).commit
-            }
-          }
+      val saveListMode = () => {
+        Globals.prefs.foreach{ p =>
+          val str = genDialogMode(sort_mode,list_item_mode)
+          p.edit.putString("fudaset_edit_list_dlg_mode",str).commit
         }
-      )
+      }
       setContentView(R.layout.fudasetedit_list)
       setTitle(R.string.button_fudasetedit_list)
       val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
@@ -178,6 +175,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
       })
       findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
+          saveListMode()
           dismiss()
         }
       })
@@ -191,6 +189,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
           bundle.putString("tag","fudaset_edit_list_done")
           bundle.putString("body",body)
           getTargetFragment.asInstanceOf[CommonDialog.CallbackListener].onCommonDialogCallback(bundle)
+          saveListMode()
           dismiss()
         }
       })
