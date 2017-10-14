@@ -95,6 +95,7 @@ class FudaSetEditNumDialog(context:Context)
     findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val list_view = findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
+        val bundle = new Bundle
         bundle.putString("tag","fudaset_edit_num_done")
         bundle.putSerializable("set",ListSet(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num):_*))
         callbackListener.onCommonDialogCallback(bundle)
