@@ -50,6 +50,11 @@ class WasuramotiActivity extends AppCompatActivity
     val dataString = intent.getDataString
     // we don't need the current intent anymore so replace it with default intent so that getIntent returns plain intent.
     setIntent(new Intent(this,this.getClass))
+    // There was some crash error that throws NullPointerException here,
+    // I could not find the reason, but simply ignore when dataString is null
+    if(dataString == null){
+      return
+    }
     dataString.replaceFirst("wasuramoti://","").split("/")(0) match {
       case "fudaset" => importFudaset(dataString)
       case "from_oom" => CommonDialog.messageDialog(this,Right(R.string.from_oom_message))
