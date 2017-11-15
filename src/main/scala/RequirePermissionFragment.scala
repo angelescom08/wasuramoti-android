@@ -102,6 +102,8 @@ class RequirePermissionFragment extends Fragment with CommonDialog.CallbackListe
         val uri = Uri.fromParts("package", getContext.getPackageName, null)
         intent.setData(uri)
         startActivity(intent)
+      case other =>
+        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
 

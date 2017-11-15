@@ -622,6 +622,8 @@ class WasuramotiActivity extends AppCompatActivity
 
   override def onCommonDialogCallback(bundle:Bundle){
     bundle.getString("tag") match {
+      case "all_read_done" =>
+        None
       case "already_reported_expection" =>
         throw new AlreadyReportedException(bundle.getString("error_message"))
       case "karutaplay_rewind" =>
@@ -700,6 +702,8 @@ class WasuramotiActivity extends AppCompatActivity
         }
         edit.commit
         reloadFragment
+      case other =>
+        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
 
@@ -715,7 +719,7 @@ class WasuramotiActivity extends AppCompatActivity
           CommonDialog.messageDialog(this,Right(R.string.all_memorized))
         }else if(FudaListHelper.allReadDone(this.getApplicationContext())){
           val bundle = new Bundle
-          bundle.putString("tag", "read_all_done")
+          bundle.putString("tag", "all_read_done")
           CommonDialog.messageDialogWithCallback(this,Right(R.string.all_read_done),bundle)
         }else if(
           Utils.isExternalReaderPath(Globals.prefs.get.getString("reader_path",null))

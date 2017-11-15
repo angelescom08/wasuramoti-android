@@ -52,7 +52,8 @@ class FudaSetEditDialogFragment extends DialogFragment with CommonDialog.Callbac
         val body_view = getDialog.findViewById(R.id.fudasetedit_text).asInstanceOf[LocalizationEditText]
         val body = bundle.getString("body")
         body_view.setLocalizationText(body)
-
+      case other =>
+        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
   override def onCreateDialog(state:Bundle):Dialog = {
