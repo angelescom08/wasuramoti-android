@@ -545,7 +545,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       music_track.foreach{
         case Left(track) => {
           track.flush()
-          track.stop()
+          try{
+            track.stop()
+          }catch{
+            case _:IllegalStateException =>
+              // We get some random IllegalStateException when track.stop() from bug report
+              // We could not found any solution, so we just ignore it
+          }
           track.release()
         }
         case Right(_) =>
