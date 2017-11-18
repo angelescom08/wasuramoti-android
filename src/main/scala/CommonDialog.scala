@@ -104,6 +104,7 @@ object CommonDialog {
         case TargetType.ACTIVITY => getActivity
         case TargetType.FRAGMENT => getTargetFragment
         case null => null
+        case _ => null //TODO: read the same problem below
       }
       if(dialog.isInstanceOf[WrappableDialog]){
         val wrappable = dialog.asInstanceOf[WrappableDialog]
@@ -160,6 +161,8 @@ object CommonDialog {
         case TargetType.ACTIVITY => getActivity
         case TargetType.FRAGMENT => getTargetFragment
         case null => null
+        case _ => null //TODO: this should not match but there's MatchError report here.
+                       //      we should find out how that error has be occured
       }
       val callbackBundle = Option(args.getBundle("callback_bundle")).getOrElse(new Bundle)
       val dialogType = args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType]
