@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
-import android.app.ProgressDialog
+import android.app.{ProgressDialog,Activity}
 import android.os.{Environment,AsyncTask,Bundle}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
@@ -57,10 +57,9 @@ object ReaderList{
 // We don't use ListPreferenceDialogFragmentCompat since it does not support mutating entries after onCreate
 class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with DialogInterface.OnClickListener{
   var adapter = None:Option[ArrayAdapter[CharSequence]]
-  class SearchDirectoryTask extends AsyncTask[AnyRef,Void,Boolean] {
+  class SearchDirectoryTask(activity:Activity) extends AsyncTask[AnyRef,Void,Boolean] {
     var progress = None:Option[ProgressDialog]
     override def onPreExecute(){
-      val activity = getActivity
       activity.runOnUiThread(new Runnable{
           override def run(){
             if(!activity.isFinishing){
@@ -75,7 +74,7 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
     }
     override def onPostExecute(rval:Boolean){
       val pref = getPreference.asInstanceOf[ReaderListPreference]
-      getActivity.runOnUiThread(new Runnable{
+      activity.runOnUiThread(new Runnable{
         override def run(){
           progress.foreach(_.dismiss())
         }
@@ -87,9 +86,8 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
     // the signature of doInBackground must be `java.lang.Object doInBackground(java.lang.Object[])`. check in javap command.
     // otherwise it raises AbstractMethodError "abstract method not implemented"
     override def doInBackground(unused:AnyRef*):AnyRef = {
-      val context = getContext
       val pref = getPreference.asInstanceOf[ReaderListPreference]
-      val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom(context)
+      val paths = Utils.getAllExternalStorageDirectoriesWithUserCustom(activity)
       for(path <- paths){
         Utils.walkDir(path,Globals.READER_SCAN_DEPTH_MAX, f =>{
           if(f.getName == Globals.READER_DIR){
@@ -109,7 +107,7 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
               }
               pref.setEntries(entries)
               pref.setEntryValues(entvals)
-              getActivity.runOnUiThread(new Runnable{
+              activity.runOnUiThread(new Runnable{
                   override def run(){
                     adapter.foreach{ad=>
                      for(i <- buf){
@@ -166,7 +164,7 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
       entries += x
     }
     if(getArguments.getBoolean("scanFileSystem")){
-      new SearchDirectoryTask().execute(new AnyRef())
+      new SearchDirectoryTask(getActivity).execute(new AnyRef())
       getArguments.putBoolean("scanFileSystem",false)
     }else{
       for(x <- FudaListHelper.selectNonInternalReaders){
