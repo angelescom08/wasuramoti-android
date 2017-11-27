@@ -15,15 +15,16 @@ import scala.reflect.ClassTag
 
 object CommonDialog {
 
-  object TargetType extends Enumeration {
-    type TargetType = Value
-    val ACTIVITY, FRAGMENT = Value
-  }
+  // Putting Enumration into Bundle.putSerializable causes error,
+  // Read KarutaPlayUtils.scala for more information
+  val TARGET_ACTIVITY = "TARGET_ACTIVITY"
+  val TARGET_FRAGMENT = "TARGET_FRAGMENT"
 
-  object DialogType extends Enumeration {
-    type DialogType = Value
-    val MESSAGE, CONFIRM, HTML, CHECKBOX, LIST = Value
-  }
+  val DIALOG_MESSAGE = "DIALOG_MESSAGE"
+  val DIALOG_CONFIRM = "DIALOG_CONFIRM"
+  val DIALOG_HTML = "DIALOG_HTML"
+  val DIALOG_CHECKBOX = "DIALOG_CHECKBOX"
+  val DIALOG_LIST = "DIALOG_LIST"
 
   // We get IllegalStateException when we try to commit the FragmentTransaction, or call DialogFrament#show, which actually calls commit(), after onSaveInstanceState.
   // The easy workaround is using commitAllowingStateLoss() instead of commit(), however, it is a last resort.
@@ -55,7 +56,7 @@ object CommonDialog {
       val bundle = new Bundle
       val message = getStringOrResource(this,arg)
       bundle.putString("message", message)
-      bundle.putSerializable("dialog_type",DialogType.MESSAGE)
+      bundle.putString("dialog_type",DIALOG_MESSAGE)
       if(isCommonDialogShowable){
         showMessageDialogFromBundle(bundle)
       }else{
@@ -100,9 +101,9 @@ object CommonDialog {
       val classTag = args.getSerializable("class_tag").asInstanceOf[ClassTag[Dialog]]
       val extraArgs = args.getBundle("extra_args")
       val dialog = classTag.runtimeClass.getConstructor(classOf[Context]).newInstance(getContext).asInstanceOf[Dialog]
-      val callbackTarget = args.getSerializable("callback_target").asInstanceOf[TargetType.TargetType] match {
-        case TargetType.ACTIVITY => getActivity
-        case TargetType.FRAGMENT => getTargetFragment
+      val callbackTarget = args.getString("callback_target") match {
+        case TARGET_ACTIVITY => getActivity
+        case TARGET_FRAGMENT => getTargetFragment
         case null => null
         case _ => null //TODO: read the same problem below
       }
@@ -137,9 +138,9 @@ object CommonDialog {
     bundle.putBundle("extra_args",extraArgs)
     if(target.isLeft){
       val parent = target.left.get
-      bundle.putSerializable("callback_target", parent match {
-        case _:Fragment => TargetType.FRAGMENT
-        case _:FragmentActivity => TargetType.ACTIVITY
+      bundle.putString("callback_target", parent match {
+        case _:Fragment => TARGET_FRAGMENT
+        case _:FragmentActivity => TARGET_ACTIVITY
       })
       if(parent.isInstanceOf[Fragment]){
         fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
@@ -157,17 +158,17 @@ object CommonDialog {
   class CommonDialogFragment extends DialogFragment {
     override def onCreateDialog(state:Bundle):Dialog = {
       val args = super.getArguments
-      val callbackTarget = args.getSerializable("callback_target").asInstanceOf[TargetType.TargetType] match {
-        case TargetType.ACTIVITY => getActivity
-        case TargetType.FRAGMENT => getTargetFragment
+      val callbackTarget = args.getString("callback_target") match {
+        case TARGET_ACTIVITY => getActivity
+        case TARGET_FRAGMENT => getTargetFragment
         case null => null
         case _ => null //TODO: this should not match but there's MatchError report here.
                        //      we should find out how that error has be occured
       }
       val callbackBundle = Option(args.getBundle("callback_bundle")).getOrElse(new Bundle)
-      val dialogType = args.getSerializable("dialog_type").asInstanceOf[DialogType.DialogType]
+      val dialogType = args.getString("dialog_type")
       val listener = if(callbackTarget != null && callbackTarget.isInstanceOf[CallbackListener]){
-        if(dialogType == DialogType.CHECKBOX){
+        if(dialogType == DIALOG_CHECKBOX){
           new DialogInterface.OnClickListener(){
             override def onClick(interface:DialogInterface,which:Int){
               val dialog = interface.asInstanceOf[Dialog]
@@ -192,14 +193,14 @@ object CommonDialog {
       val context = getContext
       val builder = new AlertDialog.Builder(context)
       dialogType match {
-        case DialogType.MESSAGE =>
+        case DIALOG_MESSAGE =>
           builder.setPositiveButton(android.R.string.ok,listener)
           builder.setMessage(message)
-        case DialogType.CONFIRM => 
+        case DIALOG_CONFIRM => 
           builder.setPositiveButton(android.R.string.yes,listener)
           builder.setNegativeButton(android.R.string.no,null)
           builder.setMessage(message)
-        case DialogType.HTML =>
+        case DIALOG_HTML =>
           builder.setPositiveButton(android.R.string.ok,listener)
           val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
           val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
@@ -207,7 +208,7 @@ object CommonDialog {
           // this makes "<a href='...'></a>" clickable
           txtview.setMovementMethod(LinkMovementMethod.getInstance)
           builder.setView(view)
-        case DialogType.CHECKBOX =>
+        case DIALOG_CHECKBOX =>
           builder.setPositiveButton(android.R.string.ok,listener)
           builder.setNegativeButton(android.R.string.no,listener)
           val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
@@ -216,7 +217,7 @@ object CommonDialog {
           vtext.setText(message)
           vcheckbox.setText(args.getString("message_checkbox"))
           builder.setView(view)
-        case DialogType.LIST =>
+        case DIALOG_LIST =>
           builder.setNegativeButton(R.string.button_cancel,null)
           builder.setTitle(message)
           val items = context.getResources().getStringArray(args.getInt("items_id"))
@@ -243,18 +244,18 @@ object CommonDialog {
     }
   }
   def messageDialog(context:Context,message:Either[String,Int]){
-    baseDialog(DialogType.MESSAGE,context,message)
+    baseDialog(DIALOG_MESSAGE,context,message)
   }
   def generalHtmlDialog(context:Context,message:Either[String,Int]){
-    baseDialog(DialogType.HTML,context,message)
+    baseDialog(DIALOG_HTML,context,message)
   }
   // TODO: replace Context with FragmentManager since casting Context to FragmentActivity is not always safe
-  def baseDialog(dialogType:DialogType.DialogType,context:Context,message:Either[String,Int]){
+  def baseDialog(dialogType:String,context:Context,message:Either[String,Int]){
     val manager = context.asInstanceOf[FragmentActivity].getSupportFragmentManager
     val fragment = new CommonDialogFragment
     val bundle = new Bundle
     bundle.putString("message", getStringOrResource(context,message))
-    bundle.putSerializable("dialog_type",dialogType)
+    bundle.putString("dialog_type",dialogType)
     fragment.setArguments(bundle)
     fragment.show(manager, "common_dialog_message")
   }
@@ -264,14 +265,14 @@ object CommonDialog {
     message:Either[String,Int],
     callbackBundle:Bundle
     ){
-      baseDialogWithCallback(DialogType.MESSAGE,parent,message,callbackBundle)
+      baseDialogWithCallback(DIALOG_MESSAGE,parent,message,callbackBundle)
   }
   def confirmDialogWithCallback(
     parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle
      ){
-      baseDialogWithCallback(DialogType.CONFIRM,parent,message,callbackBundle)
+      baseDialogWithCallback(DIALOG_CONFIRM,parent,message,callbackBundle)
   }
   def generalListDialogWithCallback(
     parent:CallbackListener,
@@ -281,7 +282,7 @@ object CommonDialog {
   ){
     val extraArgs = new Bundle
     extraArgs.putInt("items_id",items_id)
-    baseDialogWithCallback(DialogType.LIST,parent,title,callbackBundle,extraArgs)
+    baseDialogWithCallback(DIALOG_LIST,parent,title,callbackBundle,extraArgs)
 
   }
 
@@ -294,7 +295,7 @@ object CommonDialog {
       val extraArgs = new Bundle
       val (context,_) = getContextAndManager(parent)
       extraArgs.putString("message_checkbox",getStringOrResource(context, message_checkbox))
-      baseDialogWithCallback(DialogType.CHECKBOX,parent,message,callbackBundle,extraArgs)
+      baseDialogWithCallback(DIALOG_CHECKBOX,parent,message,callbackBundle,extraArgs)
   }
 
   def getContextAndManager(parent:CallbackListener) = {
@@ -305,7 +306,7 @@ object CommonDialog {
   }
 
   def baseDialogWithCallback(
-    dialogType:DialogType.DialogType,
+    dialogType:String,
     parent:CallbackListener,
     message:Either[String,Int],
     callbackBundle:Bundle,
@@ -316,11 +317,11 @@ object CommonDialog {
     val (context,manager) = getContextAndManager(parent)
     bundle.putString("message", getStringOrResource(context, message))
     bundle.putBundle("callback_bundle", callbackBundle)
-    bundle.putSerializable("callback_target", parent match {
-      case _:Fragment => TargetType.FRAGMENT
-      case _:FragmentActivity => TargetType.ACTIVITY
+    bundle.putString("callback_target", parent match {
+      case _:Fragment => TARGET_FRAGMENT
+      case _:FragmentActivity => TARGET_ACTIVITY
     })
-    bundle.putSerializable("dialog_type",dialogType)
+    bundle.putString("dialog_type",dialogType)
     if(extraArgs != null){
       bundle.putAll(extraArgs)
     }
