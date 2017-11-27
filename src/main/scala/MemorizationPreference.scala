@@ -27,8 +27,6 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
         setMemCountAll()
       case "set_mem_count_all" =>
         setMemCountAll()
-      case other =>
-        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
   override def onDialogClosed(positiveResult:Boolean){

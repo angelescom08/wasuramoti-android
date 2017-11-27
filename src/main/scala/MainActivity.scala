@@ -702,8 +702,6 @@ class WasuramotiActivity extends AppCompatActivity
         }
         edit.commit
         reloadFragment
-      case other =>
-        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
 

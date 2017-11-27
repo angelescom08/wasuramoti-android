@@ -46,7 +46,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
           dialog.switchSortMode()
       }
     }else{
-      throw new IllegalStateException("unknown callback tag: " + bundle.getString("tag"))
+      throw new MatchError("unknown callback tag: " + bundle.getString("tag"))
     }
   }
   override def onCreateDialog(state:Bundle):Dialog = {

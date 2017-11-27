@@ -44,8 +44,6 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
 
       case "fudaset_reorder_done" =>
         refreshListItems
-      case other =>
-        throw new IllegalStateException("unknown callback tag: " + other)
     }
   }
 
