@@ -32,12 +32,21 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     bundle.getString("tag") match {
       case "fudaset_delete_confirmed" => 
         Globals.db_lock.synchronized{
-          val pos = bundle.getInt("pos")
-          val fs = adapter.get.getItem(pos)
-          val db = Globals.database.get.getWritableDatabase
-          db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(fs.title))
-          db.close()
-          adapter.get.remove(fs)
+          val pos = bundle.getInt("delete_pos")
+          val title = bundle.getString("delete_title")
+          try{
+            val fs = adapter.get.getItem(pos)
+            if(fs.title == title){ //consistency check
+              val db = Globals.database.get.getWritableDatabase
+              db.delete(Globals.TABLE_FUDASETS,"title = ?", Array(title))
+              db.close()
+              adapter.get.remove(fs)
+            }
+          }catch{
+            // I could'n figure out how the following exception occurs but there was user report.
+            // TODO: how does this happen?
+            case _:IndexOutOfBoundsException => None
+          }
         }
       case "fudaset_copymerge_done" =>
         addFudaSetToSpinner(bundle.getSerializable("fudaset").asInstanceOf[FudaSetWithSize])
@@ -137,7 +146,8 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     val message = context.getResources.getString(R.string.fudaset_confirmdelete,fs.title)
     val bundle = new Bundle
     bundle.putString("tag","fudaset_delete_confirmed")
-    bundle.putInt("pos",pos)
+    bundle.putInt("delete_pos",pos)
+    bundle.putString("delete_title",fs.title)
     CommonDialog.confirmDialogWithCallback(this, Left(message), bundle)
   }}
   def copymergeFudaSet(){
