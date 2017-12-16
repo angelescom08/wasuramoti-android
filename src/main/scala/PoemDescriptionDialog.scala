@@ -70,7 +70,12 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
         "https://www.shigureden.or.jp/about/database_03.html?id="+num
       }
       intent.setData(Uri.parse(url))
-      startActivity(intent)
+      try{
+        startActivity(intent)
+      }catch{
+        case _:android.content.ActivityNotFoundException =>
+          CommonDialog.messageDialog(getActivity,Right(R.string.browser_not_found))
+      }
     }
   }
   def doWebSearch(search_author:Boolean){
