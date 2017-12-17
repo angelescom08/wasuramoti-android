@@ -10,12 +10,17 @@ import android.media.audiofx.Equalizer
 class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   var number_of_bands = None:Option[Short]
+
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[EqualizerPreference]
     PrefUtils.current_config_dialog = None
     if(positiveResult && number_of_bands.nonEmpty){
       pref.persistString(Utils.equalizerToString(makeSeq()))
     }
+    stopAndClear()
+  }
+
+  def stopAndClear(){
     Globals.player.foreach{ p => {
       Globals.global_lock.synchronized{
         if(Globals.is_playing){
@@ -146,6 +151,9 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
 
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
+
+    // onCreateDialogView seems to be called before onDialogClosed when screen rotate, so we also have to stop playing here
+    stopAndClear()
 
     Globals.player match{
       case Some(pl) => {
