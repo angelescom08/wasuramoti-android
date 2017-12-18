@@ -272,6 +272,7 @@ class KarafudaPreferenceFragment extends PreferenceDialogFragmentCompat {
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[KarafudaPreference]
     if(positiveResult){
+        val context = getContext // this will be null when call onDialogClosed was call by screen rotate
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
         val (enable,num,rand) = getWidgets(view)
@@ -304,8 +305,8 @@ class KarafudaPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
 
 class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
+  var maybe_context = None:Option[Context]
   override def onDialogClosed(positiveResult:Boolean){
-    val context = getContext
     val pref = getPreference.asInstanceOf[AudioVolumePreference]
     PrefUtils.current_config_dialog = None
     Globals.player.foreach{ p => {
@@ -329,7 +330,9 @@ class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
         pref.persistString(new_value)
       }
     }
-    Utils.restoreAudioVolume(context)
+    maybe_context.foreach{
+      Utils.restoreAudioVolume(_)
+    }
     Globals.player.foreach{ pl =>
       pl.set_audio_volume = true
     }
@@ -343,8 +346,9 @@ class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
       pl.set_audio_volume = false
     }
     val view = LayoutInflater.from(context).inflate(R.layout.audio_volume,null)
-    // getDialog() returns null on onDialogClosed(), so we save view
-    root_view = Some(view)
+    // getDialog() and getContext() returns null on onDialogClosed(), so we save those.
+    root_view = Option(view)
+    maybe_context = Option(getContext)
 
     KarutaPlayUtils.setAudioPlayButton(view,context)
 

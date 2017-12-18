@@ -30,9 +30,9 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     }
   }
   override def onDialogClosed(positiveResult:Boolean){
-    val context = getContext
     val pref = getPreference.asInstanceOf[MemorizationPreference]
     if(positiveResult){
+      val context = getContext // this will be null when call onDialogClosed was call by screen rotate
       root_view.foreach{ view =>
         val edit = pref.getSharedPreferences.edit
         val enable = getWidgets(view)

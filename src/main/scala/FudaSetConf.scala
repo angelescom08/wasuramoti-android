@@ -74,8 +74,8 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     )
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[FudaSetPreference]
-    val context = getContext
     if(positiveResult){
+      val context = getContext // this will be null when call onDialogClosed was call by screen rotate
       val pos = spinner.get.getSelectedItemPosition()
       val title = try{
         listItems.get(pos).title
