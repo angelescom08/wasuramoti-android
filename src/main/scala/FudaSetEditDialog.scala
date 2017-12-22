@@ -9,7 +9,7 @@ import android.app.Dialog
 
 import android.support.v4.app.DialogFragment
 
-import scala.collection.JavaConversions
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.immutable.ListSet
 
@@ -183,7 +183,7 @@ object FudaSetEditUtils{
     ordering:Ordering[T]):ArrayAdapter[T]={
     val fudalist = mutable.ArrayBuffer[T]()
     val checked = mutable.Map[T,Boolean]()
-    return new ArrayAdapter[T](context,R.layout.my_simple_list_item_multiple_choice,JavaConversions.bufferAsJavaList(fudalist)){
+    return new ArrayAdapter[T](context,R.layout.my_simple_list_item_multiple_choice,fudalist.asJava){
       val adapter = this
       val filter = new Filter(){
         override def performFiltering(constraint:CharSequence):Filter.FilterResults = {

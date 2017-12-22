@@ -25,6 +25,7 @@ import java.util.Locale
 import karuta.hpnpwd.audio.OpenSLESPlayer
 
 import scala.collection.mutable
+import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.{Try,Random}
 
@@ -692,8 +693,7 @@ object Utils {
   //   https://issuetracker.google.com/code/p/android/issues/detail?id=76683
   val HAVE_TO_GRANT_CONTENT_PERMISSION = android.os.Build.VERSION.SDK_INT < 16 
   def grantUriPermissionsForExtraStream(context:Context,intent:Intent,uri:Uri){
-    import collection.JavaConversions._
-    for(res <- context.getPackageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+    for(res <- context.getPackageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).asScala){
       context.grantUriPermission(res.activityInfo.packageName,uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
   }

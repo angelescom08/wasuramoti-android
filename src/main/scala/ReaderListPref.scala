@@ -14,7 +14,7 @@ import android.support.v7.app.AlertDialog
 import karuta.hpnpwd.audio.OggVorbisDecoder
 import java.io.{IOException,File,FileOutputStream}
 import scala.collection.mutable.Buffer
-import scala.collection.JavaConversions
+import scala.collection.JavaConverters._
 
 object ReaderList{
 
@@ -184,7 +184,7 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
 
     pref.setEntries(entries.toArray)
     pref.setEntryValues(entvals.toArray)
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,JavaConversions.bufferAsJavaList(entries)))
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,entries.asJava))
     builder.setAdapter(adapter.get,null)
 
     // since we do not use ListPreferenceDialogFragmentCompat, we have to call setSingleChoiceItems by our own
