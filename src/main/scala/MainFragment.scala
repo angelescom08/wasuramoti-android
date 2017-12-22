@@ -120,8 +120,18 @@ class WasuramotiFragment extends Fragment{
           new View.OnLongClickListener(){
             override def onLongClick(v:View):Boolean = {
               if(view.cur_num.nonEmpty){
-                PoemDescriptionDialog.newInstance(view.cur_num)
-                  .show(getFragmentManager,"poem_description_dialog")
+                val dialog = PoemDescriptionDialog.newInstance(view.cur_num)
+                try{
+                  dialog.show(getFragmentManager,"poem_description_dialog")
+                }catch{
+                  case _:IllegalStateException =>
+                    // I could not find out how this exception happens, but it is sometimes reported from user.
+                    // In that case, I will retry to show the dialog allowing state loss
+                    // https://medium.com/inloop/demystifying-androids-commitallowingstateloss-cb9011a544cc
+                    val ft = getFragmentManager.beginTransaction
+                    ft.add(dialog,"poem_description_dialog")
+                    ft.commitAllowingStateLoss()
+                }
               }
               return true
             }
