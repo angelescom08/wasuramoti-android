@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog
 import karuta.hpnpwd.audio.OggVorbisDecoder
 import java.io.{IOException,File,FileOutputStream}
 import scala.collection.mutable.Buffer
+import scala.collection.JavaConversions
 
 object ReaderList{
 
@@ -153,9 +154,15 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
     dialog.dismiss
   }
 
-  override def onCreate(state:Bundle){
+  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val context = getContext
     val pref = getPreference.asInstanceOf[ReaderListPreference]
+    // entries must be mutable list if you want to call .add(), or you get UnsupportedOperationException
+    // reference:
+    //   https://stackoverflow.com/questions/3200551/unable-to-modify-arrayadapter-in-listview-unsupportedoperationexception
+    //   https://stackoverflow.com/questions/157944/create-arraylist-from-array
+    // :_* is required for varargs
+    // reference: https://stackoverflow.com/questions/11125931/what-does-do-when-calling-a-java-vararg-method-from-scala
     val entvals = Buffer[CharSequence]()
     val entries = Buffer[CharSequence]()
 
@@ -177,21 +184,7 @@ class ReaderListPreferenceFragment extends PreferenceDialogFragmentCompat with D
 
     pref.setEntries(entries.toArray)
     pref.setEntryValues(entvals.toArray)
-
-    super.onCreate(state)
-  }
-
-  override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
-    val context = getContext
-    val pref = getPreference.asInstanceOf[ReaderListPreference]
-    // entries must be mutable list if you want to call .add(), or you get UnsupportedOperationException
-    // reference:
-    //   https://stackoverflow.com/questions/3200551/unable-to-modify-arrayadapter-in-listview-unsupportedoperationexception
-    //   https://stackoverflow.com/questions/157944/create-arraylist-from-array
-    // :_* is required for varargs
-    // reference: https://stackoverflow.com/questions/11125931/what-does-do-when-calling-a-java-vararg-method-from-scala
-    val entries = new java.util.ArrayList(java.util.Arrays.asList[CharSequence](pref.getEntries:_*))
-    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,entries))
+    adapter = Some(new ArrayAdapter[CharSequence](context,android.R.layout.simple_list_item_1,JavaConversions.bufferAsJavaList(entries)))
     builder.setAdapter(adapter.get,null)
 
     // since we do not use ListPreferenceDialogFragmentCompat, we have to call setSingleChoiceItems by our own
