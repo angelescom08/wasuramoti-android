@@ -477,6 +477,8 @@
   <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
   <string name="conf_bug_report">Support Form</string>
   <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
+  <string name="conf_review_link">Review This App</string>
+  <string name="conf_review_link_summary">Redirects to Google Play. It would be my pleasure.</string>
   <string name="bug_report_subject" >About Wasuramoti for Android</string>
   <string name="bug_report_summary" >You can contact us by either E-Mail or Anonymous Form. Feel free to ask any question, give a request, and report bug.</string>
   <string name="bug_report_mail_addr" >E-Mail: </string>

@@ -432,3 +432,7 @@ class CreditsPreferenceFragment extends PreferenceDialogFragmentCompat {
 class CreditsPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) {
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
 }
+
+class ReviewLinkPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) {
+  def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+}

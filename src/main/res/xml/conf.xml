@@ -271,5 +271,10 @@
       android:title="@string/conf_bug_report"
       android:summary="@string/conf_bug_report_summary"
       />
+    <karuta.hpnpwd.wasuramoti.ReviewLinkPreference
+      android:key="dummy_review_link"
+      android:title="@string/conf_review_link"
+      android:summary="@string/conf_review_link_summary"
+      />
   </PreferenceCategory>
 </PreferenceScreen>

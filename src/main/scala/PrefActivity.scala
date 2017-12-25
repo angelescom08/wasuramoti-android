@@ -2,6 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
 import android.content.{Context,SharedPreferences,Intent}
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.{View,ViewGroup}
 import android.widget.{CheckBox,LinearLayout,CompoundButton}
@@ -11,6 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.{Preference,EditTextPreference,ListPreference,PreferenceScreen,PreferenceDialogFragmentCompat}
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
+
+import scala.util.Try
 
 class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
     with RequirePermission.OnRequirePermissionCallback
@@ -76,6 +79,10 @@ class PrefFragment extends PreferenceFragmentCompat
       case _:YomiInfoPreference => PrefWidgets.newInstance[YomiInfoPreferenceFragment](pref.getKey)
       case _:BugReportPreference => PrefWidgets.newInstance[BugReportPreferenceFragment](pref.getKey)
       case _:CreditsPreference => PrefWidgets.newInstance[CreditsPreferenceFragment](pref.getKey)
+      case _:ReviewLinkPreference => {
+        openReviewLink()
+        return
+      }
       case _ => null
     }
     if(fragment != null){
@@ -137,6 +144,20 @@ class PrefFragment extends PreferenceFragmentCompat
   override def onPreferenceStartScreen(pref:android.support.v7.preference.PreferenceFragmentCompat,screen:PreferenceScreen):Boolean = {
     pref.setPreferenceScreen(screen)
     return true
+  }
+  def openReviewLink(){
+    // https://developer.android.com/distribute/marketing-tools/linking-to-google-play.html
+    val APP_ID = "karuta.hpnpwd.wasuramoti"
+    val try_view = (url:String) => Try{
+      val intent = new Intent(Intent.ACTION_VIEW)
+      intent.setData(Uri.parse(url))
+      startActivity(intent)
+    }
+    (try_view(s"market://details?id=${APP_ID}") orElse
+    try_view (s"http://play.google.com/store/apps/details?id=${APP_ID}"))
+      .recover{ case _:Throwable =>
+        CommonDialog.messageDialog(getActivity,Right(R.string.browser_not_found))
+      }
   }
 }
 
