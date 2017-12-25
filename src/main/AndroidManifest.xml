@@ -5,7 +5,7 @@ android:versionName="1.1.2" android:versionCode="86" >
     <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="24" ></uses-sdk>
     <application
-      android:icon="@drawable/animals_dolphin"
+      android:icon="@drawable/eto_hitsuji_otoshidama"
       android:theme="@style/Wasuramoti.MainTheme"
       android:label="@string/app_name"
       android:hardwareAccelerated="true"
