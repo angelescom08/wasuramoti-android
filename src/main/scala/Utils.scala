@@ -448,23 +448,6 @@ object Utils {
     }
   }
 
-  def deleteCache(context:Context,match_func:String=>Boolean){
-    if(android.os.Build.VERSION.SDK_INT >= 9){
-      // In Android >= 2.3, we directly decode ogg file from asset without copying to cacheDir()
-      return
-    }
-    this.synchronized{
-      val files = context.getCacheDir.listFiles
-      if(files != null){
-        for(f <- files){
-          if(match_func(f.getAbsolutePath)){
-            Try(f.delete())
-          }
-        }
-      }
-    }
-  }
-
   def saveAndSetAudioVolume(context:Context){
     readPrefAudioVolume.foreach{ pref_volume =>
       val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]

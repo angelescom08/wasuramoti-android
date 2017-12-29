@@ -118,13 +118,6 @@ class PrefFragment extends PreferenceFragmentCompat
         Globals.forceRefreshPlayer = true
       case "light_theme" =>
         Globals.forceRestart = true
-      case "use_opensles" =>
-        if(android.os.Build.VERSION.SDK_INT <= 8 && prefs.getBoolean(key,false)){
-          val edit = prefs.edit
-          edit.putBoolean(key,false)
-          edit.commit()
-          CommonDialog.messageDialog(context,Right(R.string.conf_use_opensles_not_supported))
-        }
       case _ =>
     }
     val pref = findPreference(key)

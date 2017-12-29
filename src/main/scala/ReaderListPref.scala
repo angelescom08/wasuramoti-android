@@ -289,22 +289,8 @@ class Asset(context:Context,path:String) extends Reader(context,path){
     }
   }
   override def withAssetOrFile(num:Int, kamisimo:Int, func:AssetOrFile=>Unit){
-    if(android.os.Build.VERSION.SDK_INT >= 9){
-      // functions in asset_manager.h and asset_manager_jni.h is only available in Android >= 2.3
-      val assetPath = getAssetPath(num,kamisimo)
-      func(Left(assetPath))
-    }else{
-      val temp_dir = context.getCacheDir()
-      val temp_file = File.createTempFile("wasuramoti_",Globals.CACHE_SUFFIX_OGG,temp_dir)
-      val asset_fd = context.getAssets.openFd(getAssetPath(num,kamisimo))
-      val finstream = asset_fd.createInputStream()
-      new FileOutputStream(temp_file).getChannel().transferFrom(
-        finstream.getChannel(), 0, asset_fd.getLength())
-      func(Right(temp_file))
-      finstream.close()
-      asset_fd.close()
-      temp_file.delete()
-    }
+    val assetPath = getAssetPath(num,kamisimo)
+    func(Left(assetPath))
   }
 }
 abstract class ExtAbsBase(context:Context,path:String) extends Reader(context,path){

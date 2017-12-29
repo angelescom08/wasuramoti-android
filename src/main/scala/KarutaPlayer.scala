@@ -1,7 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
 import karuta.hpnpwd.audio.{OggVorbisDecoder,OpenSLESPlayer}
-import android.annotation.TargetApi
 import android.media.{AudioManager,AudioFormat,AudioTrack}
 import android.os.{AsyncTask,Bundle,SystemClock}
 import android.media.audiofx.Equalizer
@@ -145,10 +144,9 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       mode )))
     makeEqualizer()
   }
-  @TargetApi(9) // Equalizer requires API >= 9
   def makeEqualizer(force:Boolean=false){
     val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer())
-    if(android.os.Build.VERSION.SDK_INT < 9 || equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
+    if(equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
       return
     }
     // TODO: Ensure that music_track is not None here.
@@ -504,7 +502,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     thread.start()
   }
 
-  @TargetApi(9) // Equalizer requires API >= 9
   def commonJobWhenFinished(releaseAudioFocusAndWakeLock:Boolean){
     equalizer.foreach(_.release())
     equalizer = None
@@ -617,7 +614,6 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       // TODO: Using AsyncTask seems not so convenient. maybe we should use Scala's Futures and Promises instead.
       Globals.decode_lock.synchronized{
       try{
-        Utils.deleteCache(activity.getApplicationContext(),path => List(Globals.CACHE_SUFFIX_OGG).exists{s=>path.endsWith(s)})
         val res_queue = new AudioQueue()
         if(maybe_reader.isEmpty){
           return Left(res_queue)

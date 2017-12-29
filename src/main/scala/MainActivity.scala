@@ -539,15 +539,6 @@ class WasuramotiActivity extends AppCompatActivity
     Utils.cleanProvidedFile(this,false)
   }
 
-  // don't forget that this method may be called when device is rotated
-  // also not that this is not called when app is terminated by user using task manager.
-  // See:
-  //   http://stackoverflow.com/questions/4449955/activity-ondestroy-never-called
-  //   https://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
-  override def onDestroy(){
-    super.onDestroy()
-    Utils.deleteCache(getApplicationContext,_=>true)
-  }
   def startDimLockTimer(){
     Globals.global_lock.synchronized{
       release_lock.foreach(_())
