@@ -152,7 +152,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       return
     }
     // TODO: Ensure that music_track is not None here.
-    //       See also EqualizerPref's add_seekbars
+    //       See also EqualizerPref's addSeekbars
     music_track.foreach{ case Left(atrk) => {
       equalizer = Some{
         val eql = new Equalizer(0, atrk.getAudioSessionId)
@@ -625,7 +625,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         val reader = maybe_reader.get
         val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
         cur_millisec = 0
-        def add_to_audio_queue(w:Either[WavBuffer,Int],is_cur:Boolean){
+        def addToAudioQueue(w:Either[WavBuffer,Int],is_cur:Boolean){
           res_queue.enqueue(w)
           val alen = w match{
             case Left(wav) => wav.audioLength
@@ -642,7 +642,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         // However, note that taking silence_time_{begin,end} too much can consume much more memory.
         val silence_time_begin = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
         val silence_time_end = (Utils.getPrefAs[Double]("wav_end_read", 0.2, 5.0)*1000.0).toInt
-        add_to_audio_queue(Right(silence_time_begin),true)
+        addToAudioQueue(Right(silence_time_begin),true)
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()
         val ss = AudioHelper.genReadNumKamiSimoPairs(activity.getApplicationContext,cur_num,next_num)
@@ -655,12 +655,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
             try{
               val key = (read_num,kami_simo)
               if(decoded_wavs.contains(key)){
-                add_to_audio_queue(Left(decoded_wavs(key)),is_cur)
+                addToAudioQueue(Left(decoded_wavs(key)),is_cur)
               }else{
                 reader.withDecodedWav(read_num, kami_simo, wav => {
                    wav.trimFadeIn()
                    wav.trimFadeOut()
-                   add_to_audio_queue(Left(wav),is_cur)
+                   addToAudioQueue(Left(wav),is_cur)
                    decoded_wavs.put(key,wav)
                    if(Globals.IS_DEBUG){
                      KarutaPlayerDebug.checkValid(wav,read_num,kami_simo)
@@ -688,11 +688,11 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
               case e:java.lang.UnsatisfiedLinkError => return Right(e)
             }
             if( i != ss.length - 1 ){
-              add_to_audio_queue(Right(span_simokami),is_cur)
+              addToAudioQueue(Right(span_simokami),is_cur)
             }
           }
         }
-        add_to_audio_queue(Right(silence_time_end),false)
+        addToAudioQueue(Right(silence_time_end),false)
         return(Left(res_queue))
       }catch{
         case e:OggDecodeFailException => return(Right(e))

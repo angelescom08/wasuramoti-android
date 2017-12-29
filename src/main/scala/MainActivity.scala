@@ -695,7 +695,7 @@ class WasuramotiActivity extends AppCompatActivity
         YomiInfoUtils.showPoemTextAndTitleBar(edit)
         edit.putString("yomi_info_default_lang",lang.toString)
         if(lang == Utils.YomiInfoLang.Japanese){
-          edit.putBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(this))
+          edit.putBoolean("yomi_info_show_translate_button",!Romanization.isJapanese(this))
         }else{
           edit.putBoolean("yomi_info_show_translate_button",true)
           edit.putBoolean("yomi_info_author",false)

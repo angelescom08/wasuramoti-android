@@ -99,7 +99,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
           val author = AllFuda.removeInsideParens(AllFuda.get(context,R.array.author)(fudanum))
           poem + " (" + author.replace(" ","") + ")"
         }else{
-          Romanization.jap_to_local(context,str)
+          Romanization.japToLocal(context,str)
         }
         prefix + body
       }

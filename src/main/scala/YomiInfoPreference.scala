@@ -147,7 +147,7 @@ class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(contex
 
     val (show_trans,default_lang) = getWidgets
     val prefs = Globals.prefs.get
-    show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(context)))
+    show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.isJapanese(context)))
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     default_lang.setSelection(lang.id)
   }

@@ -126,7 +126,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
       }else if(tag == CommandButtonPanel.PREFIX_MEMORIZE+"_SWITCH"){
         Globals.prefs.get.getBoolean("memorization_mode",false)
       }else if(List("LANG","ROMAJI").map{ CommandButtonPanel.PREFIX_SWITCH + "_" + _ }.contains(tag) ){
-        Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.is_japanese(getActivity))
+        Globals.prefs.get.getBoolean("yomi_info_show_translate_button",!Romanization.isJapanese(getActivity))
       }else{
         true
       }
@@ -280,7 +280,7 @@ class KimarijiChangelogDialog extends DialogFragment with GetFudanum{
         return
       }
       val msg_cur = if(!Utils.disableKimarijiLog){
-        (if(Romanization.is_japanese(getActivity)){""}else{" "}) +
+        (if(Romanization.isJapanese(getActivity)){""}else{" "}) +
         getActivity.getString(R.string.kimariji_changelog_current)
       }else{
         ""

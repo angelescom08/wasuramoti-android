@@ -18,7 +18,7 @@ class FudaSetEditNumDialog(context:Context)
 
   case class FudaListItem(val num:Int, val str:String){
     override def toString():String = {
-      return s"${num}. ${Romanization.jap_to_local(context,str)}"
+      return s"${num}. ${Romanization.japToLocal(context,str)}"
     }
     def compVal():Int = {
       return num

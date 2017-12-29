@@ -35,7 +35,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     val view = root_view.get
     val seq = number_of_bands.flatMap{ nb =>
       Some(for( i <- 0 until nb ) yield {
-        // since the timing of number_of_bands is set and set_all_seekbar differs,
+        // since the timing of number_of_bands is set and setAllSeekbar differs,
         // there might be a case that we cannot find seekbar which corresponds to band number
         Option(view.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]).flatMap{ seek =>
           val half = seek.getMax / 2
@@ -55,7 +55,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     }
   }
 
-  def set_all_seekbar(x:Int){
+  def setAllSeekbar(x:Int){
     number_of_bands.foreach{ n =>
       for(i <- 0 until n){
         val seek = root_view.get.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]
@@ -64,7 +64,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     }
   }
 
-  def set_button_listeners(view:View){
+  def setButtonListeners(view:View){
     // Play Button
     KarutaPlayUtils.setAudioPlayButton(view,getContext,Some({
         pl => pl.equalizer_seq = Some(makeSeq())
@@ -74,13 +74,13 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     rst.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val s = view.findViewWithTag("equalizer_all").asInstanceOf[SeekBar]
-        set_all_seekbar(s.getMax/2)
+        setAllSeekbar(s.getMax/2)
       }
     })
   }
 
   @TargetApi(9) // Equalizer requires API >= 9
-  def add_seekbars(view:View,equalizer:Equalizer,inflater:LayoutInflater){
+  def addSeekbars(view:View,equalizer:Equalizer,inflater:LayoutInflater){
     // SeekBar ALL
     val vw = inflater.inflate(R.layout.equalizer_item, null)
     vw.setPadding(0,0,0,16)
@@ -89,7 +89,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     val seek = vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar]
     seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
       override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
-        set_all_seekbar(progress)
+        setAllSeekbar(progress)
       }
       override def onStartTrackingTouch(bar:SeekBar){
       }
@@ -169,8 +169,8 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
           pl.equalizer match{
             case Some(eqlz) => {
               number_of_bands = Some(eqlz.getNumberOfBands)
-              set_button_listeners(view)
-              add_seekbars(view,eqlz,inflater)
+              setButtonListeners(view)
+              addSeekbars(view,eqlz,inflater)
               eqlz.release()
               pl.equalizer = None
             }

@@ -18,7 +18,7 @@ class FudaSetEditInitialDialog(context:Context)
 
   case class FudaListItem(val num:Int, val str:String){
     override def toString():String = {
-      return Romanization.jap_to_local(context,str)
+      return Romanization.japToLocal(context,str)
     }
     def compVal():(Int,String) = {
       val head = AllFuda.musumefusahoseAll.indexOf(str(0))
@@ -45,7 +45,7 @@ class FudaSetEditInitialDialog(context:Context)
         val width = context.getResources.getDimension(R.dimen.fudasetedit_letter_button_width).toInt
         btn.setLayoutParams(new ViewGroup.LayoutParams(width,ViewGroup.LayoutParams.WRAP_CONTENT))
         btn.setTag(TAG_INITIAL,c)
-        val tt = Romanization.jap_to_local(context,c.toString)
+        val tt = Romanization.japToLocal(context,c.toString)
         btn.setText(tt)
         btn.setTextOn(tt)
         btn.setTextOff(tt)

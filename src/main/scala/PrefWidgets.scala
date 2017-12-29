@@ -407,7 +407,7 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
 class CreditsPreferenceFragment extends PreferenceDialogFragmentCompat {
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val context = getContext
-    val suffix = if(Romanization.is_japanese(context)){".ja"}else{""}
+    val suffix = if(Romanization.isJapanese(context)){".ja"}else{""}
     val fp = context.getAssets.open("README"+suffix)
     val pat1 = Pattern.compile(".*__BEGIN_CREDITS__",Pattern.DOTALL)
     val pat2 = Pattern.compile("__END_CREDITS__.*",Pattern.DOTALL)

@@ -153,7 +153,7 @@ object AllFuda{
     val PATTERN_FUDANUM_1 = """(\d{1,3})\.\.(\d{1,3})""".r
     val PATTERN_FUDANUM_2 = """[0-9?*\[\]]+""".r
 
-    val buf1 = Romanization.zenkaku_to_hankaku(str)
+    val buf1 = Romanization.zenkakuToHankaku(str)
     val patterns1 = PATTERN_FUDANUM_1.findAllMatchIn(buf1).flatMap{
       m => Try((m.group(1).toInt,m.group(2).toInt)).toOption
     }.toList

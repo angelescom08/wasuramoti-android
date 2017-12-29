@@ -319,10 +319,10 @@ object PoemSearchUtils{
   // DalvikVM does not support isHan
   val REMOVE_PATTEN_JP = """[^\p{Blank}\p{InHiragana}\p{InCJKUnifiedIdeographs}\p{InCJKSymbolsAndPunctuation}]+""".r
   def preprocessConstraint(context:Context,chars:CharSequence):String = {
-    val str = if(Romanization.is_japanese(context)){
+    val str = if(Romanization.isJapanese(context)){
       chars.toString
     }else{
-      Romanization.roma_to_jap(chars.toString)
+      Romanization.romaToJap(chars.toString)
     }
     REMOVE_PATTEN_JP.replaceAllIn(str,"")
   }
