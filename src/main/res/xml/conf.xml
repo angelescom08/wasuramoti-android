@@ -98,7 +98,7 @@
       android:key="conf_others"
       android:title="@string/subscreen_others"
       android:persistent="false"
-      android:summary="@string/subscreen_others"
+      android:summary="@string/subscreen_others_summary"
       >
       <PreferenceCategory android:title="@string/category_button">
         <CheckBoxPreference

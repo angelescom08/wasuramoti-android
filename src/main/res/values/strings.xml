@@ -292,6 +292,7 @@
 
   <!-- CATEGORY_ELSE -->
   <string name="subscreen_others">Other Settings</string>
+  <string name="subscreen_others_summary">Change background colors, show skip button, and so on.</string>
   <string name="category_move">Move</string>
   <string name="conf_move_after_first_phrase">Go Next on Interrupted</string>
   <string name="conf_move_after_first_phrase_summary">If you press the button after first phrase, go to next poem.</string>
@@ -303,7 +304,6 @@
   <string name="conf_show_replay_last_button">Show Replay Button</string>
   <string name="conf_show_replay_last_button_summary">Replay last half of the previous poem.</string>
   <string name="conf_show_skip_button">Show Skip Button</string>
-  <string name="intended_use_rewind">Show Rewind Button</string>
   <string name="conf_show_skip_button_summary">Halt current poem and start playing next poem.</string>
   <string name="conf_show_message_when_moved">Show Msg when Moved</string>
   <string name="conf_show_message_when_moved_summary">Show `Moved to next poem` message.</string>
@@ -570,6 +570,7 @@
   <string name="intended_use_joka_off">Disabled</string>
   <string name="intended_use_replay">Replay Button</string>
   <string name="intended_use_skip">Skip Button</string>
+  <string name="intended_use_rewind">Show Rewind Button</string>
   <string name="intended_use_show">Show</string>
   <string name="intended_use_hide">Hide</string>
   <string name="intended_use_move_next">Go Next After Play</string>
