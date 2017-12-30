@@ -326,7 +326,7 @@ object CommonDialog {
     if(parent.isInstanceOf[Fragment]){
       fragment.setTargetFragment(parent.asInstanceOf[Fragment], 0)
     }
-    fragment.show(manager, "common_dialog_base")
+    Utils.showDialogOrFallbackToStateless(manager,fragment,"common_dialog_base")
   }
 
 }

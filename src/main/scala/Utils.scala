@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.{TextView,ListView,ArrayAdapter}
 
 import android.support.v4.content.FileProvider
+import android.support.v4.app.{DialogFragment,FragmentManager}
 
 import java.io.File
 import java.text.NumberFormat
@@ -772,6 +773,20 @@ object Utils {
         s"color='#${colorToHex(color)}'"
       }.getOrElse("")
     })
+  }
+
+  def showDialogOrFallbackToStateless(manager:FragmentManager,dialog:DialogFragment,tag:String){
+    try{
+      dialog.show(manager,tag)
+    }catch{
+      case _:IllegalStateException =>
+        // I could not find out how this exception occurs, but it is sometimes reported from user.
+        // In that case, I will retry to show the dialog allowing state loss
+        // https://medium.com/inloop/demystifying-androids-commitallowingstateloss-cb9011a544cc
+        val ft = manager.beginTransaction
+        ft.add(dialog,tag)
+        ft.commitAllowingStateLoss()
+    }
   }
 }
 
