@@ -1,7 +1,7 @@
 <manifest 
 xmlns:android="http://schemas.android.com/apk/res/android"
 package="karuta.hpnpwd.wasuramoti" android:installLocation="auto"
-android:versionName="1.1.3" android:versionCode="87" >
+android:versionName="1.1.4" android:versionCode="88" >
     <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="24" ></uses-sdk>
     <application
