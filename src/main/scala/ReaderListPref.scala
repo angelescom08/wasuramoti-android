@@ -213,7 +213,9 @@ class ReaderListPreference(context:Context, attrs:AttributeSet) extends ListPref
 
   override def getAbbrValue():String = {
     val path = getValue()
-    if(path.startsWith("INT:")){
+    if(path == null){
+      "" // this should not happen, but I got user report
+    }else if(path.startsWith("INT:")){
       path.replaceFirst("INT:","")
     }else{
       new File(path).getName()
