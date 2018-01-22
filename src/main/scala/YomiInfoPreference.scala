@@ -126,13 +126,15 @@ class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(contex
   def getWidgets() = {
     val show_trans = findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
     val default_lang =  findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
-    (show_trans,default_lang)
+    val override_lang = findViewById(R.id.override_language).asInstanceOf[Spinner]
+    (show_trans,default_lang,override_lang)
   }
   override def doWhenClose():Boolean = {
     val edit = Globals.prefs.get.edit
-    val (show_trans,default_lang) = getWidgets
+    val (show_trans,default_lang,override_lang) = getWidgets
     edit.putBoolean("yomi_info_show_translate_button",show_trans.isChecked)
     edit.putString("yomi_info_default_lang",Utils.YomiInfoLang(default_lang.getSelectedItemPosition).toString)
+    edit.putString("override_language",Utils.OverrideLang(override_lang.getSelectedItemPosition).toString)
     edit.commit
     Globals.forceReloadUI = true
     return true
@@ -145,11 +147,13 @@ class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(contex
     setView(view)
     super.onCreate(state)
 
-    val (show_trans,default_lang) = getWidgets
+    val (show_trans,default_lang,override_lang) = getWidgets
     val prefs = Globals.prefs.get
     show_trans.setChecked(prefs.getBoolean("yomi_info_show_translate_button",!Romanization.isJapanese(context)))
     val lang = Utils.YomiInfoLang.withName(prefs.getString("yomi_info_default_lang",Utils.YomiInfoLang.Japanese.toString))
     default_lang.setSelection(lang.id)
+    val over = Utils.OverrideLang.withName(prefs.getString("override_language",Utils.OverrideLang.Device.toString))
+    override_lang.setSelection(over.id)
   }
 }
 

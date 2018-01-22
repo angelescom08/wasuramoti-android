@@ -181,10 +181,15 @@
   <string name="kimariji_changelog_disabled">札の詠み上げによる決まり字変化は暗記モードとランダムモードでは表示できません．</string>
 
   <string name="yomi_info_button_config_font">フォント</string>
-  <string name="yomi_info_default_language_desc">既定の言語:</string>
+  <string name="yomi_info_default_language_desc">読み句の言語:</string>
+  <string name="override_language_desc">歌意の言語:</string>
+  <string name="override_language_warn">※ Android 4.1以前の端末では歌意の言語の変更はできません</string>
   <string name="yomi_info_lang_jpn">日本語</string>
   <string name="yomi_info_lang_roma">ローマ字</string>
   <string name="yomi_info_lang_eng">英語</string>
+  <string name="override_locale_device">端末の言語</string>
+  <string name="override_locale_ja">日本語</string>
+  <string name="override_locale_en">英語</string>
   <string name="yomi_info_show_translate_button">翻訳とローマ字ボタンを表示</string>
   <string name="yomi_info_english_fonts_desc">英語:</string>
 

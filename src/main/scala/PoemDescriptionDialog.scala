@@ -39,19 +39,19 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
       }
       view.findViewById(R.id.poem_desc_reference).asInstanceOf[TextView].setText(source_id)
 
-      val context = getActivity
+      val context = Utils.getOverrideContext(getActivity)
       val poem = AllFuda.get(context,R.array.list_full)(num)
       val desc = AllFuda.get(context,R.array.poem_description)(num)
       val author_desc = AllFuda.get(context,R.array.author_description)(num)
       val body = if(Romanization.isJapanese(context)){
         val author = AllFuda.shrinkAuthorParens(AllFuda.get(context,R.array.author)(num))
         val theme = AllFuda.get(context,R.array.poem_theme)(num)
-        getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,theme,desc,author,author_desc)
+        context.getResources.getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,theme,desc,author,author_desc)
       }else{
         val author = AllFuda.get(context,R.array.author_romaji)(num)
         val romaji = AllFuda.get(context,R.array.list_full_romaji)(num).replaceAllLiterally("|"," ")
         val eng =  AllFuda.get(context,R.array.list_full_en)(num).replaceAll("(//|##)"," ")
-        getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,romaji,eng,desc,author,author_desc)
+        context.getResources.getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,romaji,eng,desc,author,author_desc)
       }
       view.findViewById(R.id.poem_desc_body).asInstanceOf[TextView].setText(Html.fromHtml(Utils.htmlAttrFormatter(context,body)))
     }

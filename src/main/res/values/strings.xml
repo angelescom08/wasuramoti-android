@@ -185,17 +185,28 @@
   <string name="kimariji_changelog_disabled">The rest change is disabled in memorization mode or random mode.</string>
 
   <string name="yomi_info_button_config_font">Font</string>
-  <string name="yomi_info_default_language_desc">Default Language:</string>
+  <string name="yomi_info_default_language_desc">Language of Poem:</string>
 
   <string-array name="yomi_info_default_languages">
     <item>@string/yomi_info_lang_jpn</item>
     <item>@string/yomi_info_lang_roma</item>
     <item>@string/yomi_info_lang_eng</item>
   </string-array>
+
+  <string name="override_language_desc">Language of Info:</string>
+  <string-array name="override_languages">
+    <item>@string/override_locale_device</item>
+    <item>@string/override_locale_ja</item>
+    <item>@string/override_locale_en</item>
+  </string-array>
+  <string name="override_language_warn">Note: Changing language of info is not supported in Android 4.1 or lower.</string>
   
   <string name="yomi_info_lang_jpn">Japanese</string>
   <string name="yomi_info_lang_roma">Romaji</string>
   <string name="yomi_info_lang_eng">English</string>
+  <string name="override_locale_device">Device Language</string>
+  <string name="override_locale_ja">Japanese</string>
+  <string name="override_locale_en">English</string>
   <string name="yomi_info_show_translate_button">Show Translate / Romaji Button</string>
   <string name="yomi_info_english_fonts_desc">English:</string>
   <string-array name="yomi_info_english_fonts">

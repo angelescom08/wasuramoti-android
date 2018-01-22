@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
 import android.app.{Activity,AlarmManager,PendingIntent}
-import android.content.res.Resources
+import android.content.res.{Resources,Configuration}
 import android.content.pm.PackageManager
 import android.content.{Context,SharedPreferences,Intent,ContentValues}
 import android.database.sqlite.SQLiteDatabase
@@ -104,6 +104,26 @@ object Utils {
         withName(p)
       }.getOrElse(Japanese)
     }
+  }
+
+  object OverrideLang extends Enumeration {
+    type OverrideLang = Value
+    val Device = Value("device")
+    val Japanese = Value("ja")
+    val English = Value("en")
+  }
+  def getOverrideContext(context:Context):Context = {
+    if(android.os.Build.VERSION.SDK_INT < 17){
+      return context
+    }
+    val lang = Globals.prefs.get.getString("override_language",OverrideLang.Device.toString)
+    val system = context.getResources.getString(R.string.locale)
+    if(lang == OverrideLang.Device.toString || lang == system){
+      return context
+    }
+    val config = new Configuration(context.getResources.getConfiguration)
+    config.setLocale(new Locale(lang))
+    return context.createConfigurationContext(config)
   }
 
   // Caution: Never use StringOps.format since the output varies with locale.
