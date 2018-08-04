@@ -1,4 +1,4 @@
-androidBuild
+enablePlugins(AndroidApp)
 
 scalaVersion := "2.11.8"
 platformTarget in Android := "android-25"
@@ -54,5 +54,5 @@ proguardOptions in Android ++= Seq(
 shrinkResources in Android := true
 
 // Reference: https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
-useSupportVectors
+android.useSupportVectors
 
