@@ -43,10 +43,10 @@ class FudaSetEditNumDialog(context:Context)
     super.onCreate(bundle)
     setContentView(R.layout.fudasetedit_num)
     setTitle(R.string.fudasetedit_num_title)
-    val container = findViewById(R.id.fudasetedit_num_list).asInstanceOf[LinearLayout]
+    val container = findViewById[LinearLayout](R.id.fudasetedit_num_list)
     val sar = context.getResources.getStringArray(R.array.fudasetedit_numbers)
-    val list_view = findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
-    val radio_group = findViewById(R.id.fudasetedit_num_type).asInstanceOf[RadioGroup]
+    val list_view = findViewById[ListView](R.id.fudaseteditnum_container)
+    val radio_group = findViewById[RadioGroup](R.id.fudasetedit_num_type)
     radio_group.check(R.id.fudasetedit_num_type_ones_digit)
     val filtered = (n:Int)=>radio_group.getCheckedRadioButtonId match{
       case R.id.fudasetedit_num_type_ones_digit =>
@@ -89,14 +89,14 @@ class FudaSetEditNumDialog(context:Context)
       list_view.setAdapter(adapter)
       container.addView(row)
     }
-    findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
+    findViewById[View](R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         dismiss()
       }
     })
-    findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
+    findViewById[View](R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val list_view = findViewById(R.id.fudaseteditnum_container).asInstanceOf[ListView]
+        val list_view = findViewById[ListView](R.id.fudaseteditnum_container)
         val bundle = new Bundle
         bundle.putString("tag","fudaset_edit_num_done")
         bundle.putSerializable("set",ListSet(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num):_*))

@@ -299,7 +299,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
 
   def forceYomiInfoView(q:AudioQueue){
     val num = q.find(_.isLeft).get.left.get.num
-    val vw = activity.findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]
+    val vw = activity.findViewById[YomiInfoView](R.id.yomi_info_view_cur)
     if(vw != null){
       activity.runOnUiThread(new Runnable(){
         override def run(){

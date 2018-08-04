@@ -47,8 +47,8 @@ class WasuramotiFragment extends Fragment{
   }
 
   def switchViewAndReloadHandler(was:WasuramotiActivity, root:View){
-    val read_button = root.findViewById(R.id.read_button).asInstanceOf[Button]
-    val stub = root.findViewById(R.id.yomi_info_stub).asInstanceOf[ViewStub]
+    val read_button = root.findViewById[Button](R.id.read_button)
+    val stub = root.findViewById[ViewStub](R.id.yomi_info_stub)
     if(YomiInfoUtils.showPoemText){
       stub.inflate()
       read_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources.getDimension(R.dimen.read_button_text_normal))
@@ -61,7 +61,7 @@ class WasuramotiFragment extends Fragment{
       typedArray.recycle()
     }
 
-    val frag_stub = root.findViewById(R.id.command_button_stub).asInstanceOf[ViewStub]
+    val frag_stub = root.findViewById[ViewStub](R.id.command_button_stub)
     if(frag_stub != null &&
       YomiInfoUtils.showPoemText){
       frag_stub.inflate()
@@ -74,10 +74,10 @@ class WasuramotiFragment extends Fragment{
     val show_skip_button = Globals.prefs.get.getBoolean("show_skip_button",false)
 
     if(!YomiInfoUtils.showPoemText && (show_replay_last_button || show_skip_button || show_rewind_button)){
-      val sub_buttons = root.findViewById(R.id.sub_buttons_stub).asInstanceOf[ViewStub].inflate()
+      val sub_buttons = root.findViewById[ViewStub](R.id.sub_buttons_stub).inflate()
       if(show_rewind_button){
-        val inflated = sub_buttons.findViewById(R.id.rewind_button_stub).asInstanceOf[ViewStub].inflate()
-        val btn = inflated.findViewById(R.id.rewind_button).asInstanceOf[Button]
+        val inflated = sub_buttons.findViewById[ViewStub](R.id.rewind_button_stub).inflate()
+        val btn = inflated.findViewById[Button](R.id.rewind_button)
         btn.setOnClickListener(new View.OnClickListener(){
           override def onClick(v:View){
              KarutaPlayUtils.rewind(was)
@@ -85,8 +85,8 @@ class WasuramotiFragment extends Fragment{
         })
       }
       if(show_replay_last_button){
-        val inflated = sub_buttons.findViewById(R.id.replay_last_button_stub).asInstanceOf[ViewStub].inflate()
-        val btn = inflated.findViewById(R.id.replay_last_button).asInstanceOf[Button]
+        val inflated = sub_buttons.findViewById[ViewStub](R.id.replay_last_button_stub).inflate()
+        val btn = inflated.findViewById[Button](R.id.replay_last_button)
         btn.setText(Utils.replayButtonText(getResources))
         btn.setOnClickListener(new View.OnClickListener(){
           override def onClick(v:View){
@@ -98,8 +98,8 @@ class WasuramotiFragment extends Fragment{
         }
       }
       if(show_skip_button){
-        val inflated = sub_buttons.findViewById(R.id.skip_button_stub).asInstanceOf[ViewStub].inflate()
-        val btn = inflated.findViewById(R.id.skip_button).asInstanceOf[Button]
+        val inflated = sub_buttons.findViewById[ViewStub](R.id.skip_button_stub).inflate()
+        val btn = inflated.findViewById[Button](R.id.skip_button)
         btn.setOnClickListener(new View.OnClickListener(){
           override def onClick(v:View){
              KarutaPlayUtils.skipToNext(was)
@@ -114,7 +114,7 @@ class WasuramotiFragment extends Fragment{
   }
   def setLongClickYomiInfo(root:View){
     for(id <- Array(R.id.yomi_info_view_prev,R.id.yomi_info_view_cur,R.id.yomi_info_view_next)){
-      val view = root.findViewById(id).asInstanceOf[YomiInfoView]
+      val view = root.findViewById[YomiInfoView](id)
       if(view != null){
         view.setOnLongClickListener(
           new View.OnLongClickListener(){

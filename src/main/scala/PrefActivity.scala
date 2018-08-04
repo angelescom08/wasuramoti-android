@@ -191,7 +191,7 @@ object PrefUtils {
     // layout_id must be <LinearLayout android:layout_height="wrap_content" ..>
     val f = (isChecked:Boolean) => {
       root_view.foreach{ root =>
-        val layout = root.findViewById(layout_id)
+        val layout = root.findViewById[View](layout_id)
         if(layout != null){
           val lp = layout.getLayoutParams.asInstanceOf[LinearLayout.LayoutParams]
           if(isChecked){

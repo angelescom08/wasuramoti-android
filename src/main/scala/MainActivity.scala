@@ -113,7 +113,7 @@ class WasuramotiActivity extends AppCompatActivity
   def setButtonText(txt:String){
      runOnUiThread(new Runnable(){
       override def run(){
-        Option(findViewById(R.id.read_button).asInstanceOf[Button]).foreach{ read_button =>
+        Option(findViewById[Button](R.id.read_button)).foreach{ read_button =>
           val lines = txt.split("\n")
           val max_chars = lines.map{x=>Utils.measureStringWidth(x)}.max
           if(YomiInfoUtils.showPoemText){
@@ -237,7 +237,7 @@ class WasuramotiActivity extends AppCompatActivity
   def setCustomActionBar(){
     val actionbar = getSupportActionBar
     val actionview = getLayoutInflater.inflate(R.layout.actionbar_custom,null)
-    val brc = actionview.findViewById(R.id.actionbar_blue_ring_container)
+    val brc = actionview.findViewById[View](R.id.actionbar_blue_ring_container)
     if(brc != null){
       brc.setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
@@ -248,17 +248,17 @@ class WasuramotiActivity extends AppCompatActivity
     actionbar.setCustomView(actionview)
     actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,ActionBar.DISPLAY_SHOW_CUSTOM)
 
-    val bar_container = actionview.findViewById(R.id.yomi_info_bar_container).asInstanceOf[ViewStub]
+    val bar_container = actionview.findViewById[ViewStub](R.id.yomi_info_bar_container)
     val show_kimari  = Globals.prefs.get.getBoolean("yomi_info_show_bar_kimari",true)
     val show_poem_num  = Globals.prefs.get.getBoolean("yomi_info_show_bar_poem_num",true)
     if(bar_container != null &&
       YomiInfoUtils.showPoemText && (show_kimari || show_poem_num)
     ){
       val inflated = bar_container.inflate()
-      Option(inflated.findViewById(R.id.command_button_kimariji_container)).foreach{v =>
+      Option(inflated.findViewById[View](R.id.command_button_kimariji_container)).foreach{v =>
         v.setVisibility(if(show_kimari){View.VISIBLE}else{View.GONE})
       }
-      Option(inflated.findViewById(R.id.command_button_poem_num_container)).foreach{v =>
+      Option(inflated.findViewById[View](R.id.command_button_poem_num_container)).foreach{v =>
         v.setVisibility(if(show_poem_num){View.VISIBLE}else{View.GONE})
       }
       actionbar.setDisplayShowTitleEnabled(false)
@@ -305,7 +305,7 @@ class WasuramotiActivity extends AppCompatActivity
   def showProgress(){
     val v = getSupportActionBar.getCustomView
     if(v!=null){
-      val ring = v.findViewById(R.id.actionbar_blue_ring)
+      val ring = v.findViewById[View](R.id.actionbar_blue_ring)
       if(ring!=null){
         val rotation = AnimationUtils.loadAnimation(getApplicationContext,R.anim.rotator)
         rotation.setInterpolator(new Interpolator(){
@@ -321,7 +321,7 @@ class WasuramotiActivity extends AppCompatActivity
   def hideProgress(){
     val v = getSupportActionBar.getCustomView
     if(v!=null){
-      val ring = v.findViewById(R.id.actionbar_blue_ring)
+      val ring = v.findViewById[View](R.id.actionbar_blue_ring)
       if(ring!=null){
         ring.clearAnimation()
         ring.setVisibility(View.INVISIBLE)
@@ -332,7 +332,7 @@ class WasuramotiActivity extends AppCompatActivity
     if(!YomiInfoUtils.showPoemText){
       return
     }
-    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    val yomi_info = findViewById[YomiInfoLayout](R.id.yomi_info)
     if(yomi_info != null){
       yomi_info.invalidateAndScroll()
     }
@@ -347,20 +347,20 @@ class WasuramotiActivity extends AppCompatActivity
       if(aq.isEmpty){
         return
       }
-      val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+      val yomi_info = findViewById[YomiInfoLayout](R.id.yomi_info)
       if(yomi_info == null){
         return
       }
       val sx = yomi_info.getScrollX
       val cur_view = Array(R.id.yomi_info_view_cur,R.id.yomi_info_view_next,R.id.yomi_info_view_prev).view
-        .flatMap{ x => Option(yomi_info.findViewById(x).asInstanceOf[YomiInfoView]) }
+        .flatMap{ x => Option(yomi_info.findViewById[YomiInfoView](x)) }
         .find( _.getLeft == sx ) // only get current displayed YomiInfoView, which scroll ended
       if(cur_view.isEmpty){
         return
       }
       lazy val next_view =
         yomi_info.getNextViewId(cur_view.get.getId).flatMap{
-          vid => Option(yomi_info.findViewById(vid).asInstanceOf[YomiInfoView])
+          vid => Option(yomi_info.findViewById[YomiInfoView](vid))
         }
       val vq = List(cur_view.flatMap{_.rendered_num},
         if(aq.length > 1){
@@ -385,7 +385,7 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   def updatePoemInfo(cur_view:Int){
-    val yomi_cur = findViewById(cur_view).asInstanceOf[YomiInfoView]
+    val yomi_cur = findViewById[YomiInfoView](cur_view)
     if(yomi_cur != null){
       val fudanum = yomi_cur.cur_num
       bar_poem_info_num = fudanum
@@ -402,12 +402,12 @@ class WasuramotiActivity extends AppCompatActivity
         if(show_kimari || show_poem_num){
           val (fudanum_s,kimari_s) = CommandButtonPanel.getFudaNumAndKimari(this,fudanum)
           if(show_poem_num){
-            Option(cv.findViewById(R.id.command_button_poem_num).asInstanceOf[TextView]).foreach{ tv =>
+            Option(cv.findViewById[TextView](R.id.command_button_poem_num)).foreach{ tv =>
               tv.setText(fudanum_s)
             }
           }
           if(show_kimari){
-            Option(cv.findViewById(R.id.command_button_kimariji).asInstanceOf[TextView]).foreach{ tv =>
+            Option(cv.findViewById[TextView](R.id.command_button_kimariji)).foreach{ tv =>
               tv.setText(kimari_s)
             }
           }
@@ -417,14 +417,14 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   def getCurNumInView():Option[Int] = {
-    Option(findViewById(R.id.yomi_info_view_cur).asInstanceOf[YomiInfoView]).flatMap{_.cur_num}
+    Option(findViewById[YomiInfoView](R.id.yomi_info_view_cur)).flatMap{_.cur_num}
   }
 
   def scrollYomiInfo(id:Int,smooth:Boolean,do_after_done:Option[()=>Unit]=None){
     if(!YomiInfoUtils.showPoemText){
       return
     }
-    val yomi_info = findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    val yomi_info = findViewById[YomiInfoLayout](R.id.yomi_info)
     if(yomi_info != null){
       yomi_info.scrollToView(id,smooth,false,do_after_done)
     }

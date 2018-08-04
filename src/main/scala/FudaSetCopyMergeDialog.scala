@@ -17,14 +17,14 @@ class FudaSetCopyMergeDialog(context:Context)
   }
 
   def addItemsToListView(view:View){
-    val container_view = view.findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView]
+    val container_view = view.findViewById[ListView](R.id.fudasetcopymerge_container)
     val setlist = FudaListHelper.selectFudasetAll.map{ fs => new FudaSetItem(fs.id,fs.title,fs.set_size) }
     val adapter = new ArrayAdapter[FudaSetItem](context,R.layout.my_simple_list_item_multiple_choice,setlist)
     container_view.setAdapter(adapter)
   }
 
   override def doWhenClose():Boolean = {Globals.db_lock.synchronized {
-    val title_view = findViewById(R.id.fudasetcopymerge_name).asInstanceOf[EditText]
+    val title_view = findViewById[EditText](R.id.fudasetcopymerge_name)
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
       CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
@@ -34,7 +34,7 @@ class FudaSetCopyMergeDialog(context:Context)
       CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleduplicated))
       return false
     }
-    val items = Utils.getCheckedItemsFromListView[FudaSetItem](findViewById(R.id.fudasetcopymerge_container).asInstanceOf[ListView])
+    val items = Utils.getCheckedItemsFromListView[FudaSetItem](findViewById[ListView](R.id.fudasetcopymerge_container))
     if(items.isEmpty){
       CommonDialog.messageDialog(context,Right(R.string.fudaset_copymerge_notchecked))
       return false

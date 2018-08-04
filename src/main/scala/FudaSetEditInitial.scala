@@ -30,9 +30,9 @@ class FudaSetEditInitialDialog(context:Context)
     super.onCreate(bundle)
     setContentView(R.layout.fudasetedit_initial)
     setTitle(R.string.fudasetedit_initial_title)
-    val container = findViewById(R.id.fudasetedit_initial_list).asInstanceOf[LinearLayout]
+    val container = findViewById[LinearLayout](R.id.fudasetedit_initial_list)
     val sar = context.getResources.getStringArray(R.array.fudasetedit_initials)
-    val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+    val list_view = findViewById[ListView](R.id.fudaseteditinitial_container)
     val filter = (constraint:CharSequence) => for((s,i)<-AllFuda.list.zipWithIndex if constraint.toString.contains(s(0)))yield{
       new FudaListItem(i+1,s)
     }
@@ -64,14 +64,14 @@ class FudaSetEditInitialDialog(context:Context)
       list_view.setAdapter(adapter)
       container.addView(row)
     }
-    findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
+    findViewById[View](R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         dismiss()
       }
     })
-    findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
+    findViewById[View](R.id.button_ok).setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val list_view = findViewById(R.id.fudaseteditinitial_container).asInstanceOf[ListView]
+        val list_view = findViewById[ListView](R.id.fudaseteditinitial_container)
         val bundle = new Bundle
         bundle.putString("tag","fudaset_edit_initial_done")
         bundle.putSerializable("set",ListSet(Utils.getCheckedItemsFromListView[FudaListItem](list_view).map(_.num):_*))

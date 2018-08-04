@@ -43,7 +43,7 @@ class MovePositionDialog extends DialogFragment{
     }
   }
   def setOnClick(view:View,id:Int,func:()=>Unit){
-    view.findViewById(id).asInstanceOf[Button].setOnClickListener(
+    view.findViewById[Button](id).setOnClickListener(
       new View.OnClickListener(){
         override def onClick(v:View){
           func()
@@ -81,7 +81,7 @@ class MovePositionDialog extends DialogFragment{
   }
 
   def setIncrementWhilePressed(handler:Handler,view:View,con:Convey,id:Int,is_inc:Boolean){
-    view.findViewById(id).asInstanceOf[Button].setOnTouchListener(
+    view.findViewById[Button](id).setOnTouchListener(
       new View.OnTouchListener(){
         override def onTouch(v:View, event:MotionEvent):Boolean = {
           event.getAction match {
@@ -110,8 +110,8 @@ class MovePositionDialog extends DialogFragment{
     }
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.move_position,null)
-    val text = view.findViewById(R.id.move_position_index).asInstanceOf[TextView]
-    val bar = view.findViewById(R.id.move_position_seek).asInstanceOf[SeekBar]
+    val text = view.findViewById[TextView](R.id.move_position_index)
+    val bar = view.findViewById[SeekBar](R.id.move_position_seek)
     val con = Convey(text,bar)
     builder.setView(view)
     .setTitle(R.string.move_position_title)
@@ -123,7 +123,7 @@ class MovePositionDialog extends DialogFragment{
     setOnClick(view,R.id.move_button_goto_num, {() => onOk() })
    
     val (index_s,total_s) = Utils.makeDisplayedNum(current_index, numbers_to_read)
-    view.findViewById(R.id.move_position_total).asInstanceOf[TextView].setText(total_s.toString)
+    view.findViewById[TextView](R.id.move_position_total).setText(total_s.toString)
 
     bar.setMax(total_s-1)
     bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
@@ -148,8 +148,8 @@ class MovePositionDialog extends DialogFragment{
       new SearchFudaListItem(poem,author,fudanum)
     }.toArray
     Sorting.quickSort(fudalist)
-    val list_view = view.findViewById(R.id.move_search_list).asInstanceOf[ListView]
-    val notfound_view = view.findViewById(R.id.move_search_notfound).asInstanceOf[TextView] 
+    val list_view = view.findViewById[ListView](R.id.move_search_list)
+    val notfound_view = view.findViewById[TextView](R.id.move_search_notfound) 
     val adapter = new CustomFilteredArrayAdapter(getActivity,fudalist,list_view,notfound_view)
     list_view.setAdapter(adapter)
     list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -169,7 +169,7 @@ class MovePositionDialog extends DialogFragment{
         Utils.playAfterMove(wa)
       }
     })
-    view.findViewById(R.id.move_search_text).asInstanceOf[EditText].addTextChangedListener(new TextWatcher(){
+    view.findViewById[EditText](R.id.move_search_text).addTextChangedListener(new TextWatcher(){
       override def afterTextChanged(s:Editable){
         adapter.getFilter.filter(s)
       }
@@ -219,8 +219,8 @@ class CustomFilteredArrayAdapter(context:Context,orig:Array[SearchFudaListItem],
     }else{
       val view = Option(convertView).getOrElse{LayoutInflater.from(context).inflate(R.layout.my_simple_list_item_search,null)}
       val item = objects(position)
-      view.findViewById(android.R.id.text1).asInstanceOf[TextView].setText(item.poem_text)
-      view.findViewById(android.R.id.text2).asInstanceOf[TextView].setText(item.author)
+      view.findViewById[TextView](android.R.id.text1).setText(item.poem_text)
+      view.findViewById[TextView](android.R.id.text2).setText(item.author)
       view
     }
   }

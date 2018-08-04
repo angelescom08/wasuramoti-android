@@ -18,7 +18,7 @@ class ScanReaderConfDialogFragment extends DialogFragment {
   }
   class ScanReaderConfDialog(context:Context) extends CustomAlertDialog(context){
     override def doWhenClose():Boolean = {
-      val pathForm = findViewById(R.id.scan_reader_additional).asInstanceOf[EditText]
+      val pathForm = findViewById[EditText](R.id.scan_reader_additional)
       val path = pathForm.getText.toString
       if(TextUtils.isEmpty(path) || new File(path).isDirectory){
         val edit = Globals.prefs.get.edit
@@ -40,12 +40,12 @@ class ScanReaderConfDialogFragment extends DialogFragment {
       setTitle(R.string.scan_reader_title)
       
       val desc = context.getResources.getString(R.string.scan_reader_description,Globals.READER_SCAN_DEPTH_MAX.toString)
-      view.findViewById(R.id.scan_reader_description).asInstanceOf[TextView].setText(desc)
+      view.findViewById[TextView](R.id.scan_reader_description).setText(desc)
       val list = Utils.getAllExternalStorageDirectories(context).map{_.toString}.mkString("\n")
-      val tv = view.findViewById(R.id.scan_reader_list).asInstanceOf[TextView]
+      val tv = view.findViewById[TextView](R.id.scan_reader_list)
       tv.setText(list)
       tv.setTextColor(Utils.attrColor(context,R.attr.scanReaderListColor))
-      val path_form = view.findViewById(R.id.scan_reader_additional).asInstanceOf[EditText]
+      val path_form = view.findViewById[EditText](R.id.scan_reader_additional)
       path_form.setText(Globals.prefs.get.getString("scan_reader_additional","/sdcard"))
 
       // overwrite AlertDialog so that it does not close dialog on button click
@@ -57,7 +57,7 @@ class ScanReaderConfDialogFragment extends DialogFragment {
       super.onCreate(bundle)
 
       // overwrite the button's behavior
-      val neutral = findViewById(android.R.id.button3)
+      val neutral = findViewById[View](android.R.id.button3)
       neutral.setOnClickListener(new View.OnClickListener{
         override def onClick(v:View){
           CommonDialog.generalHtmlDialog(context,Right(R.string.how_to_add_reader_html))

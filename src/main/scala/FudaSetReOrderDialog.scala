@@ -18,7 +18,7 @@ class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
 
 
   override def doWhenClose():Boolean = {
-    val list = findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
+    val list = findViewById[ViewGroup](R.id.fudaset_reorder_list)
     val fudaset_ids = (0 until list.getChildCount).map{ i=>
       Option(list.getChildAt(i).getTag(R.id.tag_fudaset_id))
     }.flatten
@@ -38,7 +38,7 @@ class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
   }
 
   def setBorderColor(v:View,color:Int){
-    v.findViewById(R.id.horizontal_rule_droppable_body).setBackgroundColor(color)
+    v.findViewById[View](R.id.horizontal_rule_droppable_body).setBackgroundColor(color)
   }
 
   def setTextColorOrDefault(v:TextView,color:Option[Int]){
@@ -57,7 +57,7 @@ class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
 
   override def onCreate(state:Bundle){
     val root = LayoutInflater.from(context).inflate(R.layout.fudaset_reorder, null)
-    val list = root.findViewById(R.id.fudaset_reorder_list).asInstanceOf[ViewGroup]
+    val list = root.findViewById[ViewGroup](R.id.fudaset_reorder_list)
 
     def getPrevNextBorder(v:View):(View,View) = {
       val index = list.indexOfChild(v)

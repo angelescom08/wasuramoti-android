@@ -67,7 +67,7 @@ class IntendedUseDialog extends DialogFragment with DialogInterface.OnClickListe
   }
   override def onClick(dialog:DialogInterface,which:Int){
     import FudaSetEditListDialog.{SortMode,ListItemMode}
-    val radio_group = dialog.asInstanceOf[Dialog].findViewById(R.id.general_radio_dialog_group).asInstanceOf[RadioGroup]
+    val radio_group = dialog.asInstanceOf[Dialog].findViewById[RadioGroup](R.id.general_radio_dialog_group)
     val id = Option(radio_group).map{_.getCheckedRadioButtonId}.getOrElse(-1)
     if(id == -1){
       return

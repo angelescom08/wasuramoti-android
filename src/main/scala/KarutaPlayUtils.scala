@@ -33,7 +33,7 @@ object KarutaPlayUtils{
   val karuta_play_schema = "wasuramoti://karuta_play/"
 
   def setAudioPlayButton(view:View,context:Context,before_play:Option[KarutaPlayer=>Unit]=None){
-    val btn = view.findViewById(R.id.audio_play).asInstanceOf[Button]
+    val btn = view.findViewById[Button](R.id.audio_play)
     val handler = new Handler()
     btn.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
@@ -251,7 +251,7 @@ object KarutaPlayUtils{
   
   def doAfterSenderConf(bundle:Bundle){
     PrefUtils.current_config_dialog.foreach{dp=>
-      val btn = dp.getDialog.findViewById(R.id.audio_play).asInstanceOf[Button]
+      val btn = dp.getDialog.findViewById[Button](R.id.audio_play)
       if(btn != null){
         Globals.player.foreach{p=>
           val context = p.activity.getApplicationContext
@@ -392,9 +392,9 @@ object KarutaPlayUtils{
   def haveToEnableRewindButton():Boolean = { !Globals.is_playing }
 
   def setButtonEnabled(activity:Activity,force:Option[Boolean],button_id:Int,button_tag:String,default_enabled: =>Boolean){
-    val btn = Option(activity.findViewById(button_id))
+    val btn = Option(activity.findViewById[View](button_id))
     .orElse(
-      Option(activity.findViewById(R.id.command_button_fragment)).flatMap( x=>
+      Option(activity.findViewById[View](R.id.command_button_fragment)).flatMap( x=>
         Option(x.findViewWithTag(button_tag))
       ))
     btn.foreach{ b =>

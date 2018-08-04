@@ -52,7 +52,7 @@ object CommandButtonPanel{
 
 class CommandButtonPanel extends Fragment with GetFudanum{
   def enableDisplayButton(enabled:Boolean,force:Map[String,Boolean]=Map()){
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
+    val btnlist = getActivity.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
         val tag = CommandButtonPanel.PREFIX_DISPLAY + "_" + t
@@ -66,7 +66,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     }
   }
   def setMemorizedButton(){
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
+    val btnlist = getActivity.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     if(btnlist != null){
       val tag = CommandButtonPanel.PREFIX_MEMORIZE + "_SWITCH"
       val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
@@ -95,7 +95,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     setMemorizedButton()
 
     val tag = CommandButtonPanel.PREFIX_SWITCH+"_MODE"
-    val btnlist = getActivity.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
+    val btnlist = getActivity.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     if(btnlist != null){
       val btn = btnlist.findViewWithTag(tag).asInstanceOf[Button]
       if(btn != null){
@@ -104,15 +104,15 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     }
   }
   def getCurYomiInfoView():Option[YomiInfoView] = {
-    val yi = getActivity.findViewById(R.id.yomi_info).asInstanceOf[YomiInfoLayout]
+    val yi = getActivity.findViewById[YomiInfoLayout](R.id.yomi_info)
     if(yi == null){ return None }
     yi.cur_view.flatMap{x:Int =>
-      Option(getActivity.findViewById(x).asInstanceOf[YomiInfoView])
+      Option(getActivity.findViewById[YomiInfoView](x))
     }
   }
   override def onCreateView(inflater:LayoutInflater,container:ViewGroup,saved:Bundle):View = {
     val view = inflater.inflate(R.layout.command_button_panel,null)
-    val btnlist = view.findViewById(R.id.yomi_info_button_list).asInstanceOf[CommandButtonList]
+    val btnlist = view.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     var items = getActivity.getResources.getStringArray(R.array.command_button_array).toArray.filter{ x=>
       val tag = x.split("\\|")(0)
       if(tag.startsWith(CommandButtonPanel.PREFIX_DISPLAY+"_")){
@@ -269,7 +269,7 @@ class KimarijiChangelogDialog extends DialogFragment with GetFudanum{
   def addRow(table:LinearLayout,text:String){
     val context = getActivity
     val item = LayoutInflater.from(context).inflate(R.layout.kimariji_changelog_row,null)
-    val v_text = item.findViewById(R.id.kimariji_changelog_row).asInstanceOf[TextView]
+    val v_text = item.findViewById[TextView](R.id.kimariji_changelog_row)
     v_text.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,text)))
     table.addView(item)
   }
@@ -321,7 +321,7 @@ class KimarijiChangelogDialog extends DialogFragment with GetFudanum{
   override def onCreateDialog(saved:Bundle):Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.kimariji_changelog,null)
-    val table = view.findViewById(R.id.kimariji_changelog).asInstanceOf[LinearLayout]
+    val table = view.findViewById[LinearLayout](R.id.kimariji_changelog)
     addKimarijiChangelog(table,getFudanum)
     builder
     .setTitle(getActivity.getString(R.string.kimariji_changelog_title))

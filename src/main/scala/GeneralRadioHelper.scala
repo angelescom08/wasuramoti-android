@@ -49,12 +49,12 @@ class GeneralRadioHelper(context:Context, var builder:AlertDialog.Builder = null
   }
   val inflater = LayoutInflater.from(context)
   val view = inflater.inflate(R.layout.general_radio_dialog,null)
-  val radio_group = view.findViewById(R.id.general_radio_dialog_group).asInstanceOf[RadioGroup]
+  val radio_group = view.findViewById[RadioGroup](R.id.general_radio_dialog_group)
   builder.setView(view)
 
   def setDescription(resourceId: Int){
     val text = context.getResources.getString(resourceId)
-    val v = view.findViewById(R.id.general_radio_dialog_description).asInstanceOf[TextView]
+    val v = view.findViewById[TextView](R.id.general_radio_dialog_description)
     v.setText(text)
   }
 

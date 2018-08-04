@@ -127,7 +127,7 @@ class JokaOrderPreferenceFragment extends PreferenceDialogFragmentCompat {
     for( t <- pref.getPersistedString(DEFAULT_VALUE).split(",")){
       view.findViewWithTag(t).asInstanceOf[RadioButton].toggle()
     }
-    val enable = view.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
+    val enable = view.findViewById[CheckBox](R.id.joka_enable)
     enable.setChecked(Globals.prefs.get.getBoolean("joka_enable",true))
     PrefUtils.switchVisibilityByCheckBox(root_view,enable,R.id.read_order_joka_layout)
     return view
@@ -136,11 +136,11 @@ class JokaOrderPreferenceFragment extends PreferenceDialogFragmentCompat {
     val pref = getPreference.asInstanceOf[JokaOrderPreference]
     if(positiveResult){
       val read_order_joka = Array(R.id.conf_joka_upper_num,R.id.conf_joka_lower_num).map{ rid =>
-        val btn = root_view.get.findViewById(rid).asInstanceOf[RadioGroup].getCheckedRadioButtonId()
-        root_view.get.findViewById(btn).getTag()
+        val btn = root_view.get.findViewById[RadioGroup](rid).getCheckedRadioButtonId()
+        root_view.get.findViewById[View](btn).getTag()
       }.mkString(",")
       val edit = pref.getSharedPreferences.edit
-      val enable = root_view.get.findViewById(R.id.joka_enable).asInstanceOf[CheckBox]
+      val enable = root_view.get.findViewById[CheckBox](R.id.joka_enable)
       val (eld,roj) = if(read_order_joka == "upper_0,lower_0"){
         (false,DEFAULT_VALUE)
       }else{
@@ -168,11 +168,11 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
 class AutoPlayPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
-    val span = view.findViewById(R.id.autoplay_span).asInstanceOf[TextView]
-    val enable = view.findViewById(R.id.autoplay_enable).asInstanceOf[CheckBox]
-    val repeat = view.findViewById(R.id.autoplay_repeat).asInstanceOf[CheckBox]
-    val stop = view.findViewById(R.id.autoplay_stop).asInstanceOf[CheckBox]
-    val stop_minutes = view.findViewById(R.id.autoplay_stop_minutes).asInstanceOf[TextView]
+    val span = view.findViewById[TextView](R.id.autoplay_span)
+    val enable = view.findViewById[CheckBox](R.id.autoplay_enable)
+    val repeat = view.findViewById[CheckBox](R.id.autoplay_repeat)
+    val stop = view.findViewById[CheckBox](R.id.autoplay_stop)
+    val stop_minutes = view.findViewById[TextView](R.id.autoplay_stop_minutes)
     (enable,span,repeat,stop,stop_minutes)
   }
   override def onDialogClosed(positiveResult:Boolean){
@@ -230,7 +230,7 @@ class DescriptionPreferenceFragment extends PreferenceDialogFragmentCompat {
     val context = getContext
     val pref = getPreference.asInstanceOf[DescriptionPreference]
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+    val txtview = view.findViewById[TextView](R.id.general_scroll_body)
     txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,pref.message)))
     builder.setView(view)
     super.onPrepareDialogBuilder(builder)
@@ -252,9 +252,9 @@ class DescriptionPreference(context:Context,attrs:AttributeSet) extends DialogPr
 class KarafudaPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
-    val rand = view.findViewById(R.id.karafuda_urafuda_prob).asInstanceOf[SeekBar]
-    val num = view.findViewById(R.id.karafuda_append_num).asInstanceOf[TextView]
-    val enable = view.findViewById(R.id.karafuda_enable).asInstanceOf[CheckBox]
+    val rand = view.findViewById[SeekBar](R.id.karafuda_urafuda_prob)
+    val num = view.findViewById[TextView](R.id.karafuda_append_num)
+    val enable = view.findViewById[CheckBox](R.id.karafuda_enable)
     (enable,num,rand)
   }
   override def onCreateDialogView(context:Context):View = {
@@ -318,9 +318,9 @@ class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
       }}
     if(positiveResult){
       root_view.foreach{ view =>
-        val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
+        val check = view.findViewById[CheckBox](R.id.volume_set_each_play)
         val new_value = if(check.isChecked){
-          val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
+          val seek = view.findViewById[SeekBar](R.id.volume_seek)
           Utils.formatFloat("%.2f" , seek.getProgress.toFloat / seek.getMax.toFloat)
         }else{
           Globals.audio_volume_bkup = None // do not restore audio volume
@@ -352,10 +352,10 @@ class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
 
     KarutaPlayUtils.setAudioPlayButton(view,context)
 
-    val check = view.findViewById(R.id.volume_set_each_play).asInstanceOf[CheckBox]
+    val check = view.findViewById[CheckBox](R.id.volume_set_each_play)
     check.setChecked(!TextUtils.isEmpty(pref.getPersistedString("")))
 
-    val seek = view.findViewById(R.id.volume_seek).asInstanceOf[SeekBar]
+    val seek = view.findViewById[SeekBar](R.id.volume_seek)
 
     pref.withAudioVolume(Unit,{(audio_manager, max_volume, current_volume) =>
       Globals.audio_volume_bkup = Some(current_volume)
@@ -420,7 +420,7 @@ class CreditsPreferenceFragment extends PreferenceDialogFragmentCompat {
     fp.close
     val buf2 = pat2.matcher(pat1.matcher(buf).replaceAll("")).replaceAll("")
     val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-    val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+    val txtview = view.findViewById[TextView](R.id.general_scroll_body)
     txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,buf2)))
     builder.setView(view)
     super.onPrepareDialogBuilder(builder)

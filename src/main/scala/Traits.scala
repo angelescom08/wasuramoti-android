@@ -28,8 +28,8 @@ abstract class CustomAlertDialog(context:Context) extends AlertDialog(context){
     super.onCreate(bundle)
 
     // overwrite the button's behavior
-    val positive = findViewById(android.R.id.button1)
-    val negative = findViewById(android.R.id.button2)
+    val positive = findViewById[View](android.R.id.button1)
+    val negative = findViewById[View](android.R.id.button2)
     positive.setOnClickListener(new View.OnClickListener{
       override def onClick(v:View){
         if(doWhenClose){
@@ -53,7 +53,7 @@ trait ButtonListener extends View.OnClickListener{
   }
   def setButtonMapping(view:View){
     for(id <- buttonMapping.keys){
-      view.findViewById(id).setOnClickListener(self)
+      view.findViewById[View](id).setOnClickListener(self)
     }
   }
 }

@@ -37,7 +37,7 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
       }else{
         R.string.poem_desc_reference_shigureden
       }
-      view.findViewById(R.id.poem_desc_reference).asInstanceOf[TextView].setText(source_id)
+      view.findViewById[TextView](R.id.poem_desc_reference).setText(source_id)
 
       val context = Utils.getOverrideContext(getActivity)
       val poem = AllFuda.get(context,R.array.list_full)(num)
@@ -53,7 +53,7 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
         val eng =  AllFuda.get(context,R.array.list_full_en)(num).replaceAll("(//|##)"," ")
         context.getResources.getString(R.string.poem_desc_body,new java.lang.Integer(num),poem,romaji,eng,desc,author,author_desc)
       }
-      view.findViewById(R.id.poem_desc_body).asInstanceOf[TextView].setText(Html.fromHtml(Utils.htmlAttrFormatter(context,body)))
+      view.findViewById[TextView](R.id.poem_desc_body).setText(Html.fromHtml(Utils.htmlAttrFormatter(context,body)))
     }
     setButtonMapping(view)
     builder

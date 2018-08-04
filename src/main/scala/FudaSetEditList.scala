@@ -60,7 +60,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     var list_item_mode = ListItemMode.KIMARIJI
 
     def invertSelect(){
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       for( pos <- 0 until container_view.getCount ){
         val q = container_view.isItemChecked(pos)
         container_view.setItemChecked(pos,!q)
@@ -69,14 +69,14 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     }
 
     def switchListItem(){
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       list_item_mode = ListItemMode.nextMode(list_item_mode)
       val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
       adapter.notifyDataSetChanged()
     }
 
     def switchSortMode(){
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       sort_mode = SortMode.nextMode(sort_mode)
       val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
       val num_list = getNumList.toSet
@@ -113,7 +113,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     val fudalistitem_comp = Ordering.by[FudaListItem,(Int,String)](_.compVal())
 
     def checkListBy(f:FudaListItem=>Boolean){
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       val adapter = container_view.getAdapter().asInstanceOf[ArrayAdapter[FudaListItem]]
       for( pos <- 0 until container_view.getCount ){
         val r = f(adapter.getItem(pos))
@@ -122,7 +122,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     }
 
     def addItemsToListView(){
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       val have_to_read = TrieUtils.makeHaveToRead(kimarijis)
       val fudalist = AllFuda.list.zipWithIndex.map{ x => new FudaListItem(x._1,x._2+1) }
       val adapter = new ArrayAdapter[FudaListItem](context,R.layout.my_simple_list_item_multiple_choice,fudalist)
@@ -132,11 +132,11 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
     }
 
     def getNumList() = {
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       Utils.getCheckedItemsFromListView[FudaListItem](container_view).map(_.fudanum).toList
     }
     def updateFudanum(){
-      findViewById(R.id.fudaseteditlist_fudanum).asInstanceOf[TextView].setText(getNumList().length.toString)
+      findViewById[TextView](R.id.fudaseteditlist_fudanum).setText(getNumList().length.toString)
     }
 
     override def onCreate(bundle:Bundle){
@@ -157,7 +157,7 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
       }
       setContentView(R.layout.fudasetedit_list)
       setTitle(R.string.button_fudasetedit_list)
-      val container_view = findViewById(R.id.fudaseteditlist_container).asInstanceOf[ListView]
+      val container_view = findViewById[ListView](R.id.fudaseteditlist_container)
       addItemsToListView()
 
       updateFudanum()
@@ -168,20 +168,20 @@ class FudaSetEditListDialogFragment extends DialogFragment with CommonDialog.Cal
           }
         })
 
-      findViewById(R.id.button_invert).setOnClickListener(new View.OnClickListener(){
+      findViewById[View](R.id.button_invert).setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
           val bundle = new Bundle
           bundle.putString("tag","fudasetedit_list_invert")
           CommonDialog.generalListDialogWithCallback(self,Right(R.string.fudaseteditlist_menutitle),R.array.fudaseteditlist_menuitems,bundle)
         }
       })
-      findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
+      findViewById[View](R.id.button_cancel).setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
           saveListMode()
           dismiss()
         }
       })
-      findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener(){
+      findViewById[View](R.id.button_ok).setOnClickListener(new View.OnClickListener(){
         override def onClick(v:View){
           val body = TrieUtils.makeKimarijiSetFromNumList(getNumList) match {
             case None => ""

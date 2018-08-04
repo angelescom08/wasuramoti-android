@@ -27,7 +27,7 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
   override def onPrepareDialogBuilder(builder:AlertDialog.Builder){
     val context = getContext
     val view = LayoutInflater.from(context).inflate(R.layout.bug_report_dialog,null)
-    val mail = view.findViewById(R.id.developer_mail_addr).asInstanceOf[TextView]
+    val mail = view.findViewById[TextView](R.id.developer_mail_addr)
     Utils.setUnderline(mail)
     mail.setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
@@ -41,7 +41,7 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
         return true
       }
     })
-    val form = view.findViewById(R.id.bug_report_anonymous_form).asInstanceOf[Button]
+    val form = view.findViewById[Button](R.id.bug_report_anonymous_form)
     form.setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
         showAnonymousForm(context)

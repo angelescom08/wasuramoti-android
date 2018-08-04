@@ -11,12 +11,12 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[ReadOrderEachPreference]
     if(positiveResult){
-      val group = root_view.get.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
+      val group = root_view.get.findViewById[RadioGroup](R.id.conf_read_order_each_group)
       val bid = group.getCheckedRadioButtonId()
       if(bid == R.id.conf_read_order_each_custom){
         pref.persistString(Globals.prefs.get.getString("read_order_each_custom",pref.DEFAULT_VALUE))
       }else{
-        val vw = group.findViewById(bid)
+        val vw = group.findViewById[View](bid)
         pref.persistString(vw.getTag.asInstanceOf[String].toUpperCase)
       }
     }
@@ -27,10 +27,10 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each,null)
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
-    val group = view.findViewById(R.id.conf_read_order_each_group).asInstanceOf[RadioGroup]
+    val group = view.findViewById[RadioGroup](R.id.conf_read_order_each_group)
     GeneralRadioHelper.setRadioTextClickListener(group)
     val value = pref.getPersistedString(pref.DEFAULT_VALUE)
-    val vw = group.findViewWithTag(value.toLowerCase)
+    val vw = group.findViewWithTag[View](value.toLowerCase)
     if(vw == null){
       if(value != Globals.prefs.get.getString("read_order_each_custom",pref.DEFAULT_VALUE)){
         // migrate from abolished option
@@ -46,13 +46,13 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
     // Android has a bug RadioGroup.OnCheckedChangeListener is called twice when calling RadioGroup.check().
     // Therefore we use View.OnClickListener instead.
     //   https://issuetracker.google.com/code/p/android/issues/detail?id=4785
-    val custom = view.findViewById(R.id.conf_read_order_each_custom)
+    val custom = view.findViewById[View](R.id.conf_read_order_each_custom)
     custom.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         CommonDialog.showWrappedDialog[ReadOrderEachCustomDialog](getFragmentManager)
       }
     })
-    val custom_text = view.findViewById(R.id.conf_read_order_value_custom)
+    val custom_text = view.findViewById[View](R.id.conf_read_order_value_custom)
     custom_text.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         // group.check() does not trigger OnClickListener, so we have to show dialog after it.
@@ -74,7 +74,7 @@ class ReadOrderEachPreferenceFragment extends PreferenceDialogFragmentCompat wit
       }else{
         getContext.getResources.getString(R.string.conf_read_order_value_undefined)
       }
-      v.findViewById(R.id.conf_read_order_value_custom).asInstanceOf[TextView].setText(abbr)
+      v.findViewById[TextView](R.id.conf_read_order_value_custom).setText(abbr)
     }
   }
 
@@ -132,7 +132,7 @@ class ReadOrderEachCustomDialog(context:Context) extends CustomAlertDialog(conte
   }
 
   override def doWhenClose():Boolean = {
-    val edit_text = findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
+    val edit_text = findViewById[EditText](R.id.conf_read_order_each_custom_text)
     parseCustomOrder(edit_text.getText.toString) match {
       case Left(txt:String) => {
         val edit = Globals.prefs.get.edit
@@ -150,7 +150,7 @@ class ReadOrderEachCustomDialog(context:Context) extends CustomAlertDialog(conte
     val view = LayoutInflater.from(context).inflate(R.layout.read_order_each_custom,null)
     setView(view)
     setTitle(context.getString(R.string.conf_read_order_each_custom_title))
-    val edit_text = view.findViewById(R.id.conf_read_order_each_custom_text).asInstanceOf[EditText]
+    val edit_text = view.findViewById[EditText](R.id.conf_read_order_each_custom_text)
     edit_text.setText(toOrigValue(Globals.prefs.get.getString("read_order_each_custom","")))
     super.onCreate(bundle)
   }

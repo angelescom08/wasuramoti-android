@@ -91,7 +91,7 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     val view = LayoutInflater.from(context).inflate(R.layout.fudaset, null)
 
     adapter = Some(new ArrayAdapter[FudaSetWithSize](context,android.R.layout.simple_spinner_item,listItems))
-    val spin = view.findViewById(R.id.fudaset_list).asInstanceOf[Spinner]
+    val spin = view.findViewById[Spinner](R.id.fudaset_list)
     spin.setAdapter(adapter.get)
     spinner =  Some(spin)
     refreshListItems

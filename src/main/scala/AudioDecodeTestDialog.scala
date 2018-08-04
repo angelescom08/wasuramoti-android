@@ -11,7 +11,7 @@ class AudioDecodeTestDialog(context:Context) extends AlertDialog(context){
   override def onCreate(bundle:Bundle){
     val view = LayoutInflater.from(context).inflate(R.layout.audio_decode_test,null)
     setView(view)
-    val container = view.findViewById(R.id.audio_decode_result_container).asInstanceOf[ViewGroup]
+    val container = view.findViewById[ViewGroup](R.id.audio_decode_result_container)
     val handler = new Handler
     val thread = new Thread(new Runnable(){
       override def run(){

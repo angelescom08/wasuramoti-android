@@ -170,7 +170,7 @@ object CommonDialog {
             override def onClick(interface:DialogInterface,which:Int){
               val dialog = interface.asInstanceOf[Dialog]
               val bundle = callbackBundle.clone.asInstanceOf[Bundle]
-              val checkbox = dialog.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+              val checkbox = dialog.findViewById[CheckBox](R.id.checkbox_dialog_checkbox)
               bundle.putBoolean("checked",checkbox.isChecked)
               bundle.putInt("which",which)
               callbackTarget.asInstanceOf[CallbackListener].onCommonDialogCallback(bundle)
@@ -200,7 +200,7 @@ object CommonDialog {
         case DIALOG_HTML =>
           builder.setPositiveButton(android.R.string.ok,listener)
           val view = LayoutInflater.from(context).inflate(R.layout.general_scroll,null)
-          val txtview = view.findViewById(R.id.general_scroll_body).asInstanceOf[TextView]
+          val txtview = view.findViewById[TextView](R.id.general_scroll_body)
           txtview.setText(Html.fromHtml(Utils.htmlAttrFormatter(context,message)))
           // this makes "<a href='...'></a>" clickable
           txtview.setMovementMethod(LinkMovementMethod.getInstance)
@@ -209,8 +209,8 @@ object CommonDialog {
           builder.setPositiveButton(android.R.string.ok,listener)
           builder.setNegativeButton(android.R.string.no,listener)
           val view = LayoutInflater.from(context).inflate(R.layout.general_checkbox_dialog,null)
-          val vtext = view.findViewById(R.id.checkbox_dialog_text).asInstanceOf[TextView]
-          val vcheckbox = view.findViewById(R.id.checkbox_dialog_checkbox).asInstanceOf[CheckBox]
+          val vtext = view.findViewById[TextView](R.id.checkbox_dialog_text)
+          val vcheckbox = view.findViewById[CheckBox](R.id.checkbox_dialog_checkbox)
           vtext.setText(message)
           vcheckbox.setText(args.getString("message_checkbox"))
           builder.setView(view)

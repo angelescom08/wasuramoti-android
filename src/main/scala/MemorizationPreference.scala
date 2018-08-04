@@ -13,7 +13,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
   val TAG_PANEL_FUDASET = "panel_fudaset"
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
-    val enable = view.findViewById(R.id.memorization_mode_enable).asInstanceOf[CheckBox]
+    val enable = view.findViewById[CheckBox](R.id.memorization_mode_enable)
     enable
   }
   override def onCommonDialogCallback(bundle:Bundle){
@@ -62,8 +62,8 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
       val cn = FudaListHelper.queryNumbersToReadAlt("memorized = 0")
       (c,cn)
     }
-    panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].setText(count.toString)
-    panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].setText(count_not.toString)
+    panel.findViewById[TextView](R.id.memorization_panel_memorized_count).setText(count.toString)
+    panel.findViewById[TextView](R.id.memorization_panel_not_memorized_count).setText(count_not.toString)
   }
   def setMemCountAll(){
     root_view.foreach{rv =>
@@ -93,9 +93,9 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     setMemCount(panel,onlyInFudaset)
 
     val fragment = this
-    panel.findViewById(R.id.memorization_panel_save_memorized).setOnClickListener(new View.OnClickListener(){
+    panel.findViewById[View](R.id.memorization_panel_save_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        if(panel.findViewById(R.id.memorization_panel_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
+        if(panel.findViewById[TextView](R.id.memorization_panel_memorized_count).getText.toString.toInt > 0){
           MemorizationFudaSetDialog.show(fragment,onlyInFudaset,true,reset_cond)
         }else{
           CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
@@ -103,9 +103,9 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
       }
     })
     
-    panel.findViewById(R.id.memorization_panel_save_not_memorized).setOnClickListener(new View.OnClickListener(){
+    panel.findViewById[View](R.id.memorization_panel_save_not_memorized).setOnClickListener(new View.OnClickListener(){
       override def onClick(view:View){
-        if(panel.findViewById(R.id.memorization_panel_not_memorized_count).asInstanceOf[TextView].getText.toString.toInt > 0){
+        if(panel.findViewById[TextView](R.id.memorization_panel_not_memorized_count).getText.toString.toInt > 0){
           MemorizationFudaSetDialog.show(fragment,onlyInFudaset,false,reset_cond)
         }else{
           CommonDialog.messageDialog(context,Right(R.string.memorization_fudaset_empty))
@@ -113,7 +113,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
       }
     })
     
-    panel.findViewById(R.id.memorization_panel_reset_memorized).setOnClickListener(new View.OnClickListener(){
+    panel.findViewById[View](R.id.memorization_panel_reset_memorized).setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
           val bundle = new Bundle
           bundle.putString("tag","reset_memorized")
@@ -122,7 +122,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
         }
     })
 
-    val title_view = panel.findViewById(R.id.memorization_panel_title).asInstanceOf[TextView]
+    val title_view = panel.findViewById[TextView](R.id.memorization_panel_title)
     title_view.setText(title)
 
     panel
@@ -136,7 +136,7 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
     val memorization_mode = pref.getPersistedBoolean(false)
     enable.setChecked(memorization_mode)
 
-    val container = view.findViewById(R.id.memorization_panel_container).asInstanceOf[ViewGroup]
+    val container = view.findViewById[ViewGroup](R.id.memorization_panel_container)
     if(memorization_mode && FudaListHelper.isBoundedByFudaset){
       // We only show the panel which is bounded by poem set only when memorization mode is turned on.
       // That is because `skip` column is not set to 2 when memorization mode is off.
@@ -177,7 +177,7 @@ class MemorizationFudaSetDialog(context:Context)
   lazy val resetCond = extraArguments.getString("reset_cond")
 
   override def doWhenClose():Boolean = {
-    val title_view = findViewById(R.id.memorization_fudaset_name).asInstanceOf[EditText]
+    val title_view = findViewById[EditText](R.id.memorization_fudaset_name)
     val title = title_view.getText.toString
     if(TextUtils.isEmpty(title)){
       CommonDialog.messageDialog(context,Right(R.string.fudasetedit_titleempty))
@@ -199,7 +199,7 @@ class MemorizationFudaSetDialog(context:Context)
         return false
       case Some((kimari,st_size))=>
         Utils.writeFudaSetToDB(context,title,kimari,st_size)
-        if(Option(findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]).exists{_.isChecked}){
+        if(Option(findViewById[CheckBox](R.id.memorization_fudaset_reset)).exists{_.isChecked}){
           FudaListHelper.resetMemorized(resetCond)
           FudaListHelper.updateSkipList(context)
         }
@@ -219,7 +219,7 @@ class MemorizationFudaSetDialog(context:Context)
     }
     setTitle(title_id)
 
-    val cb = root.findViewById(R.id.memorization_fudaset_reset).asInstanceOf[CheckBox]
+    val cb = root.findViewById[CheckBox](R.id.memorization_fudaset_reset)
     if(memorized){
       cb.setChecked(true)
     }else{

@@ -69,7 +69,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
         pl => pl.equalizer_seq = Some(makeSeq())
       }))
     // Reset Button
-    val rst = view.findViewById(R.id.equalizer_reset).asInstanceOf[Button]
+    val rst = view.findViewById[Button](R.id.equalizer_reset)
     rst.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
         val s = view.findViewWithTag("equalizer_all").asInstanceOf[SeekBar]
@@ -82,9 +82,9 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     // SeekBar ALL
     val vw = inflater.inflate(R.layout.equalizer_item, null)
     vw.setPadding(0,0,0,16)
-    vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar].setTag("equalizer_all")
-    vw.findViewById(R.id.equalizer_seek_text).asInstanceOf[TextView].setText("ALL")
-    val seek = vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar]
+    vw.findViewById[SeekBar](R.id.equalizer_seek).setTag("equalizer_all")
+    vw.findViewById[TextView](R.id.equalizer_seek_text).setText("ALL")
+    val seek = vw.findViewById[SeekBar](R.id.equalizer_seek)
     seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
       override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
         setAllSeekbar(progress)
@@ -94,7 +94,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
       override def onStopTrackingTouch(bar:SeekBar){
       }
     })
-    view.findViewById(R.id.equalizer_linear).asInstanceOf[LinearLayout].addView(vw)
+    view.findViewById[LinearLayout](R.id.equalizer_linear).addView(vw)
 
     // Each SeekBars
     val prev_seq = Utils.getPrefsEqualizer()
@@ -106,8 +106,8 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
         }else{
           (freq/1000).toString+"kHz"
         }
-        vw.findViewById(R.id.equalizer_seek_text).asInstanceOf[TextView].setText(txt)
-        val seek = vw.findViewById(R.id.equalizer_seek).asInstanceOf[SeekBar]
+        vw.findViewById[TextView](R.id.equalizer_seek_text).setText(txt)
+        val seek = vw.findViewById[SeekBar](R.id.equalizer_seek)
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
           override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
             Globals.global_lock.synchronized{
@@ -136,7 +136,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
         if(i < prev_seq.seq.length){
           prev_seq.seq(i).foreach{ x => seek.setProgress((x*seek.getMax).toInt) }
         }
-        view.findViewById(R.id.equalizer_linear).asInstanceOf[LinearLayout].addView(vw)
+        view.findViewById[LinearLayout](R.id.equalizer_linear).addView(vw)
     }
   }
 
@@ -159,7 +159,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
             pl.makeMusicTrack(pl.audio_queue)
           }catch{
             case e:Exception =>
-            view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(e.getMessage())
+            view.findViewById[TextView](R.id.equalizer_message).setText(e.getMessage())
             return view
           }
           pl.makeEqualizer(true)
@@ -172,7 +172,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
               pl.equalizer = None
             }
             case None => {
-              view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(
+              view.findViewById[TextView](R.id.equalizer_message).setText(
                 if(Globals.prefs.get.getBoolean("use_opensles",false)){
                   R.string.equalizer_not_available_in_opensles
                 }else{
@@ -184,7 +184,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
           pl.releaseTrackSetNone() 
       }
       case None => {
-        view.findViewById(R.id.equalizer_message).asInstanceOf[TextView].setText(context.getResources().getString(R.string.player_error_noplay))
+        view.findViewById[TextView](R.id.equalizer_message).setText(context.getResources().getString(R.string.player_error_noplay))
       }
     }
     return view

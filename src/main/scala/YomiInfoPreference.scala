@@ -13,15 +13,15 @@ import android.support.v4.app.DialogFragment
 class YomiInfoPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   def getWidgets(view:View) = {
-    val main = view.findViewById(R.id.yomi_info_show_text).asInstanceOf[CheckBox]
-    val furigana_size = view.findViewById(R.id.yomi_info_furigana_width).asInstanceOf[SeekBar]
-    val furigana_show = view.findViewById(R.id.yomi_info_furigana_show).asInstanceOf[CheckBox]
-    val author = view.findViewById(R.id.yomi_info_author).asInstanceOf[CheckBox]
-    val kami = view.findViewById(R.id.yomi_info_kami).asInstanceOf[CheckBox]
-    val simo = view.findViewById(R.id.yomi_info_simo).asInstanceOf[CheckBox]
-    val torifuda_mode =  view.findViewById(R.id.yomi_info_torifuda_mode).asInstanceOf[Spinner]
-    val show_kimari = view.findViewById(R.id.yomi_info_show_bar_kimari).asInstanceOf[CheckBox]
-    val show_poem_num = view.findViewById(R.id.yomi_info_show_bar_poem_num).asInstanceOf[CheckBox]
+    val main = view.findViewById[CheckBox](R.id.yomi_info_show_text)
+    val furigana_size = view.findViewById[SeekBar](R.id.yomi_info_furigana_width)
+    val furigana_show = view.findViewById[CheckBox](R.id.yomi_info_furigana_show)
+    val author = view.findViewById[CheckBox](R.id.yomi_info_author)
+    val kami = view.findViewById[CheckBox](R.id.yomi_info_kami)
+    val simo = view.findViewById[CheckBox](R.id.yomi_info_simo)
+    val torifuda_mode =  view.findViewById[Spinner](R.id.yomi_info_torifuda_mode)
+    val show_kimari = view.findViewById[CheckBox](R.id.yomi_info_show_bar_kimari)
+    val show_poem_num = view.findViewById[CheckBox](R.id.yomi_info_show_bar_poem_num)
     (main,furigana_size,furigana_show,author,kami,simo,torifuda_mode,show_kimari,show_poem_num)
   }
   override def onDialogClosed(positiveResult:Boolean){
@@ -64,7 +64,7 @@ class YomiInfoPreferenceFragment extends PreferenceDialogFragmentCompat {
     show_poem_num.setChecked(prefs.getBoolean("yomi_info_show_bar_poem_num",true))
 
     // switch visibility when spinner changed
-    val layout = view.findViewById(R.id.yomi_info_conf_layout)
+    val layout = view.findViewById[View](R.id.yomi_info_conf_layout)
     val f = (flag:Boolean) => {
       layout.setVisibility(if(flag){
         View.VISIBLE
@@ -79,13 +79,13 @@ class YomiInfoPreferenceFragment extends PreferenceDialogFragmentCompat {
         }
     })
 
-    val btn_lang = view.findViewById(R.id.yomi_info_conf_button_lang).asInstanceOf[Button]
+    val btn_lang = view.findViewById[Button](R.id.yomi_info_conf_button_lang)
     btn_lang.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
           CommonDialog.showWrappedDialog[YomiInfoConfigLangDialog](getFragmentManager)
         }
     })
-    val btn_font = view.findViewById(R.id.yomi_info_conf_button_font).asInstanceOf[Button]
+    val btn_font = view.findViewById[Button](R.id.yomi_info_conf_button_font)
     btn_font.setOnClickListener(new View.OnClickListener(){
         override def onClick(view:View){
           CommonDialog.showWrappedDialog[YomiInfoConfigFontDialog](getFragmentManager)
@@ -124,9 +124,9 @@ class YomiInfoPreference(context:Context,attrs:AttributeSet) extends DialogPrefe
 @KeepConstructor
 class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait {
   def getWidgets() = {
-    val show_trans = findViewById(R.id.yomi_info_show_translate_button).asInstanceOf[CheckBox]
-    val default_lang =  findViewById(R.id.yomi_info_default_language).asInstanceOf[Spinner]
-    val override_lang = findViewById(R.id.override_language).asInstanceOf[Spinner]
+    val show_trans = findViewById[CheckBox](R.id.yomi_info_show_translate_button)
+    val default_lang =  findViewById[Spinner](R.id.yomi_info_default_language)
+    val override_lang = findViewById[Spinner](R.id.override_language)
     (show_trans,default_lang,override_lang)
   }
   override def doWhenClose():Boolean = {
@@ -160,10 +160,10 @@ class YomiInfoConfigLangDialog(context:Context) extends CustomAlertDialog(contex
 @KeepConstructor
 class YomiInfoConfigFontDialog(context:Context) extends CustomAlertDialog(context) with YomiInfoPreferenceTrait{
   def getWidgets = {
-    val japanese_font = findViewById(R.id.yomi_info_japanese_font).asInstanceOf[Spinner]
-    val furigana_font = findViewById(R.id.yomi_info_furigana_font).asInstanceOf[Spinner]
-    val torifuda_font =  findViewById(R.id.yomi_info_torifuda_font).asInstanceOf[Spinner]
-    val english_font =  findViewById(R.id.yomi_info_english_font).asInstanceOf[Spinner]
+    val japanese_font = findViewById[Spinner](R.id.yomi_info_japanese_font)
+    val furigana_font = findViewById[Spinner](R.id.yomi_info_furigana_font)
+    val torifuda_font =  findViewById[Spinner](R.id.yomi_info_torifuda_font)
+    val english_font =  findViewById[Spinner](R.id.yomi_info_english_font)
     (japanese_font,furigana_font,torifuda_font,english_font)
   }
   override def doWhenClose():Boolean = {

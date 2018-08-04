@@ -62,7 +62,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     ev.getAction match{
       case MotionEvent.ACTION_UP =>
         cur_view.foreach{ vid=>
-          val v = findViewById(vid)
+          val v = findViewById[View](vid)
           if(v != null){
             val dx = getScrollX-v.getLeft
             if(Globals.IS_DEBUG){
@@ -103,7 +103,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
     post(new Runnable(){
         override def run(){
           for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-            Option(findViewById(i)).foreach{ v=>
+            Option(findViewById[View](i)).foreach{ v=>
               val prop = v.getLayoutParams
               prop.width = w
               v.setLayoutParams(prop)
@@ -121,7 +121,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
                 // on the screen until layout is finished.
                 // We have to avoid it since what we want to display initially is yomi_info_view_cur.
                 for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-                  Option(findViewById(i)).foreach{ v=>
+                  Option(findViewById[View](i)).foreach{ v=>
                     v.setVisibility(View.VISIBLE)
                   }
                 }
@@ -133,7 +133,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
   def invalidateAndScroll(){
     for(i <- Array(R.id.yomi_info_view_next,R.id.yomi_info_view_cur,R.id.yomi_info_view_prev)){
-      val v = findViewById(i).asInstanceOf[YomiInfoView]
+      val v = findViewById[YomiInfoView](i)
       if(v!=null){
         v.updateCurNum()
         v.invalidate()
@@ -143,7 +143,7 @@ class YomiInfoLayout(context:Context, attrs:AttributeSet) extends HorizontalScro
   }
 
   def scrollToView(id:Int,smooth:Boolean,from_touch_event:Boolean=false,do_after_done:Option[()=>Unit]=None){
-    val v = findViewById(id).asInstanceOf[YomiInfoView]
+    val v = findViewById[YomiInfoView](id)
     if(v!=null){
       cur_view = Some(id)
       getContext.asInstanceOf[WasuramotiActivity].updatePoemInfo(id)

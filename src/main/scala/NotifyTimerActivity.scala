@@ -94,14 +94,14 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
     if(resultCode == Activity.RESULT_OK){
       val uri:Uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
       if(uri != null){
-        val item = findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].findViewWithTag(Map("timer_id"->requestCode))
+        val item = findViewById[LinearLayout](R.id.notify_timer_linear).findViewWithTag(Map("timer_id"->requestCode))
         setTimerUri(item,uri)
       }
     }
   }
 
   def setTimerUri(item_view:View,uri:Uri){
-    val tv = item_view.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView]
+    val tv = item_view.findViewById[TextView](R.id.timer_sound_uri)
     getRingtoneFromUri(uri).foreach{r=>
       tv.setText(r.getTitle(this))
       tv.setTag(Map("timer_uri"->uri))
@@ -129,16 +129,16 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
     for( ((icon,id,tag),index) <- timer_iter.zipWithIndex ){
       val vw = inflater.inflate(R.layout.notify_timer_item,null)
       vw.setTag(tag)
-      vw.findViewById(R.id.timer_icon).asInstanceOf[ImageView].setImageResource(icon)
+      vw.findViewById[ImageView](R.id.timer_icon).setImageResource(icon)
       val minute = try { timer_minutes(index).toInt } catch { case _:Exception => timer_icons(index)._2  }
-      vw.findViewById(R.id.timer_limit).asInstanceOf[EditText].setText(minute.toString)
+      vw.findViewById[EditText](R.id.timer_limit).setText(minute.toString)
       val uri = if(timer_uris.isDefinedAt(index) && ! TextUtils.isEmpty(timer_uris(index))){Uri.parse(timer_uris(index))}else{null}
       setTimerUri(vw,uri)
       val ps = get_boolean_at(play_sounds,index)
-      vw.findViewById(R.id.timer_play_sound).asInstanceOf[CheckBox].setChecked(ps)
+      vw.findViewById[CheckBox](R.id.timer_play_sound).setChecked(ps)
       val dv = get_boolean_at(do_vibrates,index)
-      vw.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].setChecked(dv)
-      findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].addView(vw)
+      vw.findViewById[CheckBox](R.id.timer_do_vibrate).setChecked(dv)
+      findViewById[LinearLayout](R.id.notify_timer_linear).addView(vw)
     }
 
     this.setVolumeControlStream(AudioManager.STREAM_NOTIFICATION)
@@ -156,7 +156,7 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
     intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
     intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION)
     val pv = Utils.findAncestorViewById(v,R.id.timer_item).get
-    val tag = pv.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView].getTag
+    val tag = pv.findViewById[TextView](R.id.timer_sound_uri).getTag
     val uri = if(tag != null){
       tag.asInstanceOf[Map[String,Uri]].getOrElse("timer_uri",null)
     }else{
@@ -174,7 +174,7 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
       }
     }
     val p = Utils.findAncestorViewById(v,R.id.timer_item).get.asInstanceOf[LinearLayout]
-    val tv = p.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView]
+    val tv = p.findViewById[TextView](R.id.timer_sound_uri)
     val tag = tv.getTag
     val uri = if(tag == null){null}else{tag.asInstanceOf[Map[String,Uri]].getOrElse("timer_uri",null)}
     getRingtoneFromUri(uri).foreach{r=>
@@ -213,15 +213,15 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
     Globals.global_lock.synchronized{
       cancelAndRemove
       val timer_datas = timer_iter.map{case (timer_icon,timer_id,timer_tag) => {
-        val vw_item = findViewById(R.id.notify_timer_linear).asInstanceOf[LinearLayout].findViewWithTag(timer_tag)
+        val vw_item = findViewById[LinearLayout](R.id.notify_timer_linear).findViewWithTag[View](timer_tag)
         val limit = try{
-          vw_item.findViewById(R.id.timer_limit).asInstanceOf[EditText].getText.toString.toInt
+          vw_item.findViewById[EditText](R.id.timer_limit).getText.toString.toInt
         }catch{
           case e:java.lang.NumberFormatException => 0
         }
-        val play_sound = vw_item.findViewById(R.id.timer_play_sound).asInstanceOf[CheckBox].isChecked
-        val uri_tag = vw_item.findViewById(R.id.timer_sound_uri).asInstanceOf[TextView].getTag.asInstanceOf[Map[String,Uri]]
-        val do_vibrate = vw_item.findViewById(R.id.timer_do_vibrate).asInstanceOf[CheckBox].isChecked
+        val play_sound = vw_item.findViewById[CheckBox](R.id.timer_play_sound).isChecked
+        val uri_tag = vw_item.findViewById[TextView](R.id.timer_sound_uri).getTag.asInstanceOf[Map[String,Uri]]
+        val do_vibrate = vw_item.findViewById[CheckBox](R.id.timer_do_vibrate).isChecked
         val intent = new Intent(this, classOf[NotifyTimerReceiver])
         //action and data must be identical to cancel even after application restarted
         intent.setAction(timer_id.toString)
