@@ -22,6 +22,7 @@ import android.support.v4.app.{DialogFragment,FragmentManager}
 import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
+import java.util.BitSet
 
 import karuta.hpnpwd.audio.OpenSLESPlayer
 
@@ -784,6 +785,28 @@ object Utils {
   def colorToHex(color:Int):String = {
     // remove alpha channel when color is ARGB
     return "%06x".format(0xffffff & color)
+  }
+
+  // TODO: Use BitSet.valueOf() and BitSet#toByteArray() if API>=19
+  def byteArrayToBitSetForAPI18(ar:Array[Byte]):BitSet = {
+    val bs = new BitSet
+    for (i <- 0 until ar.length*8) {
+      if ((ar(i/8)&(1<<(i%8))) > 0) {
+        bs.set(i)
+      }
+    }
+    return bs
+  }
+  def bitSetToByteArrayForAPI18(bs:BitSet):Array[Byte] = {
+    val len = if (bs.length%8==0) {bs.length/8} else {bs.length/8+1}
+    val ar = new Array[Byte](len)
+    for (i <- 0 until bs.length) {
+      if(bs.get(i)) {
+        val index = i/8
+        ar(index) = (ar(index)|(1<<(i%8))).byteValue
+      }
+    }
+    return ar
   }
 
   lazy val colorPattern = """color=['"]?\?attr/(\w+)['"]?""".r

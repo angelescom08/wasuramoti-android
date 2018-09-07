@@ -7,6 +7,8 @@ import org.robolectric.{Robolectric, RobolectricTestRunner, RuntimeEnvironment}
 import org.scalatest.Matchers
 import org.scalatest.junit.JUnitSuite
 import scala.collection.mutable
+import java.util.BitSet
+import scala.util.Random
 
 @RunWith(classOf[RobolectricTestRunner])
 @Config(
@@ -22,9 +24,9 @@ class MainTest extends JUnitSuite with Matchers {
 
   @Test
   def testStringConvert(){
-    Romanization.jap_to_roma("わすらもち 0123") shouldBe "wasuramochi 0123"
-    Romanization.roma_to_jap("wasuramoti 4567") shouldBe "わすらもち 4567"
-    Romanization.zenkaku_to_hankaku("＊？［］１２３４５６７８９０") shouldBe "*?[]1234567890"
+    Romanization.japToRoma("わすらもち 0123") shouldBe "wasuramochi 0123"
+    Romanization.romaToJap("wasuramoti 4567") shouldBe "わすらもち 4567"
+    Romanization.zenkakuToHankaku("＊？［］１２３４５６７８９０") shouldBe "*?[]1234567890"
   }
 
   @Test
@@ -105,6 +107,28 @@ class MainTest extends JUnitSuite with Matchers {
 <font color='#002a11'>candy</font>
 <font >dragon</font>""")
     
+  }
+
+  @Test
+  def testBitSet() {
+    def doIt(orig:Array[Byte]) {
+      val bs1 = BitSet.valueOf(orig)
+      val bs2 = Utils.byteArrayToBitSetForAPI18(orig)
+      bs1 shouldBe bs2 
+      val ar1 = bs1.toByteArray()
+      val ar2 = Utils.bitSetToByteArrayForAPI18(bs1)
+      ar1 shouldBe ar2
+    }
+    doIt(Array[Byte](182.toByte,119.toByte,156.toByte,227.toByte))
+
+    // test random bitset
+    val rand = new Random
+    for (i <- 0 until 10000) {
+      val len = rand.nextInt(12)
+      val ar = new Array[Byte](len)
+      rand.nextBytes(ar)
+      doIt(ar)
+    }
   }
 
 }
