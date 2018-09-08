@@ -8,7 +8,7 @@ resolvers ++= Seq(
   "Google Maven Repository" at "https://maven.google.com"
 )
 
-val supportLibVer = "25.4.0"
+val supportLibVer = "26.0.2"
 
 // Until the folling bug is fixed by upstream, we use patched support library instead
 // https://stackoverflow.com/questions/32070670/preferencefragmentcompat-requires-preferencetheme-to-be-set
@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
   "org.robolectric" % "robolectric" % "3.2.2" % Test,
   "junit" % "junit" % "4.12" % Test,
   "com.android.support" % "support-v4" % supportLibVer,
-  "com.takisoft.fix" % "preference-v7" % "25.4.0.3",
+  "com.takisoft.fix" % "preference-v7" % "26.1.0.3",
   aar("com.android.support" % "appcompat-v7" % supportLibVer),
   "com.getkeepsafe.relinker" % "relinker" % "1.2.2"
   )

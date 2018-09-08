@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager}
+import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager,NotificationChannel}
 import android.media.{AudioManager,RingtoneManager,Ringtone}
 import android.os.{Bundle,Vibrator}
 import android.net.Uri
@@ -19,6 +19,7 @@ import java.util.Date
 import scala.collection.mutable
 
 object NotifyTimerUtils {
+  val NOTIFICATION_CHANNEL_ID = "channel_timer"
   val notify_timers = new mutable.HashMap[Int,Intent]()
   var alarm_manager = None:Option[AlarmManager]
   var notify_manager = None:Option[NotificationManager]
@@ -264,7 +265,19 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
 class NotifyTimerReceiver extends BroadcastReceiver {
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
-      NotifyTimerUtils.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
+      if (NotifyTimerUtils.notify_manager.isEmpty) {
+        NotifyTimerUtils.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+          // Starting in API>=26, all notifications must be assigned to a channel
+          //   https://developer.android.com/training/notify-user/channels
+          NotifyTimerUtils.notify_manager.foreach{ manager =>
+            val channel = new NotificationChannel(NotifyTimerUtils.NOTIFICATION_CHANNEL_ID,
+              "Wasuramoti Timer", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.setDescription("Wasuramoti timer for memorization time")
+            manager.createNotificationChannel(channel)
+          }
+        }
+      }
 
       val result_intent = new Intent(context, classOf[WasuramotiActivity])
       val pending_intent = TaskStackBuilder.create(context)
@@ -279,7 +292,7 @@ class NotifyTimerReceiver extends BroadcastReceiver {
       
       val message = extras.getInt("elapsed") + " " + context.getResources.getString(R.string.timer_minutes_elapsed)
       val from = context.getResources.getString(R.string.app_name)
-      val notif = new NotificationCompat.Builder(context)
+      val notif = new NotificationCompat.Builder(context, NotifyTimerUtils.NOTIFICATION_CHANNEL_ID)
         .setContentTitle(from)
         .setContentText(message)
         .setTicker(message)
