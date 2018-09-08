@@ -356,6 +356,28 @@
   <string name="fudaset_reorder_title">Reorder Poem Set</string>
   <string name="fudaset_reorder_description">Click one button to begin move, click another button to end move.</string>
 
+  <string name="fudaset_transfer">Transfer</string>
+  <string name="fudaset_transfer_title">Transfer Poem Set</string>
+  <string name="fudaset_transfer_export">Export</string>
+  <string name="fudaset_transfer_import">Import</string>
+  <string name="fudaset_transfer_export_success">Copied to Clipboard</string>
+  <string name="fudaset_transfer_import_success">Imported %s Poem Sets</string>
+  <string name="fudaset_transfer_failed_clipboard">Clipboard Access Failed</string>
+  <string name="fudaset_transfer_failed_decode">Poem Set Decode Failed</string>
+  <string name="fudaset_transfer_failed_encode">Poem Set Encode Failed</string>
+  <string name="fudaset_transfer_description_html">
+    <![CDATA[
+    <h4>What is This?</h4>
+    <div>You can send poem set in this device to another device.</div>
+    <h4>Usage</h4>
+    <div><b>(1)</b> Press `Export` to copy poem set to clipboard.</div>
+    <div><b>(2)</b> Paste it to E-Mail or some other SNS, and send to another device.</div>
+    <div><b>(3)</b> Copy the poem set to clipboard, and press `Import`.</div>
+    ]]>
+  </string>
+
+
+
   <string name="fudaset_confirmdelete">Really delete %s ?</string>
   <string name="fudasetedit_title">New/Edit Poem Set</string>
   <string name="fudasetedit_name">Title</string>

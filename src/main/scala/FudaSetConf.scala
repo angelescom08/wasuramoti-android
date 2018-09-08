@@ -51,7 +51,7 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
       case "fudaset_copymerge_done" =>
         addFudaSetToSpinner(bundle.getSerializable("fudaset").asInstanceOf[FudaSetWithSize])
 
-      case "fudaset_reorder_done" =>
+      case "fudaset_list_changed" =>
         refreshListItems
     }
   }
@@ -70,7 +70,8 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
       R.id.button_fudaset_new ->  newFudaSet _,
       R.id.button_fudaset_delete ->  deleteFudaSet _,
       R.id.button_fudaset_copymerge -> copymergeFudaSet _,
-      R.id.button_fudaset_reorder -> reorderFudaSet _
+      R.id.button_fudaset_reorder -> reorderFudaSet _,
+      R.id.button_fudaset_transfer -> transferFudaSet _
     )
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[FudaSetPreference]
@@ -155,6 +156,9 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
   }
   def reorderFudaSet(){
     CommonDialog.showWrappedDialogWithCallback[FudaSetReOrderDialog](this)
+  }
+  def transferFudaSet(){
+    CommonDialog.showWrappedDialogWithCallback[FudaSetTransferDialog](this)
   }
 }
 

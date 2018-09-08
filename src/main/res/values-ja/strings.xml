@@ -317,6 +317,26 @@
   <string name="fudaset_reorder_title">札セットの並べ替え</string>
   <string name="fudaset_reorder_description">ボタンを押すと移動開始，別のボタンを押すとそこに移動完了．</string>
 
+  <string name="fudaset_transfer">転送</string>
+  <string name="fudaset_transfer_title">札セットの転送</string>
+  <string name="fudaset_transfer_export">エクスポート</string>
+  <string name="fudaset_transfer_import">インポート</string>
+  <string name="fudaset_transfer_export_success">クリップボードにコピーしました</string>
+  <string name="fudaset_transfer_import_success">%s個の札セットを取り込みました</string>
+  <string name="fudaset_transfer_failed_clipboard">クリップボードへのアクセス失敗</string>
+  <string name="fudaset_transfer_failed_decode">札セットのデコード失敗</string>
+  <string name="fudaset_transfer_failed_encode">札セットのエンコード失敗</string>
+  <string name="fudaset_transfer_description_html">
+    <![CDATA[
+    <h4>これは何？</h4>
+    <div>この端末の札セットをわすらもちをインストールした別の端末に送ることができます．</div>
+    <h4>使用手順</h4>
+    <div><b>(1)</b> 「エクスポート」を押すとクリップボードに札セットがコピーされます．</div>
+    <div><b>(2)</b> メールやSNSなどにそれを貼り付けて別の端末に送ります．</div>
+    <div><b>(3)</b> その別の端末でクリップボードに札セットをコピーし「インポート」を押して取り込み完了です．</div>
+    ]]>
+  </string>
+
   <string name="fudaset_confirmdelete">%s を削除してもよろしいですか？</string>
   <string name="fudasetedit_title">札セットの作成/編集</string>
   <string name="fudasetedit_name">名前</string>

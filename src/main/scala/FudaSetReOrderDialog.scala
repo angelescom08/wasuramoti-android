@@ -32,7 +32,7 @@ class FudaSetReOrderDialog(context:Context) extends CustomAlertDialog(context)
     })
     db.close()
     val bundle = new Bundle
-    bundle.putString("tag","fudaset_reorder_done")
+    bundle.putString("tag","fudaset_list_changed")
     callbackListener.onCommonDialogCallback(bundle)
     return true
   }

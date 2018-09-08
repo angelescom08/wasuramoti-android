@@ -717,6 +717,21 @@ object Utils {
     }
   }
 
+  @TargetApi(11)
+  def copyFromClipBoard(context:Context):String = {
+    if(android.os.Build.VERSION.SDK_INT >= 11){
+      val clip = context.getSystemService(Context.CLIPBOARD_SERVICE)
+        .asInstanceOf[android.content.ClipboardManager]
+      clip.getPrimaryClip().getItemAt(0).getText.toString
+    }else{
+      val clip = context.getSystemService(Context.CLIPBOARD_SERVICE)
+        .asInstanceOf[android.text.ClipboardManager]
+      clip.getText.toString
+    }
+  }
+
+
+
   def playAfterMove(wa:WasuramotiActivity){
     if(Globals.player.nonEmpty && Globals.prefs.get.getBoolean("play_after_swipe",false)){
       wa.doPlay(from_swipe=true)
@@ -785,28 +800,6 @@ object Utils {
   def colorToHex(color:Int):String = {
     // remove alpha channel when color is ARGB
     return "%06x".format(0xffffff & color)
-  }
-
-  // TODO: Use BitSet.valueOf() and BitSet#toByteArray() if API>=19
-  def byteArrayToBitSetForAPI18(ar:Array[Byte]):BitSet = {
-    val bs = new BitSet
-    for (i <- 0 until ar.length*8) {
-      if ((ar(i/8)&(1<<(i%8))) > 0) {
-        bs.set(i)
-      }
-    }
-    return bs
-  }
-  def bitSetToByteArrayForAPI18(bs:BitSet):Array[Byte] = {
-    val len = if (bs.length%8==0) {bs.length/8} else {bs.length/8+1}
-    val ar = new Array[Byte](len)
-    for (i <- 0 until bs.length) {
-      if(bs.get(i)) {
-        val index = i/8
-        ar(index) = (ar(index)|(1<<(i%8))).byteValue
-      }
-    }
-    return ar
   }
 
   lazy val colorPattern = """color=['"]?\?attr/(\w+)['"]?""".r

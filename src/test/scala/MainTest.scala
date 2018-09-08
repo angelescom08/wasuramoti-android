@@ -113,22 +113,32 @@ class MainTest extends JUnitSuite with Matchers {
   def testBitSet() {
     def doIt(orig:Array[Byte]) {
       val bs1 = BitSet.valueOf(orig)
-      val bs2 = Utils.byteArrayToBitSetForAPI18(orig)
+      val bs2 = FudaSetTransferHelper.byteArrayToBitSetForAPI18(orig)
       bs1 shouldBe bs2 
       val ar1 = bs1.toByteArray()
-      val ar2 = Utils.bitSetToByteArrayForAPI18(bs1)
+      val ar2 = FudaSetTransferHelper.bitSetToByteArrayForAPI18(bs1)
       ar1 shouldBe ar2
     }
     doIt(Array[Byte](182.toByte,119.toByte,156.toByte,227.toByte))
 
     // test random bitset
     val rand = new Random
-    for (i <- 0 until 10000) {
+    for (i <- 0 until 1000) {
       val len = rand.nextInt(12)
       val ar = new Array[Byte](len)
       rand.nextBytes(ar)
       doIt(ar)
     }
+  }
+
+  @Test
+  def testEncodeFudaSet(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    AllFuda.init(context)
+    Globals.database = Some(new DictionaryOpenHelper(context))
+    val str = FudaSetTransferHelper.encodeAllFudaSet()
+    FudaSetTransferHelper.decodeAndSaveFudaSets(context,str)
+
   }
 
 }
