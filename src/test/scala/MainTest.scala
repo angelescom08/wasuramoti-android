@@ -137,7 +137,7 @@ class MainTest extends JUnitSuite with Matchers {
     AllFuda.init(context)
     Globals.database = Some(new DictionaryOpenHelper(context))
     val str = FudaSetTransferHelper.encodeAllFudaSet()
-    FudaSetTransferHelper.decodeAndSaveFudaSets(context,str)
+    FudaSetTransferHelper.decodeAndSaveFudaSets(context,str,false)
 
   }
 

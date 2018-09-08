@@ -326,6 +326,7 @@
   <string name="fudaset_transfer_failed_clipboard">クリップボードへのアクセス失敗</string>
   <string name="fudaset_transfer_failed_decode">札セットのデコード失敗</string>
   <string name="fudaset_transfer_failed_encode">札セットのエンコード失敗</string>
+  <string name="fudaset_transfer_overwrite">同名の札セットは上書き</string>
   <string name="fudaset_transfer_description_html">
     <![CDATA[
     <h4>これは何？</h4>

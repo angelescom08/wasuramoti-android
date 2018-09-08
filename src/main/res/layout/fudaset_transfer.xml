@@ -17,6 +17,12 @@
     android:layout_width="192sp"
     android:layout_height="wrap_content"
     />
+  <CheckBox
+    android:id="@+id/fudaset_transfer_overwrite"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="@string/fudaset_transfer_overwrite"
+    android:checked="true"
+    />
   <karuta.hpnpwd.wasuramoti.PatchedTextView
       android:layout_width="wrap_content" android:layout_height="wrap_content"
       android:id="@+id/fudaset_transfer_description"

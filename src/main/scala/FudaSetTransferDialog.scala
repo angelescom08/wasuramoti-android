@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.os.Bundle
 import android.content.Context
 import android.view.{View,LayoutInflater}
-import android.widget.{Button,Toast,TextView}
+import android.widget.{Button,Toast,TextView,CheckBox}
 import android.util.Base64
 import android.text.Html
 
@@ -19,11 +19,11 @@ class FudaSetTransferDialog(context:Context)
   }
   override def onCreate(state:Bundle){
     val root = LayoutInflater.from(context).inflate(R.layout.fudaset_transfer, null)
-
+    val overwrite = root.findViewById[CheckBox](R.id.fudaset_transfer_overwrite)
     root.findViewById[Button](R.id.button_fudaset_transfer_import)
         .setOnClickListener(new View.OnClickListener(){
           override def onClick(view:View){
-            fudasetTransferImport()
+            fudasetTransferImport(overwrite.isChecked)
           }
         })
     root.findViewById[Button](R.id.button_fudaset_transfer_export)
@@ -55,14 +55,14 @@ class FudaSetTransferDialog(context:Context)
       Toast.makeText(context,R.string.fudaset_transfer_export_success,Toast.LENGTH_SHORT).show()
     }
   }
-  def fudasetTransferImport(){
+  def fudasetTransferImport(insertOrUpdate:Boolean){
     for {
       txt <- Try(Utils.copyFromClipBoard(context))
         .recoverWith{case e:Exception =>
           Toast.makeText(context,R.string.fudaset_transfer_failed_clipboard,Toast.LENGTH_SHORT).show()
           Failure(e)
         }
-      num <- Try(FudaSetTransferHelper.decodeAndSaveFudaSets(context,txt))
+      num <- Try(FudaSetTransferHelper.decodeAndSaveFudaSets(context,txt,insertOrUpdate))
         .recoverWith{case e:Exception =>
           Toast.makeText(context,R.string.fudaset_transfer_failed_decode,Toast.LENGTH_SHORT).show()
           Failure(e)
@@ -88,17 +88,18 @@ object FudaSetTransferHelper {
     }.mkString("\n")
   }
 
-  def decodeAndSaveFudaSets(context:Context,str:String):Int = {
+  def decodeAndSaveFudaSets(context:Context,str:String,insertOrUpdate:Boolean):Int = {
     var success = 0
     for(s <- str.split("\n")){
       try {
         val Array(b64,title) = s.split(" ",2)
         val nl = byteArrayToBitSet(Base64.decode(b64,Base64.URL_SAFE))
-        TrieUtils.makeKimarijiSetFromNumList(nl.stream.toArray).exists{
+        TrieUtils.makeKimarijiSetFromNumList(nl.stream.toArray).foreach{
           case (kimari,st_size) =>
-            Utils.writeFudaSetToDB(context,title,kimari,st_size)
+            if(Utils.writeFudaSetToDB(context,title,kimari,st_size,insertOrUpdate=insertOrUpdate)){
+              success += 1
+            }
         }
-        success += 1
       } catch {
         case e:Exception =>
           // do nothing

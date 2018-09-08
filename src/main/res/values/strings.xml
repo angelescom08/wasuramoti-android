@@ -365,6 +365,7 @@
   <string name="fudaset_transfer_failed_clipboard">Clipboard Access Failed</string>
   <string name="fudaset_transfer_failed_decode">Poem Set Decode Failed</string>
   <string name="fudaset_transfer_failed_encode">Poem Set Encode Failed</string>
+  <string name="fudaset_transfer_overwrite">Overwrite poem set which has same title</string>
   <string name="fudaset_transfer_description_html">
     <![CDATA[
     <h4>What is This?</h4>

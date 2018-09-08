@@ -558,7 +558,7 @@ object Utils {
     }
   }
   // return true if succeed
-  def writeFudaSetToDB(context:Context,title:String,kimari:String,st_size:Int,orig_title:Option[String]=None):Boolean = Globals.db_lock.synchronized{
+  def writeFudaSetToDB(context:Context,title:String,kimari:String,st_size:Int,orig_title:Option[String]=None,insertOrUpdate:Boolean=false):Boolean = Globals.db_lock.synchronized{
     val cv = new ContentValues()
     val db = Globals.database.get.getWritableDatabase
     cv.put("title",title)
@@ -572,7 +572,16 @@ object Utils {
         val max_order = cursor.getInt(0)
         cursor.close
         cv.put("set_order",new java.lang.Integer(max_order+1))
-        db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
+        if (!insertOrUpdate) {
+          db.insert(Globals.TABLE_FUDASETS,null,cv) != -1
+        } else {
+          val id = db.insertWithOnConflict(Globals.TABLE_FUDASETS,null,cv,SQLiteDatabase.CONFLICT_IGNORE)
+          if (id == -1){
+            db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(title)) > 0
+          } else {
+            true
+          }
+        }
       case Some(orig) =>
         // Update
         db.update(Globals.TABLE_FUDASETS,cv,"title = ?",Array(orig)) > 0
