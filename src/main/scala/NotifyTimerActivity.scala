@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager,NotificationChannel}
 import android.media.{AudioManager,RingtoneManager,Ringtone}
-import android.os.{Bundle,Vibrator}
+import android.os.{Bundle,Vibrator,Handler}
 import android.net.Uri
 import android.view.{View,LayoutInflater}
 import android.content.{Intent,Context,BroadcastReceiver}
@@ -263,6 +263,7 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
 
 
 class NotifyTimerReceiver extends BroadcastReceiver {
+  val handler = new Handler
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
       if (NotifyTimerUtils.notify_manager.isEmpty) {
@@ -300,12 +301,20 @@ class NotifyTimerReceiver extends BroadcastReceiver {
         .setContentIntent(pending_intent)
       if(!Globals.is_playing){
         if(extras.getBoolean("play_sound")){
-          val stream_type = AudioManager.STREAM_NOTIFICATION
-          val sound = extras.get("sound_uri").asInstanceOf[Uri]
-          if(sound == null){
-            notif.setDefaults(Notification.DEFAULT_SOUND)
+          // Starting with API >= 26, notification sound seems to be managed by NotificationChannel#setSound(), and NotificationCompat.Builder#setSound is not working anymore.
+          // Since it can register one sound per channel, and cannot change after createNotificationChannel,
+          // we have to manage multiple channel if we want to play sound via notification.
+          // Therefore, we give up using notification sound, and use RingtoneManager instead.
+          val sound = Option(extras.get("sound_uri").asInstanceOf[Uri]).getOrElse(Settings.System.DEFAULT_NOTIFICATION_URI)
+          Option(RingtoneManager.getRingtone(context, sound)).foreach{r=>
+            r.setStreamType(AudioManager.STREAM_NOTIFICATION)
+            r.play
+            handler.postDelayed(new Runnable{
+              override def run(){
+                r.stop
+              }
+            }, 40*1000)
           }
-          notif.setSound(sound,stream_type)
         }
         if(extras.getBoolean("do_vibrate")){
           // using `notif.defaults |= Notification.DEFAULT_VIBRATE' does not work when RINGER_MODE_SILENT
