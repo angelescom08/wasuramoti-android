@@ -291,7 +291,7 @@ class WasuramotiActivity extends AppCompatActivity
     getSupportActionBar.setHomeButtonEnabled(true)
     if(Globals.IS_DEBUG){
       setTitle(getResources().getString(R.string.app_name) + " DEBUG")
-      val layout = getWindow.getDecorView.findViewWithTag("main_linear_layout").asInstanceOf[LinearLayout]
+      val layout = getWindow.getDecorView.findViewWithTag[LinearLayout]("main_linear_layout")
       val view = new TextView(this)
       view.setTag("main_debug_info")
       view.setContentDescription("MainDebugInfo")
@@ -756,7 +756,7 @@ trait ActivityDebugTrait{
   self:WasuramotiActivity =>
   def showBottomInfo(key:String,value:String){
     if(Globals.IS_DEBUG){
-      val btn = getWindow.getDecorView.findViewWithTag("main_debug_info").asInstanceOf[TextView]
+      val btn = getWindow.getDecorView.findViewWithTag[TextView]("main_debug_info")
       val txt = (btn.getText.toString.split(";").map{_.split("=")}.collect{
         case Array(k,v)=>(k,v)
       }.toMap + ((key,value))).collect{case (k,v)=>k+"="+v}.mkString(";")

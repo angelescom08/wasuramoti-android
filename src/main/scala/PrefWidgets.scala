@@ -125,7 +125,7 @@ class JokaOrderPreferenceFragment extends PreferenceDialogFragmentCompat {
     // getDialog() returns null on onDialogClosed(), so we save view
     root_view = Some(view)
     for( t <- pref.getPersistedString(DEFAULT_VALUE).split(",")){
-      view.findViewWithTag(t).asInstanceOf[RadioButton].toggle()
+      view.findViewWithTag[RadioButton](t).toggle()
     }
     val enable = view.findViewById[CheckBox](R.id.joka_enable)
     enable.setChecked(Globals.prefs.get.getBoolean("joka_enable",true))

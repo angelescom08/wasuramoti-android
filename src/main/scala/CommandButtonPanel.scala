@@ -56,7 +56,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     if(btnlist != null){
       for(t<-Array("AUTHOR","KAMI","SIMO","FURIGANA")){
         val tag = CommandButtonPanel.PREFIX_DISPLAY + "_" + t
-        val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
+        val b = btnlist.findViewWithTag[Button](tag)
         if(b != null){
           b.setEnabled(force.getOrElse(t,enabled && haveToEnableDisplayButton(tag)))
           val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
@@ -69,7 +69,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     val btnlist = getActivity.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     if(btnlist != null){
       val tag = CommandButtonPanel.PREFIX_MEMORIZE + "_SWITCH"
-      val b = btnlist.findViewWithTag(tag).asInstanceOf[Button]
+      val b = btnlist.findViewWithTag[Button](tag)
       if(b != null){
         val img = getResources.getDrawable(Utils.getButtonDrawableId(getCurYomiInfoView,tag))
         b.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null)
@@ -97,7 +97,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
     val tag = CommandButtonPanel.PREFIX_SWITCH+"_MODE"
     val btnlist = getActivity.findViewById[CommandButtonList](R.id.yomi_info_button_list)
     if(btnlist != null){
-      val btn = btnlist.findViewWithTag(tag).asInstanceOf[Button]
+      val btn = btnlist.findViewWithTag[Button](tag)
       if(btn != null){
         btn.setText(getSwitchModeButtonText(tag,torifuda_mode))
       }

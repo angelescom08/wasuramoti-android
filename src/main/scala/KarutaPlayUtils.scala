@@ -395,7 +395,7 @@ object KarutaPlayUtils{
     val btn = Option(activity.findViewById[View](button_id))
     .orElse(
       Option(activity.findViewById[View](R.id.command_button_fragment)).flatMap( x=>
-        Option(x.findViewWithTag(button_tag))
+        Option(x.findViewWithTag[View](button_tag))
       ))
     btn.foreach{ b =>
       activity.runOnUiThread(new Runnable(){

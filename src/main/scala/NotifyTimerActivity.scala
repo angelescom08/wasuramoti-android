@@ -95,7 +95,7 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
     if(resultCode == Activity.RESULT_OK){
       val uri:Uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
       if(uri != null){
-        val item = findViewById[LinearLayout](R.id.notify_timer_linear).findViewWithTag(Map("timer_id"->requestCode))
+        val item = findViewById[LinearLayout](R.id.notify_timer_linear).findViewWithTag[View](Map("timer_id"->requestCode))
         setTimerUri(item,uri)
       }
     }

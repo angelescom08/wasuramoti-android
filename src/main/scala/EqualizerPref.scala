@@ -36,7 +36,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
       Some(for( i <- 0 until nb ) yield {
         // since the timing of number_of_bands is set and setAllSeekbar differs,
         // there might be a case that we cannot find seekbar which corresponds to band number
-        Option(view.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]).flatMap{ seek =>
+        Option(view.findViewWithTag[SeekBar]("equalizer_"+i.toString)).flatMap{ seek =>
           val half = seek.getMax / 2
           val prog = seek.getProgress
           if(prog >= half - 2 && prog <= half + 2){
@@ -57,7 +57,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
   def setAllSeekbar(x:Int){
     number_of_bands.foreach{ n =>
       for(i <- 0 until n){
-        val seek = root_view.get.findViewWithTag("equalizer_"+i.toString).asInstanceOf[SeekBar]
+        val seek = root_view.get.findViewWithTag[SeekBar]("equalizer_"+i.toString)
         seek.setProgress(x)
       }
     }
@@ -72,7 +72,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     val rst = view.findViewById[Button](R.id.equalizer_reset)
     rst.setOnClickListener(new View.OnClickListener(){
       override def onClick(v:View){
-        val s = view.findViewWithTag("equalizer_all").asInstanceOf[SeekBar]
+        val s = view.findViewWithTag[SeekBar]("equalizer_all")
         setAllSeekbar(s.getMax/2)
       }
     })

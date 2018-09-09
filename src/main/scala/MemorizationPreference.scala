@@ -67,10 +67,10 @@ class MemorizationPreferenceFragment extends PreferenceDialogFragmentCompat with
   }
   def setMemCountAll(){
     root_view.foreach{rv =>
-      Option(rv.findViewWithTag(TAG_PANEL_FUDASET)).foreach{ panel =>
+      Option(rv.findViewWithTag[View](TAG_PANEL_FUDASET)).foreach{ panel =>
         setMemCount(panel,true)
       }
-      Option(rv.findViewWithTag(TAG_PANEL_ALL)).foreach{ panel =>
+      Option(rv.findViewWithTag[View](TAG_PANEL_ALL)).foreach{ panel =>
         setMemCount(panel,false)
       }
     }
