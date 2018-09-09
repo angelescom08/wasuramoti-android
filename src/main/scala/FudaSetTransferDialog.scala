@@ -94,7 +94,7 @@ object FudaSetTransferHelper {
       try {
         val Array(b64,title) = s.split(" ",2)
         val nl = byteArrayToBitSet(Base64.decode(b64,Base64.URL_SAFE))
-        TrieUtils.makeKimarijiSetFromNumList(nl.stream.toArray).foreach{
+        TrieUtils.makeKimarijiSetFromNumList(bitSetToIntArray(nl)).foreach{
           case (kimari,st_size) =>
             if(Utils.writeFudaSetToDB(context,title,kimari,st_size,insertOrUpdate=insertOrUpdate)){
               success += 1
@@ -122,6 +122,15 @@ object FudaSetTransferHelper {
       return bitSetToByteArrayForAPI18(bs)
     }
   }
+
+  def bitSetToIntArray(bs:BitSet):Array[Int] = {
+    if(android.os.Build.VERSION.SDK_INT >= 24){
+      return bs.stream.toArray
+    }else{
+      return bitSetToIntArrayForAPI23(bs)
+    }
+  }
+
   def byteArrayToBitSetForAPI18(ar:Array[Byte]):BitSet = {
     val bs = new BitSet
     for (i <- 0 until ar.length*8) {
@@ -141,6 +150,10 @@ object FudaSetTransferHelper {
       }
     }
     return ar
+  }
+
+  def bitSetToIntArrayForAPI23(bs:BitSet):Array[Int] = {
+    (0 until bs.length).filter(bs.get(_)).toArray
   }
 
 }

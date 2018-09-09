@@ -118,6 +118,9 @@ class MainTest extends JUnitSuite with Matchers {
       val ar1 = bs1.toByteArray()
       val ar2 = FudaSetTransferHelper.bitSetToByteArrayForAPI18(bs1)
       ar1 shouldBe ar2
+      val ia1 = bs1.stream.toArray()
+      val ia2 = FudaSetTransferHelper.bitSetToIntArrayForAPI23(bs1)
+      ia1 shouldBe ia2
     }
     doIt(Array[Byte](182.toByte,119.toByte,156.toByte,227.toByte))
 
