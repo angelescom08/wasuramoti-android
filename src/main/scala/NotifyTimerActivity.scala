@@ -19,7 +19,7 @@ import java.util.Date
 import scala.collection.mutable
 
 object NotifyTimerUtils {
-  val NOTIFICATION_CHANNEL_ID = "channel_timer"
+  val NOTIFICATION_CHANNEL_ID = "wasuramoti_mem_timer"
   val notify_timers = new mutable.HashMap[Int,Intent]()
   var alarm_manager = None:Option[AlarmManager]
   var notify_manager = None:Option[NotificationManager]
@@ -275,6 +275,9 @@ class NotifyTimerReceiver extends BroadcastReceiver {
             val channel = new NotificationChannel(NotifyTimerUtils.NOTIFICATION_CHANNEL_ID,
               "Wasuramoti Timer", NotificationManager.IMPORTANCE_DEFAULT)
             channel.setDescription("Wasuramoti timer for memorization time")
+            // Disable Sound
+            //  https://stackoverflow.com/questions/45919392/disable-sound-from-notificationchannel
+            channel.setSound(null,null)
             manager.createNotificationChannel(channel)
           }
         }
