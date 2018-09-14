@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="Wasuramoti.PrefTheme.Light" parent="PreferenceFixTheme.Light">
+  <style name="Wasuramoti.PrefTheme.White" parent="PreferenceFixTheme.Light">
     <item name="textAllCaps">false</item>
     <!-- drawables -->
-    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_light</item>
-    <item name="mainButtonDrawable">@drawable/main_button_light</item>
-    <item name="roundBorderDrawable">@drawable/round_border_light</item>
-    <item name="tableCellDrawable">@drawable/table_cell_light</item>
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_theme_white</item>
+    <item name="mainButtonDrawable">@drawable/main_button_theme_white</item>
+    <item name="roundBorderDrawable">@drawable/round_border_theme_white</item>
+    <item name="tableCellDrawable">@drawable/table_cell_theme_white</item>
     <item name="settingsIconDrawable">@drawable/light_ic_action_settings</item>
     <!-- our custom attributes -->
-    <item name="themeName">Wasuramoti.PrefTheme.Light</item>
+    <item name="themeName">Wasuramoti.PrefTheme.White</item>
     <item name="generalBackgroundColor">#ffffff</item>
     <item name="generalTextColor">#000000</item>
     <item name="horizontalRuleColor">#cccccc</item>
@@ -51,5 +51,6 @@
     <item name="howToAddSubColor">#4f4f00</item>
     <item name="cautionMessageColor">#4f4f00</item>
     <item name="poemDescColor">#808000</item>
+
   </style>
 </resources>

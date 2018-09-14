@@ -279,7 +279,7 @@ class WasuramotiActivity extends AppCompatActivity
     OpenSLESPlayer.loadLibrary(getApplicationContext)
 
     if(Globals.prefs.get.getBoolean("light_theme", false)){
-      setTheme(R.style.Wasuramoti_MainTheme_Light)
+      setTheme(R.style.Wasuramoti_MainTheme_White)
     }
 
     setContentView(R.layout.main_activity)

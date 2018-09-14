@@ -6,34 +6,18 @@
 from subprocess import check_output
 from pathlib import Path
 import xml.etree.ElementTree as ET
+import yaml
 
 ROOT_DIR = str(check_output("git rev-parse --show-toplevel", shell=True), 'utf-8').rstrip()
-STYLES_DIR = 'src/main/res/values'
 DRAWABLE_DIR = 'src/main/res/drawable'
 
-STYLE_SUFFIX = {
-    'Wasuramoti.MainTheme': 'dark',
-    'Wasuramoti.MainTheme.Light': 'light'
-    }
-
-def parseStyle(fn, res):
-  tree = ET.parse(fn)
-  for style in tree.getroot().findall('./style'):
-    suffix = STYLE_SUFFIX.get(style.attrib['name'])
-    if not suffix:
-      continue
-    for item in style.findall('./item'):
-      res[suffix][item.attrib['name']] = item.text
-
 def aggregateStyles():
-  path = Path(ROOT_DIR, STYLES_DIR)
-  res = {}
-  for v in STYLE_SUFFIX.values():
-    res[v] = {}
-  for fn in path.glob('styles*.xml'):
-    parseStyle(fn, res)
-  return res
-
+  styles = {}
+  for fn in Path('./theme/').glob('*.yml'):
+    with open(fn) as f:
+      style = yaml.load(f)
+      styles[style['key']] = style['colors']
+  return styles
 
 def replaceAttr(table, tree):
   replaced = False
@@ -52,10 +36,10 @@ def main():
   styles = aggregateStyles()
   path = Path(ROOT_DIR, DRAWABLE_DIR)
   for fn in path.glob('*.xml'):
-    if any(fn.name.endswith('_' + theme + '.xml') for theme in styles):
+    if any(fn.name.endswith('_theme_' + theme + '.xml') for theme in styles):
       continue
     for theme, table in styles.items():
-      postfix = '_' + theme + '.xml'
+      postfix = '_theme_' + theme + '.xml'
       tree = ET.parse(fn)
       if not replaceAttr(table, tree.getroot()):
         continue

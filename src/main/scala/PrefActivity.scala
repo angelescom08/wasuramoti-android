@@ -215,9 +215,9 @@ object PrefUtils {
 
   def switchPrefTheme():Int = {
     if(Globals.prefs.get.getBoolean("light_theme", false)){
-      R.style.Wasuramoti_PrefTheme_Light
+      R.style.Wasuramoti_PrefTheme_White
     }else{
-      R.style.Wasuramoti_PrefTheme
+      R.style.Wasuramoti_PrefTheme_Black
     }
   }
 

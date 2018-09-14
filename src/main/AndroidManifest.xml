@@ -6,7 +6,7 @@ android:versionName="1.1.6" android:versionCode="90" >
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="26" ></uses-sdk>
     <application
       android:icon="@drawable/eto_hitsuji_otoshidama"
-      android:theme="@style/Wasuramoti.MainTheme"
+      android:theme="@style/Wasuramoti.MainTheme.Black"
       android:label="@string/app_name"
       android:hardwareAccelerated="true"
       android:resizeableActivity="true"
@@ -15,7 +15,7 @@ android:versionName="1.1.6" android:versionCode="90" >
         <!-- In order to use startActivityForResult, launchMode must not be set to singleInstance -->
         <activity 
           android:name=".WasuramotiActivity" 
-          android:theme="@style/Wasuramoti.MainTheme"
+          android:theme="@style/Wasuramoti.MainTheme.Black"
           android:launchMode="singleTask" 
           android:configChanges="keyboardHidden"
           android:label="@string/app_name"
@@ -33,13 +33,13 @@ android:versionName="1.1.6" android:versionCode="90" >
         </activity>
         <activity
           android:name=".PrefActivity"
-          android:theme="@style/Wasuramoti.PrefTheme"
+          android:theme="@style/Wasuramoti.PrefTheme.Black"
           android:launchMode="singleTop"
           android:configChanges="keyboardHidden"
           />
         <activity
           android:name=".NotifyTimerActivity"
-          android:theme="@style/Wasuramoti.MainTheme"
+          android:theme="@style/Wasuramoti.MainTheme.Black"
           android:launchMode="singleTop"
           android:configChanges="keyboardHidden"
           android:windowSoftInputMode="stateHidden"

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="Wasuramoti.PrefTheme" parent="PreferenceFixTheme">
+  <style name="Wasuramoti.PrefTheme.Black" parent="PreferenceFixTheme">
     <item name="textAllCaps">false</item>
     <!-- drawables -->
-    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_dark</item>
-    <item name="mainButtonDrawable">@drawable/main_button_dark</item>
-    <item name="roundBorderDrawable">@drawable/round_border_dark</item>
-    <item name="tableCellDrawable">@drawable/table_cell_dark</item>
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_theme_black</item>
+    <item name="mainButtonDrawable">@drawable/main_button_theme_black</item>
+    <item name="roundBorderDrawable">@drawable/round_border_theme_black</item>
+    <item name="tableCellDrawable">@drawable/table_cell_theme_black</item>
     <item name="settingsIconDrawable">@drawable/ic_action_settings</item>
     <!-- our custom attributes -->
-    <item name="themeName">Wasuramoti.PrefTheme</item>
+    <item name="themeName">Wasuramoti.PrefTheme.Black</item>
     <item name="generalBackgroundColor">#000000</item>
     <item name="generalTextColor">#ffffff</item>
     <item name="horizontalRuleColor">#444444</item>
