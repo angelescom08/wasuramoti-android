@@ -121,6 +121,12 @@
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_misc">
+        <karuta.hpnpwd.wasuramoti.ColorThemePreference
+          android:key="color_theme"
+          android:title="@string/conf_color_theme"
+          android:summary="@string/conf_color_theme_summary"
+          android:widgetLayout="@layout/conf_current_value"
+          />
         <CheckBoxPreference
           android:key="light_theme"
           android:title="@string/conf_light_theme"

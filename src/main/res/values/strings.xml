@@ -323,6 +323,17 @@
   <string name="conf_show_current_index_summary">Show how many number of poem played from the beginning.</string>
   <string name="conf_light_theme">Light Theme</string>
   <string name="conf_light_theme_summary">White background and black text.</string>
+  <string name="conf_color_theme">Color Theme</string>
+  <string name="conf_color_theme_summary">Change background and text color</string>
+  <!-- COLOR_THEME -->
+  <string name="color_theme_black">Black</string>
+  <string name="color_theme_white">White</string>
+  <string name="color_theme_spring">Spring</string>
+  <string name="color_theme_summer">Summer</string>
+  <string name="color_theme_autumn">Autumn</string>
+  <string name="color_theme_winter">Winter</string>
+  <string name="color_theme_love">Love</string>
+
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">Time</string>

@@ -7,10 +7,10 @@
     <item name="actionBarStyle">@style/Wasuramoti.ActionBar.${name}</item>
     <item name="textAllCaps">false</item>
     <!-- drawables -->
-    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_theme_${key}</item>
-    <item name="mainButtonDrawable">@drawable/main_button_theme_${key}</item>
-    <item name="roundBorderDrawable">@drawable/round_border_theme_${key}</item>
-    <item name="tableCellDrawable">@drawable/table_cell_theme_${key}</item>
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_theme_${tag}</item>
+    <item name="mainButtonDrawable">@drawable/main_button_theme_${tag}</item>
+    <item name="roundBorderDrawable">@drawable/round_border_theme_${tag}</item>
+    <item name="tableCellDrawable">@drawable/table_cell_theme_${tag}</item>
     <item name="settingsIconDrawable">@drawable/${actionSettingsIcon}</item>
     <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.MainTheme.${name}</item>

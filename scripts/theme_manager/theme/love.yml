@@ -1,6 +1,6 @@
-name: Black
-tag: black
-isLight: false
+name: Love
+tag: love
+isLight: true
 colors:
   generalBackgroundColor: "#000000"
   generalTextColor: "#ffffff"

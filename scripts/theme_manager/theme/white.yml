@@ -1,5 +1,5 @@
 name: White
-key: white
+tag: white
 isLight: true
 colors:
   generalBackgroundColor: "#ffffff"

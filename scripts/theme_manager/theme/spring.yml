@@ -1,6 +1,6 @@
-name: Black
-tag: black
-isLight: false
+name: Spring
+tag: spring
+isLight: true
 colors:
   generalBackgroundColor: "#000000"
   generalTextColor: "#ffffff"

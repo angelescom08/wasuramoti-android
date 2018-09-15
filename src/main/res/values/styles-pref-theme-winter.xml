@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Wasuramoti.PrefTheme.Winter" parent="PreferenceFixTheme">
+    <item name="textAllCaps">false</item>
+    <!-- drawables -->
+    <item name="actionbarShapeDrawable">@drawable/actionbar_shape_theme_winter</item>
+    <item name="mainButtonDrawable">@drawable/main_button_theme_winter</item>
+    <item name="roundBorderDrawable">@drawable/round_border_theme_winter</item>
+    <item name="tableCellDrawable">@drawable/table_cell_theme_winter</item>
+    <item name="settingsIconDrawable">@drawable/ic_action_settings</item>
+    <!-- our custom attributes -->
+    <item name="themeName">Wasuramoti.PrefTheme.Winter</item>
+    <item name="generalBackgroundColor">#000000</item>
+    <item name="generalTextColor">#ffffff</item>
+    <item name="horizontalRuleColor">#444444</item>
+    <item name="mailAddrColor">#00ffff</item>
+    <item name="confCurrentValueColor">#ffa500</item>
+    <item name="generalRadioDialogItemColor">#ff9900</item>
+    <item name="memoPanelTitleColor">#ffff00</item>
+    <item name="memoCountColor">#99ff99</item>
+    <item name="memoNotCountColor">#ff9999</item>
+    <item name="searchItemSubColor">#b0e0e6</item>
+    <item name="readOrderEachItemColor">#ff9900</item>
+    <item name="moveSearchNotFoundColor">#cccccc</item>
+    <item name="mainActivityBorderColor">#222222</item>
+    <item name="actionBarDividerColor">#33b5e5</item>
+    <item name="actionBarPrimaryTextColor">#33b5e5</item>
+    <item name="actionBarPoemNumColor">#ffffff</item>
+    <item name="poemTextMainColor">#ffffff</item>
+    <item name="poemTextFuriganaColor">#c7effb</item>
+    <item name="kimarijiPrimaryColor">#90ee90</item>
+    <item name="kimarijiSecondaryColor">#f0ffff</item>
+    <item name="kimarijiTertiaryColor">#555555</item>
+    <item name="tableCellBorderColor">#999999</item>
+    <item name="mainButtonPressedColor">#222222</item>
+    <item name="roundBorderBackgroundColor">#222222</item>
+    <item name="roundBorderColor">#9B59B6</item>
+    <item name="torifudaEdgeColor">#002a11</item>
+    <item name="scanReaderListColor">#ffff00</item>
+    <item name="decodeTestOkColor">#ffffff</item>
+    <item name="decodeTestErrorColor">#ffff00</item>
+    <item name="reorderBarActiveColor">#00ffff</item>
+    <item name="reorderBarDefaultColor">#444444</item>
+    <item name="reorderTextActiveColor">#888888</item>
+    <item name="reorderTextDefaultColor">#a52a2a</item>
+    <item name="intendedUseValueColor">#ffff00</item>
+    <item name="creditSpecialColor">#ffff99</item>
+    <item name="kimarijiLogMainColor">#09ee90</item>
+    <item name="kimarijiLogSubColor">#ee90ee</item>
+    <item name="howToAddMainColor">#ffff00</item>
+    <item name="howToAddSubColor">#ffff00</item>
+    <item name="cautionMessageColor">#ccffff</item>
+    <item name="poemDescColor">#66cc99</item>
+
+  </style>
+</resources>

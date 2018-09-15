@@ -164,7 +164,6 @@ class JokaOrderPreference(context:Context,attrs:AttributeSet) extends DialogPref
   }
 }
 
-
 class AutoPlayPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
   def getWidgets(view:View) = {

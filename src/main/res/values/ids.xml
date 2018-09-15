@@ -20,6 +20,15 @@
   <item type="id" name="intended_use_study" />
   <item type="id" name="intended_use_shimonoku" />
 
+  <!-- color_theme -->
+  <item type="id" name="color_theme_black" />
+  <item type="id" name="color_theme_white" />
+  <item type="id" name="color_theme_spring" />
+  <item type="id" name="color_theme_summer" />
+  <item type="id" name="color_theme_autumn" />
+  <item type="id" name="color_theme_winter" />
+  <item type="id" name="color_theme_love" />
+
   <!-- iGeneralRadioHelper -->
   <item type="id" name="general_radio_helper_1" />
   <item type="id" name="general_radio_helper_2" />

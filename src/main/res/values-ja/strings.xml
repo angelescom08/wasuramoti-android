@@ -284,6 +284,17 @@
   <string name="conf_show_current_index_summary">次に詠まれる札が何首目なのかを表示</string>
   <string name="conf_light_theme">明るいテーマ</string>
   <string name="conf_light_theme_summary">背景を白色に，文字を黒色にする</string>
+  <string name="conf_color_theme">色テーマ</string>
+  <string name="conf_color_theme_summary">背景色や文字色などを変更</string>
+  <!-- COLOR_THEME -->
+  <string name="color_theme_black">黒</string>
+  <string name="color_theme_white">白</string>
+  <string name="color_theme_spring">春</string>
+  <string name="color_theme_summer">夏</string>
+  <string name="color_theme_autumn">秋</string>
+  <string name="color_theme_winter">冬</string>
+  <string name="color_theme_love">恋</string>
+
 
   <!-- CATEGORY_TIME -->
   <string name="category_time">時間</string>
