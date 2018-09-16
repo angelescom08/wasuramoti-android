@@ -1,0 +1,21 @@
+<!doctype html>
+<title>Wasuramoti Theme Editor: {{ name }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script>
+  $(document).ready(function(){
+    $('#save').on('click',function(){
+      data = $('form').serialize()
+      $.post(location.href+'/save', data, function(){
+        alert('saved')
+      })
+    })
+  })
+</script>
+<a href='/'>[TOP]</a>
+<h3>Theme: {{ name }}</h3>
+<button id='save'>Save</button>
+<form id='colors'>
+  {% for k,v in colors.items() %}
+  <div>{{ k }}: <input type='color' name='{{k}}' value='{{v}}'></div>
+  {% endfor %}
+</form>

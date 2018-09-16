@@ -43,7 +43,6 @@ colors:
   howToAddSubColor: "#ffff00"
   cautionMessageColor: "#ccffff"
   poemDescColor: "#66cc99"
-  android:textColor: "#cccccc"
   generalBackgroundColor: "#000000"
   generalTextColor: "#ffffff"
   horizontalRuleColor: "#444444"
