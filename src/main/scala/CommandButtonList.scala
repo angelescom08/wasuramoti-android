@@ -25,7 +25,7 @@ class CommandButtonList(context:Context,attrs:AttributeSet) extends LinearLayout
     button.setText(text)
     button.setEnabled(enabled)
     // TODO: we should use Theme#resolveAttribute to get the drawable of theme instead of switching by isLight
-    val isLight = Globals.prefs.get.getBoolean("light_theme", false)
+    val isLight = ColorThemeHelper.isLight
     val drawable = tag.split("_").head match{
       case PREFIX_REWIND => 
         if(isLight){

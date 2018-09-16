@@ -39,7 +39,7 @@ object Globals {
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
   val DATABASE_VERSION = 6
-  val PREFERENCE_VERSION = 8
+  val PREFERENCE_VERSION = 9
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"
   val CACHE_SUFFIX_OGG = "_copied.ogg"
@@ -221,6 +221,15 @@ object Utils {
             edit.putBoolean("joka_enable",false)
             edit.putString("read_order_joka","upper_1,lower_1")
           }
+        }
+
+        if(prev_version > 0 && prev_version < 9){
+          if(pref.getBoolean("light_theme", false)){
+            edit.putString("color_theme","white")
+          }else{
+            edit.putString("color_theme","black")
+          }
+          edit.remove("light_theme")
         }
 
         // remove obsolete preferences
@@ -595,7 +604,7 @@ object Utils {
   }
   def getButtonDrawableId(yiv:Option[YomiInfoView],tag:String):Int = {
     // TODO: we should use Theme#resolveAttribute to get the drawable of theme instead of switching by isLight
-    val isLight = Globals.prefs.get.getBoolean("light_theme", false)
+    val isLight = ColorThemeHelper.isLight
     val Array(prefix,postfix) = tag.split("_")
     val is_mem = prefix == CommandButtonPanel.PREFIX_MEMORIZE
     val (ic_on,ic_off) = if(is_mem){

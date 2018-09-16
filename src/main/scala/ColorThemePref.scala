@@ -73,4 +73,10 @@ object ColorThemeHelper {
   def get(tag:String):ColorTheme = {
     themesMap.getOrElse(tag,defaultTheme)
   }
+  def getFromPref():ColorTheme = {
+    get(Globals.prefs.map(_.getString("color_theme",defaultTheme.tag)).getOrElse(defaultTheme.tag))
+  }
+  def isLight():Boolean = {
+    getFromPref.isLight
+  }
 }

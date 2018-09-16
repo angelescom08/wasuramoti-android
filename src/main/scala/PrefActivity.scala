@@ -21,7 +21,7 @@ class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
   override def onCreate(state:Bundle){
     super.onCreate(state)
     Utils.initGlobals(getApplicationContext())
-    setTheme(PrefUtils.switchPrefTheme)
+    setTheme(ColorThemeHelper.getFromPref.prefStyleId)
     setContentView(R.layout.pref_activity)
     val pinfo = getPackageManager().getPackageInfo(getPackageName(), 0)
     setTitle(getResources().getString(R.string.app_name) + " ver " + pinfo.versionName)
@@ -117,7 +117,7 @@ class PrefFragment extends PreferenceFragmentCompat
       case "read_order" =>
         FudaListHelper.shuffleAndMoveToFirst(context)
         Globals.forceRefreshPlayer = true
-      case "light_theme" =>
+      case "color_theme" =>
         Globals.forceRestart = true
       case _ =>
     }
@@ -214,16 +214,8 @@ object PrefUtils {
       })
   }
 
-  def switchPrefTheme():Int = {
-    if(Globals.prefs.get.getBoolean("light_theme", false)){
-      R.style.Wasuramoti_PrefTheme_White
-    }else{
-      R.style.Wasuramoti_PrefTheme_Black
-    }
-  }
-
   def switchFullDialogTheme():Int = {
-    if(Globals.prefs.get.getBoolean("light_theme", false)){
+    if(ColorThemeHelper.isLight){
       android.R.style.Theme_Light_NoTitleBar_Fullscreen
     }else{
       android.R.style.Theme_Black_NoTitleBar_Fullscreen

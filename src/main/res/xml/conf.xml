@@ -127,12 +127,6 @@
           android:summary="@string/conf_color_theme_summary"
           android:widgetLayout="@layout/conf_current_value"
           />
-        <CheckBoxPreference
-          android:key="light_theme"
-          android:title="@string/conf_light_theme"
-          android:summary="@string/conf_light_theme_summary"
-          android:defaultValue="false"
-          />
         <karuta.hpnpwd.wasuramoti.EqualizerPreference
           android:key="effect_equalizer_seq"
           android:title="@string/conf_equalizer"

@@ -321,8 +321,6 @@
   <string name="message_when_moved">Moved to next poem</string>
   <string name="conf_show_current_index">Show Number</string>
   <string name="conf_show_current_index_summary">Show how many number of poem played from the beginning.</string>
-  <string name="conf_light_theme">Light Theme</string>
-  <string name="conf_light_theme_summary">White background and black text.</string>
   <string name="conf_color_theme">Color Theme</string>
   <string name="conf_color_theme_summary">Change background and text color</string>
   <!-- COLOR_THEME -->
