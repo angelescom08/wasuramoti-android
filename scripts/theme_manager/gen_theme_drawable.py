@@ -36,9 +36,9 @@ def main():
   styles = aggregateStyles()
   path = Path(ROOT_DIR, DRAWABLE_DIR)
   for fn in path.glob('*.xml'):
-    if any(fn.name.endswith('_theme_' + theme + '.xml') for theme in styles):
-      print("skipping: {}".format(fn))
-      continue
+    #if any(fn.name.endswith('_theme_' + theme + '.xml') for theme in styles):
+    #  print("skipping: {}".format(fn))
+    #  continue
     for theme, table in styles.items():
       postfix = '_theme_' + theme + '.xml'
       tree = ET.parse(fn)

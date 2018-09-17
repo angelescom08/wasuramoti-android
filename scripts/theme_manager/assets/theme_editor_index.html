@@ -2,6 +2,66 @@
 <title>Wasuramoti Theme Editor: {{ name }}</title>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script>
+  function refreshMainWindow(){
+    var canvas = document.getElementById('main_window')
+    var ctx = canvas.getContext('2d')
+    // clear
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    // background
+    ctx.fillStyle = $('#generalBackgroundColor').val()
+    ctx.fillRect(0,0,canvas.width,canvas.height)
+    // main text
+    ctx.fillStyle = $('#poemTextMainColor').val()
+    ctx.font = '32px monospace'
+    ctx.fillText('Poem Text Main',30,170)
+    // furigana text
+    ctx.fillStyle = $('#poemTextFuriganaColor').val()
+    ctx.font = '24px monospace'
+    ctx.fillText('Poem Text Furigana',30,130)
+    // torifuda fill
+    ctx.fillStyle = $('#torifudaFillColor').val()
+    ctx.fillRect(20,200,250,80)
+    // torifuda edge
+    ctx.lineWidth = 12;
+    ctx.strokeStyle = $('#torifudaEdgeColor').val()
+    ctx.strokeRect(20,200,250,80)
+    // torifuda text
+    ctx.fillStyle = $('#poemTextMainColor').val()
+    ctx.font = '28px monospace'
+    ctx.fillText('Poem Text Main',50,250)
+    // action bar divider
+    ctx.lineWidth = 3
+    ctx.strokeStyle = $('#actionBarDividerColor').val()
+    ctx.beginPath()
+    ctx.moveTo(0,70)
+    ctx.lineTo(canvas.width,70)
+    ctx.stroke()
+    // action bar text
+    ctx.fillStyle = $('#actionBarPrimaryTextColor').val()
+    ctx.font = '24px monospace'
+    ctx.fillText('No:',25,50)
+    ctx.fillText('Kmrj:',105,50)
+    ctx.fillStyle = $('#actionBarPoemNumColor').val()
+    ctx.fillText('73',65,50)
+    ctx.fillStyle = $('#kimarijiPrimaryColor').val()
+    ctx.fillText('Mi',170,50)
+    ctx.fillStyle = $('#kimarijiSecondaryColor').val()
+    ctx.fillText('Ka',200,50)
+    ctx.fillStyle = $('#kimarijiTertiaryColor').val()
+    ctx.fillText('Ki',230,50)
+    // main button
+    ctx.lineWidth = 5
+    ctx.strokeStyle = $('#mainActivityBorderColor') .val()
+    ctx.beginPath()
+    ctx.moveTo(0,300)
+    ctx.lineTo(canvas.width,300)
+    ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(canvas.width/2,300)
+    ctx.lineTo(canvas.width/2,canvas.height)
+    ctx.stroke()
+
+  }
   $(document).ready(function(){
     $('#save').on('click',function(){
       data = $('form').serialize()
@@ -9,13 +69,23 @@
         alert('saved')
       })
     })
+    refreshMainWindow()
   })
 </script>
 <a href='/'>[TOP]</a>
 <h3>Theme: {{ name }}</h3>
 <button id='save'>Save</button>
-<form id='colors'>
-  {% for k,v in colors.items() %}
-  <div>{{ k }}: <input type='color' name='{{k}}' value='{{v}}'></div>
-  {% endfor %}
-</form>
+<table>
+  <tr>
+    <td>
+      <form id='colors'>
+        {% for k,v in colors.items() %}
+        <div>{{ k }}: <input type='color' id='{{k}}' name='{{k}}' value='{{v}}' onchange='refreshMainWindow()'></div>
+        {% endfor %}
+      </form>
+    </td>
+    <td style='vertical-align: top'>
+      <canvas id='main_window' width='300' height='500'></canvas>
+    </td>
+  </tr>
+</table>
