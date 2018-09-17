@@ -56,17 +56,17 @@ class ColorThemePreference(context:Context,attrs:AttributeSet) extends DialogPre
   }
 }
 
-case class ColorTheme(tag:String, isLight:Boolean, itemId:Int, textId:Int, styleId:Int, prefStyleId:Int)
+case class ColorTheme(tag:String, isLight:Boolean, fillTorifuda:Boolean, itemId:Int, textId:Int, styleId:Int, prefStyleId:Int)
 
 object ColorThemeHelper {
   val themes = Seq(
-    ColorTheme("black",false,R.id.color_theme_black,R.string.color_theme_black,R.style.Wasuramoti_MainTheme_Black,R.style.Wasuramoti_PrefTheme_Black),
-    ColorTheme("white",true,R.id.color_theme_white,R.string.color_theme_white,R.style.Wasuramoti_MainTheme_White,R.style.Wasuramoti_PrefTheme_White),
-    ColorTheme("spring",true,R.id.color_theme_spring,R.string.color_theme_spring,R.style.Wasuramoti_MainTheme_Spring,R.style.Wasuramoti_PrefTheme_Spring),
-    ColorTheme("summer",true,R.id.color_theme_summer,R.string.color_theme_summer,R.style.Wasuramoti_MainTheme_Summer,R.style.Wasuramoti_PrefTheme_Summer),
-    ColorTheme("autumn",false,R.id.color_theme_autumn,R.string.color_theme_autumn,R.style.Wasuramoti_MainTheme_Autumn,R.style.Wasuramoti_PrefTheme_Autumn),
-    ColorTheme("winter",false,R.id.color_theme_winter,R.string.color_theme_winter,R.style.Wasuramoti_MainTheme_Winter,R.style.Wasuramoti_PrefTheme_Winter),
-    ColorTheme("love",true,R.id.color_theme_love,R.string.color_theme_love,R.style.Wasuramoti_MainTheme_Love,R.style.Wasuramoti_PrefTheme_Love)
+    ColorTheme("black",false,false,R.id.color_theme_black,R.string.color_theme_black,R.style.Wasuramoti_MainTheme_Black,R.style.Wasuramoti_PrefTheme_Black),
+    ColorTheme("white",true,false,R.id.color_theme_white,R.string.color_theme_white,R.style.Wasuramoti_MainTheme_White,R.style.Wasuramoti_PrefTheme_White),
+    ColorTheme("spring",true,true,R.id.color_theme_spring,R.string.color_theme_spring,R.style.Wasuramoti_MainTheme_Spring,R.style.Wasuramoti_PrefTheme_Spring),
+    ColorTheme("summer",true,true,R.id.color_theme_summer,R.string.color_theme_summer,R.style.Wasuramoti_MainTheme_Summer,R.style.Wasuramoti_PrefTheme_Summer),
+    ColorTheme("autumn",false,true,R.id.color_theme_autumn,R.string.color_theme_autumn,R.style.Wasuramoti_MainTheme_Autumn,R.style.Wasuramoti_PrefTheme_Autumn),
+    ColorTheme("winter",false,true,R.id.color_theme_winter,R.string.color_theme_winter,R.style.Wasuramoti_MainTheme_Winter,R.style.Wasuramoti_PrefTheme_Winter),
+    ColorTheme("love",true,true,R.id.color_theme_love,R.string.color_theme_love,R.style.Wasuramoti_MainTheme_Love,R.style.Wasuramoti_PrefTheme_Love)
     )
   val themesMap = themes.map{t => (t.tag,t)}.toMap
   val defaultTheme = themes(0)

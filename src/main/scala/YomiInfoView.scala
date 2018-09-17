@@ -501,8 +501,6 @@ trait YomiInfoTorifudaTrait{
   val FUDA_EDGE_SIZE = 0.04
 
   val paint_edge = new Paint(Paint.ANTI_ALIAS_FLAG)
-  paint_edge.setColor(Utils.attrColor(self.context,R.attr.torifudaEdgeColor))
-  paint_edge.setStyle(Paint.Style.STROKE)
 
   def initTorifuda(){
     val font = Globals.prefs.get.getString("yomi_info_torifuda_font",YomiInfoUtils.DEFAULT_FONT)
@@ -510,12 +508,19 @@ trait YomiInfoTorifudaTrait{
   }
   def drawEdge(canvas:Canvas,frame:Rect){
     val edge_size = FUDA_EDGE_SIZE*(frame.bottom-frame.top)
-    paint_edge.setStrokeWidth(edge_size.toFloat)
     val edge_rect = new Rect(
       (frame.left + edge_size / 2).toInt,
       (frame.top + edge_size / 2).toInt,
       (frame.right - edge_size / 2).toInt,
       (frame.bottom - edge_size / 2).toInt)
+    if(ColorThemeHelper.getFromPref.fillTorifuda){
+      paint_edge.setStyle(Paint.Style.FILL)
+      paint_edge.setColor(Utils.attrColor(self.context,R.attr.torifudaFillColor))
+      canvas.drawRect(edge_rect,paint_edge)
+    }
+    paint_edge.setStyle(Paint.Style.STROKE)
+    paint_edge.setColor(Utils.attrColor(self.context,R.attr.torifudaEdgeColor))
+    paint_edge.setStrokeWidth(edge_size.toFloat)
     canvas.drawRect(edge_rect,paint_edge)
   }
   def calcFudaTextSize(paint:Paint,frame:Rect):Float ={

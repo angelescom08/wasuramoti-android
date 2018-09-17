@@ -36,6 +36,7 @@
     <item name="roundBorderBackgroundColor">#fffafa</item>
     <item name="roundBorderColor">#b0c4de</item>
     <item name="torifudaEdgeColor">#6b8e23</item>
+    <item name="torifudaFillColor">#ffffff</item>
     <item name="scanReaderListColor">#4f4f00</item>
     <item name="decodeTestOkColor">#000000</item>
     <item name="decodeTestErrorColor">#800080</item>

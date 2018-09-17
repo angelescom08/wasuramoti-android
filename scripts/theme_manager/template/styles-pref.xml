@@ -36,6 +36,7 @@
     <item name="roundBorderBackgroundColor">${roundBorderBackgroundColor}</item>
     <item name="roundBorderColor">${roundBorderColor}</item>
     <item name="torifudaEdgeColor">${torifudaEdgeColor}</item>
+    <item name="torifudaFillColor">${torifudaFillColor}</item>
     <item name="scanReaderListColor">${scanReaderListColor}</item>
     <item name="decodeTestOkColor">${decodeTestOkColor}</item>
     <item name="decodeTestErrorColor">${decodeTestErrorColor}</item>
