@@ -15,38 +15,40 @@
     android:tag="radio_text"
     >
     <TextView
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/conf_color_theme_background"
     />
     <View
       android:layout_width="20dp"
-      android:layout_height="match_parent"
+      android:layout_height="20dp"
       android:tag="color_theme_example_generalBackgroundColor"
     />
     <TextView
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/conf_color_theme_text"
+      android:paddingLeft="8dp"
     />
     <View
       android:layout_width="20dp"
-      android:layout_height="match_parent"
+      android:layout_height="20dp"
       android:tag="color_theme_example_generalTextColor"
     />
     <TextView
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/conf_color_theme_others"
+      android:paddingLeft="8dp"
     />
     <View
       android:layout_width="20dp"
-      android:layout_height="match_parent"
+      android:layout_height="20dp"
       android:tag="color_theme_example_torifudaEdgeColor"
     />
     <View
       android:layout_width="20dp"
-      android:layout_height="match_parent"
+      android:layout_height="20dp"
       android:tag="color_theme_example_torifudaFillColor"
     />
 
