@@ -284,6 +284,9 @@
   <string name="conf_show_current_index_summary">次に詠まれる札が何首目なのかを表示</string>
   <string name="conf_color_theme">色テーマ</string>
   <string name="conf_color_theme_summary">背景色や文字色などを変更</string>
+  <string name="conf_color_theme_background">背景:</string>
+  <string name="conf_color_theme_text">文字:</string>
+  <string name="conf_color_theme_others">その他:</string>
   <!-- COLOR_THEME -->
   <string name="color_theme_black">黒</string>
   <string name="color_theme_white">白</string>

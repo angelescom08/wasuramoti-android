@@ -3,9 +3,8 @@ package karuta.hpnpwd.wasuramoti
 import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder}
 import android.content.Context
 import android.util.AttributeSet
-import android.view.{View,LayoutInflater}
+import android.view.{View,LayoutInflater,ViewGroup}
 import android.widget.RadioGroup
-
 
 
 class ColorThemePreferenceFragment extends PreferenceDialogFragmentCompat {
@@ -15,7 +14,7 @@ class ColorThemePreferenceFragment extends PreferenceDialogFragmentCompat {
     val view = LayoutInflater.from(context).inflate(R.layout.color_theme_pref,null)
     val radio_group = view.findViewById[RadioGroup](R.id.conf_color_theme_group)
     for(item <- ColorThemeHelper.themes){
-      LayoutInflater.from(context).inflate(R.layout.general_radio_dialog_item,radio_group,true)
+      LayoutInflater.from(context).inflate(R.layout.color_theme_pref_item,radio_group,true)
     }
     val iter = ColorThemeHelper.themes.iterator
     val curTag = pref.getSharedPreferences.getString(pref.getKey,ColorThemeHelper.defaultTheme.tag)
@@ -25,6 +24,11 @@ class ColorThemePreferenceFragment extends PreferenceDialogFragmentCompat {
         r.setText(item.textId)
         r.setTag(item.tag)
         r.setId(item.itemId)
+        val vg = view.asInstanceOf[ViewGroup]
+        for ((tag,colorId) <- ColorThemeHelper.exampleTagToColorId){
+          val color = Utils.getColorOfTheme(context,item.styleId,colorId)
+          vg.findViewWithTag[View](tag).setBackgroundColor(color)
+        }
       }
     })
 
@@ -59,6 +63,14 @@ class ColorThemePreference(context:Context,attrs:AttributeSet) extends DialogPre
 case class ColorTheme(tag:String, isLight:Boolean, fillTorifuda:Boolean, itemId:Int, textId:Int, styleId:Int, prefStyleId:Int)
 
 object ColorThemeHelper {
+  val exampleTagToColorId = Seq(
+    ("color_theme_example_generalBackgroundColor",R.attr.generalBackgroundColor),
+    ("color_theme_example_generalTextColor",R.attr.generalTextColor),
+    ("color_theme_example_torifudaEdgeColor",R.attr.torifudaEdgeColor),
+    ("color_theme_example_torifudaFillColor",R.attr.torifudaFillColor)
+    )
+
+
   val themes = Seq(
     ColorTheme("black",false,false,R.id.color_theme_black,R.string.color_theme_black,R.style.Wasuramoti_MainTheme_Black,R.style.Wasuramoti_PrefTheme_Black),
     ColorTheme("white",true,false,R.id.color_theme_white,R.string.color_theme_white,R.style.Wasuramoti_MainTheme_White,R.style.Wasuramoti_PrefTheme_White),

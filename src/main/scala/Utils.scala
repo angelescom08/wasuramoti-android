@@ -13,7 +13,7 @@ import android.os.{Environment,Handler}
 import android.support.v7.preference.PreferenceManager
 import android.text.{TextUtils}
 import android.util.{Log,TypedValue}
-import android.view.View
+import android.view.{View,ContextThemeWrapper}
 import android.widget.{TextView,ListView,ArrayAdapter}
 
 import android.support.v4.content.FileProvider
@@ -841,6 +841,12 @@ object Utils {
         ft.add(dialog,tag)
         ft.commitAllowingStateLoss()
     }
+  }
+  def getColorOfTheme(context:Context,themeId:Int,colorId:Int):Int = {
+    val typed = new TypedValue
+    val theme = new ContextThemeWrapper(context, themeId).getTheme
+    theme.resolveAttribute(colorId, typed, true)
+    return typed.data
   }
 }
 
