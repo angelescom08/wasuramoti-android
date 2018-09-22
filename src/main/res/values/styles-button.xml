@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Reference:  https://android.googlesource.com/platform/frameworks/support -->
+  <!-- This button is actually Holo.ButtonBar. Althogh Holo is deprecated, I like it.
+       https://android.googlesource.com/platform/frameworks/base/+/android-9.0.0_r8/core/res/res/values/styles_holo.xml#373
+  -->
+  <style name="Wasuramoti.ButtonBar" parent="Widget.AppCompat.ButtonBar">
+    <item name="android:paddingTop">0dip</item>
+    <item name="android:paddingStart">0dip</item>
+    <item name="android:paddingEnd">0dip</item>
+    <item name="android:paddingBottom">0dip</item>
+    <item name="android:divider">?attr/dividerVertical</item>
+    <item name="android:showDividers">middle</item>
+    <item name="android:dividerPadding">12dip</item>
+    <item name="android:background">@null</item>
+  </style>
+  <style name="Wasuramoti.ButtonBarButton" parent="Widget.AppCompat.Button.Borderless" />
+  <style name="Wasuramoti.FudaListButton" parent="Widget.AppCompat.Button" />
+</resources>
