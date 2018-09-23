@@ -77,8 +77,7 @@ object ColorThemeHelper {
     ColorTheme("spring",true,true,R.id.color_theme_spring,R.string.color_theme_spring,R.style.Wasuramoti_MainTheme_Spring,R.style.Wasuramoti_PrefTheme_Spring),
     ColorTheme("summer",true,true,R.id.color_theme_summer,R.string.color_theme_summer,R.style.Wasuramoti_MainTheme_Summer,R.style.Wasuramoti_PrefTheme_Summer),
     ColorTheme("autumn",false,true,R.id.color_theme_autumn,R.string.color_theme_autumn,R.style.Wasuramoti_MainTheme_Autumn,R.style.Wasuramoti_PrefTheme_Autumn),
-    ColorTheme("winter",false,true,R.id.color_theme_winter,R.string.color_theme_winter,R.style.Wasuramoti_MainTheme_Winter,R.style.Wasuramoti_PrefTheme_Winter),
-    ColorTheme("love",true,true,R.id.color_theme_love,R.string.color_theme_love,R.style.Wasuramoti_MainTheme_Love,R.style.Wasuramoti_PrefTheme_Love)
+    ColorTheme("winter",false,true,R.id.color_theme_winter,R.string.color_theme_winter,R.style.Wasuramoti_MainTheme_Winter,R.style.Wasuramoti_PrefTheme_Winter)
     )
   val themesMap = themes.map{t => (t.tag,t)}.toMap
   val defaultTheme = themes(0)
