@@ -8,6 +8,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script>
   function refreshMainWindow(){
+    var isLight = '{{ isLight }}' === 'True'
     var canvas = document.getElementById('main_window')
     var ctx = canvas.getContext('2d')
     // clear
@@ -65,7 +66,45 @@
     ctx.moveTo(canvas.width/2,300)
     ctx.lineTo(canvas.width/2,canvas.height)
     ctx.stroke()
+    // the alpha level of disabled button is ?attr/disabledAlpha which default is 0.5
+    // https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/color/btn_colored_borderless_text_material.xml
+    ctx.font = '20px monospace'
+    if(isLight){
+      ctx.fillStyle = 'rgba(0,0,0,0.5)'
+    }else{
+      ctx.fillStyle = 'rgba(255,255,255,0.5)'
+    }
+    ctx.fillText('Disabled',60,350)
+    if(isLight){
+      ctx.fillStyle = 'rgba(0,0,0,1.0)'
+    }else{
+      ctx.fillStyle = 'rgba(255,255,255,1.0)'
+    }
+    ctx.fillText('Enabled',60,410)
+    var drawImage = function(src,x,y){
+      var img = new Image()
+      img.addEventListener('load', function(){
+        ctx.drawImage(img,x,y)
+      }, false)
+      img.src = src 
+    }
+    // icon
+    var src = isLight ? '/image/light_ic_action_settings.png' : '/image/ic_action_settings.png'
+    drawImage(src,260,10)
 
+    var src = isLight ? '/image/light_ic_action_important.png' : '/image/ic_action_important.png'
+    drawImage(src,10,320)
+
+    var src = isLight ? '/image/light_ic_action_important.png' : '/image/ic_action_important.png'
+    drawImage(src,10,320)
+
+    var src = isLight ? '/image/light_ic_action_replay.png' : '/image/ic_action_replay.png'
+    drawImage(src,10,380)
+
+    // main button
+    ctx.fillStyle = $('#generalTextColor').val()
+    ctx.font = '24px monospace'
+    ctx.fillText('Main Btn',190,380)
   }
   $(document).ready(function(){
     $('#save').on('click',function(){
@@ -90,7 +129,7 @@
       </form>
     </td>
     <td style='vertical-align: top'>
-      <canvas id='main_window' width='300' height='500'></canvas>
+      <canvas id='main_window' width='320' height='480'></canvas>
     </td>
   </tr>
 </table>

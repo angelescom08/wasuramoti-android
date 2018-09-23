@@ -3,7 +3,7 @@
 from subprocess import check_output
 from pathlib import Path
 import yaml
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 
 ROOT_DIR = str(check_output("git rev-parse --show-toplevel", shell=True), 'utf-8').rstrip()
 CUR_DIR = Path(__file__).parent
@@ -33,6 +33,11 @@ def save_theme(tag):
     yaml.dump(config, fout, default_flow_style=False)
   return 'ok'
 
+
+@app.route('/image/<name>.png')
+def get_image(name):
+  path = Path(ROOT_DIR)/'src'/'main'/'res'/'drawable-hdpi'/('{}.png'.format(name))
+  return send_file(str(path), mimetype='image/png')
 
 def load_config(tag):
   with open(THEME_DIR / '{}.yml'.format(tag)) as fin:
