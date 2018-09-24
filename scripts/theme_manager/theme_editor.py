@@ -9,6 +9,16 @@ ROOT_DIR = str(check_output("git rev-parse --show-toplevel", shell=True), 'utf-8
 CUR_DIR = Path(__file__).parent
 THEME_DIR = CUR_DIR / 'theme'
 TEMPLATE_FOLDER = (CUR_DIR/'assets').resolve()
+IMPORTANT_COLORS = [
+    'actionBarDividerColor',
+    'generalBackgroundColor',
+    'kimarijiSecondaryColor',
+    'mainActivityBorderColor',
+    'poemTextFuriganaColor',
+    'poemTextMainColor',
+    'torifudaEdgeColor'
+]
+
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 @app.route('/')
@@ -22,6 +32,7 @@ def get_index():
 @app.route('/theme/<tag>')
 def get_theme(tag):
   config = load_config(tag)
+  config['important_colors'] = IMPORTANT_COLORS
   return render_template('theme_editor_index.html', **config)
 
 @app.route('/theme/<tag>/save', methods=['POST'])

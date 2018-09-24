@@ -7,6 +7,7 @@ from copy import copy
 import yaml
 
 ROOT_DIR = str(check_output("git rev-parse --show-toplevel", shell=True), 'utf-8').rstrip()
+CUR_DIR = Path(__file__).parent
 
 def gen_style(fn, theme):
   with open(fn) as f:
@@ -26,11 +27,11 @@ def gen_style(fn, theme):
     print("wrote: {}".format(outpath))
 
 def gen_theme(theme):
-  for fn in Path('./template/').glob('*.xml'):
+  for fn in (CUR_DIR/'template').glob('*.xml'):
     gen_style(fn, theme)
 
 def main():
-  for fn in Path('./theme/').glob('*.yml'):
+  for fn in (CUR_DIR/'theme').glob('*.yml'):
     with open(fn) as f:
       theme = yaml.load(f)
       gen_theme(theme)
