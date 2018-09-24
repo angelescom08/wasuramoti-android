@@ -27,31 +27,34 @@
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/conf_color_theme_text"
-      android:paddingLeft="8dp"
-    />
-    <View
-      android:layout_width="20dp"
-      android:layout_height="20dp"
-      android:tag="color_theme_example_generalTextColor"
-    />
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
       android:text="@string/conf_color_theme_others"
       android:paddingLeft="8dp"
     />
     <View
       android:layout_width="20dp"
       android:layout_height="20dp"
-      android:tag="color_theme_example_torifudaEdgeColor"
+      android:tag="color_theme_example_actionBarDividerColor"
     />
     <View
       android:layout_width="20dp"
       android:layout_height="20dp"
-      android:tag="color_theme_example_torifudaFillColor"
+      android:tag="color_theme_example_mainActivityBorderColor"
     />
-
+    <View
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:tag="color_theme_example_poemTextMainColor"
+    />
+    <View
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:tag="color_theme_example_poemTextFuriganaColor"
+    />
+    <View
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:tag="color_theme_example_torifudaEdgeColor"
+    />
 
   </LinearLayout>
   <include layout="@layout/horizontal_rule" />

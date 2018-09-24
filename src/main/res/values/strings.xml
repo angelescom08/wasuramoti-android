@@ -324,7 +324,6 @@
   <string name="conf_color_theme">Color Theme</string>
   <string name="conf_color_theme_summary">Change background and text color</string>
   <string name="conf_color_theme_background">BG:</string>
-  <string name="conf_color_theme_text">Text:</string>
   <string name="conf_color_theme_others">Else:</string>
   <!-- COLOR_THEME -->
   <string name="color_theme_black">Black</string>

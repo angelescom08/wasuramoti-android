@@ -65,9 +65,11 @@ case class ColorTheme(tag:String, isLight:Boolean, fillTorifuda:Boolean, itemId:
 object ColorThemeHelper {
   val exampleTagToColorId = Seq(
     ("color_theme_example_generalBackgroundColor",R.attr.generalBackgroundColor),
-    ("color_theme_example_generalTextColor",R.attr.generalTextColor),
-    ("color_theme_example_torifudaEdgeColor",R.attr.torifudaEdgeColor),
-    ("color_theme_example_torifudaFillColor",R.attr.torifudaFillColor)
+    ("color_theme_example_actionBarDividerColor",R.attr.actionBarDividerColor),
+    ("color_theme_example_mainActivityBorderColor",R.attr.mainActivityBorderColor),
+    ("color_theme_example_poemTextMainColor",R.attr.poemTextMainColor),
+    ("color_theme_example_poemTextFuriganaColor",R.attr.poemTextFuriganaColor),
+    ("color_theme_example_torifudaEdgeColor",R.attr.torifudaEdgeColor)
     )
 
 
