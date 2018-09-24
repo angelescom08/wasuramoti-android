@@ -40,7 +40,7 @@ def save_theme(tag):
   config = load_config(tag)
   for name, color in request.form.items():
     config['colors'][name] = color
-  with open(THEME_DIR / '{}_new.yml'.format(tag), 'w') as fout:
+  with open(THEME_DIR / '{}.yml'.format(tag), 'w') as fout:
     yaml.dump(config, fout, default_flow_style=False)
   return 'ok'
 

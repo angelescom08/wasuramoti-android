@@ -114,7 +114,7 @@
     $('#save').on('click',function(){
       data = $('form').serialize()
       $.post(location.href+'/save', data, function(){
-        alert('saved')
+        alert("saved to theme/{{ tag }}.yml\ndon't forget to run gen_theme.py")
       })
     })
     refreshMainWindow()
