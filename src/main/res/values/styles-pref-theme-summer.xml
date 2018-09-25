@@ -29,7 +29,7 @@
     <item name="poemTextMainColor">#000000</item>
     <item name="poemTextFuriganaColor">#006a65</item>
     <item name="kimarijiPrimaryColor">#000000</item>
-    <item name="kimarijiSecondaryColor">#009e96</item>
+    <item name="kimarijiSecondaryColor">#68a7a3</item>
     <item name="kimarijiTertiaryColor">#999999</item>
     <item name="tableCellBorderColor">#d7d7d7</item>
     <item name="mainButtonPressedColor">#cccccc</item>

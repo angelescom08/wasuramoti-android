@@ -27,9 +27,9 @@
     <item name="actionBarPrimaryTextColor">#696969</item>
     <item name="actionBarPoemNumColor">#000000</item>
     <item name="poemTextMainColor">#4d3a44</item>
-    <item name="poemTextFuriganaColor">#938f3a</item>
+    <item name="poemTextFuriganaColor">#7c770c</item>
     <item name="kimarijiPrimaryColor">#000000</item>
-    <item name="kimarijiSecondaryColor">#af2600</item>
+    <item name="kimarijiSecondaryColor">#ac6e5c</item>
     <item name="kimarijiTertiaryColor">#999999</item>
     <item name="tableCellBorderColor">#d7d7d7</item>
     <item name="mainButtonPressedColor">#cccccc</item>
