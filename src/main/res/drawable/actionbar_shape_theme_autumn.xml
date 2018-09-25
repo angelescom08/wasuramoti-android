@@ -2,6 +2,6 @@
 <inset xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:insetLeft="-5dp" ns0:insetRight="-5dp" ns0:insetTop="-5dp">
   <shape ns0:shape="rectangle">
     <stroke ns0:color="#a98e62" ns0:width="2dp" />
-    <solid ns0:color="#ffeedd" />
+    <solid ns0:color="#fdf6e3" />
   </shape>
 </inset>

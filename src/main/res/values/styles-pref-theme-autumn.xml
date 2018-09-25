@@ -10,7 +10,7 @@
     <item name="settingsIconDrawable">@drawable/light_ic_action_settings</item>
     <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.PrefTheme.Autumn</item>
-    <item name="generalBackgroundColor">#ffeedd</item>
+    <item name="generalBackgroundColor">#fdf6e3</item>
     <item name="generalTextColor">#000000</item>
     <item name="horizontalRuleColor">#cccccc</item>
     <item name="mailAddrColor">#008080</item>

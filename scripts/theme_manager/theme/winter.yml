@@ -1,13 +1,13 @@
 colors:
-  actionBarDividerColor: '#4c4c64'
+  actionBarDividerColor: '#00475a'
   actionBarPoemNumColor: '#ffffff'
-  actionBarPrimaryTextColor: '#c0c0f0'
+  actionBarPrimaryTextColor: '#93a1a1'
   cautionMessageColor: '#ccffff'
   confCurrentValueColor: '#ffa500'
   creditSpecialColor: '#ffff99'
   decodeTestErrorColor: '#ffff00'
   decodeTestOkColor: '#ffffff'
-  generalBackgroundColor: '#00253e'
+  generalBackgroundColor: '#002b36'
   generalRadioDialogItemColor: '#ff9900'
   generalTextColor: '#ffffff'
   horizontalRuleColor: '#444444'
@@ -20,7 +20,7 @@ colors:
   kimarijiSecondaryColor: '#7ecef4'
   kimarijiTertiaryColor: '#7f7e7e'
   mailAddrColor: '#00ffff'
-  mainActivityBorderColor: '#4c4c64'
+  mainActivityBorderColor: '#00475a'
   mainButtonPressedColor: '#222222'
   memoCountColor: '#99ff99'
   memoNotCountColor: '#ff9999'
@@ -40,7 +40,7 @@ colors:
   searchItemSubColor: '#b0e0e6'
   tableCellBorderColor: '#999999'
   torifudaEdgeColor: '#000000'
-  torifudaFillColor: '#353434'
+  torifudaFillColor: '#323232'
 isLight: false
 name: Winter
 tag: winter

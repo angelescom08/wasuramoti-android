@@ -7,7 +7,7 @@ colors:
   creditSpecialColor: '#404026'
   decodeTestErrorColor: '#800080'
   decodeTestOkColor: '#000000'
-  generalBackgroundColor: '#ffeedd'
+  generalBackgroundColor: '#fdf6e3'
   generalRadioDialogItemColor: '#2f4f4f'
   generalTextColor: '#000000'
   horizontalRuleColor: '#cccccc'

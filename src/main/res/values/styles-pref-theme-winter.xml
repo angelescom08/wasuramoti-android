@@ -10,7 +10,7 @@
     <item name="settingsIconDrawable">@drawable/ic_action_settings</item>
     <!-- our custom attributes -->
     <item name="themeName">Wasuramoti.PrefTheme.Winter</item>
-    <item name="generalBackgroundColor">#00253e</item>
+    <item name="generalBackgroundColor">#002b36</item>
     <item name="generalTextColor">#ffffff</item>
     <item name="horizontalRuleColor">#444444</item>
     <item name="mailAddrColor">#00ffff</item>
@@ -22,9 +22,9 @@
     <item name="searchItemSubColor">#b0e0e6</item>
     <item name="readOrderEachItemColor">#ff9900</item>
     <item name="moveSearchNotFoundColor">#cccccc</item>
-    <item name="mainActivityBorderColor">#4c4c64</item>
-    <item name="actionBarDividerColor">#4c4c64</item>
-    <item name="actionBarPrimaryTextColor">#c0c0f0</item>
+    <item name="mainActivityBorderColor">#00475a</item>
+    <item name="actionBarDividerColor">#00475a</item>
+    <item name="actionBarPrimaryTextColor">#93a1a1</item>
     <item name="actionBarPoemNumColor">#ffffff</item>
     <item name="poemTextMainColor">#ffffff</item>
     <item name="poemTextFuriganaColor">#d0f2fc</item>
@@ -36,7 +36,7 @@
     <item name="roundBorderBackgroundColor">#222222</item>
     <item name="roundBorderColor">#9b59b6</item>
     <item name="torifudaEdgeColor">#000000</item>
-    <item name="torifudaFillColor">#353434</item>
+    <item name="torifudaFillColor">#323232</item>
     <item name="scanReaderListColor">#ffff00</item>
     <item name="decodeTestOkColor">#ffffff</item>
     <item name="decodeTestErrorColor">#ffff00</item>
