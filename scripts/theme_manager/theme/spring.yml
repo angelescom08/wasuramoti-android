@@ -27,7 +27,7 @@ colors:
   memoPanelTitleColor: '#4f4f00'
   moveSearchNotFoundColor: '#666666'
   poemDescColor: '#808000'
-  poemTextFuriganaColor: '#76ad75'
+  poemTextFuriganaColor: '#449a58'
   poemTextMainColor: '#000000'
   readOrderEachItemColor: '#2f4f4f'
   reorderBarActiveColor: '#008e8e'
