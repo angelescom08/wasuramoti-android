@@ -137,8 +137,8 @@ class CommandButtonPanel extends Fragment with GetFudanum{
           if(tag == CommandButtonPanel.PREFIX_KIMARIJI + "_LOG"){
             showKimarijiChangelogDialog()
           }else if(tag == CommandButtonPanel.PREFIX_POEM + "_DESC"){
-            PoemDescriptionDialog.newInstance(getFudanum)
-              .show(getActivity.getSupportFragmentManager,"poem_description_dialog")
+            val dlg = PoemDescriptionDialog.newInstance(getFudanum)
+            Utils.showDialogOrFallbackToStateless(getActivity.getSupportFragmentManager,dlg,"poem_description_dialog")
           }else if(tag == CommandButtonPanel.PREFIX_SWITCH + "_MODE"){
             getCurYomiInfoView.foreach{vw =>
               vw.torifuda_mode ^= true
@@ -260,7 +260,7 @@ class CommandButtonPanel extends Fragment with GetFudanum{
   def showKimarijiChangelogDialog(){
     val dlg = new KimarijiChangelogDialog
     dlg.setArguments(getArguments)
-    dlg.show(getActivity.getSupportFragmentManager,"kimariji_log")
+    Utils.showDialogOrFallbackToStateless(getActivity.getSupportFragmentManager,dlg,"kimariji_log")
   }
 }
 
