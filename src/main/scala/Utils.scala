@@ -848,6 +848,24 @@ object Utils {
     theme.resolveAttribute(colorId, typed, true)
     return typed.data
   }
+  def kimarijiToHtml(context:Context,fudanum:Int,color:Boolean):String = {
+    val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(fudanum)
+    val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
+    val k_c = kimari_all.substring(kimari_in_fudaset.length)
+    if(color){
+      // TODO: cache these values
+      val COLOR_1 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiPrimaryColor)))
+      val COLOR_2 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiSecondaryColor)))
+      val COLOR_3 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiTertiaryColor)))
+      s"""<font color="#$COLOR_1">$kimari_cur</font><font color="#$COLOR_2">$k_b</font><font color="#$COLOR_3">$k_c</font>"""
+    }else{
+      kimari_cur + (if(!TextUtils.isEmpty(k_b)){
+        " / " + k_b
+      }else{""}) + (if(!TextUtils.isEmpty(k_c)) {
+        " (" + k_c + ")"
+      }else{""})
+    }
+  }
 }
 
 class AlreadyReportedException(s:String) extends Exception(s){

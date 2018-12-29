@@ -25,6 +25,7 @@
   <string name="menu_shuffle_confirm">Really shuffle and restart from beginning?</string>
   <string name="menu_move">Move / Search</string>
   <string name="menu_timer">Timer</string>
+  <string name="menu_play_history">History</string>
   <string name="menu_quick_conf">Quick Config</string>
   <string name="menu_conf">Advanced Config</string>
 

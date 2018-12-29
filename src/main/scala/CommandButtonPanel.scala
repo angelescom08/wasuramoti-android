@@ -33,15 +33,7 @@ object CommandButtonPanel{
       if(num == 0){
         (context.getResources.getString(R.string.yomi_info_joka),Html.fromHtml("---"))
       }else{
-        // TODO: cache these values
-        val COLOR_1 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiPrimaryColor)))
-        val COLOR_2 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiSecondaryColor)))
-        val COLOR_3 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiTertiaryColor)))
-        val (kimari_all,kimari_cur,kimari_in_fudaset) = FudaListHelper.getKimarijis(num)
-        val k_b = kimari_all.substring(kimari_cur.length,kimari_in_fudaset.length)
-        val k_c = kimari_all.substring(kimari_in_fudaset.length)
-        val html = s"""<font color="#$COLOR_1">$kimari_cur</font><font color="#$COLOR_2">$k_b</font><font color="#$COLOR_3">$k_c</font>"""
-        (num.toString,Html.fromHtml(html))
+        (num.toString,Html.fromHtml(Utils.kimarijiToHtml(context,num,true)))
       }
     }.getOrElse{
       ("---", Html.fromHtml("---"))

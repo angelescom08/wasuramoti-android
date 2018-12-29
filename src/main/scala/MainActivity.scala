@@ -182,6 +182,10 @@ class WasuramotiActivity extends AppCompatActivity
         dlg.show(getSupportFragmentManager,"move_position")
       }
       case R.id.menu_timer => startActivity(new Intent(this,classOf[NotifyTimerActivity]))
+      case R.id.menu_play_history => {
+        val html = PlayHistoryDialog.genHtml(this)
+        CommonDialog.generalHtmlDialog(this,Left(html))
+      }
       case R.id.menu_quick_conf => {
         val dlg = new QuickConfigDialog()
         dlg.show(getSupportFragmentManager,"quick_config")

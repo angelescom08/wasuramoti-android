@@ -397,7 +397,7 @@ object FudaListHelper{
     if(nums.isEmpty){
       return new Array[(String,Int)](0)
     }
-    val cursor = db.rawQuery("SELECT num,read_order FROM " + Globals.TABLE_FUDALIST + " WHERE skip <=0 AND read_order < "+current_index+" AND num IN ("+nums.mkString(",")+") ORDER BY read_order ASC",null)
+    val cursor = db.rawQuery(s"SELECT num,read_order FROM ${Globals.TABLE_FUDALIST} WHERE skip <=0 AND read_order < ${current_index} AND num IN (${nums.mkString(",")}) ORDER BY read_order ASC",null)
     cursor.moveToFirst
     val alreadyread = ( 0 until cursor.getCount ).map{ x=>
       val n = kimalist(cursor.getInt(0)-1)
@@ -408,6 +408,21 @@ object FudaListHelper{
     cursor.close()
     //db.close()
     alreadyread.toArray
+  }
+
+  def getPlayHistory(context:Context, includeCurrentIndex:Boolean):Seq[Int] = Globals.db_lock.synchronized{
+    val current_index = getCurrentIndex(context)
+    val op = if(includeCurrentIndex){"<="}else{"<"}
+    val db = Globals.database.get.getReadableDatabase
+    val cursor = db.rawQuery(s"SELECT num,read_order FROM ${Globals.TABLE_FUDALIST} WHERE skip <=0 AND num >0 AND read_order ${op} ${current_index} ORDER BY read_order ASC",null)
+    cursor.moveToFirst()
+    val seq = (0 until cursor.getCount).map{ x=>
+      val n = cursor.getInt(0)
+      cursor.moveToNext
+      n
+    }.toSeq
+    cursor.close()
+    seq
   }
 
   def getKimarijis(
