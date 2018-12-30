@@ -614,12 +614,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       // TODO: Using AsyncTask seems not so convenient. maybe we should use Scala's Futures and Promises instead.
       Globals.decode_lock.synchronized{
       try{
+        val context = activity.getApplicationContext
         val res_queue = new AudioQueue()
         if(maybe_reader.isEmpty){
           return Left(res_queue)
         }
         val reader = maybe_reader.get
-        val span_simokami = (Utils.getPrefAs[Double]("wav_span_simokami", 1.0, 9999.0) * 1000).toInt
+        val span_simokami = (PrefManager.getPrefNumeric[Double](context,PrefKeyNumeric.WavSpanSimokami) * 1000).toInt
         cur_millisec = 0
         def addToAudioQueue(w:Either[WavBuffer,Int],is_cur:Boolean){
           res_queue.enqueue(w)
@@ -636,12 +637,12 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
         // Additionally, playing silence as wave file can avoid some weird effect
         // which occurs at beginning of wav when using bluetooth speaker.
         // However, note that taking silence_time_{begin,end} too much can consume much more memory.
-        val silence_time_begin = (Utils.getPrefAs[Double]("wav_begin_read", 0.5, 5.0)*1000.0).toInt
-        val silence_time_end = (Utils.getPrefAs[Double]("wav_end_read", 0.2, 5.0)*1000.0).toInt
+        val silence_time_begin = (PrefManager.getPrefNumeric[Double](context,PrefKeyNumeric.WavBeginRead)*1000.0).toInt
+        val silence_time_end = (PrefManager.getPrefNumeric[Double](context,PrefKeyNumeric.WavEndRead)*1000.0).toInt
         addToAudioQueue(Right(silence_time_begin),true)
         // reuse decoded wav
         val decoded_wavs = new mutable.HashMap[(Int,Int),WavBuffer]()
-        val ss = AudioHelper.genReadNumKamiSimoPairs(activity.getApplicationContext,cur_num,next_num)
+        val ss = AudioHelper.genReadNumKamiSimoPairs(context,cur_num,next_num)
         for (((read_num,kami_simo,is_cur),i) <-ss.zipWithIndex){
           if(isCancelled){
             // TODO: what should we return ?
@@ -654,8 +655,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
                 addToAudioQueue(Left(decoded_wavs(key)),is_cur)
               }else{
                 reader.withDecodedWav(read_num, kami_simo, wav => {
-                   wav.trimFadeIn()
-                   wav.trimFadeOut()
+                   wav.trimFadeIn(context)
+                   wav.trimFadeOut(context)
                    addToAudioQueue(Left(wav),is_cur)
                    decoded_wavs.put(key,wav)
                    if(Globals.IS_DEBUG){

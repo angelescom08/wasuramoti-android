@@ -144,4 +144,52 @@ class MainTest extends JUnitSuite with Matchers {
 
   }
 
+  @Test
+  def testPrefDouble(){
+    val key = PrefKeyNumeric.WavSpanSimokami
+    key.toString shouldBe "wav_span_simokami"
+    val context = RuntimeEnvironment.application.getApplicationContext
+    Utils.initGlobals(context)
+    val edit = Globals.prefs.get.edit
+
+    // normal case
+		edit.putString(key.toString, "3.14")
+    edit.commit()
+    PrefManager.getPrefNumeric[Double](context,key) shouldBe 3.14
+    
+    // exceed maximum
+		edit.putString(key.toString, "99999.0")
+    edit.commit()
+    PrefManager.getPrefNumeric[Double](context,key) shouldBe 999.0
+    
+    // invalid number
+		edit.putString(key.toString, "hoo")
+    edit.commit()
+    PrefManager.getPrefNumeric[Double](context,key) shouldBe 1.0
+  }
+
+  @Test
+  def testPrefLong(){
+    val key = PrefKeyNumeric.DimlockMinutes
+    key.toString shouldBe "dimlock_minutes"
+    val context = RuntimeEnvironment.application.getApplicationContext
+    Utils.initGlobals(context)
+    val edit = Globals.prefs.get.edit
+
+    // normal case
+		edit.putString(key.toString, "42")
+    edit.commit()
+    PrefManager.getPrefNumeric[Long](context,key) shouldBe 42
+    
+    // exceed maximum
+		edit.putString(key.toString, "9999999")
+    edit.commit()
+    PrefManager.getPrefNumeric[Long](context,key) shouldBe 9999
+    
+    // invalid number
+		edit.putString(key.toString, "hoo")
+    edit.commit()
+    PrefManager.getPrefNumeric[Long](context,key) shouldBe 5
+  }
+
 }

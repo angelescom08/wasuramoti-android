@@ -179,7 +179,7 @@
           android:title="@string/conf_dimlock_minutes"
           android:summary="@string/conf_dimlock_minutes_summary"
           android:numeric="integer"
-          android:defaultValue="5"
+          android:defaultValue="@integer/dimlock_minutes_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_minute"
           />
@@ -188,7 +188,7 @@
           android:title="@string/conf_wav_span_simokami"
           android:summary="@string/conf_wav_span_simokami_summary"
           android:numeric="decimal"
-          android:defaultValue="1.0"
+          android:defaultValue="@dimen/wav_span_simokami_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />
@@ -197,7 +197,7 @@
           android:title="@string/conf_wav_begin_read"
           android:summary="@string/conf_wav_begin_read_summary"
           android:numeric="decimal"
-          android:defaultValue="0.5"
+          android:defaultValue="@dimen/wav_begin_read_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />
@@ -206,7 +206,7 @@
           android:title="@string/conf_wav_end_read"
           android:summary="@string/conf_wav_end_read_summary"
           android:numeric="decimal"
-          android:defaultValue="0.2"
+          android:defaultValue="@dimen/wav_end_read_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />
@@ -222,7 +222,7 @@
           android:title="@string/conf_wav_threshold"
           android:summary="@string/conf_wav_threshold_summary"
           android:numeric="decimal"
-          android:defaultValue="0.003"
+          android:defaultValue="@dimen/wav_threshold_default"
           android:widgetLayout="@layout/conf_current_value"
           />
 
@@ -231,7 +231,7 @@
           android:title="@string/conf_wav_fadeout_simo"
           android:summary="@string/conf_wav_fadout_simo_summary"
           android:numeric="decimal"
-          android:defaultValue="0.2"
+          android:defaultValue="@dimen/wav_fadeout_simo_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />
@@ -240,7 +240,7 @@
           android:title="@string/conf_wav_fadein_kami"
           android:summary="@string/conf_wav_fadein_kami_summary"
           android:numeric="decimal"
-          android:defaultValue="0.1"
+          android:defaultValue="@dimen/wav_fadein_kami_default"
           android:widgetLayout="@layout/conf_current_value"
           unit="@string/conf_unit_second"
           />

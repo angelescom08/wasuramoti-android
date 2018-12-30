@@ -299,9 +299,9 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
   }
 
   // fadein
-  def trimFadeIn(){
-    val threshold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 0.3)
-    val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadein_kami", 0.1, 2.0))
+  def trimFadeIn(context:Context){
+    val threshold = PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavThreshold)
+    val fadelen = secToIndex(PrefManager.getPrefNumeric[Double](context,PrefKeyNumeric.WavFadeinKami))
     val beg = fitIndex(thresholdIndex(threshold,false))
     val fadebegin = Math.max( beg - fadelen, 0)
     // Log.v("wasuramoti_fadein", s"num=${num}, kamisimo=${kamisimo}, fadebegin=${fadebegin}, beg=${beg}, len=${beg-fadebegin}")
@@ -313,9 +313,9 @@ class WavBuffer(val buffer:ShortBuffer, val decoder:OggVorbisDecoder, val num:In
     }
   }
   // fadeout
-  def trimFadeOut(){
-    val threshold = Utils.getPrefAs[Double]("wav_threshold", 0.003, 0.3)
-    val fadelen = secToIndex(Utils.getPrefAs[Double]("wav_fadeout_simo", 0.2, 2.0))
+  def trimFadeOut(context:Context){
+    val threshold = PrefManager.getPrefNumeric[Double](context,PrefKeyNumeric.WavThreshold)
+    val fadelen = secToIndex(PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavFadeoutSimo))
     val end = fitIndex(thresholdIndex(threshold,true))
     val fadeend = Math.max( end - fadelen, 0)
     // Log.v("wasuramoti_fadeout", s"num=${num}, kamisimo=${kamisimo}, fadeend=${decoder.data_length-fadeend}, end=${decoder.data_length-end}, len=${end-fadeend}")

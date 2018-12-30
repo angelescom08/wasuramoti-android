@@ -63,36 +63,6 @@ object Globals {
 }
 
 object Utils {
-  abstract class PrefAccept[T <% Ordered[T] ] {
-    def from(s:String):T
-    def >(a:T,b:T):Boolean = a > b
-  }
-  object PrefAccept{
-    implicit val LongPrefAccept = new PrefAccept[Long] {
-      def from(s : String) = s.toLong
-    }
-    implicit val DoublePrefAccept = new PrefAccept[Double] {
-      def from(s : String) = s.toDouble
-    }
-  }
-
-  def getPrefAs[T:PrefAccept](key:String,defValue:T,maxValue:T):T = {
-    if(Globals.prefs.isEmpty){
-      return defValue
-    }
-    val r = try{
-      val v = Globals.prefs.get.getString(key,defValue.toString)
-      implicitly[PrefAccept[T]].from(v)
-    }catch{
-      case _:NumberFormatException => defValue
-    }
-    if( implicitly[PrefAccept[T]].>(r,maxValue)  ){
-      maxValue
-    }else{
-      r
-    }
-  }
-
   object ReadOrder extends Enumeration{
     type ReadOrder = Value
     val Shuffle, Random, PoemNum, Musumefusahose = Value

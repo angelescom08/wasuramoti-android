@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="wav_threshold_default" format="float" type="dimen">0.003</item>
+  <item name="wav_begin_read_default" format="float" type="dimen">0.5</item>
+  <item name="wav_end_read_default" format="float" type="dimen">0.2</item>
+  <item name="wav_fadein_kami_default" format="float" type="dimen">0.1</item>
+  <item name="wav_fadeout_simo_default" format="float" type="dimen">0.2</item>
+  <item name="wav_span_simokami_default" format="float" type="dimen">1.0</item>
+  <integer name="dimlock_minutes_default">5</integer>
+</resources>
