@@ -150,8 +150,11 @@ class MainTest extends JUnitSuite with Matchers {
     key.toString shouldBe "wav_span_simokami"
     val context = RuntimeEnvironment.application.getApplicationContext
     Utils.initGlobals(context)
-    val edit = Globals.prefs.get.edit
 
+    // default value
+    PrefManager.getPrefNumeric[Double](context,key) shouldBe 1.0
+
+    val edit = Globals.prefs.get.edit
     // normal case
 		edit.putString(key.toString, "3.14")
     edit.commit()
@@ -166,6 +169,13 @@ class MainTest extends JUnitSuite with Matchers {
 		edit.putString(key.toString, "hoo")
     edit.commit()
     PrefManager.getPrefNumeric[Double](context,key) shouldBe 1.0
+
+    // check other defaults
+    PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavBeginRead) shouldBe 0.5
+    PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavEndRead) shouldBe 0.2
+    PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavFadeinKami) shouldBe 0.1
+    PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavFadeoutSimo) shouldBe 0.2
+    PrefManager.getPrefNumeric[Double](context, PrefKeyNumeric.WavThreshold) shouldBe 0.003
   }
 
   @Test
@@ -174,8 +184,11 @@ class MainTest extends JUnitSuite with Matchers {
     key.toString shouldBe "dimlock_minutes"
     val context = RuntimeEnvironment.application.getApplicationContext
     Utils.initGlobals(context)
-    val edit = Globals.prefs.get.edit
 
+    // default value
+    PrefManager.getPrefNumeric[Long](context,key) shouldBe 5
+
+    val edit = Globals.prefs.get.edit
     // normal case
 		edit.putString(key.toString, "42")
     edit.commit()
@@ -190,6 +203,9 @@ class MainTest extends JUnitSuite with Matchers {
 		edit.putString(key.toString, "hoo")
     edit.commit()
     PrefManager.getPrefNumeric[Long](context,key) shouldBe 5
+
+    // get default
+    PrefManager.getPrefDefault[Long](context,key) shouldBe 5
   }
 
 }

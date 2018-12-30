@@ -5,6 +5,9 @@ import android.content.Context
 
 object PrefKeyNumeric extends Enumeration {
   type PrefKeyNumeric = Value
+  // EditTextPreferenceCustom persists value as String, however, we have to treat as Numeric when getting it from preference.
+  //   https://github.com/aosp-mirror/platform_frameworks_base/blob/99f6957f2e42caeea209d2069174cab24c347a95/core/java/android/preference/EditTextPreference.java#L96
+  // TODO: do not use EditTextPreferenceCustom and store as appropriate type. (e.g. SharedProference.Editor#putFloat)
   val DimlockMinutes = Value("dimlock_minutes")
   val WavBeginRead = Value("wav_begin_read")
   val WavEndRead = Value("wav_end_read")
@@ -20,7 +23,7 @@ object PrefManager {
   implicit val LongPrefAccept = new PrefAccept[Long] {
     def from(s: String) = s.toLong
     def defaultValue(context:Context, resId:Int):Long = {
-      context.getResources.getInteger(resId)
+      from(context.getResources.getString(resId))
     }
     def maxValue(conf:Conf[Long]):Long = {
       conf.maxValue
@@ -29,7 +32,7 @@ object PrefManager {
   implicit val DoublePrefAccept = new PrefAccept[Double] {
     def from(s: String) = s.toDouble
     def defaultValue(context:Context, resId:Int):Double = {
-      Utils.getDimenFloat(context,resId)
+      from(context.getResources.getString(resId))
     }
     def maxValue(conf:Conf[Double]):Double = {
       conf.maxValue
@@ -41,13 +44,13 @@ object PrefManager {
   def getConf[T:PrefAccept](key:PrefKeyNumeric):Conf[T] = {
     val conv = implicitly[PrefAccept[T]].from _
     key match {
-      case DimlockMinutes => Conf[T](R.integer.dimlock_minutes_default, conv("9999"))
-      case WavBeginRead => Conf[T](R.dimen.wav_begin_read_default, conv("5.0"))
-      case WavEndRead => Conf[T](R.dimen.wav_end_read_default, conv("5.0"))
-      case WavFadeinKami => Conf[T](R.dimen.wav_fadein_kami_default, conv("2.0"))
-      case WavFadeoutSimo => Conf[T](R.dimen.wav_fadeout_simo_default, conv("2.0"))
-      case WavSpanSimokami => Conf[T](R.dimen.wav_span_simokami_default, conv("999.0"))
-      case WavThreshold => Conf[T](R.dimen.wav_threshold_default, conv("0.3"))
+      case DimlockMinutes => Conf[T](R.string.dimlock_minutes_default, conv("9999"))
+      case WavBeginRead => Conf[T](R.string.wav_begin_read_default, conv("5.0"))
+      case WavEndRead => Conf[T](R.string.wav_end_read_default, conv("5.0"))
+      case WavFadeinKami => Conf[T](R.string.wav_fadein_kami_default, conv("2.0"))
+      case WavFadeoutSimo => Conf[T](R.string.wav_fadeout_simo_default, conv("2.0"))
+      case WavSpanSimokami => Conf[T](R.string.wav_span_simokami_default, conv("999.0"))
+      case WavThreshold => Conf[T](R.string.wav_threshold_default, conv("0.3"))
     }
   }
 
@@ -80,5 +83,9 @@ object PrefManager {
     val defValue = implicitly[PrefAccept[T]].defaultValue(context, conf.defResId)
     val maxValue = implicitly[PrefAccept[T]].maxValue(conf)
     getPrefAs[T](key, defValue, maxValue)
+  }
+  def getPrefDefault[T:PrefAccept](context:Context,key:PrefKeyNumeric):T = {
+    val conf = getConf[T](key)
+    implicitly[PrefAccept[T]].defaultValue(context, conf.defResId)
   }
 }

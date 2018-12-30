@@ -555,7 +555,7 @@ class WasuramotiActivity extends AppCompatActivity
   }
 
   def rescheduleDimLockTimer(millisec:Option[Long]=None){
-    val DEFAULT_DIMLOCK_MINUTES = getResources.getInteger(R.integer.dimlock_minutes_default)
+    val DEFAULT_DIMLOCK_MINUTES = PrefManager.getPrefDefault[Long](this, PrefKeyNumeric.DimlockMinutes)
     Globals.global_lock.synchronized{
       run_dimlock.foreach(handler.removeCallbacks(_))
       run_dimlock = None
