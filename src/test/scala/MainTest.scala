@@ -234,7 +234,6 @@ class MainTest extends JUnitSuite with Matchers {
     PrefManager.getPrefBool(context,ShowMessageWhenMoved) shouldBe true
     PrefManager.getPrefBool(context,ShowCurrentIndex) shouldBe true
     PrefManager.getPrefBool(context,PlayAfterSwipe) shouldBe false
-    PrefManager.getPrefBool(context,MoveAfterFirstPhrase) shouldBe true
     PrefManager.getPrefBool(context,UseOpenSles) shouldBe false
   }
   @Test

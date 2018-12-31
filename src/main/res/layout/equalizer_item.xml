@@ -7,7 +7,8 @@
   <TextView
     android:id="@+id/equalizer_seek_text"
     android:gravity="right"
-    android:layout_width="60sp" android:layout_height="wrap_content"
+    android:layout_width="60sp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     />
   <SeekBar android:id="@+id/equalizer_seek"

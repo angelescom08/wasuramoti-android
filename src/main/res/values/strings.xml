@@ -787,4 +787,9 @@
       &nbsp;&nbsp;%6$s / %7$s<br>
     ]]>
   </string>
+  <string name="conf_pref_reset">Reset Preference</string>
+  <string name="conf_pref_reset_summary">Show dialog which resets each preference.</string>
+  <string name="pref_reset_current_label">Current:</string>
+  <string name="pref_reset_default_label">Default:</string>
+  <string name="pref_reset_exec">Reset</string>
 </resources>

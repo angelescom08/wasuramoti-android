@@ -260,6 +260,11 @@
         android:defaultValue="@string/audio_stream_type_default"
         android:widgetLayout="@layout/conf_current_value"
         />
+      <karuta.hpnpwd.wasuramoti.PrefResetPreference
+        android:key="dummy_pref_reset"
+        android:title="@string/conf_pref_reset"
+        android:summary="@string/conf_pref_reset_summary"
+        />
     </PreferenceScreen>
     <karuta.hpnpwd.wasuramoti.CreditsPreference
       android:key="dummy_credits"

@@ -18,7 +18,7 @@ object PrefKeyNumeric extends Enumeration {
 }
 
 object PrefKeyBool extends Enumeration {
-  type PrefKeyBool = PrefKeyBoolVal
+  type PrefKeyBool = Value
   val VolumeAlert = PrefKeyBoolVal("volume_alert", R.bool.volume_alert_default)
   val RingerModeAlert = PrefKeyBoolVal("ringer_mode_alert", R.bool.ringer_mode_alert_default)
   val UseAudioFocus = PrefKeyBoolVal("use_audio_focus", R.bool.use_audio_focus_default)
@@ -31,7 +31,7 @@ object PrefKeyBool extends Enumeration {
 }
 
 object PrefKeyStr extends Enumeration {
-  type PrefKeyStr = PrefKeyStrVal
+  type PrefKeyStr = Value
   val AudioStreamType = PrefKeyStrVal("audio_stream_type", R.string.audio_stream_type_default)
   protected case class PrefKeyStrVal(key:String, defaultResId:Int) extends super.Val()
   implicit def convert(value: Value) = value.asInstanceOf[PrefKeyStrVal]

@@ -79,6 +79,7 @@ class PrefFragment extends PreferenceFragmentCompat
       case _:YomiInfoPreference => PrefWidgets.newInstance[YomiInfoPreferenceFragment](pref.getKey)
       case _:BugReportPreference => PrefWidgets.newInstance[BugReportPreferenceFragment](pref.getKey)
       case _:CreditsPreference => PrefWidgets.newInstance[CreditsPreferenceFragment](pref.getKey)
+      case _:PrefResetPreference => PrefWidgets.newInstance[PrefResetPreferenceFragment](pref.getKey)
       case _:ColorThemePreference => PrefWidgets.newInstance[ColorThemePreferenceFragment](pref.getKey)
       case _:ReviewLinkPreference => {
         openReviewLink()
