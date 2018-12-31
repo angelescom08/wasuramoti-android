@@ -17,8 +17,30 @@ object PrefKeyNumeric extends Enumeration {
   val WavThreshold = Value("wav_threshold")
 }
 
+object PrefKeyBool extends Enumeration {
+  type PrefKeyBool = PrefKeyBoolVal
+  val VolumeAlert = PrefKeyBoolVal("volume_alert", R.bool.volume_alert_default)
+  val RingerModeAlert = PrefKeyBoolVal("ringer_mode_alert", R.bool.ringer_mode_alert_default)
+  val UseAudioFocus = PrefKeyBoolVal("use_audio_focus", R.bool.use_audio_focus_default)
+  val ShowMessageWhenMoved = PrefKeyBoolVal("show_message_when_moved", R.bool.show_message_when_moved_default)
+  val ShowCurrentIndex = PrefKeyBoolVal("show_current_index", R.bool.show_current_index_default)
+  val PlayAfterSwipe = PrefKeyBoolVal("play_after_swipe", R.bool.play_after_swipe_default)
+  val UseOpenSles = PrefKeyBoolVal("use_opensles", R.bool.use_opensles_default)
+  protected case class PrefKeyBoolVal(key:String, defaultResId:Int) extends super.Val()
+  implicit def convert(value: Value) = value.asInstanceOf[PrefKeyBoolVal]
+}
+
+object PrefKeyStr extends Enumeration {
+  type PrefKeyStr = PrefKeyStrVal
+  val AudioStreamType = PrefKeyStrVal("audio_stream_type", R.string.audio_stream_type_default)
+  protected case class PrefKeyStrVal(key:String, defaultResId:Int) extends super.Val()
+  implicit def convert(value: Value) = value.asInstanceOf[PrefKeyStrVal]
+}
+
 object PrefManager {
   import PrefKeyNumeric._
+  import PrefKeyBool._
+  import PrefKeyStr._
 
   implicit val LongPrefAccept = new PrefAccept[Long] {
     def from(s: String) = s.toLong
@@ -87,5 +109,14 @@ object PrefManager {
   def getPrefDefault[T:PrefAccept](context:Context,key:PrefKeyNumeric):T = {
     val conf = getConf[T](key)
     implicitly[PrefAccept[T]].defaultValue(context, conf.defResId)
+  }
+
+  def getPrefBool(context:Context,key:PrefKeyBool):Boolean = {
+    val defValue = context.getResources.getBoolean(key.defaultResId)
+    Globals.prefs.get.getBoolean(key.key, defValue)
+  }
+  def getPrefStr(context:Context,key:PrefKeyStr):String = {
+    val defValue = context.getResources.getString(key.defaultResId)
+    Globals.prefs.get.getString(key.key, defValue)
   }
 }

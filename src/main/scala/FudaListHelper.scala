@@ -143,7 +143,7 @@ object FudaListHelper{
       }else if(Globals.player.exists(_.is_replay)){
         res.getString(R.string.message_readindex_replay,
           new java.lang.Integer(total_s))
-      }else if(pref.getBoolean("show_current_index",true)){
+      }else if(PrefManager.getPrefBool(context,PrefKeyBool.ShowCurrentIndex)){
         show_seq = true
         res.getString(R.string.message_readindex_shuffle,
           new java.lang.Integer(index_s),

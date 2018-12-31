@@ -466,7 +466,7 @@ class WasuramotiActivity extends AppCompatActivity
         }
       }
     }
-    setVolumeControlStream(Utils.getAudioStreamType)
+    setVolumeControlStream(Utils.getAudioStreamType(this))
     KarutaPlayUtils.setReplayButtonEnabled(this,
       if(Globals.is_playing){
         Some(false)
@@ -580,18 +580,19 @@ class WasuramotiActivity extends AppCompatActivity
     doPlay(from_main_button=true)
   }
   def moveToNextFuda(showToast:Boolean = true, fromAuto:Boolean = false){
+    val context = getApplicationContext
     val is_shuffle = ! Utils.isRandom
     if(is_shuffle){
-      FudaListHelper.moveNext(this.getApplicationContext())
+      FudaListHelper.moveNext(context)
     }
     // In random mode, there is a possibility that same pairs of fuda are read in a row.
     // In that case, if we do not show "now loading" message, the user can know that same pairs are read.
     // Therefore we give force flag to true for refreshAndSetButton.
     this.refreshAndSetButton(!is_shuffle,fromAuto)
-    if(Utils.readCurNext(this.getApplicationContext)){
+    if(Utils.readCurNext(context)){
       invalidateYomiInfo()
     }
-    if(showToast && Globals.prefs.get.getBoolean("show_message_when_moved",true)){
+    if(showToast && PrefManager.getPrefBool(context,PrefKeyBool.ShowMessageWhenMoved)){
       Toast.makeText(getApplicationContext,R.string.message_when_moved,Toast.LENGTH_SHORT).show()
     }
   }
@@ -631,7 +632,7 @@ class WasuramotiActivity extends AppCompatActivity
         KarutaPlayUtils.last_confirmed_for_volume = Some(cur_time)
         if(bundle.getBoolean("checked")){
           val edit = Globals.prefs.get.edit
-          edit.putBoolean("volume_alert",false)
+          edit.putBoolean(PrefKeyBool.VolumeAlert.key,false)
           edit.commit()
         }
         if(bundle.getInt("which") == DialogInterface.BUTTON_POSITIVE){
@@ -646,7 +647,7 @@ class WasuramotiActivity extends AppCompatActivity
         KarutaPlayUtils.last_confirmed_for_ringer_mode = Some(cur_time)
         if(bundle.getBoolean("checked")){
           val edit = Globals.prefs.get.edit
-          edit.putBoolean("ringer_mode_alert",false)
+          edit.putBoolean(PrefKeyBool.RingerModeAlert.key,false)
           edit.commit()
         }
         if(bundle.getInt("which") == DialogInterface.BUTTON_POSITIVE){

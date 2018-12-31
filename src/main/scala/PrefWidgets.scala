@@ -365,7 +365,7 @@ class AudioVolumePreferenceFragment extends PreferenceDialogFragmentCompat {
       seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
         override def onProgressChanged(bar:SeekBar,progress:Int,fromUser:Boolean){
           val volume = math.min(((progress.toFloat/seek.getMax.toFloat)*max_volume).toInt,max_volume)
-          audio_manager.setStreamVolume(Utils.getAudioStreamType,volume,0)
+          audio_manager.setStreamVolume(Utils.getAudioStreamType(context),volume,0)
         }
         override def onStartTrackingTouch(bar:SeekBar){
         }
@@ -383,8 +383,9 @@ class AudioVolumePreference(context:Context,attrs:AttributeSet) extends DialogPr
   def withAudioVolume(defValue:Any,func:(AudioManager,Int,Int)=>Any):Any = {
     val audio_manager = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(audio_manager != null){
-      val max_volume = audio_manager.getStreamMaxVolume(Utils.getAudioStreamType)
-      val current_volume = audio_manager.getStreamVolume(Utils.getAudioStreamType)
+      val streamType = Utils.getAudioStreamType(context)
+      val max_volume = audio_manager.getStreamMaxVolume(streamType)
+      val current_volume = audio_manager.getStreamVolume(streamType)
       func(audio_manager,max_volume,current_volume)
     }else{
       defValue

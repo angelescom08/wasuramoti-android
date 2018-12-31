@@ -8,4 +8,13 @@
   <string name="wav_fadeout_simo_default">0.2</string>
   <string name="wav_span_simokami_default">1.0</string>
   <string name="dimlock_minutes_default">5</string>
+
+  <bool name="volume_alert_default">true</bool>
+  <bool name="ringer_mode_alert_default">true</bool>
+  <bool name="use_audio_focus_default">true</bool>
+  <bool name="show_message_when_moved_default">true</bool>
+  <bool name="show_current_index_default">true</bool>
+  <bool name="play_after_swipe_default">false</bool>
+  <bool name="use_opensles_default">false</bool>
+  <string name="audio_stream_type_default">MUSIC</string>
 </resources>

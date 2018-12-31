@@ -101,14 +101,15 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
 
   def makeMusicTrack(queue:AudioQueue){
     val decoder = getFirstDecoder(queue)
+    val context = activity.getApplicationContext
 
-    if(Globals.prefs.get.getBoolean("use_opensles",false)){
+    if(PrefManager.getPrefBool(context,PrefKeyBool.UseOpenSles)){
       // TODO: support audio other than 22050 mono
       if(decoder.channels != 1 || decoder.rate != 22050){
         throw new OpenSLESInvalidAudioFormatException("invalid audio format")
       }
       // it is safe to call slesCreateEngine multiple times.
-      if(!(OpenSLESPlayer.slesCreateEngine() && OpenSLESPlayer.slesCreateBufferQueueAudioPlayer(Utils.getAudioStreamType))){
+      if(!(OpenSLESPlayer.slesCreateEngine() && OpenSLESPlayer.slesCreateBufferQueueAudioPlayer(Utils.getAudioStreamType(context)))){
         throw new OpenSLESInitException("init error")
       }
       music_track = Some(Right(new OpenSLESTrack))
@@ -118,6 +119,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
   }
 
   def makeAudioTrack(decoder:OggVorbisDecoder,queue:AudioQueue){
+    val context = activity.getApplicationContext
     val buffer_size_bytes = AudioHelper.calcBufferSize(decoder,queue)
     val (audio_format,rate_1) = if(decoder.bit_depth == 16){
       (AudioFormat.ENCODING_PCM_16BIT,2)
@@ -136,7 +138,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     val rate_3 = rate_1 * rate_2
     buffer_size = (buffer_size / rate_3) * rate_3
 
-    music_track = Some(Left(new AudioTrack( Utils.getAudioStreamType,
+    music_track = Some(Left(new AudioTrack( Utils.getAudioStreamType(context),
       decoder.rate.toInt,
       channels,
       audio_format,
@@ -177,9 +179,10 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     if(set_audio_volume && av.nonEmpty){
       return (av.get < threshold)
     }else{
-      val am = activity.getApplicationContext.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+      val context = activity.getApplicationContext
+      val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
-        val stream_type = Utils.getAudioStreamType
+        val stream_type = Utils.getAudioStreamType(context)
         val max_volume =  am.getStreamMaxVolume(stream_type)
         val cur_volume = am.getStreamVolume(stream_type)
         if(max_volume > 0 && cur_volume.toFloat / max_volume.toFloat < threshold){
@@ -253,6 +256,7 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       if(Globals.is_playing){
         return
       }
+      val context = activity.getApplicationContext
       lazy val baseBundle = {
         val b = new Bundle
         b.putBundle("play_bundle",bundle)
@@ -267,13 +271,13 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
       val haveToAlert = !fromAuto &&
          Array(KarutaPlayUtils.SENDER_MAIN,KarutaPlayUtils.SENDER_REPLAY).contains(bundle.getString("fromSender"))
       if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_volume)
-        && Globals.prefs.get.getBoolean("volume_alert",true) && isDeviceVolumeTooSmall){
+        && PrefManager.getPrefBool(context,PrefKeyBool.VolumeAlert) && isDeviceVolumeTooSmall){
         val args = baseBundle
         args.putString("tag","volume_alert_confirm")
         CommonDialog.generalCheckBoxConfirmDialogWithCallback(
           activity,Right(R.string.conf_volume_alert_confirm),Right(R.string.never_confirm_again),args)
       }else if(haveToAlert && KarutaPlayUtils.elapsedEnoghSinceLastConfirm(cur_time,KarutaPlayUtils.last_confirmed_for_ringer_mode) &&
-        Globals.prefs.get.getBoolean("ringer_mode_alert",true) && haveToAlertForSilentMode){
+        PrefManager.getPrefBool(context,PrefKeyBool.RingerModeAlert) && haveToAlertForSilentMode){
         val args = baseBundle
         args.putString("tag","ringer_mode_alert_confirm")
         CommonDialog.generalCheckBoxConfirmDialogWithCallback(

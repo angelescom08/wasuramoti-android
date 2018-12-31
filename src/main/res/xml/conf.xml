@@ -136,7 +136,7 @@
           android:key="play_after_swipe"
           android:title="@string/conf_play_after_swipe"
           android:summary="@string/conf_play_after_swipe_summary"
-          android:defaultValue="false"
+          android:defaultValue="@bool/play_after_swipe_default"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_display">
@@ -144,13 +144,13 @@
           android:key="show_message_when_moved"
           android:title="@string/conf_show_message_when_moved"
           android:summary="@string/conf_show_message_when_moved_summary"
-          android:defaultValue="true"
+          android:defaultValue="@bool/show_message_when_moved_default"
           />
         <CheckBoxPreference
           android:key="show_current_index"
           android:title="@string/conf_show_current_index"
           android:summary="@string/conf_show_current_index_summary"
-          android:defaultValue="true"
+          android:defaultValue="@bool/show_current_index_default"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_behavior">
@@ -158,19 +158,19 @@
           android:key="use_audio_focus"
           android:title="@string/conf_use_audio_focus"
           android:summary="@string/conf_use_audio_focus_summary"
-          android:defaultValue="true"
+          android:defaultValue="@bool/use_audio_focus_default"
           />
         <CheckBoxPreference
           android:key="ringer_mode_alert"
           android:title="@string/conf_ringer_mode_alert"
           android:summary="@string/conf_ringer_mode_alert_summary"
-          android:defaultValue="true"
+          android:defaultValue="@bool/ringer_mode_alert_default"
           />
         <CheckBoxPreference
           android:key="volume_alert"
           android:title="@string/conf_volume_alert"
           android:summary="@string/conf_volume_alert_summary"
-          android:defaultValue="true"
+          android:defaultValue="@bool/volume_alert_default"
           />
       </PreferenceCategory>
       <PreferenceCategory android:title="@string/category_time">
@@ -248,7 +248,7 @@
           android:key="use_opensles"
           android:title="@string/conf_use_opensles"
           android:summary="@string/conf_use_opensles_summary"
-          android:defaultValue="false"
+          android:defaultValue="@bool/use_opensles_default"
           />
       </PreferenceCategory>
       <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
@@ -257,7 +257,7 @@
         android:summary="@string/conf_audio_stream_type_summary"
         android:entries="@array/conf_audio_stream_type_entries"
         android:entryValues="@array/conf_audio_stream_type_entryValues"
-        android:defaultValue="MUSIC"
+        android:defaultValue="@string/audio_stream_type_default"
         android:widgetLayout="@layout/conf_current_value"
         />
     </PreferenceScreen>

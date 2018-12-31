@@ -173,7 +173,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
             }
             case None => {
               view.findViewById[TextView](R.id.equalizer_message).setText(
-                if(Globals.prefs.get.getBoolean("use_opensles",false)){
+                if(PrefManager.getPrefBool(context,PrefKeyBool.UseOpenSles)){
                   R.string.equalizer_not_available_in_opensles
                 }else{
                   R.string.equalizer_error_notsupported

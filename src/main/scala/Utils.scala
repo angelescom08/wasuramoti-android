@@ -453,10 +453,11 @@ object Utils {
     readPrefAudioVolume.foreach{ pref_volume =>
       val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
       if(am != null){
-        val max_volume = am.getStreamMaxVolume(Utils.getAudioStreamType)
+        val streamType = Utils.getAudioStreamType(context)
+        val max_volume = am.getStreamMaxVolume(streamType)
         val new_volume = math.min((pref_volume*max_volume).toInt,max_volume)
-        Globals.audio_volume_bkup = Some(am.getStreamVolume(Utils.getAudioStreamType))
-        am.setStreamVolume(Utils.getAudioStreamType,new_volume,0)
+        Globals.audio_volume_bkup = Some(am.getStreamVolume(streamType))
+        am.setStreamVolume(streamType,new_volume,0)
       }
     }
   }
@@ -474,7 +475,7 @@ object Utils {
     Globals.audio_volume_bkup.foreach{ volume =>
         val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
         if(am != null){
-          am.setStreamVolume(Utils.getAudioStreamType,volume,0)
+          am.setStreamVolume(Utils.getAudioStreamType(context),volume,0)
         }
     }
     Globals.audio_volume_bkup = None
@@ -617,10 +618,12 @@ object Utils {
       manager.set(typ,triggerAtMillis,operation)
     }
   }
-  def getAudioStreamType():Int = {
+  def getAudioStreamType(context:Context):Int = {
     import AudioManager._
+    val key = PrefKeyStr.AudioStreamType
+    val defaultValue = context.getResources.getString(key.defaultResId)
     Globals.prefs.map{
-      _.getString("audio_stream_type","MUSIC") match {
+      _.getString(key.key,defaultValue) match {
         case "MUSIC" => STREAM_MUSIC
         case "NOTIFICATION" => STREAM_NOTIFICATION
         case "ALARM" => STREAM_ALARM
@@ -721,7 +724,8 @@ object Utils {
 
 
   def playAfterMove(wa:WasuramotiActivity){
-    if(Globals.player.nonEmpty && Globals.prefs.get.getBoolean("play_after_swipe",false)){
+    val context = wa.getApplicationContext
+    if(Globals.player.nonEmpty && PrefManager.getPrefBool(context,PrefKeyBool.PlayAfterSwipe)){
       wa.doPlay(from_swipe=true)
     }
   }

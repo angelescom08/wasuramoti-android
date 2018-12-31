@@ -279,10 +279,10 @@ object KarutaPlayUtils{
   }
 
   def requestAudioFocus(activity:WasuramotiActivity):Boolean = {
-    if(! Globals.prefs.get.getBoolean("use_audio_focus",true)){
+    val context = activity.getApplicationContext
+    if(! PrefManager.getPrefBool(context,PrefKeyBool.UseAudioFocus)){
       return true
     }
-    val context = activity.getApplicationContext
     abandonAudioFocus(context)
     val am = context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if(am != null){
@@ -312,7 +312,7 @@ object KarutaPlayUtils{
           }
         }
       }
-      val res = am.requestAudioFocus(af,Utils.getAudioStreamType,AudioManager.AUDIOFOCUS_GAIN)
+      val res = am.requestAudioFocus(af,Utils.getAudioStreamType(context),AudioManager.AUDIOFOCUS_GAIN)
       if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         audio_focus = Some(af)
         return true

@@ -208,4 +208,50 @@ class MainTest extends JUnitSuite with Matchers {
     PrefManager.getPrefDefault[Long](context,key) shouldBe 5
   }
 
+  @Test
+  def testPrefBool(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    Utils.initGlobals(context)
+    import PrefKeyBool._
+    val key = VolumeAlert
+    // default value
+    PrefManager.getPrefBool(context,key) shouldBe true
+    val edit = Globals.prefs.get.edit
+
+    // changed to false
+    edit.putBoolean(key.key, false)
+    edit.commit()
+    PrefManager.getPrefBool(context,key) shouldBe false
+
+    // changed to true
+    edit.putBoolean(key.key, true)
+    edit.commit()
+    PrefManager.getPrefBool(context,key) shouldBe true
+
+    // check other defaults
+    PrefManager.getPrefBool(context,RingerModeAlert) shouldBe true
+    PrefManager.getPrefBool(context,UseAudioFocus) shouldBe true
+    PrefManager.getPrefBool(context,ShowMessageWhenMoved) shouldBe true
+    PrefManager.getPrefBool(context,ShowCurrentIndex) shouldBe true
+    PrefManager.getPrefBool(context,PlayAfterSwipe) shouldBe false
+    PrefManager.getPrefBool(context,MoveAfterFirstPhrase) shouldBe true
+    PrefManager.getPrefBool(context,UseOpenSles) shouldBe false
+  }
+  @Test
+  def testPrefStr(){
+    val context = RuntimeEnvironment.application.getApplicationContext
+    Utils.initGlobals(context)
+    import PrefKeyStr._
+    val key = AudioStreamType
+    // default value
+    PrefManager.getPrefStr(context,key) shouldBe "MUSIC"
+    val edit = Globals.prefs.get.edit
+
+    // changed to new value
+    edit.putString(key.key, "RINGER")
+    edit.commit()
+    PrefManager.getPrefStr(context,key) shouldBe "RINGER"
+
+  }
+
 }
