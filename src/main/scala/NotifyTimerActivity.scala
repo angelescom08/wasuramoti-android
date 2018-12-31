@@ -1,5 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
+import android.annotation.TargetApi
 import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager,NotificationChannel}
 import android.media.{AudioManager,RingtoneManager,Ringtone}
 import android.os.{Bundle,Vibrator,Handler}
@@ -262,23 +263,27 @@ class NotifyTimerActivity extends FragmentActivity with WasuramotiBaseTrait{
 
 class NotifyTimerReceiver extends BroadcastReceiver {
   val handler = new Handler
+  @TargetApi(26)
+  def assignNotifyChannel(notify_manager:Option[NotificationManager]){
+    if (android.os.Build.VERSION.SDK_INT >= 26) {
+      // Starting in API>=26, all notifications must be assigned to a channel
+      //   https://developer.android.com/training/notify-user/channels
+      notify_manager.foreach{ manager =>
+        val channel = new NotificationChannel(NotifyTimerUtils.NOTIFICATION_CHANNEL_ID,
+          "Wasuramoti Timer", NotificationManager.IMPORTANCE_DEFAULT)
+        channel.setDescription("Wasuramoti timer for memorization time")
+        // Disable Sound
+        //  https://stackoverflow.com/questions/45919392/disable-sound-from-notificationchannel
+        channel.setSound(null,null)
+        manager.createNotificationChannel(channel)
+      }
+    }
+  }
   override def onReceive(context:Context, intent:Intent) {
     Globals.global_lock.synchronized{
       if (NotifyTimerUtils.notify_manager.isEmpty) {
         NotifyTimerUtils.notify_manager = Option(context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
-        if (android.os.Build.VERSION.SDK_INT >= 26) {
-          // Starting in API>=26, all notifications must be assigned to a channel
-          //   https://developer.android.com/training/notify-user/channels
-          NotifyTimerUtils.notify_manager.foreach{ manager =>
-            val channel = new NotificationChannel(NotifyTimerUtils.NOTIFICATION_CHANNEL_ID,
-              "Wasuramoti Timer", NotificationManager.IMPORTANCE_DEFAULT)
-            channel.setDescription("Wasuramoti timer for memorization time")
-            // Disable Sound
-            //  https://stackoverflow.com/questions/45919392/disable-sound-from-notificationchannel
-            channel.setSound(null,null)
-            manager.createNotificationChannel(channel)
-          }
-        }
+        assignNotifyChannel(NotifyTimerUtils.notify_manager)
       }
 
       val result_intent = new Intent(context, classOf[WasuramotiActivity])
