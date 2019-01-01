@@ -104,21 +104,29 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
     val titleView = view.findViewById[TextView](R.id.pref_reset_title)
     titleView.setText(context.getResources.getString(titleResId))
     val defaultView = view.findViewById[TextView](R.id.pref_reset_default)
-    defaultView.setText(processor.getDefault(context,defResId))
+    val defValue = processor.getDefault(context,defResId)
+    defaultView.setText(defValue)
     val currentView = view.findViewById[TextView](R.id.pref_reset_current)
-    currentView.setText(processor.getCurrent(key))
+    val curValue = processor.getCurrent(key)
+    currentView.setTag(s"CUR_PREF_VAL::${key}")
+    currentView.setText(curValue)
+    if(defValue != curValue){
+      // TODO: don't reuse colors from others, and define our own
+      currentView.setTextColor(Utils.attrColor(context,R.attr.kimarijiLogMainColor))
+    }
     val btn = view.findViewById[Button](R.id.pref_reset_exec)
     btn.setTag((key,defResId))
     btn.setOnClickListener(this)
     view
   }
-  override def onClick(v:View){
+  override def onClick(target:View){
     val context = getContext
-    val (key,defResId) = v.getTag.asInstanceOf[(String,Int)]
+    val (key,defResId) = target.getTag.asInstanceOf[(String,Int)]
     val pref = getPreference.asInstanceOf[PrefResetPreference].findPreferenceInHierarchyPublic(key)
+    val procMaybe = processorMap.get(key)
     if(pref == null){
       // no need to sync with private memebers of Preference, so directly update shared preference
-      processorMap.get(key).foreach{ proc =>
+      procMaybe.foreach{ proc =>
         proc.reset(context,key,defResId)
       }
     }else{
@@ -136,6 +144,12 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
         case _ => {
           Log.v("wasuramoti", s"WARNING: unknown class of preference to set default:${pref.getClass}")
         }
+      }
+    }
+    procMaybe.foreach{proc =>
+      val cur = proc.getCurrent(key)
+      Option(target.getRootView.findViewWithTag[TextView](s"CUR_PREF_VAL::${key}")).foreach{
+        _.setText(cur)
       }
     }
   }

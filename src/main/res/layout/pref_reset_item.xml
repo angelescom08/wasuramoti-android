@@ -3,43 +3,50 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingBottom="3sp" >
+              android:background="?attr/roundBorderDrawable" android:padding="10dp" android:layout_marginTop="10dip"
+              >
   <TextView
     android:id="@+id/pref_reset_title"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+    android:textColor="?attr/generalTextColor"
     />
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      android:paddingBottom="3sp" >
+      >
     <TextView
       android:text="@string/pref_reset_default_label"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:paddingRight="6dp"
       />
     <TextView
       android:id="@+id/pref_reset_default"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textColor="?attr/generalTextColor"
       />
   </LinearLayout>
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      android:paddingBottom="3sp" >
+      >
     <TextView
       android:text="@string/pref_reset_current_label"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:paddingRight="6dp"
       />
     <TextView
       android:id="@+id/pref_reset_current"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textColor="?attr/generalTextColor"
       />
   </LinearLayout>
   <Button
