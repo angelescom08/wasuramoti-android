@@ -250,27 +250,29 @@
           android:summary="@string/conf_use_opensles_summary"
           android:defaultValue="@bool/use_opensles_default"
           />
+        <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+          android:key="audio_stream_type"
+          android:title="@string/conf_audio_stream_type"
+          android:summary="@string/conf_audio_stream_type_summary"
+          android:entries="@array/conf_audio_stream_type_entries"
+          android:entryValues="@array/conf_audio_stream_type_entryValues"
+          android:defaultValue="@string/audio_stream_type_default"
+          android:widgetLayout="@layout/conf_current_value"
+          />
       </PreferenceCategory>
-      <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
-        android:key="audio_stream_type"
-        android:title="@string/conf_audio_stream_type"
-        android:summary="@string/conf_audio_stream_type_summary"
-        android:entries="@array/conf_audio_stream_type_entries"
-        android:entryValues="@array/conf_audio_stream_type_entryValues"
-        android:defaultValue="@string/audio_stream_type_default"
-        android:widgetLayout="@layout/conf_current_value"
-        />
-      <karuta.hpnpwd.wasuramoti.PrefResetPreference
-        android:key="dummy_pref_reset"
-        android:title="@string/conf_pref_reset"
-        android:summary="@string/conf_pref_reset_summary"
-        />
+      <PreferenceCategory android:title="@string/category_extra">
+        <karuta.hpnpwd.wasuramoti.CreditsPreference
+          android:key="dummy_credits"
+          android:title="@string/conf_show_credits"
+          android:summary="@string/conf_show_credits_summary"
+          />
+        <karuta.hpnpwd.wasuramoti.PrefResetPreference
+          android:key="dummy_pref_reset"
+          android:title="@string/conf_pref_reset"
+          android:summary="@string/conf_pref_reset_summary"
+          />
+    </PreferenceCategory>
     </PreferenceScreen>
-    <karuta.hpnpwd.wasuramoti.CreditsPreference
-      android:key="dummy_credits"
-      android:title="@string/conf_show_credits"
-      android:summary="@string/conf_show_credits_summary"
-      />
     <karuta.hpnpwd.wasuramoti.BugReportPreference
       android:key="dummy_bug_report"
       android:title="@string/conf_bug_report"
