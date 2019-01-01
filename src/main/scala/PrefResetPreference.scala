@@ -1,8 +1,8 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.support.v7.app.AlertDialog
-import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder}
-import android.util.AttributeSet
+import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder,ListPreference,CheckBoxPreference,EditTextPreference}
+import android.util.{Log,AttributeSet}
 import android.content.Context
 import android.view.{LayoutInflater,ViewGroup,View}
 import android.widget.{TextView,Button}
@@ -115,15 +115,37 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
   override def onClick(v:View){
     val context = getContext
     val (key,defResId) = v.getTag.asInstanceOf[(String,Int)]
-    processorMap.get(key).foreach{ proc =>
-      proc.reset(context,key,defResId)
-      //TODO: notify changed
+    val pref = getPreference.asInstanceOf[PrefResetPreference].findPreferenceInHierarchyPublic(key)
+    if(pref == null){
+      // no need to sync with private memebers of Preference, so directly update shared preference
+      processorMap.get(key).foreach{ proc =>
+        proc.reset(context,key,defResId)
+      }
+    }else{
+      // we have to update private members of Preference, so call their API
+      pref match {
+        case p:ListPreference => {
+          p.setValue(context.getResources.getString(defResId))
+        }
+        case p:CheckBoxPreference => {
+          p.setChecked(context.getResources.getBoolean(defResId))
+        }
+        case p:EditTextPreference => {
+          p.setText(context.getResources.getString(defResId))
+        }
+        case _ => {
+          Log.v("wasuramoti", s"WARNING: unknown class of preference to set default:${pref.getClass}")
+        }
+      }
     }
   }
 }
-
-
 class PrefResetPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) {
   def this(context:Context,attrs:AttributeSet,def_style:Int) = this(context,attrs)
+  def findPreferenceInHierarchyPublic(key:String):Preference = {
+    //findPreferenceInHierarchy is protected
+    findPreferenceInHierarchy(key)
+  }
+
 }
 
