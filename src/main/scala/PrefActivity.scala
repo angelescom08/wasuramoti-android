@@ -81,10 +81,6 @@ class PrefFragment extends PreferenceFragmentCompat
       case _:CreditsPreference => PrefWidgets.newInstance[CreditsPreferenceFragment](pref.getKey)
       case _:PrefResetPreference => PrefWidgets.newInstance[PrefResetPreferenceFragment](pref.getKey)
       case _:ColorThemePreference => PrefWidgets.newInstance[ColorThemePreferenceFragment](pref.getKey)
-      case _:ReviewLinkPreference => {
-        openReviewLink()
-        return
-      }
       case _ => null
     }
     if(fragment != null){
@@ -139,20 +135,6 @@ class PrefFragment extends PreferenceFragmentCompat
   override def onPreferenceStartScreen(pref:android.support.v7.preference.PreferenceFragmentCompat,screen:PreferenceScreen):Boolean = {
     pref.setPreferenceScreen(screen)
     return true
-  }
-  def openReviewLink(){
-    // https://developer.android.com/distribute/marketing-tools/linking-to-google-play.html
-    val APP_ID = "karuta.hpnpwd.wasuramoti"
-    val try_view = (url:String) => Try{
-      val intent = new Intent(Intent.ACTION_VIEW)
-      intent.setData(Uri.parse(url))
-      startActivity(intent)
-    }
-    (try_view(s"market://details?id=${APP_ID}") orElse
-    try_view (s"http://play.google.com/store/apps/details?id=${APP_ID}"))
-      .recover{ case _:Throwable =>
-        CommonDialog.messageDialog(getActivity,Right(R.string.browser_not_found))
-      }
   }
 }
 

@@ -484,8 +484,6 @@
   <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです</string>
   <string name="conf_bug_report">サポート窓口</string>
   <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら．</string>
-  <string name="conf_review_link">レビューを書く</string>
-  <string name="conf_review_link_summary">Google Playへ移動します. 一言残して頂けると励みになります.</string>
   <string name="bug_report_subject" >Android版わすらもちについて</string>
   <string name="bug_report_summary" >連絡はEメールもしくは匿名フォームで受け付けています．質問，要望，バグ報告何でもどうぞ．</string>
   <string name="bug_report_mail_addr" >Eメール: </string>
