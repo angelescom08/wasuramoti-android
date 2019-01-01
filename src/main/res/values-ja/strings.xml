@@ -747,4 +747,9 @@
   <string name="pref_reset_exec">リセット</string>
 
   <string name="category_extra">おまけ</string>
+  <string name="play_history_disabled">
+    <![CDATA[
+      詠み上げ履歴はランダム順の時は無効です
+    ]]>
+  </string>
 </resources>

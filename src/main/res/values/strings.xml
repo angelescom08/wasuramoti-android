@@ -792,4 +792,9 @@
   <string name="pref_reset_exec">Reset</string>
 
   <string name="category_extra">Extra</string>
+  <string name="play_history_disabled">
+    <![CDATA[
+      History is disabled in random mode.
+    ]]>
+  </string>
 </resources>

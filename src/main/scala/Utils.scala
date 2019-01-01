@@ -833,11 +833,11 @@ object Utils {
       val COLOR_3 = Utils.colorToHex((Utils.attrColor(context,R.attr.kimarijiTertiaryColor)))
       s"""<font color="#$COLOR_1">$kimari_cur</font><font color="#$COLOR_2">$k_b</font><font color="#$COLOR_3">$k_c</font>"""
     }else{
-      kimari_cur + (if(!TextUtils.isEmpty(k_b)){
+      "<tt>" + kimari_cur + (if(!TextUtils.isEmpty(k_b)){
         " / " + k_b
       }else{""}) + (if(!TextUtils.isEmpty(k_c)) {
         " (" + k_c + ")"
-      }else{""})
+      }else{""}) + "</tt>"
     }
   }
 }
