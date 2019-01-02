@@ -41,12 +41,6 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
         return true
       }
     })
-    val form = view.findViewById[Button](R.id.bug_report_anonymous_form)
-    form.setOnClickListener(new View.OnClickListener(){
-      override def onClick(view:View){
-        showAnonymousForm(context)
-      }
-    })
     builder.setView(view)
 
     super.onPrepareDialogBuilder(builder)
@@ -82,27 +76,6 @@ class BugReportPreferenceFragment extends PreferenceDialogFragmentCompat {
     }
   }
 
-  def showAnonymousForm(context:Context){
-    val file = Utils.getProvidedFile(context,Utils.ProvidedAnonymousForm,true)
-    val post_url = context.getResources.getString(R.string.bug_report_url)
-    val bug_report = BugReport.writeBugReportToBase64(context)
-    val html = context.getResources.getString(R.string.bug_report_html,post_url,bug_report)
-    val writer = new PrintWriter(file)
-    try{
-      writer.write(html)
-    }finally{
-      writer.close()
-    }
-    val uri = Utils.getProvidedUri(context,file)
-    val intent = new Intent(Intent.ACTION_VIEW,uri)
-    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    val msg = context.getResources.getString(R.string.choose_browser)
-    try{
-      getActivity.asInstanceOf[PrefActivity].startActivityForResult(Intent.createChooser(intent,msg),BugReport.CLEAN_PROVIDED_REQUEST)
-    }catch{
-      case _:android.content.ActivityNotFoundException => CommonDialog.messageDialog(context,Right(R.string.activity_not_found_for_html))
-    }
-  }
   override def onDialogClosed(positiveResult:Boolean){
   }
 }

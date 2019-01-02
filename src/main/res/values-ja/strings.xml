@@ -483,47 +483,12 @@
   <string name="category_other">その他</string>
   <string name="browser_not_found">この端末にはブラウザはインストールされていないみたいです</string>
   <string name="conf_bug_report">サポート窓口</string>
-  <string name="conf_bug_report_summary">質問，要望，バグ報告はこちら．</string>
+  <string name="conf_bug_report_summary">作者の連絡先</string>
   <string name="bug_report_subject" >Android版わすらもちについて</string>
-  <string name="bug_report_summary" >連絡はEメールもしくは匿名フォームで受け付けています．質問，要望，バグ報告何でもどうぞ．</string>
+  <string name="bug_report_summary" >下記のアドレスをタップするとデバッグに有用な情報がメールに添付されます．</string>
   <string name="bug_report_mail_addr" >Eメール: </string>
-  <string name="bug_report_anonymous_form" >匿名フォーム</string>
-  <string name="bug_report_anonymous_form_notice" >※ お使いのブラウザによっては匿名フォームは表示できない可能性があるのでご容赦下さい．</string>
-  <string name="bug_report_html">
-    <![CDATA[
-      <!DOCTYPE html>
-      <html lang=\"ja\">
-        <head>
-          <meta charset=\"utf-8\">
-          <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>わすらもち匿名フォーム</title>
-          <style type=\"text/css\">
-            h3{
-              border-left: 0.8em solid teal;
-              border-bottom: 1px solid teal;
-              padding-left: 0.3em;
-            }
-            textarea{
-              width: 24em;
-              height: 6em;
-            }
-          </style>
-        </head>
-        <body>
-          <h3>良くある質問</h3>
-            匿名フォームへの質問や要望などに対する返答は <a target=\"_blank\" href=\"http://pjmtdw.github.io/wasuramoti/faq.html\">[こちら]</a> に記載します．<br>
-          <h3>匿名フォーム</h3>
-          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'デバッグに有用な端末の情報を送信しますがよろしいですか？\'))\" >
-            匿名の質問，要望，バグ報告はこちら:<br/>
-            <textarea name=\"bug_detail\"></textarea><br>
-            匿名のバグ報告には返信できないので，メールで連絡してくれた方が直せる確率は高まります．<br>
-            <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
-            <input type=\"submit\" value=\"送信する\">
-          </form>
-        </body>
-      </html>
-    ]]>
-  </string>
+  
+  
   <string name="intended_use_title">初期設定</string>
   <string name="intended_use_desc">主な使用目的を選んで下さい:</string>
   <string name="intended_use_recreation">かるた遊び</string>

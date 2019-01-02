@@ -405,7 +405,6 @@ object Utils {
   }
 
   sealed trait ProvidedName { def template:String }
-  case object ProvidedAnonymousForm extends ProvidedName { val template = "anonymous_form_%s.html" }
   case object ProvidedBugReport extends ProvidedName { val template = "bug_report_%s.gz" }
 
   def getProvidedName(name:ProvidedName):String = {
@@ -437,7 +436,7 @@ object Utils {
   }
 
   def isRecentProvidedFile(file:File):Boolean = {
-    Array(getProvidedName(ProvidedAnonymousForm),getProvidedName(ProvidedBugReport)).contains(file.getName)
+    Array(getProvidedName(ProvidedBugReport)).contains(file.getName)
   }
 
   def cleanProvidedFile(context:Context,all:Boolean){

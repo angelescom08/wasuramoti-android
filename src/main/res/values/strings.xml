@@ -519,48 +519,12 @@
   <string name="conf_show_credits_summary">License of fonts and libraries.</string>
   <string name="category_other">Others</string>
   <string name="browser_not_found">Web Browser not found in this device</string>
-  <string name="bug_report_url">http://wasuramoti.bushidoo.com/bug_report.cgi</string>
-  <string name="conf_bug_report">Support Form</string>
-  <string name="conf_bug_report_summary">Send question, give a request, and report bug to developer.</string>
+  <string name="conf_bug_report">Support</string>
+  <string name="conf_bug_report_summary">Contact to developer.</string>
   <string name="bug_report_subject" >About Wasuramoti for Android</string>
-  <string name="bug_report_summary" >You can contact us by either E-Mail or Anonymous Form. Feel free to ask any question, give a request, and report bug.</string>
+  <string name="bug_report_summary" >Tapping following address will attach debug information to mail.</string>
   <string name="bug_report_mail_addr" >E-Mail: </string>
-  <string name="bug_report_anonymous_form" >Anonymous Form</string>
-  <string name="bug_report_anonymous_form_notice" >Note: Some browser may not support anonymous form.</string>
-  <string name="bug_report_html">
-    <![CDATA[
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">
-          <title>Wasuramoti Anonymous Form</title>
-          <style type=\"text/css\">
-            h3{
-              border-left: 0.8em solid teal;
-              border-bottom: 1px solid teal;
-              padding-left: 0.3em;
-            }
-            textarea{
-              width: 24em;
-              height: 6em;
-            }
-          </style>
-        </head>
-        <body>
-          <h3>Frequently Asked Questions</h3>
-            Answer to anonymous form will be published to <a target=\"_blank\" href=\"http://pjmtdw.github.io/en/wasuramoti/faq.html\">[FAQ]</a>.<br>
-          <h3>Anonymous Form</h3>
-          <form method=\"post\" action=\"%1$s\" onsubmit=\"return(confirm(\'This will send some device information useful for debugging. Is it OK?\'))\" >
-            Anonymous question, request, and bug report:<br>
-            <textarea name=\"bug_detail\"></textarea><br>
-            Contact us by E-Mail if you really want to fix the bug, since we cannot reply to this form.<br>
-            <input type=\"hidden\" name=\"bug_device_info\" value=\"%2$s\">
-            <input type=\"submit\" value=\"Submit\">
-          </form>
-        </body>
-      </html>
-    ]]>
-  </string>
+
   <string name="intended_use_title">Default Config</string>
   <string name="intended_use_desc">Select your intended use:</string>
   <string name="intended_use_recreation">Recreative Karuta</string>

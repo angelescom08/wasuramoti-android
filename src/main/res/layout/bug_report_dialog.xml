@@ -40,18 +40,5 @@
           android:paddingBottom="11dp"
           />
     </LinearLayout>
-    <include layout="@layout/horizontal_rule" />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:text="@string/bug_report_anonymous_form"
-      android:id="@+id/bug_report_anonymous_form"
-    />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bug_report_anonymous_form_notice"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
-      
-      
   </LinearLayout>
 </ScrollView>
