@@ -25,19 +25,12 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
 
   override def buttonMapping = Map(
     R.id.poem_desc_search_poem -> {()=>doWebSearch(false)},
-    R.id.poem_desc_search_author -> {()=>doWebSearch(true)},
-    R.id.poem_desc_reference -> gotoReference _
+    R.id.poem_desc_search_author -> {()=>doWebSearch(true)}
     )
   override def onCreateDialog(saved:Bundle):Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
     val view = LayoutInflater.from(getActivity).inflate(R.layout.poem_description,null)
     getFudanum.foreach{ num =>
-      val source_id = if(num == 0){
-        R.string.poem_desc_reference_wikipedia
-      }else{
-        R.string.poem_desc_reference_shigureden
-      }
-      view.findViewById[TextView](R.id.poem_desc_reference).setText(source_id)
 
       val context = Utils.getOverrideContext(getActivity)
       val poem = AllFuda.get(context,R.array.list_full)(num)
@@ -60,23 +53,6 @@ class PoemDescriptionDialog extends DialogFragment with GetFudanum with ButtonLi
       .setView(view)
       .setPositiveButton(android.R.string.ok,null)
       .create
-  }
-  def gotoReference(){
-    getFudanum.foreach{ num =>
-      val intent = new Intent(Intent.ACTION_VIEW)
-      val url = if(num == 0){
-        getString(R.string.poem_desc_reference_wikipedia_url)
-      }else{
-        "https://www.shigureden.or.jp/about/database_03.html?id="+num
-      }
-      intent.setData(Uri.parse(url))
-      try{
-        startActivity(intent)
-      }catch{
-        case _:android.content.ActivityNotFoundException =>
-          CommonDialog.messageDialog(getActivity,Right(R.string.browser_not_found))
-      }
-    }
   }
   def doWebSearch(search_author:Boolean){
     val fudanum = getFudanum

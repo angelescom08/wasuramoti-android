@@ -36,22 +36,5 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textIsSelectable="true"
         />
-    <LinearLayout
-      android:layout_width="wrap_content" android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      >
-      <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/poem_desc_reference_label"
-        />
-      <Button
-        android:id="@+id/poem_desc_reference"
-        android:text="Source"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    </LinearLayout>
-
-
   </LinearLayout>
 </ScrollView>

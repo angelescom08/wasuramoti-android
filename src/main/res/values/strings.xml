@@ -731,10 +731,6 @@
   <string name="poem_desc_search_label">Web Search:</string>
   <string name="poem_desc_search_poem">Poem</string>
   <string name="poem_desc_search_author">Author</string>
-  <string name="poem_desc_reference_label">Source:</string>
-  <string name="poem_desc_reference_shigureden">Shigureden</string>
-  <string name="poem_desc_reference_wikipedia">Wikipedia</string>
-  <string name="poem_desc_reference_wikipedia_url">https://en.wikipedia.org/wiki/Wani_(scholar)</string>
   <string name="poem_desc_body">
     <![CDATA[
 			<font color="?attr/poemDescColor"><u>Poem</u></font><br>
