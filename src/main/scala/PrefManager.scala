@@ -33,6 +33,7 @@ object PrefKeyBool extends Enumeration {
 object PrefKeyStr extends Enumeration {
   type PrefKeyStr = Value
   val AudioStreamType = PrefKeyStrVal("audio_stream_type", R.string.audio_stream_type_default)
+  val EffectEqualizerSeq = PrefKeyStrVal("effect_equalizer_seq", -1)
   protected case class PrefKeyStrVal(key:String, defaultResId:Int) extends super.Val()
   implicit def convert(value: Value) = value.asInstanceOf[PrefKeyStrVal]
 }
@@ -116,7 +117,11 @@ object PrefManager {
     Globals.prefs.get.getBoolean(key.key, defValue)
   }
   def getPrefStr(context:Context,key:PrefKeyStr):String = {
-    val defValue = context.getResources.getString(key.defaultResId)
+    val defValue = if(key.defaultResId == -1){
+      null
+    } else {
+      context.getResources.getString(key.defaultResId)
+    }
     Globals.prefs.get.getString(key.key, defValue)
   }
 }

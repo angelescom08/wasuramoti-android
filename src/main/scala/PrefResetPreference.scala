@@ -42,7 +42,11 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
 
   case object StringPrefProcessor extends PrefProcessor {
     override def getDefault(context:Context, resId:Int):String = {
-      context.getResources.getString(resId)
+      if(resId == -1){
+        null
+      }else{
+        context.getResources.getString(resId)
+      }
     }
     override def getCurrent(key:String):String = {
       //TODO: get correct default value
@@ -50,18 +54,22 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
     }
     override def reset(context:Context, key:String, defaultResId:Int) {
       val edit = Globals.prefs.get.edit
-      edit.putString(key, context.getResources.getString(defaultResId))
+      if(defaultResId == -1){
+        edit.remove(key)
+      }else{
+        edit.putString(key, context.getResources.getString(defaultResId))
+      }
       edit.commit
     }
   }
 
   case object BoolPrefProcessor extends PrefProcessor {
     override def getDefault(context:Context, resId:Int):String = {
-      context.getResources.getBoolean(resId).toString
+      context.getResources.getBoolean(resId).toString.capitalize
     }
     override def getCurrent(key:String):String = {
       //TODO: get correct default value
-      Globals.prefs.get.getBoolean(key,false).toString
+      Globals.prefs.get.getBoolean(key,false).toString.capitalize
     }
     override def reset(context:Context, key:String, defaultResId:Int) {
       val edit = Globals.prefs.get.edit
@@ -87,10 +95,10 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
         for {
              keyv <- attrs.get("key")
              proc <- processorMap.get(keyv.value)
-             defv <- attrs.get("defaultValue")
              titlev <- attrs.get("title")
             }{
-            val v = genItemView(inflater, proc, keyv.value, titlev.resId, defv.resId)
+            val defResId = attrs.get("defaultValue").map{_.resId}.getOrElse(-1)
+            val v = genItemView(inflater, proc, keyv.value, titlev.resId, defResId)
             container.addView(v)
         }
       }
@@ -122,8 +130,13 @@ class PrefResetPreferenceFragment extends PreferenceDialogFragmentCompat with Vi
   override def onClick(target:View){
     val context = getContext
     val (key,defResId) = target.getTag.asInstanceOf[(String,Int)]
-    val pref = getPreference.asInstanceOf[PrefResetPreference].findPreferenceInHierarchyPublic(key)
     val procMaybe = processorMap.get(key)
+    if(defResId == -1){
+      procMaybe.foreach{ proc =>
+        proc.reset(context,key,defResId)
+      }
+    }
+    val pref = getPreference.asInstanceOf[PrefResetPreference].findPreferenceInHierarchyPublic(key)
     if(pref == null){
       // no need to sync with private memebers of Preference, so directly update shared preference
       procMaybe.foreach{ proc =>

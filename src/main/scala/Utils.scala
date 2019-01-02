@@ -481,8 +481,8 @@ object Utils {
     Globals.audio_volume_bkup = None
   }
 
-  def getPrefsEqualizer():EqualizerSeq = {
-    val str = Globals.prefs.get.getString("effect_equalizer_seq","")
+  def getPrefsEqualizer(context:Context):EqualizerSeq = {
+    val str = PrefManager.getPrefStr(context,PrefKeyStr.EffectEqualizerSeq)
     if(TextUtils.isEmpty(str)){
       Seq()
     }else{

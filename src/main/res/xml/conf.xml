@@ -131,6 +131,7 @@
           android:key="effect_equalizer_seq"
           android:title="@string/conf_equalizer"
           android:summary="@string/conf_equalizer_summary"
+          android:widgetLayout="@layout/conf_current_value"
           />
         <CheckBoxPreference
           android:key="play_after_swipe"

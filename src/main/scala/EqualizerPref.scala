@@ -5,6 +5,7 @@ import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentC
 import android.view.{View,LayoutInflater}
 import android.widget.{LinearLayout,TextView,SeekBar,Button}
 import android.media.audiofx.Equalizer
+import android.text.TextUtils
 
 class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
   var root_view = None:Option[View]
@@ -97,7 +98,7 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
     view.findViewById[LinearLayout](R.id.equalizer_linear).addView(vw)
 
     // Each SeekBars
-    val prev_seq = Utils.getPrefsEqualizer()
+    val prev_seq = Utils.getPrefsEqualizer(getContext)
     for(i <- 0 until number_of_bands.get){
       val vw = inflater.inflate(R.layout.equalizer_item, null)
         val freq = equalizer.getCenterFreq(i.toShort)/1000
@@ -193,5 +194,13 @@ class EqualizerPreferenceFragment extends PreferenceDialogFragmentCompat {
 }
 
 class EqualizerPreference(context:Context,attrs:AttributeSet) extends DialogPreference(context,attrs) with CustomPref {
-
+  override def getAbbrValue():String = {
+    val equalizer = PrefManager.getPrefStr(context,PrefKeyStr.EffectEqualizerSeq)
+    val resid = if(TextUtils.isEmpty(equalizer)){
+      R.string.message_disabled
+    } else {
+      R.string.message_enabled
+    }
+    context.getResources.getString(resid)
+  }
 }

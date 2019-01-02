@@ -147,7 +147,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
     makeEqualizer()
   }
   def makeEqualizer(force:Boolean=false){
-    val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer())
+    val context = activity.getApplicationContext
+    val ar = equalizer_seq.getOrElse(Utils.getPrefsEqualizer(context))
     if(equalizer.nonEmpty || (!force && ar.seq.isEmpty)){
       return
     }
@@ -209,7 +210,8 @@ class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reade
   }
 
   def checkEqualizerVolume():Boolean = {
-    val eql = Utils.getPrefsEqualizer.flatten
+    val context = activity.getApplicationContext
+    val eql = Utils.getPrefsEqualizer(context).flatten
     eql.isEmpty || ! eql.forall{  _ < 0.05}
   }
 
