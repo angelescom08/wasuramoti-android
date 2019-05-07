@@ -85,7 +85,16 @@
       android:widgetLayout="@layout/conf_current_value"
       />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/category_hokkaido">
+  <PreferenceCategory android:title="@string/category_study">
+    <karuta.hpnpwd.wasuramoti.ListPreferenceCustom
+      android:key="yomi_info_torifuda_rotate"
+      android:title="@string/conf_torifuda_rotate"
+      android:summary="@string/conf_torifuda_rotate_summary"
+      android:entries="@array/conf_torifuda_rotate_entries"
+      android:entryValues="@array/conf_torifuda_rotate_entryValues"
+      android:defaultValue="@string/audio_stream_type_default"
+      android:widgetLayout="@layout/conf_current_value"
+      />
     <CheckBoxPreference
       android:key="show_kimari_simo"
       android:title="@string/conf_kimari_simo"

@@ -715,7 +715,7 @@
     </p>
     ]]>
   </string>
-  <string name="category_hokkaido">Shimo-No-Ku Karuta</string>
+  <string name="category_study">Study</string>
   <string name="conf_rewind_button">Show Rewind Button</string>
   <string name="conf_rewind_button_summary">Restore recent poem to the deck.</string>
   <string name="rewind_button_confirm">Really restore `%s` to deck?</string>
@@ -723,6 +723,18 @@
   <string name="rewind_only_for_shuffle">Rewind is only for shuffle mode.</string>
   <string name="conf_kimari_simo">Show Kimariji for Shimo-No-Ku</string>
   <string name="conf_kimari_simo_summary">Shimo-No-Ku is second half of the poem.</string>
+  <string name="conf_torifuda_rotate">Rotate Torifuda</string>
+  <string name="conf_torifuda_rotate_summary">Rotate Torifuda upside down</string>
+  <string-array name="conf_torifuda_rotate_entries">
+    <item>NORMAL</item>
+    <item>REVERSE</item>
+    <item>RANDOM</item>
+  </string-array>
+  <string-array name="conf_torifuda_rotate_entryValues">
+    <item>Normal</item>
+    <item>Reverse</item>
+    <item>Random</item>
+  </string-array>
   <string name="rewind_button">Restore</string>
 
   <string name="category_button">Button</string>

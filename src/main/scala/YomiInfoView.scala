@@ -1,5 +1,5 @@
 package karuta.hpnpwd.wasuramoti
-import android.content.{Context,SharedPreferences}
+import android.content.Context
 import android.view.{View,MotionEvent}
 import android.text.TextUtils
 import android.graphics.{Canvas,Paint,Color,Rect,Path}
@@ -90,7 +90,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
-      torifuda_reverse = checkHaveToReverse(prefs)
+      torifuda_reverse = checkHaveToReverse(context)
       info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(prefs)
     }
     if(!show_author && !show_kami && !show_simo){
@@ -99,8 +99,8 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     initDrawing()
   }
 
-  def checkHaveToReverse(prefs:SharedPreferences):Boolean = {
-    prefs.getString("yomi_info_torifuda_rotate","NORMAL") match {
+  def checkHaveToReverse(context:Context):Boolean = {
+    PrefManager.getPrefStr(context,PrefKeyStr.TorifudaRotate) match {
       case "REVERSE" => true
       case "RANDOM" => Globals.rand.nextBoolean()
       case _ => false

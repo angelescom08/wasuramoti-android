@@ -33,6 +33,7 @@ object PrefKeyBool extends Enumeration {
 object PrefKeyStr extends Enumeration {
   type PrefKeyStr = Value
   val AudioStreamType = PrefKeyStrVal("audio_stream_type", R.string.audio_stream_type_default)
+  val TorifudaRotate = PrefKeyStrVal("yomi_info_torifuda_rotate", R.string.torifuda_rotate_default)
   val EffectEqualizerSeq = PrefKeyStrVal("effect_equalizer_seq", -1)
   protected case class PrefKeyStrVal(key:String, defaultResId:Int) extends super.Val()
   implicit def convert(value: Value) = value.asInstanceOf[PrefKeyStrVal]

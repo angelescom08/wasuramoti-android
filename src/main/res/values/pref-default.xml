@@ -17,4 +17,5 @@
   <bool name="play_after_swipe_default">false</bool>
   <bool name="use_opensles_default">false</bool>
   <string name="audio_stream_type_default">MUSIC</string>
+  <string name="torifuda_rotate_default">NORMAL</string>
 </resources>
