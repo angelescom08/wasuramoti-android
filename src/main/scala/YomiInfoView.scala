@@ -1,5 +1,5 @@
 package karuta.hpnpwd.wasuramoti
-import android.content.Context
+import android.content.{Context,SharedPreferences}
 import android.view.{View,MotionEvent}
 import android.text.TextUtils
 import android.graphics.{Canvas,Paint,Color,Rect,Path}
@@ -90,6 +90,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
+      reverse_mode = checkHaveToReverse(prefs)
       info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(prefs)
     }
     if(!show_author && !show_kami && !show_simo){
@@ -97,6 +98,15 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }
     initDrawing()
   }
+
+  def checkHaveToReverse(prefs:SharedPreferences):Boolean = {
+    prefs.getString("yomi_info_torifuda_rotate","NORMAL") match {
+      case "REVERSE" => true
+      case "RANDOM" => Globals.rand.nextBoolean()
+      case _ => false
+    }
+  }
+
   def initDrawing(){
     if(torifuda_mode){
       initTorifuda()
@@ -109,6 +119,10 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     }
   }
   override def onDraw(canvas:Canvas){
+    if(reverse_mode){
+      canvas.save()
+      canvas.rotate(180, canvas.getWidth/2, canvas.getHeight/2)
+    }
     super.onDraw(canvas)
     if(torifuda_mode){
       onDrawTorifuda(canvas)
@@ -120,6 +134,9 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       onDrawYomifuda(canvas)
     }
     rendered_num = cur_num
+    if(reverse_mode){
+      canvas.restore()
+    }
   }
 
   // This does not include span height
@@ -227,6 +244,8 @@ trait YomiInfoYomifudaTrait{
   var show_author = true
   var show_kami = true
   var show_simo = true
+
+  var reverse_mode = false
 
   def initYomifuda(){
     val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)
