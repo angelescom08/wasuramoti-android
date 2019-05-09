@@ -682,7 +682,7 @@
   <string name="conf_kimari_simo_summary">決まり字は現代仮名遣いです（けふ→きょう，あふ→おお）</string>
   <string name="conf_torifuda_rotate">取り札を回転</string>
   <string name="conf_torifuda_rotate_summary">取り札を逆さに回転する</string>
-  <string-array name="conf_torifuda_rotate_entryValues">
+  <string-array name="conf_torifuda_rotate_entries">
     <item>通常</item>
     <item>逆さ</item>
     <item>ランダム</item>

@@ -90,7 +90,9 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
-      torifuda_reverse = checkHaveToReverse(context)
+      if(torifuda_reverse.isEmpty){
+        torifuda_reverse = Some(checkHaveToReverse(context))
+      }
       info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(prefs)
     }
     if(!show_author && !show_kami && !show_simo){
@@ -121,12 +123,12 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
     if(torifuda_mode){
-      if(torifuda_reverse){
+      if(torifuda_reverse.getOrElse(false)){
         canvas.save()
         canvas.rotate(180, canvas.getWidth/2, canvas.getHeight/2)
       }
       onDrawTorifuda(canvas)
-      if(torifuda_reverse){
+      if(torifuda_reverse.getOrElse(false)){
         canvas.restore()
       }
     }else if(info_lang == Utils.YomiInfoLang.English){
@@ -245,7 +247,7 @@ trait YomiInfoYomifudaTrait{
   var show_kami = true
   var show_simo = true
 
-  var torifuda_reverse = false
+  var torifuda_reverse:Option[Boolean] = None
 
   def initYomifuda(){
     val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)
