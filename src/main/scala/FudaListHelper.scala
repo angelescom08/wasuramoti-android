@@ -9,7 +9,7 @@ import android.text.TextUtils
 import scala.collection.mutable
 
 case class FudaSet(id:Long, title:String, body:String, set_size: Int)
-case class NumWithOrder(num:Int, order:Int)
+case class NumWithOrder(num:Int, order:Int, torifuda_reverse:Boolean)
 case class CurNext(cur:NumWithOrder, next:NumWithOrder)
 
 // According to one of the Android framework engineer, there is no need to close the database in content provider.
@@ -253,7 +253,7 @@ object FudaListHelper{
       (condbase,Array(index.toString))
     }
 
-    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order"),cond,args,null,null,"read_order "+order,"2")
+    val cursor = db.query(Globals.TABLE_FUDALIST,Array("num","read_order", "torifuda_reverse"),cond,args,null,null,"read_order "+order,"2")
     try{
       cursor.moveToFirst()
       func(cursor)
@@ -268,21 +268,21 @@ object FudaListHelper{
 
   def queryOne(index:Int, go_forward:Boolean):Option[NumWithOrder] = {
     queryBase(index,go_forward){cursor=>
-      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1),cursor.getInt(2)!=0)
       return Some(no_cur)
     }
   }
   def queryTwo(index:Int,go_forward:Boolean,force_current:Boolean=false):Option[CurNext] = {
     queryBase(index,go_forward,force_current){cursor=>
-      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      val no_cur = NumWithOrder(cursor.getInt(0),cursor.getInt(1),cursor.getInt(2)!=0)
       val roe = Globals.prefs.get.getString("read_order_each","CUR2_NEXT1")
       if(go_forward && cursor.getCount == 1 && !roe.contains("NEXT")){
         val maxn = AllFuda.list.length + 1
-        val no_next = NumWithOrder(maxn,maxn)
+        val no_next = NumWithOrder(maxn,maxn,false)
         return Some(CurNext(no_cur,no_next))
       }
       cursor.moveToNext()
-      val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1))
+      val no_next = NumWithOrder(cursor.getInt(0),cursor.getInt(1),cursor.getInt(2)!=0)
       return Some(CurNext(no_cur,no_next))
     }
   }
@@ -494,6 +494,7 @@ object FudaListHelper{
       for ( (v,i) <- shuffled.zipWithIndex ){
         val cv = new ContentValues
         cv.put("read_order",new java.lang.Integer(i+1))
+        cv.put("torifuda_reverse", new java.lang.Integer(Globals.rand.nextInt(2)))
         db.update(Globals.TABLE_FUDALIST,cv,"num = ?",Array(v.toString))
       })
     db.close()
@@ -640,19 +641,19 @@ object FudaListHelper{
     }
   }
 
-  def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[Int] = {
+  def getOrQueryFudaNumToRead(context:Context,offset:Int):Option[(Int,Boolean)] = {
     val r = offset match{
       case 0 =>
-        Globals.player.map{_.cur_num}
+        Globals.player.map{x=>(x.cur_num,x.cur_torifuda_reverse)}
         .orElse{
           val current_index = getCurrentIndex(context)
-          queryOne(current_index, true).map{_.num}
+          queryOne(current_index, true).map{x=>(x.num,x.torifuda_reverse)}
         }
       case 1 =>
-        Globals.player.map{_.next_num}
+        Globals.player.map{x=>(x.next_num,x.next_torifuda_reverse)}
         .orElse{
           val current_index = getCurrentIndex(context)
-          queryNext(current_index).map{_.next.num}
+          queryNext(current_index).map{x=>(x.next.num,x.next.torifuda_reverse)}
         }
       case -1 =>
         val current_index = getCurrentIndex(context)
@@ -661,11 +662,11 @@ object FudaListHelper{
           // It occurs when in either one of the following condition holds.
           // (1) go last poem -> memorization mode -> click `memorized` -> swipe rightwards
           // (2) go last poem -> play the poem -> restart app
-          queryOne(current_index, false).map{_.num}
+          queryOne(current_index, false).map{x=>(x.num,x.torifuda_reverse)}
         }else{
           //TODO: maybe we don't have to check memorization_mode, and always set force_current = true
           val force_current = Globals.prefs.get.getBoolean("memorization_mode",false)
-          queryTwo(current_index,false,force_current).map{_.next.num}
+          queryTwo(current_index,false,force_current).map{x=>(x.next.num,x.next.torifuda_reverse)}
         }
       case _ =>
         throw new Exception("offset must be between -1 and 2: " + offset)

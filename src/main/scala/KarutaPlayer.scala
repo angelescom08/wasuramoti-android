@@ -32,7 +32,14 @@ object KarutaPlayerDebug{
 
 case class OpenSLESTrack()
 
-class KarutaPlayer(var activity:WasuramotiActivity,val maybe_reader:Option[Reader],val cur_num:Int,val next_num:Int) extends BugReportable{
+class KarutaPlayer(
+  var activity:WasuramotiActivity,
+  val maybe_reader:Option[Reader],
+  val cur_num:Int,
+  val next_num:Int,
+  val cur_torifuda_reverse:Boolean,
+  val next_torifuda_reverse:Boolean
+) extends BugReportable{
   type AudioQueue = AudioHelper.AudioQueue
   var cur_millisec = 0:Long
   var music_track = None:Option[Either[AudioTrack,OpenSLESTrack]]

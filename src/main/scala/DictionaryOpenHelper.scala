@@ -64,10 +64,16 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
         db.execSQL(s"CREATE UNIQUE INDEX unique_readers_path ON ${Globals.TABLE_READERS} (path);")
       })
     }
+    if(oldv < 7){
+      Utils.withTransaction(db, () => {
+        db.execSQL(s"ALTER TABLE ${Globals.TABLE_FUDALIST} ADD COLUMN torifuda_reverse INTEGER;")
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET torifuda_reverse=0;")
+      })
+    }
   }
   override def onCreate(db:SQLiteDatabase){
      db.execSQL(s"CREATE TABLE ${Globals.TABLE_FUDASETS} (id INTEGER PRIMARY KEY, title TEXT UNIQUE, body TEXT, set_size INTEGER, set_order INTEGER);")
-     db.execSQL(s"CREATE TABLE ${Globals.TABLE_FUDALIST} (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER, memorized INTEGER);")
+     db.execSQL(s"CREATE TABLE ${Globals.TABLE_FUDALIST} (id INTEGER PRIMARY KEY, num INTEGER UNIQUE, read_order INTEGER, skip INTEGER, memorized INTEGER, torifuda_reverse INTEGER);")
      db.execSQL(s"CREATE TABLE ${Globals.TABLE_READFILTER} (id INTEGER PRIMARY KEY, readers_id INTEGER, num INTEGER, volume NUMERIC, pitch NUMECIR, speed NUMERIC);")
      db.execSQL(s"CREATE TABLE ${Globals.TABLE_READERS} (id INTEGER PRIMARY KEY, path TEXT UNIQUE, joka_upper INTEGER, joka_lower INTEGER);")
      Utils.withTransaction(db, () => {

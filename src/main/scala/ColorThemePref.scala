@@ -1,6 +1,6 @@
 package karuta.hpnpwd.wasuramoti
 
-import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder}
+import android.support.v7.preference.{DialogPreference,PreferenceDialogFragmentCompat}
 import android.content.Context
 import android.util.AttributeSet
 import android.view.{View,LayoutInflater,ViewGroup}

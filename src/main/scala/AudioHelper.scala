@@ -113,16 +113,18 @@ object AudioHelper{
         .orElse(activity.getCurNumInView)
         .orElse(FudaListHelper.queryRandom)
         .getOrElse(0)
+      val cur_torifuda_reverse = Globals.rand.nextBoolean()
       val next_num = FudaListHelper.queryRandom
+      val next_torifuda_reverse = Globals.rand.nextBoolean()
       next_num.map{
-       (cur_num,_)
+       (cur_num,_,cur_torifuda_reverse,next_torifuda_reverse)
       }
     }else{
       FudaListHelper.queryNext(current_index).map{
-        x=>(x.cur.num,x.next.num)
+        x=>(x.cur.num,x.next.num,x.cur.torifuda_reverse,x.next.torifuda_reverse)
       }
     }
-    num.flatMap{case(cur_num,next_num) =>{
+    num.flatMap{case(cur_num,next_num,cur_torifuda_reverse,next_torifuda_reverse) =>{
         val num_changed = old_player.forall{ x => (x.cur_num, x.next_num) != ((cur_num, next_num)) }
         val (readable,reason) = maybe_reader.get.bothReadable(cur_num,next_num)
         if(!readable){
@@ -137,7 +139,7 @@ object AudioHelper{
             // TODO: do we have to wait for decode to finish since it is jni ?
             p.stop(fromAuto)
           }
-          Some(new KarutaPlayer(activity,maybe_reader,cur_num,next_num))
+          Some(new KarutaPlayer(activity,maybe_reader,cur_num,next_num,cur_torifuda_reverse,next_torifuda_reverse))
         }else{
           old_player
         }

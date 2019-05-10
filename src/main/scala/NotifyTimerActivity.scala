@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.annotation.TargetApi
-import android.app.{Activity,Notification,AlarmManager,PendingIntent,NotificationManager,NotificationChannel}
+import android.app.{Activity,AlarmManager,PendingIntent,NotificationManager,NotificationChannel}
 import android.media.{AudioManager,RingtoneManager,Ringtone}
 import android.os.{Bundle,Vibrator,Handler}
 import android.net.Uri

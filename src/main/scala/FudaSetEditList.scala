@@ -2,7 +2,7 @@ package karuta.hpnpwd.wasuramoti
 
 import android.app.Dialog
 import android.os.Bundle
-import android.content.{Context,DialogInterface}
+import android.content.Context
 import android.view.View
 import android.widget.{ArrayAdapter,AdapterView,ListView,TextView}
 

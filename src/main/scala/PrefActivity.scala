@@ -2,7 +2,6 @@ package karuta.hpnpwd.wasuramoti
 
 import android.os.Bundle
 import android.content.{Context,SharedPreferences,Intent}
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.{View,ViewGroup}
 import android.widget.{CheckBox,LinearLayout,CompoundButton}
@@ -12,8 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.{Preference,EditTextPreference,ListPreference,PreferenceScreen,PreferenceDialogFragmentCompat}
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
-
-import scala.util.Try
 
 class PrefActivity extends AppCompatActivity with WasuramotiBaseTrait
     with RequirePermission.OnRequirePermissionCallback

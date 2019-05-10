@@ -7,7 +7,7 @@ import android.annotation.TargetApi
 import android.app.ActivityManager
 import android.util.{Log,Base64,Base64OutputStream,AttributeSet}
 import android.view.{View,LayoutInflater}
-import android.widget.{TextView,Button,Toast}
+import android.widget.{TextView,Toast}
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.{PreferenceDialogFragmentCompat,DialogPreference}

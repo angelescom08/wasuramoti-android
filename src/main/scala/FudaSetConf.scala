@@ -119,7 +119,6 @@ class FudaSetPreferenceFragment extends PreferenceDialogFragmentCompat
     spinner.get.setSelection(adapter.get.getCount-1)
   }
   def editFudaSetBase(is_add:Boolean,orig_fs:FudaSetWithSize=null){
-    val context = getContext
     val orig_title = Option(orig_fs).map(_.title).getOrElse("")
     val fragment = FudaSetEditDialogFragment.newInstance(is_add,orig_title,orig_fs) 
     fragment.setTargetFragment(this,0)

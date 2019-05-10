@@ -1,7 +1,7 @@
 package karuta.hpnpwd.wasuramoti
 
 import android.support.v7.app.AlertDialog
-import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,PreferenceViewHolder,ListPreference,CheckBoxPreference,EditTextPreference}
+import android.support.v7.preference.{Preference,DialogPreference,PreferenceDialogFragmentCompat,ListPreference,CheckBoxPreference,EditTextPreference}
 import android.util.{Log,AttributeSet}
 import android.content.Context
 import android.view.{LayoutInflater,ViewGroup,View}

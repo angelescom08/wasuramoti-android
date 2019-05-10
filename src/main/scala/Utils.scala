@@ -22,7 +22,6 @@ import android.support.v4.app.{DialogFragment,FragmentManager}
 import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
-import java.util.BitSet
 
 import karuta.hpnpwd.audio.OpenSLESPlayer
 
@@ -38,7 +37,7 @@ object Globals {
   val TABLE_READFILTER = "readfilter"
   val TABLE_READERS = "readers"
   val DATABASE_NAME = "wasuramoti.db"
-  val DATABASE_VERSION = 6
+  val DATABASE_VERSION = 7
   val PREFERENCE_VERSION = 9
   val READER_DIR = "wasuramoti_reader"
   val ASSETS_READER_DIR="reader"

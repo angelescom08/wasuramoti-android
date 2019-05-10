@@ -75,13 +75,15 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       case R.id.yomi_info_view_next => 1
       case _ => 0
     }
-    cur_num = if(num.nonEmpty){
-      num
+    val (cur_num_temp,random_reverse) = if(num.nonEmpty){
+      (num,false)
     }else if(Utils.isRandom && fn == -1){
-      None
+      (None,false)
     }else{
-      FudaListHelper.getOrQueryFudaNumToRead(context,fn)
+      val tmp = FudaListHelper.getOrQueryFudaNumToRead(context,fn)
+      (tmp.map{_._1},tmp.map{_._2}.getOrElse(false))
     }
+    cur_num = cur_num_temp
     rendered_num = None
     render_with_path = false
     Globals.prefs.foreach{ prefs =>
@@ -90,9 +92,7 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
       show_simo = prefs.getBoolean("yomi_info_simo",true)
       show_furigana = prefs.getBoolean("yomi_info_furigana_show",false)
       torifuda_mode = prefs.getBoolean("yomi_info_torifuda_mode",false)
-      if(torifuda_reverse.isEmpty){
-        torifuda_reverse = Some(checkHaveToReverse(context))
-      }
+      torifuda_reverse = checkHaveToReverse(context,random_reverse)
       info_lang = Utils.YomiInfoLang.getDefaultLangFromPref(prefs)
     }
     if(!show_author && !show_kami && !show_simo){
@@ -101,10 +101,10 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
     initDrawing()
   }
 
-  def checkHaveToReverse(context:Context):Boolean = {
+  def checkHaveToReverse(context:Context,random_reverse:Boolean):Boolean = {
     PrefManager.getPrefStr(context,PrefKeyStr.TorifudaRotate) match {
       case "REVERSE" => true
-      case "RANDOM" => Globals.rand.nextBoolean()
+      case "RANDOM" => random_reverse
       case _ => false
     }
   }
@@ -123,12 +123,12 @@ class YomiInfoView(var context:Context, attrs:AttributeSet) extends View(context
   override def onDraw(canvas:Canvas){
     super.onDraw(canvas)
     if(torifuda_mode){
-      if(torifuda_reverse.getOrElse(false)){
+      if(torifuda_reverse){
         canvas.save()
         canvas.rotate(180, canvas.getWidth/2, canvas.getHeight/2)
       }
       onDrawTorifuda(canvas)
-      if(torifuda_reverse.getOrElse(false)){
+      if(torifuda_reverse){
         canvas.restore()
       }
     }else if(info_lang == Utils.YomiInfoLang.English){
@@ -247,7 +247,7 @@ trait YomiInfoYomifudaTrait{
   var show_kami = true
   var show_simo = true
 
-  var torifuda_reverse:Option[Boolean] = None
+  var torifuda_reverse = false
 
   def initYomifuda(){
     val margin_boost = Utils.getDimenFloat(context,R.dimen.poemtext_margin_yomifuda)

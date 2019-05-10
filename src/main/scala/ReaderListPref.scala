@@ -3,7 +3,7 @@ package karuta.hpnpwd.wasuramoti
 import android.content.{Context,DialogInterface}
 import android.util.AttributeSet
 import android.app.{ProgressDialog,Activity}
-import android.os.{Environment,AsyncTask,Bundle}
+import android.os.{Environment,AsyncTask}
 import android.view.Gravity
 import android.widget.{ArrayAdapter}
 
@@ -12,7 +12,7 @@ import android.support.v7.preference.{ListPreference,PreferenceDialogFragmentCom
 import android.support.v7.app.AlertDialog
 
 import karuta.hpnpwd.audio.OggVorbisDecoder
-import java.io.{IOException,File,FileOutputStream}
+import java.io.{IOException,File}
 import scala.collection.mutable.Buffer
 import scala.collection.JavaConverters._
 

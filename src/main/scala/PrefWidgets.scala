@@ -271,7 +271,6 @@ class KarafudaPreferenceFragment extends PreferenceDialogFragmentCompat {
   override def onDialogClosed(positiveResult:Boolean){
     val pref = getPreference.asInstanceOf[KarafudaPreference]
     if(positiveResult){
-        val context = getContext // this will be null when call onDialogClosed was call by screen rotate
       root_view.foreach{ view =>
         val edit = Globals.prefs.get.edit
         val (enable,num,rand) = getWidgets(view)
