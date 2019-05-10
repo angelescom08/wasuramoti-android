@@ -113,8 +113,8 @@ object AudioHelper{
         .orElse(activity.getCurNumInView)
         .orElse(FudaListHelper.queryRandom)
         .getOrElse(0)
-      val cur_torifuda_reverse = Globals.rand.nextBoolean()
       val next_num = FudaListHelper.queryRandom
+      val cur_torifuda_reverse = old_player.map{_.next_torifuda_reverse}.getOrElse(Globals.rand.nextBoolean())
       val next_torifuda_reverse = Globals.rand.nextBoolean()
       next_num.map{
        (cur_num,_,cur_torifuda_reverse,next_torifuda_reverse)

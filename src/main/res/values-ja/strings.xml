@@ -680,8 +680,8 @@
   <string name="rewind_only_for_shuffle">流しは順番がシャッフルの時のみ有効です</string>
   <string name="conf_kimari_simo">下の句の決まり字を表示</string>
   <string name="conf_kimari_simo_summary">決まり字は現代仮名遣いです（けふ→きょう，あふ→おお）</string>
-  <string name="conf_torifuda_rotate">取り札を回転</string>
-  <string name="conf_torifuda_rotate_summary">取り札を逆さに回転する</string>
+  <string name="conf_torifuda_rotate">取り札の向き</string>
+  <string name="conf_torifuda_rotate_summary">取り札を上下逆さに表示する</string>
   <string-array name="conf_torifuda_rotate_entries">
     <item>通常</item>
     <item>逆さ</item>
