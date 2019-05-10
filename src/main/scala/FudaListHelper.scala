@@ -673,8 +673,8 @@ object FudaListHelper{
     }
     // TODO: Since Reader.bothReadable is more strict than before,
     //       Globals.player will be empty for these cases, and might not have to check these conditions.
-    if(r == Some(AllFuda.list.length + 1) ||
-      ! Utils.readFirstFuda && r == Some(0)
+    if(r.exists{_._1 == AllFuda.list.length + 1} ||
+      ! Utils.readFirstFuda && r.exists{_._1 == 0}
     ){
       None
     }else{
