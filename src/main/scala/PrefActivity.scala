@@ -161,6 +161,7 @@ class ListPreferenceCustom(context:Context,aset:AttributeSet) extends ListPrefer
     }
     key match{
       case "audio_stream_type" => get_entry_from_value(R.array.conf_audio_stream_type_entryValues,R.array.conf_audio_stream_type_entries)
+      case "yomi_info_torifuda_rotate" => get_entry_from_value(R.array.conf_torifuda_rotate_entryValues,R.array.conf_torifuda_rotate_entries)
       case _ => value
     }
   }

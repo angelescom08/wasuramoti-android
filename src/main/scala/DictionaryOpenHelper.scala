@@ -67,7 +67,7 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
     if(oldv < 7){
       Utils.withTransaction(db, () => {
         db.execSQL(s"ALTER TABLE ${Globals.TABLE_FUDALIST} ADD COLUMN torifuda_reverse INTEGER;")
-        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET torifuda_reverse=0;")
+        db.execSQL(s"UPDATE ${Globals.TABLE_FUDALIST} SET torifuda_reverse=ABS(RANDOM()%2);")
       })
     }
   }
@@ -83,6 +83,7 @@ class DictionaryOpenHelper(context:Context) extends SQLiteOpenHelper(context,Glo
        for( i  <- 0 to AllFuda.list.length){
          cv.put("num",new java.lang.Integer(i))
          cv.put("read_order",new java.lang.Integer(i))
+         cv.put("torifuda_reverse", new java.lang.Integer(Globals.rand.nextInt(2)))
          db.insert(Globals.TABLE_FUDALIST,null,cv)
        }
        })
